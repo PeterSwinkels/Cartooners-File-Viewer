@@ -1,0 +1,27 @@
+Cartooners File Viewer - Help
+
+[About Cartooners]
+Note: this is not meant to be a complete description. See the manual that comes with this program if you want to know more.
+
+Cartooners is a basic animation software package originally developed for the Apple IIGS by ITDA and published by Electronic Arts in 1987 primarily aimed at children. It has also been ported to run under MS-DOS among others. With Cartooners the user can make a simple animated movie by placing static or animated actors over optional background images. Speech balloons, dialog boxes, music and sound effects are also available. Everything except the background images can move and animated actors can perform preprogrammed actions such as walking and dancing.
+
+[The purpose of Cartooners File Viewer]
+Due to the fact that Cartooners was designed to run on computers that are quite slow by today's standards (about 8mhz vs. 3000mhz) requiring obsolete hardware and an obsolete operating system users cannot just run this software on their computer without an emulator, for example. Further more, Cartooners uses file formats which are not supported by any (or only a few) current programs.
+
+An overview of some of the file formats used by Cartooners:
+
+Extension:	Description:				Supported by (besides Cartooners):
+*.act		An animated actor.			No known software.
+*.lbm		A static actor/background image.	Deluxe Paint/Paint Shop Pro.
+*.mov		A movie file.				No known software.
+*.mus		MIDI based music/sound effect.		A few late 80s/early 90s games.
+
+Note:
+Cartooners movie files are actually scripts describing what actors, dialog, music, and scenes are used when and how. Therefore these "movies" depend on external items in order to be played unless they contain dialog only.
+
+The purpose of Cartooners File Viewer is to give users the opportunity to view and/or manipulate the files mentioned earlier outside Cartooners. The features that likely will be the most useful are those that allow the user to export an actor so that it can be modified using external software and then import the result to an *.act file so that it can be used by Cartooners. This way new actors can also be created. Another feature allows the user to convert images (these should be no larger than 320x200 pixels) to the *.lbm format.
+
+More detailed information can be found under "File Formats" in the "Program" menu.
+
+[This project in general]
+The author of and updates for this program can be found at http://www.vbforums.com and http://github.com/peterswinkels

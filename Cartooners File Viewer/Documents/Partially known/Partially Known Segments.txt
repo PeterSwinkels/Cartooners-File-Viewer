@@ -1,0 +1,35 @@
+Cartooners
+
+[Dialog Icon Data]
+At offset 215112 there is a table used by dialog boxes describing how the following icons are used:
+
+-Exclamation icon.
+-Speaking icon.
+-Hand icon.
+
+00	WORD		An icon's vertical position relative to the dialog box' upper left corner measured in pixels.	***
+02	WORD		An icon's horizontal position relative to the dialog box' upper left corner measured in pixels.	***
+04	WORD		An icon record's size in bytes.									***
+06	WORD		Unknown.
+08	WORD		Unknown. (Critical - must be {0x12, 0x00} or dialog boxes using this icon will not appear.)
+0A	WORD		An icon's data offset relative to 20 bytes after the end of the ticket screen's data at 212448.	***
+0C	WORD		An icon's data segment.										***
+0E	08 BYTES	Null.
+16	WORD		Both bytes must be non-zero for line breaks in dialog text to be processed.
+
+
+[Level Dialog Data]
+At offset 221458 there is a table of 8 records used by the levels dialog box describing the following:
+
+00	WORD		A rectangle's upper left corner vertical position measured in pixels.
+02	WORD		A rectangle's upper left corner horizontal position measured in pixels.
+04	WORD		A rectangle's lower right corner vertical position measured in pixels.
+06	WORD		A rectangle's lower right corner horizontal position measured in pixels.
+08	DWORD		Unknown.	
+0C	08 BYTES	Null.
+16	DWORD		Unknown.
+
+
+Notes:
+-The offsets described are relative to the start of the Cartoons.exe file.
+-*** = Has been defined in the Cartooners Executable.txt layout file.
