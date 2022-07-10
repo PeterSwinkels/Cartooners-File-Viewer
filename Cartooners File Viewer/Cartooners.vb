@@ -22,6 +22,7 @@ Public Class CartoonersClass
 
    'This class defines the regions of data and code contained by the Cartooners executable.
    Private Class RegionClass
+      Public Comment As String       'Defines a region's comment.
       Public Description As String   'Defines a region's description.
       Public Type As String          'Defines a region's type.
       Public Offset As Integer       'Defines a region's offset.
@@ -37,6 +38,7 @@ Public Class CartoonersClass
       Offset        'A region's offset.
       Related       'A related region's offset.
       Length        'A region's length.
+      Comment       'A region's comment.
       EndO          'A region's end.
    End Enum
 
@@ -98,7 +100,7 @@ Public Class CartoonersClass
          For Each Region As RegionClass In Regions()
             For Each OtherRegion As RegionClass In Regions()
                If Region IsNot OtherRegion AndAlso Region.EndO > OtherRegion.Offset AndAlso Region.EndO <= OtherRegion.EndO Then
-                  Overlaps.Append($"""{Region.Description} "" overlaps with ""{OtherRegion.Description}"".{NewLine}")
+                  Overlaps.Append($"""{Region.Description}"" ({Region.Type}) overlaps with ""{OtherRegion.Description}"" ({OtherRegion.Type}).{NewLine}")
                End If
             Next OtherRegion
          Next Region
@@ -159,9 +161,10 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
-   'This procedure displays the Cartooner's executable region with the specified description and data type.
+   'This procedure displays the Cartooners's executable region with the specified description and data type.
    Private Sub DisplayRegion(Description As String, Type As String)
       Try
+         Dim Comment As String = Nothing
          Dim IconHeight As New Integer
          Dim IconType As New Integer
          Dim IconWidth As New Integer
@@ -174,6 +177,7 @@ Public Class CartoonersClass
 
          For Each Region As RegionClass In Regions()
             If Region.Description.ToLower() = Description.ToLower() AndAlso Region.Type.ToLower() = Type.ToLower() Then
+               Comment = Region.Comment
                Length = Region.Length
                Position = Region.Offset + EXEHeaderSize()
             End If
@@ -185,6 +189,8 @@ Public Class CartoonersClass
          End If
 
          NewText.Append($"[{Description}] ({Type}) At: {Position - EXEHeaderSize()} {NewLine}")
+         If Not Comment = Nothing Then NewText.Append($"{Comment}{NewLine}")
+
          Select Case Type.ToLower()
             Case "address"
                Offset = BitConverter.ToInt16(GetBytes(DataFile().Data, Position, Length).ToArray(), &H0%)
@@ -441,7 +447,7 @@ Public Class CartoonersClass
             For Each RegionLine As String In RegionLines
                If Not RegionLine.Trim() = Nothing Then
                   Properties = RegionLine.Split(REGION_PROPERTY_DELIMITER)
-                  CurrentRegions.Add(New RegionClass With {.Description = Properties(RegionPropertiesE.Description), .Type = Properties(RegionPropertiesE.Type).Trim().ToLower(), .Offset = CInt(Properties(RegionPropertiesE.Offset)), .Related = CInt(Properties(RegionPropertiesE.Related)), .Length = CInt(Properties(RegionPropertiesE.Length)), .EndO = .Offset + .Length})
+                  CurrentRegions.Add(New RegionClass With {.Description = Properties(RegionPropertiesE.Description), .Type = Properties(RegionPropertiesE.Type).Trim().ToLower(), .Offset = CInt(Properties(RegionPropertiesE.Offset)), .Related = CInt(Properties(RegionPropertiesE.Related)), .Length = CInt(Properties(RegionPropertiesE.Length)), .Comment = Properties(RegionPropertiesE.Comment), .EndO = .Offset + .Length})
                End If
             Next RegionLine
          End If

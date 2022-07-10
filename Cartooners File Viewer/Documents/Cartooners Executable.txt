@@ -1,5 +1,5 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
-80286+ executable code.	binary	0	0	156217	
+8086 executable code.	binary	0	0	156217	
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
 Actors dialog.	text	215400	0	36	
@@ -50,7 +50,7 @@ Error messages. #1	text	200737	0	307
 Error messages. #2	text	204489	0	28	
 Error messages. #3	text	204523	0	39	
 Error messages. #4	text	206936	0	611	
-Exclamation balloon information.	binary	158802	0	2049	
+Exclamation balloon information.	binary	158802	0	2029	
 Exclamation icon record size.	binary	203340	0	2	
 Exclamation icon.	point	203336	0	4	
 Exclamation icon.	address	203346	0	4	
@@ -75,14 +75,14 @@ Frame number textbox border.	rectangles	211448	0	8
 Frame number textbox.	rectangles	211424	0	8	
 Frame number textbox.	address	211434	0	4	
 Free memory bar.	rectangles	212388	0	8	
-Free memory dialog.	rectangles	212458	0	8
+Free memory dialog.	rectangles	212458	0	8	
 Free memory kbs.	address	212422	0	4	
 Free memory label.	rectangles	212412	0	8	
 Free memory OK button id.	binary	212362	0	2	
 Free memory OK button style.	binary	212372	0	2	
 Free memory OK button text.	address	212374	0	4	
 Free memory OK button.	rectangles	212364	0	8	
-Free memory.	address	212446	0	4
+Free memory.	address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
@@ -206,7 +206,7 @@ Unknown #14	binary	225032	0	36	Appears to be safe to modify.
 Unknown #15	binary	225083	0	143	Appears to be safe to modify.
 Unknown #16	binary	225237	0	15	Appears to be safe to modify.
 Unknown #17	binary	225310	0	24	Appears to be safe to modify.
-Unknown #18	binary	160851	0	7299	Appears to be safe to modify.
+Unknown #18	binary	160831	0	840	60x 14 byte records.
 Unknown #19	binary	180321	0	281	Appears to be safe to modify.
 Unknown #20	binary	180943	0	2113	Appears to be safe to modify.
 Unknown #21	binary	183120	0	2	Appears to be safe to modify.
@@ -234,6 +234,11 @@ Unknown #42	binary	210008	0	116	Appears to be safe to modify.
 Unknown #43	binary	210138	0	731	Appears to be safe to modify.
 Unknown #44	binary	210879	0	167	Appears to be safe to modify.
 Unknown #45	binary	211204	0	10	Appears to be safe to modify.
+Unknown #46	binary	161671	0	3240	60x 54 byte records.
+Unknown #47	binary	164911	0	510	255x 2 byte records.
+Unknown #48	binary	165421	0	514	257x 2 byte records.
+Unknown #49	binary	165935	0	56	28x 2 byte records.
+Unknown #50	binary	165991	0	2159	1080x 2 byte records. 
 Version.	text	206929	0	6	
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	

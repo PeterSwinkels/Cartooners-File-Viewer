@@ -80,6 +80,7 @@ Public Module MSDOSEXEModule
 
       With Data
          Try
+            NewText.Append($"Header size: {EXEHeaderSize()} bytes.{NewLine}{NewLine}")
             NewText.Append($"Signature: ""{GetString(Data, MSDOSHeaderE.Signature, &H2%)}""{NewLine}")
             NewText.Append($"Image size modulo (of 0x200): 0x{ BitConverter.ToUInt16(Data.ToArray(), MSDOSHeaderE.ImageSizeModulo):X} bytes.{NewLine}")
             NewText.Append($"Image size in pages (of 0x200 bytes): 0x{BitConverter.ToUInt16(Data.ToArray(), MSDOSHeaderE.ImageSize):X}.{NewLine}")
