@@ -239,6 +239,7 @@ Unknown #47	binary	164911	0	510	255x 2 byte records.
 Unknown #48	binary	165421	0	514	257x 2 byte records.
 Unknown #49	binary	165935	0	56	28x 2 byte records.
 Unknown #50	binary	165991	0	2159	1080x 2 byte records. 
+Unknown #51	binary	212468	0	20	Influences the Free Memory dialog.
 Version.	text	206929	0	6	
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
