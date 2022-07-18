@@ -1,5 +1,5 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
-8086 executable code.	binary	0	0	156217	
+8086 executable code.	binary	0	0	156217	Probably compiled using Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
 Actors dialog.	text	215400	0	36	
