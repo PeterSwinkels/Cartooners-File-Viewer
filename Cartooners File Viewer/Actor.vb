@@ -38,8 +38,9 @@ Public Class ActorClass
       AnimationRecordCountOffset = &H32%      'The offset of the animation record count list.
       AnimationRecordListOffset = &H2E%       'The offset of the animation records list.
       AnimationRecordLoopBackOffset = &H36%   'The offset of the animation record loop back list.
-      BaseOffset = &H4B%                      'The base offset for offsets.
+      BaseOffset = &H4B%                      'The absolute base offset for relative offsets.
       EndOfMenuOffset = &H4A%                 'The offset of the end of the menu items.
+      EndOfMenuOffsetOffset = &H2%            'The offset of the menu item data's end offset.
       ImageCount = &H24%                      'The total number of images for an actor.
       ImageRecords = &H50%                    'The image record list.
       ImageRecordsSize = &H2A%                'The size of all image records combined.
@@ -95,7 +96,7 @@ Public Class ActorClass
    Private Const UP_LEFT As Byte = &HFF%                              'Indicates up or left.
    Private Const WAY_SUFFIX As String = "N2816"                       'Defines the way item's suffix.
    Private ReadOnly GET_OFFSET As Func(Of List(Of Byte), LocationsE, Integer) = Function(Data As List(Of Byte), Position As LocationsE) LocationsE.BaseOffset + BitConverter.ToInt32(Data.ToArray(), Position)  'This procedure returns the relative offset at the specified position.
-   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%, &H46%, &H0%})                                                                                                                                        'Defines the actor file signature.
+   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%})                                                                                                                                                     'Defines the actor file signature.
 
    'The menu items used by this class.
    Private WithEvents DisplayAnimationRecordListsMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F1, .Text = "Display Animation Record &Lists"}
@@ -180,13 +181,18 @@ Public Class ActorClass
    'This procedures manages the actor's data file.
    Private Function DataFile(Optional ActorPath As String = Nothing) As DataFileStr
       Try
+         Dim EndOfMenuOffsetOffset As New Integer
+         Dim Position As New Integer
          Static CurrentFile As New DataFileStr With {.Data = Nothing, .Path = Nothing}
 
          If Not ActorPath = Nothing Then
             With CurrentFile
                .Data = New List(Of Byte)(File.ReadAllBytes(ActorPath))
 
-               If GetBytes(CurrentFile.Data, LocationsE.Signature, SIGNATURE.Count).SequenceEqual(SIGNATURE) Then
+               Position = LocationsE.EndOfMenuOffsetOffset
+               EndOfMenuOffsetOffset = BitConverter.ToUInt16(GetBytes(CurrentFile.Data, Position, Count:=&H2%, AdvanceOffset:=True).ToArray(), &H0%)
+
+               If GetBytes(CurrentFile.Data, LocationsE.Signature, SIGNATURE.Count).SequenceEqual(SIGNATURE) AndAlso Position + EndOfMenuOffsetOffset = LocationsE.EndOfMenuOffset Then
                   .Path = ActorPath
                   AnimationRecordLists(Refresh:=True)
                   AnimationRecords(Refresh:=True)
@@ -707,6 +713,7 @@ Public Class ActorClass
          With Data
             .Add(&H0%)
             .AddRange(SIGNATURE)
+            .AddRange(BitConverter.GetBytes(ToUInt16(LocationsE.EndOfMenuOffset - LocationsE.EndOfMenuOffsetOffset - .Count)))
             .AddRange(GBRPalette)
             .AddRange(BitConverter.GetBytes(ImportedImages.Count))
             .AddRange({&H0%, &H0%})

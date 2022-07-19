@@ -26,6 +26,7 @@ Public Class MovieClass
       FrameRate = &H26%                   'The movie's frame rate.
       HasScenes = &H24%                   'Indicates whether or not the movie contains scenes.
       HasSpeechBalloons = &HDF%           'Indicates whether or not the movie contains speech balloons.
+      HeaderLength = &H2%                 'Indicates the total length of the remaining header items following this entry.
       PlayRepeatedly = &H28%              'Indicates whether or not the movie is played repeatedly.
       Signature = &H0%                    'The movie file signature.
       SpeechBalloonsPalette = &HBF%       'The movie's second palette.
@@ -78,7 +79,7 @@ Public Class MovieClass
    Private Const MAXIMUM_FRAME_RATE As Integer = 60                      'Defines the highest number of frames per second supported.
    Private Const MINIMUM_INTERVAL As Double = 1000 / MAXIMUM_FRAME_RATE  'Defines the lowest number of milliseconds between frames supported.
    Private ReadOnly PALETTE_DESCRIPTIONS As New List(Of String)({"actors and scenes", "speech balloons"})                                                                                                     'Defines the movie palettes descriptions.
-   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%, &H10%, &HDF%, &H0%})                                                                                                                               'Defines the movie file signature.
+   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%, &H10%})                                                                                                                                            'Defines the movie file signature.
    Private ReadOnly SPEECH_BALLOON_ALIGNMENTS As New List(Of String)({"left", "center"})                                                                                                                      'Defines the movie speech balloon alignments.
    Private ReadOnly SPEECH_BALLOON_TYPES As New List(Of String)({"Invisible", "Title", "Speech (Right)", "Speech (Left)", "Thought (Right)", "Thought (Left)", "Exclamation (Right)", "Exclamtion (Left)"})   'Defines the movie's speech balloon types.
 
@@ -191,6 +192,7 @@ Public Class MovieClass
    'This procedures manages the movie's data.
    Private Function DataFile(Optional MoviePath As String = Nothing) As DataFileStr
       Try
+         Dim HeaderLength As New Integer
          Dim Position As Integer = 0
          Static CurrentFile As New DataFileStr With {.Data = Nothing, .Path = Nothing}
 
@@ -198,7 +200,10 @@ Public Class MovieClass
             With CurrentFile
                .Data = New List(Of Byte)(File.ReadAllBytes(MoviePath))
 
-               If GetBytes(CurrentFile.Data, LocationsE.Signature, SIGNATURE.Count).SequenceEqual(SIGNATURE) Then
+               Position = LocationsE.HeaderLength
+               HeaderLength = BitConverter.ToUInt16(GetBytes(CurrentFile.Data, Position, Count:=&H2%, AdvanceOffset:=True).ToArray(), &H0%)
+
+               If GetBytes(CurrentFile.Data, LocationsE.Signature, SIGNATURE.Count).SequenceEqual(SIGNATURE) AndAlso Position + HeaderLength = LocationsE.FrameCount Then
                   .Path = MoviePath
                   FrameRecords(Refresh:=True, Position:=Position)
                   ActorHandleRecords(Refresh:=True, Position:=Position)

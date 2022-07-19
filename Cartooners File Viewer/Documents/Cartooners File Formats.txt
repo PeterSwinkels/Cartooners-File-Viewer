@@ -16,7 +16,8 @@ Extension: *.act
 
 [File Layout]
 Begin Structure: Header.
-        0x00	DWORD		Signature. ***
+        0x00	WORD		Signature. ***
+	0x02	WORD		Relative offset of the menu item data's end offset.
 	0x04	0x10 WORDS	Palette. 0x04 nibbles repeated 0x10 times: {green, blue, null, red}. ******
 	0x24	DWORD		The total number of images.
 	0x28	WORD		Null.
@@ -102,7 +103,7 @@ Begin Structure: Image data. (Repeat [0x24] times.)
 End Structure
 
 Note:
-*** Same for all files. Appears to be a signature, but does seem to affect the way the actor file is loaded. Possibly palette/header information.
+*** Same for all files. The value of 0x10 could indicate the number of palette entries.
 ****** This type of palette is used in the Cartooners executable as well.
 ********* This RLE compression algorithm is used in the Cartooners executable as well.
 ===================================================================================================
@@ -193,10 +194,11 @@ Extension: *.mov
 
 [File Layout]
 Begin Structure: Header.
-	0x00	DWORD		Signature.
+	0x00	WORD		Signature. ***
+	0x02	WORD		The total length of the remaining header items following this entry.
 	0x04	0x20 BYTES	The palette for actors and scenes. 0x04 nibbles repeated 0x10 times: {green, blue, null, red}.
 	0x24	WORD		Indicates whether the movie contains scenes. (0x00 = FALSE, 0x01 = TRUE)
-	0x26	WORD		The number of frames per second. ***
+	0x26	WORD		The number of frames per second. ******
 	0x28	WORD		Indicates whether the movie plays repeatedly. (0x00 = FALSE, 0x01 = TRUE)
 	0x2A	0x95 BYTES	Null.
 	0xBF	0x20 BYTES	The palette for speech balloons - same format as the first palette.
@@ -211,7 +213,7 @@ Begin Structure: Frame records.
 
 		Begin Structure Frame Record Data
 			Begin Structure Actor frame data (Repeat for each actor.)
-				0x00	BYTE	The actor/speech balloon handle. ******
+				0x00	BYTE	The actor/speech balloon handle. *********
 				0x01	WORD	Action and way: (Way * WayCount) + Action.
 				0x03	BYTE	Level (0x01 - 0x08.)
 				0x04	BYTE	Animation record index.
@@ -269,7 +271,7 @@ Begin Structure: Footer
 	Begin Structure Speech balloon (Repeat [VAR8] times.)
 		0x00	WORD		The balloon's index.
 		0x02	WORD		The balloon properties' size in bytes (text not included.)
-		0x04	WORD		The balloon's type. *********
+		0x04	WORD		The balloon's type. ************
 		0x06	WORD		The balloon background color's palette index.
 		0x08	WORD		The balloon border color's palette index.
 		0x0A	DWORD		Null.
@@ -285,21 +287,25 @@ Begin Structure: Footer
 		0x22	WORD		Null.
 		0x24	WORD		The text's alignment (0x00 = left, 0x01 = center.)
 		0x26	DWORD		Filler #3 - Always: {0xFE, 0xFF, 0x08, 0x00}
-		0x2A	[0x1A] BYTES	The balloon's text and optional macro's. ************
+		0x2A	[0x1A] BYTES	The balloon's text and optional macro's. ***************
 	End Structure
 End Structure
 
-Note:
-*** The frame rate's range is 0.2 to 60.0 frames per second. The formula for calculating the number of frames per second:
+Notes:
+***
+Same for all files. The two 0x10 values could indicate the number of entries for the two palettes.
+
+******
+The frame rate's range is 0.2 to 60.0 frames per second. The formula for calculating the number of frames per second:
 Rate = (1000 / [Header:0x26]) / (1000 / 60.0)
 
 60.0	  = The highest frame rate supported .
 1000 / 60 = The minimum number of milliseconds between frames supported.
 
-******
+*********
 Each frame can have up to five speech balloons/actors at a time. Handles 1 to 5 are reserved for speech balloons. Handles 6 and upward are for actors.
 
-*********
+************
 Speech balloon types:
 
 0x00	Invisible
@@ -312,7 +318,7 @@ Speech balloon types:
 0x07	Exclamation (Left)
 
 
-************
+***************
 Text foreground color macro's:
 
 Begin Structure Macro
