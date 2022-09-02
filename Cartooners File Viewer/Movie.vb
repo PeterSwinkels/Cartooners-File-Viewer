@@ -308,14 +308,14 @@ Public Class MovieClass
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {DataFile().Path}{NewLine}")
-            .Append($"-Frame count: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.FrameCount)}{NewLine}")
-            .Append($"-Frames per second: {FrameRate()}{NewLine}")
-            .Append($"-Play repeatedly: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PlayRepeatedly))}{NewLine}")
-            .Append($"-Contains scenes: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.HasScenes))}{NewLine}")
-            .Append($"-Contains speech balloons: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.HasSpeechBalloons))}{NewLine}")
-            .Append($"-Default speech balloon text color index: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.DefaultSpeechBalloonColor)}")
+            .Append(GeneralFileInformation(DataFile().Path))
+            .Append(NewLine)
+            .Append($"Frame count: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.FrameCount)}{NewLine}")
+            .Append($"Frames per second: {FrameRate()}{NewLine}")
+            .Append($"Play repeatedly: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PlayRepeatedly))}{NewLine}")
+            .Append($"Contains scenes: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.HasScenes))}{NewLine}")
+            .Append($"Contains speech balloons: {CBool(BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.HasSpeechBalloons))}{NewLine}")
+            .Append($"Default speech balloon text color index: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.DefaultSpeechBalloonColor)}")
 
             UpdateDataBox(.ToString())
          End With

@@ -121,10 +121,10 @@ Public Class MusicClass
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {DataFile().Path}{NewLine}")
-            .Append($"-Midi track offset: {BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)} byte(s).{NewLine}")
-            .Append($"-Play repeatedly: {IsRepeatingMusic()}")
+            .Append(GeneralFileInformation(DataFile().Path))
+            .Append(NewLine)
+            .Append($"Midi track offset: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)} byte(s).{NewLine}")
+            .Append($"Play repeatedly: {IsRepeatingMusic()}")
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception

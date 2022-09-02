@@ -235,8 +235,8 @@ Public Class CartoonersClass
          Dim NewText As New StringBuilder
 
          With DataFile()
-            NewText.Append($"{ .Path}:{NewLine}")
-            NewText.Append($"File size: {New FileInfo(.Path).Length} bytes.{NewLine}{NewLine}")
+            NewText.Append(GeneralFileInformation(.Path))
+            NewText.Append(NewLine)
             NewText.Append(GetEXEHeaderInformation(.Data))
 
             UpdateDataBox(NewText.ToString())

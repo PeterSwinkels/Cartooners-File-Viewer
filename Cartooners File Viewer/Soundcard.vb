@@ -69,8 +69,8 @@ Public Class SoundCardDriverClass
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {DataFile().Path}{NewLine}")
+            .Append(GeneralFileInformation(DataFile().Path))
+            .Append(NewLine)
             .Append($"-Soundcard: { DRIVER_FILES(Path.GetFileName(DataFile().Path).ToLower())}{NewLine}{NewLine}")
             .Append($"Data:{NewLine}")
             .Append($"{Escape(DataFile().Data, " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")

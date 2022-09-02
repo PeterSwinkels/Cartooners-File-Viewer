@@ -72,9 +72,9 @@ Public Class PrinterDriverClass
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {DataFile().Path}{NewLine}")
-            .Append($"-Printer: {TERMINATE_AT_NULL(GetString(DataFile.Data, LocationsE.PrinterModelName, PRINTER_MODEL_NAME_SPACE))}{NewLine}{NewLine}")
+            .Append(GeneralFileInformation(DataFile().Path))
+            .Append(NewLine)
+            .Append($"Printer: {TERMINATE_AT_NULL(GetString(DataFile.Data, LocationsE.PrinterModelName, PRINTER_MODEL_NAME_SPACE))}{NewLine}{NewLine}")
             .Append($"Data:{NewLine}")
             .Append($"{Escape(DataFile().Data, " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
             UpdateDataBox(.ToString())

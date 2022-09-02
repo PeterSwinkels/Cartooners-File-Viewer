@@ -66,7 +66,7 @@ Public Class ScriptClass
          Dim NewText As New StringBuilder
 
          With DataFile()
-            NewText.Append($"File: { .Path}{NewLine}")
+            NewText.Append(GeneralFileInformation(.Path))
             NewText.Append(NewLine)
             NewText.Append($"Header:{NewLine}")
             NewText.Append(Escape(GetString(.Data, &H0%, HEADER_SIZE), " "c, EscapeAll:=True))

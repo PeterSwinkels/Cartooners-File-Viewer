@@ -177,6 +177,25 @@ Public Module CoreModule
       Return Nothing
    End Function
 
+   'This procedure generates text containing general file information.
+   Public Function GeneralFileInformation(PathO As String) As String
+      Try
+         Dim FileInformation As New StringBuilder
+
+         FileInformation.Append($"Path: ""{PathO}""{NewLine}")
+         With New FileInfo(PathO)
+            FileInformation.Append($"Size: { .Length} bytes.{NewLine}")
+            FileInformation.Append($"Date: { .CreationTime}{NewLine}")
+         End With
+
+         Return FileInformation.ToString()
+      Catch ExceptionO As Exception
+         HandleError(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
    'This procedure converts the specified bytes to a number assuming big endianess.
    Public Function GetBENumberFromBytes(Bytes As List(Of Byte)) As Integer
       Try

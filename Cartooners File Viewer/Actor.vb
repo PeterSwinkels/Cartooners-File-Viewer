@@ -356,12 +356,12 @@ Public Class ActorClass
          Dim WayCount As Integer? = If(LocationsE.WayCount < DataFile().Data.Count, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.WayCount), Nothing)
 
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {DataFile().Path}{NewLine}")
-            .Append($"-Name: {Escape(Name())}{NewLine}")
-            .Append($"-Action: {ActionCount.Value}{NewLine}")
-            .Append($"-Image: {ImageCount.Value}{NewLine}")
-            .Append($"-Ways: {WayCount.Value}")
+            .Append(GeneralFileInformation(DataFile().Path))
+            .Append(NewLine)
+            .Append($"Name: {Escape(Name())}{NewLine}")
+            .Append($"Action: {ActionCount.Value}{NewLine}")
+            .Append($"Image: {ImageCount.Value}{NewLine}")
+            .Append($"Ways: {WayCount.Value}")
 
             UpdateDataBox(.ToString())
          End With

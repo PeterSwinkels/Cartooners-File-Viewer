@@ -50,7 +50,8 @@ Public Class PreferencesClass
          Dim NewText As New StringBuilder
 
          With Preferences()
-            NewText.Append($"{ .Path}:{NewLine}{NewLine}")
+            NewText.Append(GeneralFileInformation(.Path))
+            NewText.Append(NewLine)
             NewText.Append($"[Preferences]{NewLine}")
             NewText.Append($"Buttons stay down: {If(.ButtonsStayDown, "on", "off")}.{NewLine}")
             NewText.Append($"Add ... adds to movie: {If(.AddAddsToMovie, "on", "off")}.{NewLine}")

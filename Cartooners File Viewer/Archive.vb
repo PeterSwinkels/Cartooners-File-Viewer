@@ -125,6 +125,9 @@ Public Class ArchiveClass
       Try
          Dim NewText As New StringBuilder
 
+         NewText.Append(GeneralFileInformation(DataFile().Path))
+         NewText.Append(NewLine)
+
          For Each ArchivedFile As ArchivedFileStr In ArchivedFiles()
             With ArchivedFile
                NewText.Append($"File: { .FileName}{NewLine}")

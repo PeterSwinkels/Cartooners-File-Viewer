@@ -243,7 +243,7 @@ Public Class InterfaceWindow
 
             If NewPath IsNot Nothing Then CurrentPath = NewPath
 
-            Me.Text = $"{ProgramInformation()} - {If(CurrentDataFile Is Nothing, Nothing, CurrentPath)}"
+            Me.Text = $"{ProgramInformation()} - ""{If(CurrentDataFile Is Nothing, Nothing, CurrentPath)}"""
          End If
 
          Return CurrentDataFile

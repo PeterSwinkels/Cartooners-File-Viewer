@@ -144,15 +144,15 @@ Public Class LBMImageClass
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
          With New StringBuilder
-            .Append($"General information:{NewLine}")
-            .Append($"-Path: {FileData().Path}{NewLine}")
-            .Append($"-IFF file size: {FileData().IFFFileSize}{NewLine}")
-            .Append($"-IFF identifier: {FileData().IFFIdentifier}{NewLine}")
-            .Append($"-IFF type: {FileData().IFFType}{NewLine}")
-            .Append($"-Bits per pixel: {FileData().BitsPerPixel}{NewLine}")
-            .Append($"-Compressed: {FileData().IsCompressed}{NewLine}")
-            .Append($"-Width: {FileData().ImageO.Width}{NewLine}")
-            .Append($"-Height: {FileData().ImageO.Height}")
+            .Append(GeneralFileInformation(FileData().Path))
+            .Append(NewLine)
+            .Append($"IFF file size: {FileData().IFFFileSize}{NewLine}")
+            .Append($"IFF identifier: {FileData().IFFIdentifier}{NewLine}")
+            .Append($"IFF type: {FileData().IFFType}{NewLine}")
+            .Append($"Bits per pixel: {FileData().BitsPerPixel}{NewLine}")
+            .Append($"Compressed: {FileData().IsCompressed}{NewLine}")
+            .Append($"Width: {FileData().ImageO.Width}{NewLine}")
+            .Append($"Height: {FileData().ImageO.Height}")
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
