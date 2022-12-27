@@ -4,7 +4,7 @@ Cartooners' File Formats, by: Peter Swinkels ***2015***
 Cartooners 1988/1989 - by: Electronic Arts & IDTA
 
 Note:
-This document applies to the game's MS-DOS version.
+This document applies to the program's MS-DOS version.
 
 ===================================================================================================
 
@@ -285,9 +285,10 @@ Begin Structure: Footer
 		0x1C	DWORD		Filler.
 		0x20	WORD		The last selected text color's palette index.
 		0x22	WORD		Null.
-		0x24	WORD		The text's alignment (0x00 = left, 0x01 = center.)
-		0x26	DWORD		Filler #3 - Always: {0xFE, 0xFF, 0x08, 0x00}
-		0x2A	[0x1A] BYTES	The balloon's text and optional macro's. ***************
+		0x24	WORD		The text's alignment (0x00 = left, 0x01 = center, 0x02 = fill (Apple IIGS only.))
+		0x26	WORD		The text's font. ***************
+		0x28	WORD		The text's size in points. ***************
+		0x2A	[0x1A] BYTES	The balloon's text and optional macro's. ******************
 	End Structure
 End Structure
 
@@ -317,14 +318,31 @@ Speech balloon types:
 0x06	Exclamation (Right)
 0x07	Exclamation (Left)
 
-
 ***************
+This data is used by the Apple IIGS version but is ignored by the MS-DOS version.
+
+Fonts:
+Value:		Name:
+{0xC8, 0x00}	Funnies
+{0xFE, 0xFF}	Shaston
+
+Supported font sizes:
+8, 10, 12, 14, 16, 20, 24, 28, and 32 points.
+
+******************
 Text foreground color macro's:
 
 Begin Structure Macro
 	0x00	BYTE	Flag (0x01 = macro, other values = none.)
-	0x01	BYTE	0x43 ('C' = color.)
-	0x02	BYTE	The text foreground color's palette index.
+	0x01	BYTE	Type ('C' (0x43) = color, 'S' (0x53) = style (Apple IIGS only.)
+	0x02	BYTE	'C' = The text foreground color's palette index.
+			'S' = Style bits.
+				Bitmask:	Style:
+				00000001	Bold.
+				00000010	Italic.
+				00000100	Underline.
+				00001000	Outline.
+				00010000	Shadow.
 	0x03	BYTE	0x00 (end of macro.)
 End Structure
 

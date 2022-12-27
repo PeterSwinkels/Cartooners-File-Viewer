@@ -49,7 +49,9 @@ Public Class MovieClass
       LastSelectedTextColor = &H20%      'The last selected text color's palette index.
       PropertiesSize = &H2%              'The balloon properties' size.
       Text = &H2A%                       'The balloon's text.
+      TextFont = &H26%                   'The balloon's text font.
       TextHeight = &H16%                 'The balloon's text area height.
+      TextSize = &H28%                   'The balloon's text size in points.
       TextWidth = &H18%                  'The balloon's text area width.
       TextX = &H12%                      'The text's vertical position.
       TextY = &H14%                      'The text's horizontal position.
@@ -57,7 +59,6 @@ Public Class MovieClass
       Type = &H4%                        'The balloon's type.
       Unknown1 = &H1C%                   'Unknown WORD #3.
       Unknown2 = &H1E%                   'Unknown WORD #4.
-      Unknown3 = &H26%                   'Unknown DWORD #5.
    End Enum
 
    'This structure defines an actor's handle record.
@@ -352,13 +353,14 @@ Public Class MovieClass
                NewText.Append($"Last selected text color: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.LastSelectedTextColor):X}{NewLine}")
                NewText.Append($"Text area width: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextWidth):X}{NewLine}")
                NewText.Append($"Text area height: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextHeight):X}{NewLine}")
+               NewText.Append($"Text font id: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextFont):X}{NewLine}")
+               NewText.Append($"Text size: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextSize):X}{NewLine}")
                NewText.Append($"Text X: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextX):X}{NewLine}")
                NewText.Append($"Text Y: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextY):X}{NewLine}")
                NewText.Append($"Text length: {BitConverter.ToUInt16(.Header.ToArray(), SpeechBalloonLocationsE.TextLength):X}{NewLine}")
                NewText.Append($"Text: ""{Escape(.Text)}""{NewLine}")
                NewText.Append($"Unknown #1: {Escape(GetBytes(.Header, SpeechBalloonLocationsE.Unknown1, Count:=&H2%),, EscapeAll:=True)}{NewLine}")
                NewText.Append($"Unknown #2: {Escape(GetBytes(.Header, SpeechBalloonLocationsE.Unknown2, Count:=&H2%),, EscapeAll:=True)}{NewLine}")
-               NewText.Append($"Unknown #3: {Escape(GetBytes(.Header, SpeechBalloonLocationsE.Unknown3, Count:=&H4%),, EscapeAll:=True)}{NewLine}")
                NewText.Append($"{NewLine}")
             End With
          Next SpeechBalloon
