@@ -481,52 +481,54 @@ Extension: *.lpt
 0x46	BYTE		Unknown.
 0x47	BYTE		Unknown.
 0x48	BYTE		Unknown.
-0x49-0x58	BYTES	Null.
+0x49	0x10 BYTES	Null.
 0x59	BYTE		Unknown.
-0x5A	BYTE		Unknown.
+0x5A	BYTE		Always 0x1B - Probably a PCL command.
 0x5B	BYTE		Unknown.
 0x5C	BYTE		Unknown.
 0x5D	BYTE		Unknown.
 0x5E	BYTE		Unknown.
 0x5F	BYTE		Unknown.
 0x60	BYTE		Unknown.
-0x61-0x69	BYTES	Null.
+0x61	0x09 BYTES	Null.
 0x6A	BYTE		Unknown.
-0x6B	BYTE		Always 0x1B - possibly an offset or chunk size.
+0x6B	BYTE		Always 0x1B - Probably a PCL command.
 0x6C	BYTE		Unknown.
 0x6D	BYTE		Unknown.
 0x6E	BYTE		Unknown.
 0x6F	BYTE		Unknown.
-0x70	WORD		Unknown.
-0x72	BYTE		Null.
+0x70	BYTE		Unknown.
+0x71	WORD		Null.
 0x73	BYTE		Unknown.
 0x74	BYTE		Appears to be a boolean. (0x00 or 0x01 only.)
 0x75	BYTE		Unknown.
 0x76	BYTE		Unknown.
 0x77	BYTE		Unknown.
-0x78-0x7D	BYTE	Unknown.
+0x78	0x06 BYTES	Null.
 0x7E	BYTE		Unknown.
 0x7F	BYTE		Unknown.
 0x80	BYTE		Unknown.
 0x81	BYTE		Unknown.
 0x82	BYTE		Unknown.
 0x83	BYTE		Unknown.
-0x84	DWORD		Unknown.
-0x88	BYTE		Null.
-0x89	BYTE		Null.
-0x90	BYTE		Null.
-0x91	BYTE		Null.
-0x92	BYTE		Null.
-0x93	BYTE		Null.
-0x94	BYTE		Null.
+0x84	BYTE		Unknown.
+0x85	DWORD		Null.
+0x89	BYTE		Unknown.
+0x8A	BYTE		Unknown.
+0x8B	BYTE		Unknown.
+0x8C	BYTE		Unknown.
+0x8D	DWORD		Null.
+0x91	BYTE		Unknown.
+0x92	BYTE		Unknown.
+0x93	BYTE		Unknown.
+0x94	BYTE		Unknown.
 0x95	DWORD		Null.
-0x99	BYTE		Null.
-0x9A	BYTE		Null.
-0x9B	BYTE		Null.
-0x9C	BYTE		Null.
+0x99	BYTE		Unknown.
+0x9A	BYTE		Unknown.
+0x9B	BYTE		Unknown.
+0x9C	BYTE		Unknown.
 0x9D	DWORD		Null.
 0xA1	BYTE		Unknown.
-
 ===================================================================================================
 
 [Scenes and Static Actors]
