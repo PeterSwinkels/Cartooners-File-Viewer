@@ -4,7 +4,7 @@ Cartooners' File Formats, by: Peter Swinkels ***2015***
 Cartooners 1988/1989 - by: Electronic Arts & IDTA
 
 Note:
-This document applies to the program's MS-DOS version.
+This document primarily applies to the program's MS-DOS version. The last section provides a brief summary of the file formats used by the Apple IIGS version.
 
 ===================================================================================================
 
@@ -608,3 +608,11 @@ File:		Soundcard:
 adtoon.smb	AD LIB Board
 cstoon.smb	CMS Board
 mttoon.smb	Roland MT 32 or LAPC Board
+
+===================================================================================================
+
+[Apple IIGS]
+Type:		Description	:	MS-DOS counterpart extension:	Notes:
+ANM		Movie.			*.mov				Identical format in both versions, external file references may differ.
+BIN		Music/sound.		*.mus				The Apple IIGS version uses an IFF based format different from the MS-DOS version.
+PNT		Scence/static actor.	*.lbm				The Apple IIGS version uses a MacPaint format where the MS-DOS version uses the ILBM format.
