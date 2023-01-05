@@ -215,7 +215,6 @@ Public Module CoreModule
    Public Function GetBytes(Data As List(Of Byte), ByRef Offset As Integer, Count As Integer, Optional AdvanceOffset As Boolean = False) As List(Of Byte)
       Try
          Dim Bytes As New List(Of Byte)(Data.GetRange(Offset, Count))
-
          If AdvanceOffset Then Offset += Count
 
          Return Bytes
@@ -223,7 +222,7 @@ Public Module CoreModule
          HandleError(ExceptionO)
       End Try
 
-      Return Nothing
+      Return New List(Of Byte)
    End Function
 
    'This procedure loads the specified template and returns the appropriate data file type.
