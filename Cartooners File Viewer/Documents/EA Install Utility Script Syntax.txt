@@ -14,7 +14,7 @@ General syntax:
 	-Keywords are case insensitive.
 	-Keywords are separated from other code elements using spaces (" ").
 	-Lines including white space cannot be longer than 120 characters.
-	-Lines of code are separated using line breaks (0x13 character (carriage return)).
+	-Lines of code are separated using line breaks (0x0D character (carriage return)).
 	-Numeric literals can only contain the decimal digits (0-9).
 	-Parameters are delimited using a comma (",").
 	-String literals are enclosed in quotes (""").

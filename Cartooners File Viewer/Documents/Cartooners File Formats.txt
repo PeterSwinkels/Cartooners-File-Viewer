@@ -137,9 +137,9 @@ Note:
 [Installation Script]
 
 [File Information]
-Endianess: ?
+Endianess: little.
 Extension: *.iea
-Line break: {0x0D, 0x0A}
+Line break: 0x0D
 
 [File Layout]
 Begin Structure: Header.
