@@ -214,8 +214,16 @@ Public Module CoreModule
    'This procedure returns the specified number of bytes at the specified position.
    Public Function GetBytes(Data As List(Of Byte), ByRef Offset As Integer, Count As Integer, Optional AdvanceOffset As Boolean = False) As List(Of Byte)
       Try
-         Dim Bytes As New List(Of Byte)(Data.GetRange(Offset, Count))
-         If AdvanceOffset Then Offset += Count
+         Dim Bytes As New List(Of Byte)
+
+         If Offset + Count >= Data.Count Then
+            Count = Data.Count - Offset
+         End If
+
+         If Offset < Data.Count Then
+            Bytes = Data.GetRange(Offset, Count)
+            If AdvanceOffset Then Offset += Count
+         End If
 
          Return Bytes
       Catch ExceptionO As Exception

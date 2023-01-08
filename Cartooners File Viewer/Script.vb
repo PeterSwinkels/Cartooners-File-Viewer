@@ -112,13 +112,24 @@ Public Class ScriptClass
          Dim Line As New Integer
          Dim Script As New StringBuilder()
          Dim ScriptFile As String = Path.GetFileNameWithoutExtension(ImportPath)
+         Dim Section As String = Nothing
+         Dim Sections As New List(Of String)({"[code]", "[header]"})
          Dim Template As New List(Of String)(LoadTemplate())
 
          Line = 0
          Do While Line < Template.Count
             If Not Template(Line) = Nothing Then
-               Select Case Template(Line).ToLower
+               Section = Template(Line).ToLower()
+               Select Case Section
+                  Case "[code]"
+                     Sections.Remove(Section)
+                     Do
+                        Line += 1
+                        If Line >= Template.Count Then Exit Do
+                        Script.Append($"{Template(Line)}{NewLine}")
+                     Loop
                   Case "[header]"
+                     Sections.Remove(Section)
                      Line += 1
                      Header = TEXT_TO_BYTES(Unescape(Template(Line), EscapeCharacter:=" "c, ErrorAt:=ErrorAt))
                      If ErrorAt > 0 Then
@@ -126,14 +137,8 @@ Public Class ScriptClass
                      End If
 
                      If Not Header.Count = HEADER_SIZE Then
-                        MessageBox.Show($"Expected header size: {HEADER_SIZE}. Size of specified header: {Header.Count}.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        MessageBox.Show($"Expected header size: {HEADER_SIZE} bytes. Size of specified header: {Header.Count} bytes.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
                      End If
-                  Case "[code]"
-                     Do
-                        Line += 1
-                        If Line >= Template.Count Then Exit Do
-                        Script.Append($"{Template(Line)}{NewLine}")
-                     Loop
                End Select
             End If
 
@@ -145,8 +150,15 @@ Public Class ScriptClass
             .AddRange(CompressLZW(TEXT_TO_BYTES(Script.ToString())))
 
             ScriptFile = Path.Combine(Path.GetDirectoryName(ImportPath), ScriptFile)
+            If Not Path.GetExtension(ScriptFile).ToLower = ".iea" Then
+               ScriptFile = $"{ScriptFile}.iea"
+            End If
             File.WriteAllBytes(ScriptFile, .ToArray())
          End With
+
+         If Sections.Count > 0 Then
+            MessageBox.Show($"Missing sections:{NewLine}{String.Join(NewLine, Sections.ToArray())}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+         End If
 
          Return ScriptFile
       Catch ExceptionO As Exception

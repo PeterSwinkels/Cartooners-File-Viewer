@@ -587,6 +587,8 @@ Public Class ActorClass
          Dim Line As New Integer
          Dim Name As New List(Of Byte)
          Dim RecordListSize As New Integer
+         Dim Section As String = Nothing
+         Dim Sections As New List(Of String)({"[actions]", "[animation record lists]", "[animation records]", "[images]", "[name]", "[palette]", "[transparent]", "[ways]"})
          Dim Template As New List(Of String)(LoadTemplate())
          Dim Transparent As Color = Color.White
          Dim WayMenu As New List(Of Byte)
@@ -607,8 +609,11 @@ Public Class ActorClass
          Line = 0
          Do While Line < Template.Count
             If Not Template(Line) = Nothing Then
-               Select Case Template(Line).ToLower
+               Section = Template(Line).ToLower
+               Select Case Section
                   Case "[actions]"
+                     Sections.Remove(Section)
+
                      Do
                         Line += 1
                         If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
@@ -616,12 +621,16 @@ Public Class ActorClass
                      Loop
                      Actions.ForEach(Sub(Item As String) ActionMenu.AddRange(TEXT_TO_BYTES($"{Item}{DELIMITER}")))
                   Case "[animation record lists]"
+                     Sections.Remove(Section)
+
                      Do
                         Line += 1
                         If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
                         Array.ForEach(Template(Line).Split(" "c), Sub(Item As String) AnimationRecordLists.Add(ToByte(Item)))
                      Loop
                   Case "[animation records]"
+                     Sections.Remove(Section)
+
                      Do
                         Line += 1
                         If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
@@ -635,6 +644,8 @@ Public Class ActorClass
                         AnimationRecords.AddRange({YSpeed, YDirection, ToByte(AnimationRecord(AnimationRecordFieldsE.ImageRecord)), &H0%, XSpeed, XDirection})
                      Loop
                   Case "[images]"
+                     Sections.Remove(Section)
+
                      If Not GBRPalette.Any Then
                         MessageBox.Show("The palette must precede the image list.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         Return Nothing
@@ -667,10 +678,14 @@ Public Class ActorClass
                         ImportedImages.Add(ImportedImage)
                      Loop
                   Case "[name]"
+                     Sections.Remove(Section)
+
                      Line += 1
                      ActorFile = Template(Line)
                      Name = TEXT_TO_BYTES($"{NAME_PREFIX}{ActorFile}{SUFFIX_DELIMITER}{NAME_SUFFIX}{DELIMITER}")
                   Case "[palette]"
+                     Sections.Remove(Section)
+
                      For ColorIndex As Integer = 0 To GBR_12_COLOR_DEPTH - 1
                         Line += 1
                         HexadecimalRGBColor.Clear()
@@ -684,9 +699,13 @@ Public Class ActorClass
                         GBRPalette.AddRange(ARGB_TO_GBR(Color.FromArgb(ToInt32(HexadecimalRGBColor.ToString(), fromBase:=16))))
                      Next ColorIndex
                   Case "[transparent]"
+                     Sections.Remove(Section)
+
                      Line += 1
                      Transparent = Color.FromArgb(ToInt32(Template(Line), fromBase:=16) Or OPAQUE)
                   Case "[ways]"
+                     Sections.Remove(Section)
+
                      Do
                         Line += 1
                         If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
@@ -757,6 +776,10 @@ Public Class ActorClass
             ActorFile = Path.Combine(Path.GetDirectoryName(ImportPath), $"{ActorFile}.act")
             File.WriteAllBytes(ActorFile, .ToArray())
          End With
+
+         If Sections.Count > 0 Then
+            MessageBox.Show($"Missing sections:{NewLine}{String.Join(NewLine, Sections.ToArray())}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+         End If
 
          Return ActorFile
       Catch ExceptionO As Exception

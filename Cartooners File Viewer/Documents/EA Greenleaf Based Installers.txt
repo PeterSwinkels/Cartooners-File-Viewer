@@ -1,0 +1,5 @@
+The following games are known to use an installer with a script stored in a *.iea file:
+
+Title:			Year:	Publisher:						Developer:
+Cartooners		1989	Electronic Arts, Inc.					ITDA
+F-16 Combat Pilot	1989	Digital Integration Ltd., Electronic Arts, Inc.		Digital Integration Ltd.

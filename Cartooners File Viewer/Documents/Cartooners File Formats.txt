@@ -150,41 +150,7 @@ Begin Structure: Compressed script.
 	0x00	BYTES		LZW compressed installation script.
 End Structure
 
-Note:
-
-Below is a brief (incomplete) table describing the decompressed script's syntax.
-
-Keyword:	Arguments:				Note:
----------------------------------------------------------------------------------------------------
-atdialog	row, column, default, UNKNOWN, "string"
-atsay		row, column, "string"
-cls	
-color		foreground, background
-else	
-endif	
-exit		exitcode
-gosub		label
-goto		label
-if		(condition)
-makedir		path					Returns a numeric value. A value of zero indicates failure.
-return
-say		"string"
-unpack		sourcefile, target[file], UNKNOWN	If the target is a directory all files will be unpacked from the source.
-							If the target is a file, only a file with the same name will be unpacked.
-
-Symbols:	Usage:					Description:
-=		variable1 = variable2			Assigns "variable2" to "variable1".
-+		variable1 + variable2			Performs arithmetic addition on numeric values or concatenates two string values.
--		variable1 - variable1			Performs arithmetic subtraction on numeric values.
-==		variable1 == variable2			Checks whether "variable1" equals "variable2".
-!=		variable1 != variable2			Checks whether "variable1" does not equal "variable2".
-<		variable1 < variable2			Checks whether "variable1" is less than "variable2".
->		variable1 > variable2			Checks whether "variable1" is greater than "variable2".
-,		parameter1, parameter2 ...		Delimits multiple parameters in a procedure call.
-"		"Literal"				Encloses a string literal
-()		(condition)				Encloses a condition that returns a boolean in an "if" statement.
-:		:Label					Indicates a label.
-$		variable$				Declares a variable to be a string.
+See the document "EA Install Utility Script Syntax.txt" for information about the scripting language.
 
 ===================================================================================================
 
