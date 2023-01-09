@@ -202,7 +202,7 @@ Predefined variables:
 	JoySticks	Indicates whether a game port is present. (0 = not present, 1 = present.) (BIOS memory address: 0x0040:0x0011 - bitmask 0x10.)
 	MachineType	The machine identification byte at BIOS memory address 0xF000:0xFFFE.
 	MemorySize	The base memory size in kilobytes. (BIOS memory address: 0x0040:0x0013)
-	TandyID		Indicates whether the machine is a Tandy (0 = no Tandy, 1 = Tandy.)
+	TandyID		Indicates whether the machine is a Tandy (0 = no Tandy, 1 = Tandy.) (If the byte at BIOS memory address 0xF000:0xC000 is equal to 0x21 it indicates a Tandy.)
 	VideoMode	The current video mode (BIOS memory address 0x0040:0x0049.)
 	VolName$	The current drive's volume name.
 
