@@ -297,7 +297,7 @@ Public Module CoreModule
       Try
          Static Template As List(Of String) = Nothing
 
-         If Not PathO = Nothing Then Template = New List(Of String)(From Item As String In File.ReadAllLines(PathO) Where Not Item.Trim().StartsWith("#"))
+         If Not PathO = Nothing Then Template = New List(Of String)(From Item As String In File.ReadAllLines(PathO))
 
          Return Template
       Catch ExceptionO As Exception

@@ -589,7 +589,7 @@ Public Class ActorClass
          Dim RecordListSize As New Integer
          Dim Section As String = Nothing
          Dim Sections As New List(Of String)({"[actions]", "[animation record lists]", "[animation records]", "[images]", "[name]", "[palette]", "[transparent]", "[ways]"})
-         Dim Template As New List(Of String)(LoadTemplate())
+         Dim Template As New List(Of String)(From Item In LoadTemplate() Where Not Item.Trim().StartsWith("#"))
          Dim Transparent As Color = Color.White
          Dim WayMenu As New List(Of Byte)
          Dim WayMenuOffset As New Integer
