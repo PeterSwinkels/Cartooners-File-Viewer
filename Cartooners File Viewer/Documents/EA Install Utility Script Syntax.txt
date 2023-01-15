@@ -192,7 +192,7 @@ Predefined variables:
 
 	Name:		Description:
 	Bell$		The control character used to generate a beep.
-	ColorCard	Unknown purpose. (Known values: 3 = VGA, 4 = EGA, 6 = Tandy, 7 = CGA/PCjr, 10 = Hercules.)
+	ColorCard	The type of videocard.
 	CopyError	Copy statement error code (0 = success, nonzero = failure.)
 	CriticalError	Unknown purpose.
 	CurrentPath$	The current path.
@@ -206,6 +206,19 @@ Predefined variables:
 	VideoMode	The current video mode (BIOS memory address 0x0040:0x0049.)
 	VolName$	The current drive's volume name.
 
+	The ColorCard variable returns one of the following values:
+	 0	MDA
+	 1	?
+	 2	MCGA
+	 3	VGA
+ 	 4	EGA
+	 5	?
+	 6	Tandy
+	 7	CGA
+	 8	?
+	 9	?
+	10	Hercules
+	11	Amstrad
 
 Archive functions:
 
