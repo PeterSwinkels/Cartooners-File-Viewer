@@ -136,7 +136,7 @@ Character functions:
 
 	Function:		Description:
 	x = CHR_TO_INT y	Assigns the ASCII code value of the character indicated by "y" to the "x" variable.
-	x = INT_TO_CHR y	Assigns the character indicated by the ASCII code value "y" to the "x" variable.
+	x = INT_TO_CHR$ y	Assigns the character indicated by the ASCII code value "y" to the "x" variable.
 
 File functions:
 
