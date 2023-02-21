@@ -17,16 +17,14 @@ Public Module DecompressLZWModule
          DictionaryO(DictionaryIndex) = New LZWEntryStr With {.Prefix = Prefix, .Suffix = Suffix}
          DictionaryIndex += &H1%
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure creates and returns a new LZW dictionary.
+   'This procedure returns a LZW dictionary.
    Private Function InitializeDictionary() As List(Of LZWEntryStr)
       Try
-         Dim DictionaryO As List(Of LZWEntryStr) = Nothing
-
-         DictionaryO = New List(Of LZWEntryStr)
+         Dim DictionaryO As New List(Of LZWEntryStr)
 
          For Index As Integer = &H0% To LZW_MAXIMUM_ENTRIES - &H1%
             DictionaryO.Add(New LZWEntryStr With {.Prefix = -1, .Suffix = If(Index < LZW_START, Index, -1)})
@@ -34,13 +32,13 @@ Public Module DecompressLZWModule
 
          Return DictionaryO
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure decompresses the specified LZW data and returns the result.
+   'This procedure returns the specified data decompressed using LZW decompression.
    Public Function DecompressLZW(Compressed As List(Of Byte)) As List(Of Byte)
       Try
          Dim Buffer As New List(Of Byte)
@@ -93,13 +91,13 @@ Public Module DecompressLZWModule
 
          Return Decompressed
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure decompresses a sequence of LZW literals and returns the result.
+   'This procedure returns the specified LZW literals decompressed using LZW decompression.
    Private Function GetBuffer(Value As Integer, DictionaryO As List(Of LZWEntryStr)) As List(Of Byte)
       Try
          Dim Buffer As New List(Of Byte)
@@ -114,7 +112,7 @@ Public Module DecompressLZWModule
 
          Return Buffer
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

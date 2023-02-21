@@ -83,11 +83,11 @@ Public Class LBMImageClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure decompresses the data read from the specified file handle.
+   'This procedure returns the decompressed data read from the specified binary stream.
    Private Function Decompress(BytesPerRow As Integer, DataStream As BinaryReader) As List(Of Byte)
       Try
          Dim ByteO As New Integer
@@ -110,7 +110,7 @@ Public Class LBMImageClass
 
          Return Decompressed
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -136,7 +136,7 @@ Public Class LBMImageClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -156,7 +156,7 @@ Public Class LBMImageClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -165,7 +165,7 @@ Public Class LBMImageClass
       Try
          UpdateDataBox(GBRToText("The LBM image's palette:", New List(Of List(Of Color))({FileData.Palette})))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -179,7 +179,7 @@ Public Class LBMImageClass
 
          Process.Start(New ProcessStartInfo With {.FileName = Path.GetDirectoryName(ExportPath), .WindowStyle = ProcessWindowStyle.Normal})
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -240,7 +240,7 @@ Public Class LBMImageClass
 
          Return LBMFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -277,13 +277,13 @@ Public Class LBMImageClass
 
          Return ImageO
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procudure converts the specified image to a 4 bit color image and returns the resulting color indexes.
+   'This procedure returns the specified image converted to 4-bit color indexes.
    Private Function GetIndexes(ImageO As Bitmap, ARGBPalette As List(Of Color), ByRef PlaneWidth As Integer) As List(Of Byte)
       Try
          Dim BestMatch As New Integer
@@ -323,13 +323,13 @@ Public Class LBMImageClass
 
          Return Indexes
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure imports the specified image file and saves it in the LBM file format.
+   'This procedure imports the specified image file to a LBM file and returns the resulting file's path.
    Private Function Import(ImportPath As String) As String
       Try
          Dim BitmapO As New Bitmap(ImportPath)
@@ -436,7 +436,7 @@ Public Class LBMImageClass
 
          Return LBMImagePath
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

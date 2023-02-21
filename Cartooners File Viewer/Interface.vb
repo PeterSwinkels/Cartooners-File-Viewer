@@ -34,7 +34,7 @@ Public Class InterfaceWindow
 
          UpdateDataBox(, NewDataBox:=DataBox)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -43,7 +43,7 @@ Public Class InterfaceWindow
       Try
          Me.Close()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -52,7 +52,7 @@ Public Class InterfaceWindow
       Try
          If e.Data.GetDataPresent(DataFormats.FileDrop) Then DataFile(DirectCast(e.Data.GetData(DataFormats.FileDrop), String()).First)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -61,7 +61,7 @@ Public Class InterfaceWindow
       Try
          If e.Data.GetDataPresent(DataFormats.FileDrop) Then e.Effect = DragDropEffects.All
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -115,11 +115,11 @@ Public Class InterfaceWindow
                   End If
                End With
             Catch ExceptionO As Exception
-               HandleError(ExceptionO)
+               DisplayException(ExceptionO)
             End Try
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -128,7 +128,7 @@ Public Class InterfaceWindow
       Try
          UpdateDataBox(My.Resources.Cartooners_File_Formats)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -137,7 +137,7 @@ Public Class InterfaceWindow
       Try
          UpdateDataBox(My.Resources.Cartooners_File_Viewer_Help)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -148,7 +148,7 @@ Public Class InterfaceWindow
             MessageBox.Show(.Description, ProgramInformation(), MessageBoxButtons.OK, MessageBoxIcon.Information)
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -158,7 +158,7 @@ Public Class InterfaceWindow
          HelpMenu.PerformClick()
          If GetCommandLineArgs.Count > 1 Then DataFile(GetCommandLineArgs(1))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -188,11 +188,11 @@ Public Class InterfaceWindow
             If Not .ShowDialog() = DialogResult.Cancel Then DataFile(.FileName)
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure gives the command to load the specified file and display its information.
+   'This procedure returns the specified data file.
    Private Function DataFile(Optional NewPath As String = Nothing) As DataFileClass
       Try
          Dim DataFileFromTemplate As DataFileClass = Nothing
@@ -248,7 +248,7 @@ Public Class InterfaceWindow
 
          Return CurrentDataFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

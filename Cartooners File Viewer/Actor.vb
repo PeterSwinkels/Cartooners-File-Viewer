@@ -122,7 +122,7 @@ Public Class ActorClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -134,7 +134,7 @@ Public Class ActorClass
 
          If Refresh Then
             If LocationsE.ActionCount < DataFile().Data.Count AndAlso LocationsE.WayCount < DataFile().Data.Count Then
-               ReDim CurrentAnimationRecordLists(0 To 2, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.ActionCount) - 1, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.WayCount) - 1)
+               ReDim CurrentAnimationRecordLists(0 To 2, BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.ActionCount) - 1, BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.WayCount) - 1)
 
                With CurrentAnimationRecordLists
                   Position = GET_OFFSET(DataFile().Data, LocationsE.AnimationRecordListOffset)
@@ -152,7 +152,7 @@ Public Class ActorClass
 
          Return CurrentAnimationRecordLists
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -172,7 +172,7 @@ Public Class ActorClass
 
          Return CurrentAnimationRecords
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -212,7 +212,7 @@ Public Class ActorClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -234,7 +234,7 @@ Public Class ActorClass
 
          Return "?"
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -261,7 +261,7 @@ Public Class ActorClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -291,7 +291,7 @@ Public Class ActorClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -305,7 +305,7 @@ Public Class ActorClass
             .Append(String.Format("Image data:{0}", NewLine))
             For Record As Integer = 0 To ImageRecords().Count - 1
                Offset = ImageRecords()(Record).DataOffset
-               Size = BitConverter.ToUint16(DataFile().Data.ToArray(), Offset)
+               Size = BitConverter.ToUInt16(DataFile().Data.ToArray(), Offset)
                .Append($"{NewLine}Image #{Record} - Size: {Size}{NewLine}")
                .Append(Escape(GetString(DataFile().Data, Offset + &H2%, &H2% + (Size - &H2%)), " "c, EscapeAll:=True).Trim())
                .Append(NewLine)
@@ -314,7 +314,7 @@ Public Class ActorClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -334,7 +334,7 @@ Public Class ActorClass
             With Record
                NewText.Append($"{RecordNumber,16}")
                NewText.Append($"{ .DataOffset,16}")
-               NewText.Append($"{BitConverter.ToUint16(DataFile().Data.ToArray(), .DataOffset),16}")
+               NewText.Append($"{BitConverter.ToUInt16(DataFile().Data.ToArray(), .DataOffset),16}")
                NewText.Append($"{ .BytesPerRow,16}")
                NewText.Append($"{ .Width,16}")
                NewText.Append($"{ .Height,16}{NewLine}")
@@ -344,29 +344,29 @@ Public Class ActorClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
    'This procedure displays the general information for the current actor.
    Private Sub DisplayInformationMenu_Click(sender As Object, e As EventArgs) Handles DisplayInformationMenu.Click
       Try
-         Dim ActionCount As Integer? = If(LocationsE.ActionCount < DataFile().Data.Count, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.ActionCount), Nothing)
-         Dim ImageCount As Integer? = If(LocationsE.ImageCount < DataFile().Data.Count, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.ImageCount), Nothing)
-         Dim WayCount As Integer? = If(LocationsE.WayCount < DataFile().Data.Count, BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.WayCount), Nothing)
+         Dim ActionCount As Integer? = If(LocationsE.ActionCount < DataFile().Data.Count, BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.ActionCount), Nothing)
+         Dim ImageCount As Integer? = If(LocationsE.ImageCount < DataFile().Data.Count, BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.ImageCount), Nothing)
+         Dim WayCount As Integer? = If(LocationsE.WayCount < DataFile().Data.Count, BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.WayCount), Nothing)
 
          With New StringBuilder
             .Append(GeneralFileInformation(DataFile().Path))
             .Append(NewLine)
             .Append($"Name: {Escape(Name())}{NewLine}")
-            .Append($"Action: {ActionCount.Value}{NewLine}")
+            .Append($"Actions: {ActionCount.Value}{NewLine}")
             .Append($"Image: {ImageCount.Value}{NewLine}")
             .Append($"Ways: {WayCount.Value}")
 
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -381,7 +381,7 @@ Public Class ActorClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -390,7 +390,7 @@ Public Class ActorClass
       Try
          UpdateDataBox(GBRToText("The actor's palette:", New List(Of List(Of Color))({Palette()})))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -463,7 +463,7 @@ Public Class ActorClass
          File.WriteAllText(Path.Combine(ExportPath, $"{MenuItemName(Name)}.txt"), Exported.ToString())
          Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -476,13 +476,13 @@ Public Class ActorClass
          For Record As Integer = 0 To ImageRecords().Count - 1
             With ImageRecords()(Record)
                ImageFiles.Add($"{RootName}{Record}.png")
-               Draw4BitImage(DecompressRLE(DataFile().Data, .DataOffset + &H2%, BitConverter.ToUint16(DataFile().Data.ToArray(), .DataOffset)), .Width, .Height, Palette(), .BytesPerRow, TRANSPARENT_INDEX, TransparentColor()).Save(Path.Combine(ExportPath, ImageFiles(ImageFiles.Count - 1)), Imaging.ImageFormat.Png)
+               Draw4BitImage(DecompressRLE(DataFile().Data, .DataOffset + &H2%, BitConverter.ToUInt16(DataFile().Data.ToArray(), .DataOffset)), .Width, .Height, Palette(), .BytesPerRow, TRANSPARENT_INDEX, TransparentColor()).Save(Path.Combine(ExportPath, ImageFiles(ImageFiles.Count - 1)), Imaging.ImageFormat.Png)
             End With
          Next Record
 
          Return ImageFiles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -532,7 +532,7 @@ Public Class ActorClass
 
          Return Indexes
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -546,13 +546,13 @@ Public Class ActorClass
          If Refresh Then
             CurrentImageRecords.Clear()
             For Position As Integer = LocationsE.ImageRecords To LocationsE.ImageRecords + (BitConverter.ToInt32(DataFile().Data.ToArray(), LocationsE.ImageRecordsSize) - IMAGE_RECORD_LENGTH) Step IMAGE_RECORD_LENGTH
-               CurrentImageRecords.Add(New ImageRecordStr With {.DataOffset = BitConverter.ToInt32(DataFile().Data.ToArray(), Position), .Width = BitConverter.ToUint16(DataFile().Data.ToArray(), Position + &H8%), .Height = BitConverter.ToUint16(DataFile().Data.ToArray(), Position + &H6%), .BytesPerRow = BitConverter.ToUint16(DataFile().Data.ToArray(), Position + &H4%)})
+               CurrentImageRecords.Add(New ImageRecordStr With {.DataOffset = BitConverter.ToInt32(DataFile().Data.ToArray(), Position), .Width = BitConverter.ToUInt16(DataFile().Data.ToArray(), Position + &H8%), .Height = BitConverter.ToUInt16(DataFile().Data.ToArray(), Position + &H6%), .BytesPerRow = BitConverter.ToUInt16(DataFile().Data.ToArray(), Position + &H4%)})
             Next Position
          End If
 
          Return CurrentImageRecords
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -568,48 +568,31 @@ Public Class ActorClass
          Dim ActorNameOffset As New Integer
          Dim AnimationCount1Offset As New Integer
          Dim AnimationCount2Offset As New Integer
-         Dim AnimationRecord As List(Of String) = Nothing
          Dim AnimationRecordListOffset As New Integer
          Dim AnimationRecordLists As New List(Of Byte)
          Dim AnimationRecords As New List(Of Byte)
-         Dim Compressed As List(Of Byte) = Nothing
          Dim Data As New List(Of Byte)
          Dim EndOfMenuOffset As New Integer
          Dim GBRPalette As New List(Of Byte)
-         Dim HexadecimalRGBColor As New StringBuilder
-         Dim ImageO As Bitmap = Nothing
          Dim ImageOffset As New Integer
          Dim ImageRecords As New List(Of Byte)
          Dim ImageRecordsSize As New Integer
-         Dim ImportedImage As New ImportedImageStr
-         Dim ImportedImagePath As String = Nothing
          Dim ImportedImages As New List(Of ImportedImageStr)
          Dim Line As New Integer
          Dim Name As New List(Of Byte)
          Dim RecordListSize As New Integer
          Dim Section As String = Nothing
          Dim Sections As New List(Of String)({"[actions]", "[animation record lists]", "[animation records]", "[images]", "[name]", "[palette]", "[transparent]", "[ways]"})
-         Dim Template As New List(Of String)(From Item In LoadTemplate() Where Not Item.Trim().StartsWith("#"))
+         Dim Template As New List(Of String)(TrimAllLines((From Item In LoadTemplate() Where Not Item.Trim().StartsWith("#")).ToList()))
          Dim Transparent As Color = Color.White
          Dim WayMenu As New List(Of Byte)
          Dim WayMenuOffset As New Integer
          Dim Ways As New List(Of String)
-         Dim XDirection As New Byte
-         Dim XSpeed As New Byte
-         Dim YDirection As New Byte
-         Dim YSpeed As New Byte
-
-         For Line = 0 To Template.Count - 1
-            Template(Line) = Template(Line).Replace(ControlChars.Tab, " ").Trim()
-            Do While Template(Line).Contains("  ")
-               Template(Line) = Template(Line).Replace("  ", " ")
-            Loop
-         Next Line
 
          Line = 0
          Do While Line < Template.Count
             If Not Template(Line) = Nothing Then
-               Section = Template(Line).ToLower
+               Section = Template(Line).ToLower()
                Select Case Section
                   Case "[actions]"
                      Sections.Remove(Section)
@@ -631,52 +614,12 @@ Public Class ActorClass
                   Case "[animation records]"
                      Sections.Remove(Section)
 
-                     Do
-                        Line += 1
-                        If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
-                        AnimationRecord = New List(Of String)(Template(Line).Split(" "c))
-
-                        XDirection = If(AnimationRecord(AnimationRecordFieldsE.XDirection).ToUpper = "RIGHT", DOWN_RIGHT, UP_LEFT)
-                        XSpeed = ToByte(SignByte(ToInt32(AnimationRecord(AnimationRecordFieldsE.XSpeed)), IsNegative:=(XDirection = UP_LEFT)))
-                        YDirection = If(AnimationRecord(AnimationRecordFieldsE.YDirection).ToUpper = "DOWN", DOWN_RIGHT, UP_LEFT)
-                        YSpeed = ToByte(SignByte(ToInt32(AnimationRecord(AnimationRecordFieldsE.YSpeed)), IsNegative:=(YDirection = UP_LEFT)))
-
-                        AnimationRecords.AddRange({YSpeed, YDirection, ToByte(AnimationRecord(AnimationRecordFieldsE.ImageRecord)), &H0%, XSpeed, XDirection})
-                     Loop
+                     AnimationRecords = ImportAnimationRecords(Template, Line)
                   Case "[images]"
                      Sections.Remove(Section)
 
-                     If Not GBRPalette.Any Then
-                        MessageBox.Show("The palette must precede the image list.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                        Return Nothing
-                     End If
-
-                     Do
-                        Line += 1
-                        If Line >= Template.Count OrElse Template(Line) = Nothing Then Exit Do
-
-                        ImportedImagePath = Path.Combine(Path.GetDirectoryName(ImportPath), Template(Line))
-                        If File.Exists(ImportedImagePath) Then
-                           ImageO = New Bitmap(Path.Combine(Path.GetDirectoryName(ImportPath), Template(Line)))
-                        Else
-                           MessageBox.Show($"Could not import the image ""{ImportedImagePath}"".", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                           Return Nothing
-                        End If
-
-                        Compressed = New List(Of Byte)(CompressRLE(GetIndexes(ImageO, GBRPalette, Transparent)))
-
-                        With ImportedImage
-                           .Data = New List(Of Byte)
-                           .Data.AddRange(BitConverter.GetBytes(ToUInt16(Compressed.Count)))
-                           .Data.AddRange(Compressed)
-                           .Height = ImageO.Height
-                           .Width = ImageO.Width
-                           .BytesPerRow = If(.Width Mod PIXELS_PER_BYTE = &H0%, .Width \ PIXELS_PER_BYTE, (.Width + 1) \ PIXELS_PER_BYTE)
-                        End With
-                        ImageO.Dispose()
-
-                        ImportedImages.Add(ImportedImage)
-                     Loop
+                     ImportedImages = ImportImages(ImportPath, Template, Line, GBRPalette, Transparent)
+                     If ImportedImages Is Nothing Then Exit Do
                   Case "[name]"
                      Sections.Remove(Section)
 
@@ -686,18 +629,7 @@ Public Class ActorClass
                   Case "[palette]"
                      Sections.Remove(Section)
 
-                     For ColorIndex As Integer = 0 To GBR_12_COLOR_DEPTH - 1
-                        Line += 1
-                        HexadecimalRGBColor.Clear()
-                        Array.ForEach(Template(Line).Trim().Split(" "c), Sub(RGBComponent As String) HexadecimalRGBColor.Append(RGBComponent & RGBComponent))
-
-                        If Line >= Template.Count OrElse Template(Line) = Nothing Then
-                           MessageBox.Show($"{GBR_12_COLOR_DEPTH} colors expected in the palette.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                           Exit For
-                        End If
-
-                        GBRPalette.AddRange(ARGB_TO_GBR(Color.FromArgb(ToInt32(HexadecimalRGBColor.ToString(), fromBase:=16))))
-                     Next ColorIndex
+                     GBRPalette = ImportGBRPalette(Template, Line)
                   Case "[transparent]"
                      Sections.Remove(Section)
 
@@ -718,72 +650,186 @@ Public Class ActorClass
             Line += 1
          Loop
 
-         ImageRecordsSize = (ImportedImages.Count * IMAGE_RECORD_LENGTH)
-         RecordListSize = (Actions.Count * Ways.Count) * &H2%
+         If ImportedImages Is Nothing Then
+            ActorFile = Nothing
+         Else
+            ImageRecordsSize = (ImportedImages.Count * IMAGE_RECORD_LENGTH)
+            RecordListSize = (Actions.Count * Ways.Count) * &H2%
 
-         AnimationRecordListOffset = ImageRecordsSize + AnimationRecords.Count + &H6%
-         AnimationCount1Offset = AnimationRecordListOffset + RecordListSize
-         AnimationCount2Offset = AnimationCount1Offset + RecordListSize
-         ActorNameOffset = AnimationCount2Offset + RecordListSize
-         ActionMenuOffset = ActorNameOffset + Name.Count
-         WayMenuOffset = ActionMenuOffset + ActionMenu.Count
-         EndOfMenuOffset = WayMenuOffset + WayMenu.Count
+            AnimationRecordListOffset = ImageRecordsSize + AnimationRecords.Count + &H6%
+            AnimationCount1Offset = AnimationRecordListOffset + RecordListSize
+            AnimationCount2Offset = AnimationCount1Offset + RecordListSize
+            ActorNameOffset = AnimationCount2Offset + RecordListSize
+            ActionMenuOffset = ActorNameOffset + Name.Count
+            WayMenuOffset = ActionMenuOffset + ActionMenu.Count
+            EndOfMenuOffset = WayMenuOffset + WayMenu.Count
 
-         With Data
-            .Add(&H0%)
-            .AddRange(SIGNATURE)
-            .AddRange(BitConverter.GetBytes(ToUInt16(LocationsE.EndOfMenuOffset - LocationsE.EndOfMenuOffsetOffset - .Count)))
-            .AddRange(GBRPalette)
-            .AddRange(BitConverter.GetBytes(ImportedImages.Count))
-            .AddRange({&H0%, &H0%})
-            .AddRange(BitConverter.GetBytes(ImageRecordsSize))
-            .AddRange(BitConverter.GetBytes(AnimationRecordListOffset))
-            .AddRange(BitConverter.GetBytes(AnimationCount1Offset))
-            .AddRange(BitConverter.GetBytes(AnimationCount2Offset))
-            .AddRange(BitConverter.GetBytes(ActorNameOffset))
-            .AddRange(BitConverter.GetBytes(ToUInt16(Actions.Count)))
-            .AddRange(BitConverter.GetBytes(ActionMenuOffset))
-            .AddRange(BitConverter.GetBytes(ToUInt16(Ways.Count)))
-            .AddRange(BitConverter.GetBytes(WayMenuOffset))
-            .AddRange(BitConverter.GetBytes(EndOfMenuOffset))
-            .AddRange({&H0%, &H0%})
+            With Data
+               .Add(&H0%)
+               .AddRange(SIGNATURE)
+               .AddRange(BitConverter.GetBytes(ToUInt16(LocationsE.EndOfMenuOffset - LocationsE.EndOfMenuOffsetOffset - .Count)))
+               .AddRange(GBRPalette)
+               .AddRange(BitConverter.GetBytes(ImportedImages.Count))
+               .AddRange({&H0%, &H0%})
+               .AddRange(BitConverter.GetBytes(ImageRecordsSize))
+               .AddRange(BitConverter.GetBytes(AnimationRecordListOffset))
+               .AddRange(BitConverter.GetBytes(AnimationCount1Offset))
+               .AddRange(BitConverter.GetBytes(AnimationCount2Offset))
+               .AddRange(BitConverter.GetBytes(ActorNameOffset))
+               .AddRange(BitConverter.GetBytes(ToUInt16(Actions.Count)))
+               .AddRange(BitConverter.GetBytes(ActionMenuOffset))
+               .AddRange(BitConverter.GetBytes(ToUInt16(Ways.Count)))
+               .AddRange(BitConverter.GetBytes(WayMenuOffset))
+               .AddRange(BitConverter.GetBytes(EndOfMenuOffset))
+               .AddRange({&H0%, &H0%})
 
-            ImageOffset = LocationsE.BaseOffset + EndOfMenuOffset + &H1%
-            For Each ImportedImage In ImportedImages
-               .AddRange(BitConverter.GetBytes(ImageOffset))
-               .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.BytesPerRow)))
-               .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.Height)))
-               .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.Width)))
-               .AddRange({&H0%, &H0%, &H0%, &H0%})
-               ImageOffset += ImportedImage.Data.Count
-            Next ImportedImage
+               ImageOffset = LocationsE.BaseOffset + EndOfMenuOffset + &H1%
+               For Each ImportedImage As ImportedImageStr In ImportedImages
+                  .AddRange(BitConverter.GetBytes(ImageOffset))
+                  .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.BytesPerRow)))
+                  .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.Height)))
+                  .AddRange(BitConverter.GetBytes(ToUInt16(ImportedImage.Width)))
+                  .AddRange({&H0%, &H0%, &H0%, &H0%})
+                  ImageOffset += ImportedImage.Data.Count
+               Next ImportedImage
 
-            .AddRange(AnimationRecords)
-            .Add(&H0%)
+               .AddRange(AnimationRecords)
+               .Add(&H0%)
 
-            For RecordList As Integer = &H0% To &H2%
-               For Position As Integer = &H0% To AnimationRecordLists.Count - &H3% Step &H3%
-                  .AddRange({&H0%, AnimationRecordLists(Position + RecordList)})
-               Next Position
-            Next RecordList
+               For RecordList As Integer = &H0% To &H2%
+                  For Position As Integer = &H0% To AnimationRecordLists.Count - &H3% Step &H3%
+                     .AddRange({&H0%, AnimationRecordLists(Position + RecordList)})
+                  Next Position
+               Next RecordList
 
-            .Add(&H0%)
-            .AddRange(Name)
-            .AddRange(ActionMenu)
-            .AddRange(WayMenu)
-            ImportedImages.ForEach(Sub(Item As ImportedImageStr) .AddRange(Item.Data))
+               .Add(&H0%)
+               .AddRange(Name)
+               .AddRange(ActionMenu)
+               .AddRange(WayMenu)
+               ImportedImages.ForEach(Sub(Item As ImportedImageStr) .AddRange(Item.Data))
 
-            ActorFile = Path.Combine(Path.GetDirectoryName(ImportPath), $"{ActorFile}.act")
-            File.WriteAllBytes(ActorFile, .ToArray())
-         End With
+               ActorFile = Path.Combine(Path.GetDirectoryName(ImportPath), $"{ActorFile}.act")
+               File.WriteAllBytes(ActorFile, .ToArray())
+            End With
 
-         If Sections.Count > 0 Then
-            MessageBox.Show($"Missing sections:{NewLine}{String.Join(NewLine, Sections.ToArray())}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If Sections.Count > 0 Then
+               MessageBox.Show($"Missing sections:{NewLine}{String.Join(NewLine, Sections.ToArray())}", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
          End If
 
          Return ActorFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure returns the animation records imported from the specified template.
+   Private Function ImportAnimationRecords(Template As List(Of String), Line As Integer) As List(Of Byte)
+      Try
+         Dim AnimationRecord As List(Of String) = Nothing
+         Dim AnimationRecords As New List(Of Byte)
+         Dim RecordListSize As New Integer
+         Dim XDirection As New Byte
+         Dim XSpeed As New Byte
+         Dim YDirection As New Byte
+         Dim YSpeed As New Byte
+
+         Do
+            Line += 1
+            If Line >= Template.Count OrElse Template(Line) = Nothing Then
+               Exit Do
+            Else
+               AnimationRecord = New List(Of String)(Template(Line).Split(" "c))
+
+               XDirection = If(AnimationRecord(AnimationRecordFieldsE.XDirection).ToUpper = "RIGHT", DOWN_RIGHT, UP_LEFT)
+               XSpeed = ToByte(SignByte(ToInt32(AnimationRecord(AnimationRecordFieldsE.XSpeed)), IsNegative:=(XDirection = UP_LEFT)))
+               YDirection = If(AnimationRecord(AnimationRecordFieldsE.YDirection).ToUpper = "DOWN", DOWN_RIGHT, UP_LEFT)
+               YSpeed = ToByte(SignByte(ToInt32(AnimationRecord(AnimationRecordFieldsE.YSpeed)), IsNegative:=(YDirection = UP_LEFT)))
+
+               AnimationRecords.AddRange({YSpeed, YDirection, ToByte(AnimationRecord(AnimationRecordFieldsE.ImageRecord)), &H0%, XSpeed, XDirection})
+            End If
+         Loop
+
+         Return AnimationRecords
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure returns the imported palette from the specified template.
+   Private Function ImportGBRPalette(Template As List(Of String), Line As Integer) As List(Of Byte)
+      Try
+         Dim GBRPalette As New List(Of Byte)
+         Dim HexadecimalRGBColor As New StringBuilder
+
+         For ColorIndex As Integer = 0 To GBR_12_COLOR_DEPTH - 1
+            Line += 1
+
+            If Line >= Template.Count OrElse Template(Line) = Nothing Then
+               MessageBox.Show($"{GBR_12_COLOR_DEPTH} colors expected in the palette.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+               Exit For
+            Else
+               HexadecimalRGBColor.Clear()
+               Array.ForEach(Template(Line).Trim().Split(" "c), Sub(RGBComponent As String) HexadecimalRGBColor.Append(RGBComponent & RGBComponent))
+               GBRPalette.AddRange(ARGB_TO_GBR(Color.FromArgb(ToInt32(HexadecimalRGBColor.ToString(), fromBase:=16))))
+            End If
+         Next ColorIndex
+
+         Return GBRPalette
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure returns the image data for the imported images listed in the specified template.
+   Private Function ImportImages(ImportPath As String, Template As List(Of String), Line As Integer, GBRPalette As List(Of Byte), Transparent As Color) As List(Of ImportedImageStr)
+      Try
+         Dim Compressed As List(Of Byte) = Nothing
+         Dim ImageO As Bitmap = Nothing
+         Dim ImportedImage As New ImportedImageStr
+         Dim ImportedImagePath As String = Nothing
+         Dim ImportedImages As New List(Of ImportedImageStr)
+
+         If GBRPalette.Any Then
+            Do
+               Line += 1
+               If Line >= Template.Count OrElse Template(Line) = Nothing Then
+                  Exit Do
+               Else
+                  ImportedImagePath = Path.Combine(Path.GetDirectoryName(ImportPath), Template(Line))
+                  If File.Exists(ImportedImagePath) Then
+                     ImageO = New Bitmap(Path.Combine(Path.GetDirectoryName(ImportPath), Template(Line)))
+                     Compressed = CompressRLE(GetIndexes(ImageO, GBRPalette, Transparent))
+
+                     With ImportedImage
+                        .Data = New List(Of Byte)(New List(Of Byte)(BitConverter.GetBytes(ToUInt16(Compressed.Count))).Concat(Compressed))
+                        .Height = ImageO.Height
+                        .Width = ImageO.Width
+                        .BytesPerRow = If(.Width Mod PIXELS_PER_BYTE = &H0%, .Width \ PIXELS_PER_BYTE, (.Width + 1) \ PIXELS_PER_BYTE)
+                     End With
+
+                     ImportedImages.Add(ImportedImage)
+                  Else
+                     MessageBox.Show($"Could not import the image ""{ImportedImagePath}"".", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                     ImportedImages = Nothing
+                     Exit Do
+                  End If
+               End If
+            Loop
+         Else
+            MessageBox.Show("The palette must precede the image list.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            ImportedImages = Nothing
+         End If
+
+         Return ImportedImages
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -794,7 +840,7 @@ Public Class ActorClass
       Try
          Return MenuItem.Substring(0, MenuItem.IndexOf(SUFFIX_DELIMITER)).Substring(MenuItem.IndexOf(ACTION_WAY_PREFIX) + ACTION_WAY_PREFIX.Length).Trim()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -833,7 +879,7 @@ Public Class ActorClass
 
          Return CurrentMenuItems
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -855,7 +901,7 @@ Public Class ActorClass
 
          Return CurrentName.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -870,7 +916,7 @@ Public Class ActorClass
 
          Return CurrentPalette
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -881,7 +927,7 @@ Public Class ActorClass
       Try
          TransparentColor(, Replace:=True)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -907,7 +953,7 @@ Public Class ActorClass
 
          Return CurrentTransparentColor
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

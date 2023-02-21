@@ -36,7 +36,7 @@ Public Class ScriptClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -54,7 +54,7 @@ Public Class ScriptClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -77,7 +77,7 @@ Public Class ScriptClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -99,11 +99,11 @@ Public Class ScriptClass
             Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure imports the specified script template.
+   'This procedure imports the specified script template and returns the resulting file's path.
    Private Function Import(ImportPath As String) As String
       Try
          Dim Data As New List(Of Byte)
@@ -162,7 +162,7 @@ Public Class ScriptClass
 
          Return ScriptFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

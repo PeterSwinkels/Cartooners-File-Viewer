@@ -21,11 +21,11 @@ Public Module CompressLZWModule
             Bits -= &H8%
          End While
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure compresses the specified data and returns the result.
+   'This procedure retruns the specified data compressed using LZW compression.
    Public Function CompressLZW(Uncompressed As List(Of Byte)) As List(Of Byte)
       Try
          Dim BitCount As Integer = &H9%
@@ -64,13 +64,13 @@ Public Module CompressLZWModule
 
          Return Compressed
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure creates and returns a new LZW dictionary.
+   'This procedure creates and returns a LZW dictionary.
    Private Function InitializeDictionary() As Dictionary(Of Integer, LZWEntryStr)
       Try
          Dim LZWDictionary As New Dictionary(Of Integer, LZWEntryStr)
@@ -81,7 +81,7 @@ Public Module CompressLZWModule
 
          Return LZWDictionary
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

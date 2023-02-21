@@ -61,16 +61,16 @@ Public Module CoreModule
    Public Const PIXELS_PER_BYTE As Integer = &H2%           'Defines the number pixels per byte in an uncompressed image.
    Public Const SCRIPT_TEMPLATE As String = "Script"        'Defines the identifier for actor templates.
 
-   Public ReadOnly BYTES_TO_TEXT As Func(Of List(Of Byte), String) = Function(Bytes As List(Of Byte)) New String((From ByteO In Bytes Select ToChar(ByteO)).ToArray())                                                                               'This procedure converts the specified bytes to text.
+   Public ReadOnly BYTES_TO_TEXT As Func(Of List(Of Byte), String) = Function(Bytes As List(Of Byte)) New String((From ByteO In Bytes Select ToChar(ByteO)).ToArray())                                                                               'This procedure returns the specified bytes converted to text.
    Public ReadOnly COLOR_DIFFERENCE As Func(Of Color, Color, Integer) = Function(Color1 As Color, Color2 As Color) CInt((Abs(CInt(Color2.R) - CInt(Color1.R)) + Abs(CInt(Color2.G) - CInt(Color1.G)) + Abs(CInt(Color2.B) - CInt(Color1.B))) / 3)    'This procedure returns the difference between the two specified colors.
    Public ReadOnly GET_BIT As Func(Of Byte, Integer, Integer) = Function(ByteO As Byte, BitIndex As Integer) Abs(ToInt32((New BitArray({ByteO}))(BitIndex)))                                                                                         'This procedure returns the specified bit inside the specified byte.
    Public ReadOnly LZW_MAXIMUM_ENTRIES As Integer = (&H1% << LZW_MAXIMUM_BITS)                                                                                                                                                                       'This procedure returns the maximum number of LZW symbols possible with the maximum LZW bit count.
-   Public ReadOnly SET_BIT As Func(Of Integer, Integer, Integer, Byte) = Function(ByteO As Integer, BitIndex As Integer, Bit As Integer) CByte(ByteO Or (Bit << BitIndex))                                                                           'This procedure sets the specified bit inside the specified byte.
-   Public ReadOnly TERMINATE_AT_NULL As Func(Of String, String) = Function(Text As String) If(Text.Contains(ControlChars.NullChar), Text.Substring(0, Text.IndexOf(ControlChars.NullChar)), Text)                                                    'This procedure terminates the specified text at the left most null character and returns the result.
-   Public ReadOnly TEXT_TO_BYTES As Func(Of String, List(Of Byte)) = Function(Text As String) (From Character In Text.ToCharArray() Select ToByte(Character)).ToList()                                                                               'This procedure converts the specified text to bytes.
-   Public ReadOnly UNSIGN_BYTE As Func(Of Integer, Integer) = Function(Value As Integer) Abs(If(Value >= &H80%, Value - &H100%, Value))                                                                                                              'This procedure converts a signed byte to an unsigned byte.
+   Public ReadOnly SET_BIT As Func(Of Integer, Integer, Integer, Byte) = Function(ByteO As Integer, BitIndex As Integer, Bit As Integer) CByte(ByteO Or (Bit << BitIndex))                                                                           'This procedure returns the specified byte with specified bit set.
+   Public ReadOnly TERMINATE_AT_NULL As Func(Of String, String) = Function(Text As String) If(Text.Contains(ControlChars.NullChar), Text.Substring(0, Text.IndexOf(ControlChars.NullChar)), Text)                                                    'This procedure returns the specified text terminated at the left most null.
+   Public ReadOnly TEXT_TO_BYTES As Func(Of String, List(Of Byte)) = Function(Text As String) (From Character In Text.ToCharArray() Select ToByte(Character)).ToList()                                                                               'This procedure returns the specified text converted to bytes.
+   Public ReadOnly UNSIGN_BYTE As Func(Of Integer, Integer) = Function(Value As Integer) Abs(If(Value >= &H80%, Value - &H100%, Value))                                                                                                              'This procedure returns the specified signed byte converted to an unsigned byte.
 
-   'This function converts MS-DOS line breaks to Microsoft Windows line breaks in the specified text and returns the result.
+   'This function returns the specified text with any MS-DOS line breaks converted to Micorosft Windows line breaks.
    Public Function ConvertMSDOSLineBreak(Text As String) As String
       Try
          Dim Conversion As New StringBuilder
@@ -90,13 +90,22 @@ Public Module CoreModule
 
          Return Conversion.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure draws the specified 4 bit pixel data on an image.
+   'This procudure displays the message describing the specified exception.
+   Public Sub DisplayException(ExceptionO As Exception)
+      Try
+         If MessageBox.Show(ExceptionO.Message, My.Application.Info.Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then Application.Exit()
+      Catch
+         [Exit](0)
+      End Try
+   End Sub
+
+   'This procedure returns an image with the specified 4-bit pixel data drawn unto it.
    Public Function Draw4BitImage(Data As List(Of Byte), Width As Integer, Height As Integer, Palette As List(Of Color), BytesPerRow As Integer, Optional TransparentIndex As Integer? = Nothing, Optional TransparentColor As Color = Nothing) As Bitmap
       Try
          Dim Color1 As New Integer
@@ -122,13 +131,13 @@ Public Module CoreModule
 
          Return ImageO
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts non-displayable or all (if specified) characters in the specified text to escape sequences.
+   'This procedure returns the specified text with any non-displayable or all charactes converted to escape sequences.
    Public Function Escape(ToEscape As Object, Optional EscapeCharacter As Char = "/"c, Optional EscapeAll As Boolean = False) As String
       Try
          Dim Character As New Char
@@ -156,13 +165,13 @@ Public Module CoreModule
 
          Return Escaped.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure searches the specified bytea array for the specified bytes and returns their position if found.
+   'This procedure returns the position of the specified bytes inside the specified array, if found.
    Public Function FindBytes(Bytes As List(Of Byte), SearchBytes As List(Of Byte), Offset As Integer) As Integer
       Try
          For Position As Integer = Offset To (Bytes.Count - 1) - SearchBytes.Count
@@ -171,13 +180,13 @@ Public Module CoreModule
 
          Return NOT_FOUND
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure generates text containing general file information.
+   'This procedure returns the specified file's general information as text.
    Public Function GeneralFileInformation(PathO As String) As String
       Try
          Dim FileInformation As New StringBuilder
@@ -190,13 +199,13 @@ Public Module CoreModule
 
          Return FileInformation.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts the specified bytes to a number assuming big endianess.
+   'This procedure returns the specified bytes converted to a number assuming big endianess.
    Public Function GetBENumberFromBytes(Bytes As List(Of Byte)) As Integer
       Try
          Dim Hexadecimals As New StringBuilder
@@ -205,7 +214,7 @@ Public Module CoreModule
 
          Return ToInt32(Hexadecimals.ToString(), fromBase:=16)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -227,13 +236,13 @@ Public Module CoreModule
 
          Return Bytes
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return New List(Of Byte)
    End Function
 
-   'This procedure loads the specified template and returns the appropriate data file type.
+   'This procedure returns the file type associated with the specified template.
    Public Function GetDataFileFromTemplate(ByRef PathO As String, DataFileMenu As ToolStripMenuItem) As DataFileClass
       Try
          For Each Line As String In LoadTemplate(PathO)
@@ -250,7 +259,7 @@ Public Module CoreModule
             End Select
          Next Line
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -266,7 +275,7 @@ Public Module CoreModule
                Return ByteO And &HF%
          End Select
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -277,22 +286,13 @@ Public Module CoreModule
       Try
          Return BYTES_TO_TEXT(GetBytes(Data, Offset, Count, AdvanceOffset))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procudure handles any errors that occur.
-   Public Sub HandleError(ExceptionO As Exception)
-      Try
-         If MessageBox.Show(ExceptionO.Message, My.Application.Info.Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then Application.Exit()
-      Catch
-         [Exit](0)
-      End Try
-   End Sub
-
-   'This procedure loads the specified template and returns it without comment lines.
+   'This procedure returns the specified template with any comments removed.
    Public Function LoadTemplate(Optional PathO As String = Nothing) As List(Of String)
       Try
          Static Template As List(Of String) = Nothing
@@ -301,13 +301,13 @@ Public Module CoreModule
 
          Return Template
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts the specified number to bytes containing either a 16 or 32 bit big endian value.
+   'This procedure returns the specified number converted to bytes containing either a 16-bit or 32-bit big endian value.
    Public Function NumberToBENumberBytes(Number As Integer, Length As Integer) As List(Of Byte)
       Try
          Select Case Length
@@ -317,7 +317,7 @@ Public Module CoreModule
                Return BitConverter.GetBytes(ToUInt32(Number)).Reverse.ToList()
          End Select
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -330,13 +330,31 @@ Public Module CoreModule
             Return $"{ .Title} v{ .Version} - by: { .CompanyName}"
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure sets the specified nibble at the specified position.
+   'This procedure returns the specified lines with any preceding and leading spaces removed.
+   Public Function TrimAllLines(Lines As List(Of String)) As List(Of String)
+      Try
+         For Line As Integer = 0 To Lines.Count - 1
+            Lines(Line) = Lines(Line).Replace(ControlChars.Tab, " ").Trim()
+            Do While Lines(Line).Contains("  ")
+               Lines(Line) = Lines(Line).Replace("  ", " ")
+            Loop
+         Next Line
+
+         Return Lines
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return New List(Of String)
+   End Function
+
+   'This procedure returns the specified byte with the specified nibble set.
    Public Function SetNibble(ByteO As Integer, NewNibble As Integer, Nibble As NibblesE) As Integer
       Try
          Select Case Nibble
@@ -346,24 +364,24 @@ Public Module CoreModule
                Return ByteO Or NewNibble
          End Select
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts an unsigned byte to a signed byte.
+   'This procedeure returns the unsigned byte converted to a signed byte.
    Public Function SignByte(Value As Integer, IsNegative As Boolean) As Integer
       Try
          Return If(IsNegative, &H100% - Value, Value)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts any escape sequences in the specified text to characters.
+   'This procedure returns the specified text with any escape sequences converted to characters.
    Public Function Unescape(Text As String, Optional EscapeCharacter As Char = "/"c, Optional ByRef ErrorAt As Integer = 0) As String
       Try
          Dim Character As New Char
@@ -402,7 +420,7 @@ Public Module CoreModule
 
          Return Unescaped.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -423,7 +441,7 @@ Public Module CoreModule
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 End Module

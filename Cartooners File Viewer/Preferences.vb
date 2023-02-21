@@ -40,7 +40,7 @@ Public Class PreferencesClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -65,7 +65,7 @@ Public Class PreferencesClass
             UpdateDataBox(NewText.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -98,7 +98,7 @@ Public Class PreferencesClass
 
          Return CurrentPreferences
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

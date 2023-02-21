@@ -53,7 +53,7 @@ Public Class ArchiveClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -90,7 +90,7 @@ Public Class ArchiveClass
 
          Return CurrentArchivedFiles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -114,7 +114,7 @@ Public Class ArchiveClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -142,7 +142,7 @@ Public Class ArchiveClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -160,7 +160,7 @@ Public Class ArchiveClass
 
          Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -176,7 +176,7 @@ Public Class ArchiveClass
 
          Return String.Format($"{Day:D2}-{Month:D2}-{Year:D4} {Hour:D2}:{Minute:D2}:{Second:D2}")
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

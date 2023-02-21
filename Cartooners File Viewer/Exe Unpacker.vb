@@ -40,7 +40,7 @@ Public Module EXEUnpackerModule
    Private Const PACKED_FILE_ERROR As String = "Packed file is corrupt"    'Defines the unpacker's error message.
    Private ReadOnly EXEPACK_PADDING As Char = ToChar(&HFF%)                'Defines the unpacker's padding byte.
 
-   'This procedure creates an unpacked executable using the specified data and returns the result.
+   'This procedure combines the specified unpacked data and returns the resulting executable.
    Private Function CreateExecutable(MSDOSHeader As MSDOSHeaderStr, EXEPackHeader As EXEPACKStr, UnpackedData As List(Of Byte), RelocationTable As List(Of Byte)) As List(Of Byte)
       Try
          Dim EndOfRelocationTable As Integer = MSDOS_HEADER_SIZE + RelocationTable.Count
@@ -71,14 +71,14 @@ Public Module EXEUnpackerModule
 
          Return Executable
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure unpacks the specfied packed data.
-   Private Function Unpack(PackedData As List(Of Byte)) As List(Of Byte)
+   'This procedure unpacks the specified data and returns the result.
+   Private Function UnpackData(PackedData As List(Of Byte)) As List(Of Byte)
       Try
          Dim Count As New Integer
          Dim FillByte As New Byte
@@ -121,13 +121,13 @@ Public Module EXEUnpackerModule
 
          Return UnpackedData
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure gives the command to unpack the specified packed executable and returns the result.
+   'This procedure unpacks the specified executable and returns the result.
    Public Function UnpackExecutable(FileData As List(Of Byte)) As List(Of Byte)
       Try
          Dim EXEPack As New EXEPACKStr
@@ -174,18 +174,18 @@ Public Module EXEUnpackerModule
          PackedData = GetBytes(FileData, PackedDataStart, EXEPackOffset - PackedDataStart)
          PackedData.Reverse()
          ReversedData.AddRange(PackedData)
-         UnpackedData = Unpack(GetBytes(ReversedData, PackedDataStart, ReversedData.Count - PackedDataStart))
+         UnpackedData = UnpackData(GetBytes(ReversedData, PackedDataStart, ReversedData.Count - PackedDataStart))
          UnpackedData.Reverse()
 
          Return CreateExecutable(MSDOSHeader, EXEPack, UnpackedData, UnpackRelocationTable(FileData, MSDOSHeader, EXEPack))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure unpacks the specified packed relocation table and returns the result.
+   'This procedure unpacks the relocation table and returns the result.
    Private Function UnpackRelocationTable(FileData As List(Of Byte), MSDOSHeader As MSDOSHeaderStr, EXEPackHeader As EXEPACKStr) As List(Of Byte)
       Try
          Dim Count As Integer = &H0%
@@ -213,7 +213,7 @@ Public Module EXEUnpackerModule
 
          Return UnpackedRelocationTable
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

@@ -104,7 +104,7 @@ Public Class MovieClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -133,7 +133,7 @@ Public Class MovieClass
 
          Return CurrentActorFiles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -161,7 +161,7 @@ Public Class MovieClass
 
          Return CurrentActorHandleRecords
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -184,7 +184,7 @@ Public Class MovieClass
 
          Return CurrentActorHandles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -224,7 +224,7 @@ Public Class MovieClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -253,7 +253,7 @@ Public Class MovieClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -280,7 +280,7 @@ Public Class MovieClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -301,7 +301,7 @@ Public Class MovieClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -321,7 +321,7 @@ Public Class MovieClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -330,7 +330,7 @@ Public Class MovieClass
       Try
          UpdateDataBox(GBRToText("The movie's palettes:", Palettes(), PALETTE_DESCRIPTIONS))
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -367,7 +367,7 @@ Public Class MovieClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -376,7 +376,7 @@ Public Class MovieClass
       Try
          Return (1000 / BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.FrameRate)) / MINIMUM_INTERVAL
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -403,7 +403,7 @@ Public Class MovieClass
 
          Return CurrentFrameRecords
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -430,7 +430,7 @@ Public Class MovieClass
 
          Return CurrentMusicFiles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -449,7 +449,7 @@ Public Class MovieClass
 
          Return CurrentPalettes
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -477,7 +477,7 @@ Public Class MovieClass
 
          Return CurrentSceneFiles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -509,7 +509,7 @@ Public Class MovieClass
 
          Return CurrentSpeechBalloons
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

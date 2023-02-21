@@ -88,11 +88,11 @@ Public Class CartoonersClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure checks whether the Cartooner's executable regions overlap and returns the result.
+   'This procedure returns whether the Cartooner's executable regions overlap.
    Private Function CheckForRegionOverlap() As String
       Try
          Dim Overlaps As New StringBuilder
@@ -107,7 +107,7 @@ Public Class CartoonersClass
 
          Return Overlaps.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -155,7 +155,7 @@ Public Class CartoonersClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -225,7 +225,7 @@ Public Class CartoonersClass
 
          UpdateDataBox(NewText.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -242,7 +242,7 @@ Public Class CartoonersClass
             UpdateDataBox(NewText.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -289,7 +289,7 @@ Public Class CartoonersClass
 
          Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -331,7 +331,7 @@ Public Class CartoonersClass
 
          File.WriteAllText(Path.Combine(ExportPath, "Cartooners Executable Map.txt"), Map.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -368,7 +368,7 @@ Public Class CartoonersClass
 
          File.WriteAllText(Path.Combine(ExportPath, "Cartooners Executable Unknown Map.txt"), Map.ToString())
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -391,13 +391,13 @@ Public Class CartoonersClass
 
          Return Rectangles
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure retrieves the mouse cursor at the specified position from the specified data.
+   'This procedure returns the mouse cursor at the specified position inside the specified data.
    Private Function MouseCursor(Region As RegionClass) As Bitmap
       Try
          Dim Bit As New Boolean
@@ -426,7 +426,7 @@ Public Class CartoonersClass
 
          Return Cursor
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -454,7 +454,7 @@ Public Class CartoonersClass
 
          Return CurrentRegions
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -468,7 +468,7 @@ Public Class CartoonersClass
 
          DisplayRegion(Description, Type)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 End Class

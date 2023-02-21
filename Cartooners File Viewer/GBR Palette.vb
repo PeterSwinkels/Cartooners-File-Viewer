@@ -19,7 +19,7 @@ Public Module GBRPaletteModule
 
    Public ReadOnly ARGB_TO_GBR As Func(Of Color, Byte()) = Function(ARGB As Color) {ToByte(ToInt32(ARGB.G >> &H4%) << &H4% Or ToInt32(ARGB.B >> &H4%)), ToByte(ARGB.R >> &H4%)}   'This procedure converts the specified 24 bit ARGB color to a 12 bit GBR color.
 
-   'This procedure reads the GBR palette from the specified data at the specified location.
+   'This procedure returns the GBR palette at the specified location.
    Public Function GBRPalette(Data As List(Of Byte), PaletteLocation As Integer) As List(Of Color)
       Try
          Dim Palette As New List(Of Color)
@@ -30,13 +30,13 @@ Public Module GBRPaletteModule
 
          Return Palette
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts the specified 12 bit GBR color to a 24 bit ARGB color.
+   'This procedure returns the specified 12-bit GBR color converted to a 24-bit ARGB color.
    Public Function GBRToARGB(GBR As List(Of Byte)) As Color
       Try
          Dim Blue As Integer = GetNibble(GBR(&H0%), NibblesE.LowNibble)
@@ -49,13 +49,13 @@ Public Module GBRPaletteModule
 
          Return Color.FromArgb((Red << &H4%) Or Red, (Green << &H4%) Or Green, (Blue << &H4%) Or Blue)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure converts the specified palettes' data to hexadecimal output with descriptions.
+   'This procedure returns the specified palette's data converted to hexadecimal values with descriptions.
    Public Function GBRToText(Optional Header As String = Nothing, Optional Palettes As List(Of List(Of Color)) = Nothing, Optional Descriptions As List(Of String) = Nothing) As String
       Try
          Dim GBRText As New StringBuilder
@@ -77,7 +77,7 @@ Public Module GBRPaletteModule
 
          Return GBRText.ToString()
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

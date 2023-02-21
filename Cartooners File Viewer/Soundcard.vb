@@ -38,7 +38,7 @@ Public Class SoundCardDriverClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -59,7 +59,7 @@ Public Class SoundCardDriverClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -77,8 +77,7 @@ Public Class SoundCardDriverClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
-
 End Class

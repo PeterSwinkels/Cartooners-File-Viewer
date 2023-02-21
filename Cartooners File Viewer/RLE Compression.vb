@@ -29,7 +29,7 @@ Public Module RLECompressionModule
    Private Const RLE_DWORD As Integer = &H80%                   'Defines a run of a single dword repeated for a specific number of times.
    Private Const RLE_LEVEL_MASK As Integer = &HC0%              'Defines the bits representing a run's compression level.
 
-   'This procedure RLE compresses the specified image color indexes.
+   'This procedure returns the specified color indexes compressed using RLE compression.
    Public Function CompressRLE(Indexes As List(Of Byte)) As List(Of Byte)
       Try
          Dim Compressed As New List(Of Byte)
@@ -70,13 +70,13 @@ Public Module RLECompressionModule
 
          Return Compressed
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure decompresses the specified RLE compressed image color indexes.
+   'This procedure returns the specified color indexes decompressed using RLE decompression.
    Public Function DecompressRLE(Compressed As List(Of Byte), Offset As Integer, Size As Integer) As List(Of Byte)
       Try
          Dim Decompressed As New List(Of Byte)
@@ -117,13 +117,13 @@ Public Module RLECompressionModule
 
          Return Decompressed
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
    End Function
 
-   'This procedure determines the run-length for the indexes at the specified position.
+   'This procedure returns the run-length for the color indexes at the specified position.
    Private Function DetermineRunLength(Indexes As List(Of Byte), Offset As Integer, ElementSize As Integer, Multiplier As Integer) As Integer
       Try
          Dim Position As Integer = Offset
@@ -137,7 +137,7 @@ Public Module RLECompressionModule
 
          Return RunLength - (RunLength Mod Multiplier)
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -152,7 +152,7 @@ Public Module RLECompressionModule
             Incompressible.Clear()
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 End Module

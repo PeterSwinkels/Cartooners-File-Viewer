@@ -55,7 +55,7 @@ Public Class MusicClass
             End With
          End If
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -82,7 +82,7 @@ Public Class MusicClass
 
          Return CurrentFile
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -113,7 +113,7 @@ Public Class MusicClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
@@ -128,11 +128,11 @@ Public Class MusicClass
             UpdateDataBox(.ToString())
          End With
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
    End Sub
 
-   'This procedure indicates whether or not the music is played repeatedly.
+   'This procedure returns whether or not the music is played repeatedly.
    Private Function IsRepeatingMusic() As Boolean
       Try
          Select Case DataFile().Data.Last
@@ -142,7 +142,7 @@ Public Class MusicClass
                Return True
          End Select
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing

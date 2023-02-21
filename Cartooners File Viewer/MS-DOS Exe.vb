@@ -66,7 +66,7 @@ Public Module MSDOSEXEModule
 
          Return CurrentExeHeaderSize
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
@@ -102,7 +102,7 @@ Public Module MSDOSEXEModule
 
             Return NewText.ToString()
          Catch ExceptionO As Exception
-            HandleError(ExceptionO)
+            DisplayException(ExceptionO)
          End Try
 
          Return Nothing
@@ -128,7 +128,7 @@ Public Module MSDOSEXEModule
 
          Return CurrentRelocationItems
       Catch ExceptionO As Exception
-         HandleError(ExceptionO)
+         DisplayException(ExceptionO)
       End Try
 
       Return Nothing
