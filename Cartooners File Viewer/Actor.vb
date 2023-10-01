@@ -253,33 +253,33 @@ Public Class ActorClass
          Return Nothing
       End Function
 
-      'This procecure displays the actor's animation record lists.
-      Private Sub DisplayAnimationRecordListsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordListsMenu.Click
-         Try
-            With New StringBuilder
-               .Append($"Animation record lists:{NewLine}{NewLine}{"Action:",-20}")
-               Array.ForEach({"Record", "Count", "Loop"}, Sub(Label As String) .Append($"{Label,10}"))
-               .Append(NewLine)
-               For Action As Integer = AnimationRecordLists().GetLowerBound(1) To AnimationRecordLists().GetUpperBound(1)
-                  .Append($"{MenuItemName(MenuItems().Actions(Action))}{NewLine}")
-                  For Way As Integer = AnimationRecordLists().GetLowerBound(2) To AnimationRecordLists().GetUpperBound(2)
-                     .Append($"{$"{MenuItemName(MenuItems().Ways(Way)),-15}",18}")
-                     For RecordList As Integer = AnimationRecordLists().GetLowerBound(0) To AnimationRecordLists().GetUpperBound(0)
-                        .Append($"{AnimationRecordLists()(RecordList, Action, Way),10}")
-                     Next RecordList
-                     .Append(NewLine)
-                  Next Way
-               Next Action
+   'This procecure displays the actor's animation record lists.
+   Private Sub DisplayAnimationRecordListsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordListsMenu.Click
+      Try
+         With New StringBuilder
+            .Append($"Animation record lists:{NewLine}{NewLine}{"Action:",-20}")
+            Array.ForEach({"Record", "Count", "Loop"}, Sub(Label As String) .Append($"{Label,10}"))
+            .Append(NewLine)
+            For Action As Integer = AnimationRecordLists().GetLowerBound(1) To AnimationRecordLists().GetUpperBound(1)
+               .Append($"{MenuItemName(MenuItems().Actions(Action))}{NewLine}")
+               For Way As Integer = AnimationRecordLists().GetLowerBound(2) To AnimationRecordLists().GetUpperBound(2)
+                  .Append($"{$"{MenuItemName(MenuItems().Ways(Way)),-15}",18}")
+                  For RecordList As Integer = AnimationRecordLists().GetLowerBound(0) To AnimationRecordLists().GetUpperBound(0)
+                     .Append($"{AnimationRecordLists()(RecordList, Action, Way),10}")
+                  Next RecordList
+                  .Append(NewLine)
+               Next Way
+            Next Action
 
-               UpdateDataBox(.ToString())
-            End With
-         Catch ExceptionO As Exception
-            DisplayException(ExceptionO)
-         End Try
-      End Sub
+            UpdateDataBox(.ToString())
+         End With
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+   End Sub
 
-      'This procecure displays the actor's animation records.
-      Private Sub DisplayAnimationRecordsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordsMenu.Click
+   'This procecure displays the actor's animation records.
+   Private Sub DisplayAnimationRecordsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordsMenu.Click
          Try
             Dim NewText As New StringBuilder
             Dim RecordNumber As New Integer

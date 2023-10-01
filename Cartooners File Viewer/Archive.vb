@@ -42,12 +42,17 @@ Public Class ArchiveClass
       Public UnarchivedSize As Integer    'Defines the file's unarchived size.
    End Structure
 
+   'The menu items used by this class.
+   Private WithEvents DisplayDataMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F1, .Text = "Display &Data"}
+   Private WithEvents DisplaySummaryMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F2, .Text = "Display &Summary"}
+
    'This procedure initializes this class.
    Public Sub New(PathO As String, Optional DataFileMenu As ToolStripMenuItem = Nothing)
       Try
          If DataFile(ArchivePath:=PathO).Data.Count > 0 AndAlso DataFileMenu IsNot Nothing Then
             With DataFileMenu
                .DropDownItems.Clear()
+               .DropDownItems.AddRange({DisplayDataMenu, DisplaySummaryMenu})
                .Text = "&Archive"
                .Visible = True
             End With
@@ -108,7 +113,7 @@ Public Class ArchiveClass
                If Not .Data.Any Then .Data.Clear()
                ArchivedFiles(Refresh:=True)
 
-               Display()
+               DisplaySummaryMenu.PerformClick()
             End With
          End If
 
@@ -120,8 +125,30 @@ Public Class ArchiveClass
       Return Nothing
    End Function
 
-   'This procedure displays the current archive file.
-   Private Sub Display()
+   'This procedure displays the current archive file's summary.
+   Private Sub DisplayDataMenu_Click(sender As Object, e As EventArgs) Handles DisplayDataMenu.Click
+      Try
+         Dim NewText As New StringBuilder
+
+         NewText.Append(GeneralFileInformation(DataFile().Path))
+         NewText.Append(NewLine)
+
+         For Each ArchivedFile As ArchivedFileStr In ArchivedFiles()
+            With ArchivedFile
+               NewText.Append($"File: { .FileName}{NewLine}")
+               NewText.Append($"Data:{NewLine}")
+               NewText.Append($"{Escape(.Data, " "c, EscapeAll:=True).Trim()}{ NewLine}{ NewLine}")
+            End With
+         Next ArchivedFile
+
+         UpdateDataBox(NewText.ToString())
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+   End Sub
+
+   'This procedure displays the current archive file's summary.
+   Private Sub DisplaySummaryMenu_Click(sender As Object, e As EventArgs) Handles DisplaySummaryMenu.Click
       Try
          Dim NewText As New StringBuilder
 
@@ -134,9 +161,7 @@ Public Class ArchiveClass
                NewText.Append($"Date: { .FileDateTime}{NewLine}")
                NewText.Append($"Compressed: { .CompressedFlag}{NewLine}")
                NewText.Append($"Archived size: { .ArchivedSize}{NewLine}")
-               NewText.Append($"Unarchived size: { .UnarchivedSize}{NewLine}")
-               NewText.Append($"Data:{NewLine}")
-               NewText.Append($"{Escape(.Data, " "c, EscapeAll:=True).Trim()}{ NewLine}{ NewLine}")
+               NewText.Append($"Unarchived size: { .UnarchivedSize}{NewLine}{NewLine}")
             End With
          Next ArchivedFile
 

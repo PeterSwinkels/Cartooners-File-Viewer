@@ -193,7 +193,7 @@ Public Module CoreModule
 
          FileInformation.Append($"Path: ""{PathO}""{NewLine}")
          With New FileInfo(PathO)
-            FileInformation.Append($"Size: { .Length} bytes.{NewLine}")
+            FileInformation.Append($"Size: { .Length} {If(.Length = 1, "byte", "bytes")}.{NewLine}")
             FileInformation.Append($"Date: { .CreationTime}{NewLine}")
          End With
 

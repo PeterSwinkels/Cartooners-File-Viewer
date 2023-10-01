@@ -166,6 +166,7 @@ Public Class InterfaceWindow
    Private Sub LoadFileMenu_Click(sender As Object, e As EventArgs) Handles LoadFileMenu.Click
       Try
          Dim Filter As New StringBuilder
+         Static FilterIndex As Integer = 1
 
          Filter.Append("Actor files (*.act)|*.act|")
          Filter.Append("Archive files (*.pea)|*.pea|")
@@ -184,8 +185,11 @@ Public Class InterfaceWindow
          Filter.Append("Sound card driver files(*.smb)|*.smb|")
          Filter.Append("Template files(*.txt)|*.txt")
 
-         With New OpenFileDialog With {.CheckFileExists = True, .FileName = Nothing, .Filter = Filter.ToString(), .FilterIndex = 1}
-            If Not .ShowDialog() = DialogResult.Cancel Then DataFile(.FileName)
+         With New OpenFileDialog With {.CheckFileExists = True, .FileName = Nothing, .Filter = Filter.ToString(), .FilterIndex = FilterIndex}
+            If Not .ShowDialog() = DialogResult.Cancel Then
+               DataFile(.FileName)
+               FilterIndex = .FilterIndex
+            End If
          End With
       Catch ExceptionO As Exception
          DisplayException(ExceptionO)
