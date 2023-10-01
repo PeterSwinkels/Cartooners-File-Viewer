@@ -320,15 +320,15 @@ Extension: *.mus
 
 [File Layout]
 Begin Structure: Header.
-	0x00	0x02	Relative MIDI track offset.
-	0x02	0x10	Roland MIDI channel off/on table.
-	0x12	0x10	Roland global MIDI volume table.
-	0x22	0x09	Adlib MIDI channel dedication table.
-	0x2B	0x0C	CMS MIDI channel dedication table.
-	0x37	0x0C	CMS MIDI channel finetune offset table.
-	0x43	0x08	Unknown.
-	0x4B	0x02	PC-Speaker pitch and speed.	
-	0x4D	BYTES	Unknown.
+	0x00	WORD		Relative MIDI track offset.
+	0x02	0x10 BYTES	Roland MIDI channel off/on table.
+	0x12	0x10 BYTES	Roland global MIDI volume table.
+	0x22	0x09 BYTES	Adlib MIDI channel dedication table.
+	0x2B	0x0C BYTES	CMS MIDI channel dedication table.
+	0x37	0x0C BYTES	CMS MIDI channel finetune offset table.
+	0x43	0x08 BYTES	Unknown.
+	0x4B	WORD		PC-Speaker pitch and speed.	
+	0x4D	BYTES		Unknown.
 End Structure
 
 Begin Structure: MIDI track data.
