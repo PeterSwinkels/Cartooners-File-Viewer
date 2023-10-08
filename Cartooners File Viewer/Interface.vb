@@ -95,20 +95,15 @@ Public Class InterfaceWindow
                         PathO = .SelectedPath
                         DirectCast(DataFile(), LBMImageClass).Export(PathO)
                      End If
-                  ElseIf TypeOf DataFile() Is PrinterDriverClass Then
+                  ElseIf TypeOf DataFile() Is MusicClass Then
                      If .ShowDialog = DialogResult.OK Then
                         PathO = .SelectedPath
-                        DirectCast(DataFile(), PrinterDriverClass).Export(PathO)
+                        DirectCast(DataFile(), MusicClass).Export(PathO)
                      End If
                   ElseIf TypeOf DataFile() Is ScriptClass Then
                      If .ShowDialog = DialogResult.OK Then
                         PathO = .SelectedPath
                         DirectCast(DataFile(), ScriptClass).Export(PathO)
-                     End If
-                  ElseIf TypeOf DataFile() Is SoundCardDriverClass Then
-                     If .ShowDialog = DialogResult.OK Then
-                        PathO = .SelectedPath
-                        DirectCast(DataFile(), SoundCardDriverClass).Export(PathO)
                      End If
                   Else
                      MessageBox.Show("The current file does not support exporting data.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information)

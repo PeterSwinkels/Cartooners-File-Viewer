@@ -54,12 +54,14 @@ Public Module CoreModule
    Public Const LZW_START As Integer = &H100%               'Defines the start of a LZW value sequence.
    Public Const LZW_SYMBOL_BASE As Integer = &H102%         'Defines the lowest value used for an LZW symbol.
    Public Const LZW_SYMBOL_TOP As Integer = &HFFF%          'Defines the highest value used for an LZW symbol.
+   Public Const MUSIC_TEMPLATE As String = "Music"          'Defines the identifier for music templates.
    Public Const NOT_FOUND As Integer = -1                   'Indicates that a value could not be found in a given data set.
    Public Const PADDING As Char = ControlChars.NullChar     'Defines the character used to pad a path.
    Public Const PAGE_SIZE As Integer = &H200%               'Defines the size of a page in memory.
    Public Const PARAGRAPH_SIZE As Integer = &H10%           'Defines the size of a paragraph in memory.
    Public Const PIXELS_PER_BYTE As Integer = &H2%           'Defines the number pixels per byte in an uncompressed image.
-   Public Const SCRIPT_TEMPLATE As String = "Script"        'Defines the identifier for actor templates.
+   Public Const SCRIPT_TEMPLATE As String = "Script"        'Defines the identifier for script templates.
+   Public Const TEMPLATE_COMMENT As Char = "#"c             'Defines the comment line character in templates.
 
    Public ReadOnly BYTES_TO_TEXT As Func(Of List(Of Byte), String) = Function(Bytes As List(Of Byte)) New String((From ByteO In Bytes Select ToChar(ByteO)).ToArray())                                                                               'This procedure returns the specified bytes converted to text.
    Public ReadOnly COLOR_DIFFERENCE As Func(Of Color, Color, Integer) = Function(Color1 As Color, Color2 As Color) CInt((Abs(CInt(Color2.R) - CInt(Color1.R)) + Abs(CInt(Color2.G) - CInt(Color1.G)) + Abs(CInt(Color2.B) - CInt(Color1.B))) / 3)    'This procedure returns the difference between the two specified colors.
@@ -245,10 +247,12 @@ Public Module CoreModule
    'This procedure returns the file type associated with the specified template.
    Public Function GetDataFileFromTemplate(ByRef PathO As String, DataFileMenu As ToolStripMenuItem) As DataFileClass
       Try
-         For Each Line As String In LoadTemplate(PathO)
+         For Each Line As String In Template(PathO)
             Select Case Line.Trim().ToLower()
                Case $"[{ACTOR_TEMPLATE.ToLower()}]"
                   Return New ActorClass(PathO, DataFileMenu)
+               Case $"[{MUSIC_TEMPLATE.ToLower()}]"
+                  Return New MusicClass(PathO, DataFileMenu)
                Case $"[{SCRIPT_TEMPLATE.ToLower()}]"
                   Return New ScriptClass(PathO, DataFileMenu)
                Case Else
@@ -292,21 +296,6 @@ Public Module CoreModule
       Return Nothing
    End Function
 
-   'This procedure returns the specified template with any comments removed.
-   Public Function LoadTemplate(Optional PathO As String = Nothing) As List(Of String)
-      Try
-         Static Template As List(Of String) = Nothing
-
-         If Not PathO = Nothing Then Template = New List(Of String)(From Item As String In File.ReadAllLines(PathO))
-
-         Return Template
-      Catch ExceptionO As Exception
-         DisplayException(ExceptionO)
-      End Try
-
-      Return Nothing
-   End Function
-
    'This procedure returns the specified number converted to bytes containing either a 16-bit or 32-bit big endian value.
    Public Function NumberToBENumberBytes(Number As Integer, Length As Integer) As List(Of Byte)
       Try
@@ -329,6 +318,21 @@ Public Module CoreModule
          With My.Application.Info
             Return $"{ .Title} v{ .Version} - by: { .CompanyName}"
          End With
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure returns the contents of the current template file or the specified template file.
+   Public Function Template(Optional PathO As String = Nothing) As List(Of String)
+      Try
+         Static CurrentTemplate As List(Of String) = Nothing
+
+         If Not PathO = Nothing Then CurrentTemplate = New List(Of String)(From Item As String In File.ReadAllLines(PathO))
+
+         Return CurrentTemplate
       Catch ExceptionO As Exception
          DisplayException(ExceptionO)
       End Try

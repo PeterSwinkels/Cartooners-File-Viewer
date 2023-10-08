@@ -16,7 +16,7 @@ Public Class SoundCardDriverClass
    Inherits DataFileClass
 
    Private ReadOnly DRIVER_FILES As New Dictionary(Of String, String) From
-      {{"adtoon.smb", "AD LIB Board"},
+      {{"adtoon.smb", "Adlib Board"},
       {"cstoon.smb", "CMS Board"},
       {"mttoon.smb", "Roland MT 32 or LAPC Board"}}   'Defines the soundcard driver files.
 
@@ -71,7 +71,7 @@ Public Class SoundCardDriverClass
          With New StringBuilder
             .Append(GeneralFileInformation(DataFile().Path))
             .Append(NewLine)
-            .Append($"-Soundcard: { DRIVER_FILES(Path.GetFileName(DataFile().Path).ToLower())}{NewLine}{NewLine}")
+            .Append($"Soundcard: { DRIVER_FILES(Path.GetFileName(DataFile().Path).ToLower())}{NewLine}{NewLine}")
             .Append($"Data:{NewLine}")
             .Append($"{Escape(DataFile().Data, " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
             UpdateDataBox(.ToString())

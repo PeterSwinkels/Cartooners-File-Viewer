@@ -124,9 +124,9 @@ Public Class ActorClass
       'This procedure initializes this class.
       Public Sub New(ByRef PathO As String, Optional DataFileMenu As ToolStripMenuItem = Nothing)
          Try
-            If Path.GetExtension(PathO).ToLower() = ".txt" Then PathO = Import(PathO)
+         If Path.GetExtension(PathO).ToLower() = ".txt" Then PathO = Import(PathO)
 
-            If PathO IsNot Nothing AndAlso DataFile(ActorPath:=PathO).Data.Count > 0 AndAlso DataFileMenu IsNot Nothing Then
+         If PathO IsNot Nothing AndAlso DataFile(ActorPath:=PathO).Data.Count > 0 AndAlso DataFileMenu IsNot Nothing Then
                With DataFileMenu
                   .DropDownItems.Clear()
                   .DropDownItems.AddRange({DisplayAnimationRecordListsMenu, DisplayAnimationRecordsMenu, DisplayImageDataMenu, DisplayImageListMenu, DisplayInformationMenu, DisplayMenuItemsMenu, DisplayPaletteMenu, TransparentColorMenu})
@@ -410,78 +410,79 @@ Public Class ActorClass
       'This procedure exports the current actor.
       Public Overloads Sub Export(ExportPath As String)
          Try
-            Dim ActorAnimationLists(,,) As Integer = AnimationRecordLists()
-            Dim ActorPath As String = DataFile().Path
-            Dim Blue As New Integer
-            Dim Exported As New StringBuilder($"[{ACTOR_TEMPLATE}]{NewLine}{NewLine}")
-            Dim Green As New Integer
-            Dim RecordNumber As New Integer
-            Dim Red As New Integer
+         Dim ActorAnimationLists(,,) As Integer = AnimationRecordLists()
+         Dim ActorPath As String = DataFile().Path
+         Dim Blue As New Integer
+         Dim Exported As New StringBuilder($"[{ACTOR_TEMPLATE}]{NewLine}{NewLine}")
+         Dim Green As New Integer
+         Dim RecordNumber As New Integer
+         Dim Red As New Integer
 
-            ExportPath = Path.Combine(ExportPath, Path.GetFileNameWithoutExtension(ActorPath))
-            Directory.CreateDirectory(ExportPath)
+         ExportPath = Path.Combine(ExportPath, Path.GetFileNameWithoutExtension(ActorPath))
+         Directory.CreateDirectory(ExportPath)
 
-            Exported.Append($"[Name]{NewLine}{MenuItemName(Name())}{NewLine}{NewLine}[Actions]")
+         Exported.Append($"[Name]{NewLine}{MenuItemName(Name())}{NewLine}{NewLine}[Actions]")
 
-            MenuItems().Actions.ForEach(Sub(Item As String) Exported.Append($"{NewLine}{MenuItemName(Item)}"))
+         MenuItems().Actions.ForEach(Sub(Item As String) Exported.Append($"{NewLine}{MenuItemName(Item)}"))
 
-            Exported.Append($"{NewLine}{NewLine}[Ways]")
-            MenuItems().Ways.ForEach(Sub(Item As String) Exported.Append($"{NewLine}{MenuItemName(Item)}"))
+         Exported.Append($"{NewLine}{NewLine}[Ways]")
+         MenuItems().Ways.ForEach(Sub(Item As String) Exported.Append($"{NewLine}{MenuItemName(Item)}"))
 
-            Exported.Append($"{NewLine}{NewLine}[Transparent]{NewLine}{TransparentColor.ToArgb:X}{NewLine}{NewLine}[Palette]{NewLine}")
+         Exported.Append($"{NewLine}{NewLine}[Transparent]{NewLine}{TransparentColor.ToArgb:X}{NewLine}{NewLine}[Palette]{NewLine}")
 
-            For Position As Integer = LocationsE.Palette To LocationsE.Palette + ((GBR_12_COLOR_DEPTH - &H1%) * GBR_12_COLOR_LENGTH) Step GBR_12_COLOR_LENGTH
-               Blue = GetNibble(DataFile().Data(Position), NibblesE.LowNibble)
-               Green = GetNibble(DataFile().Data(Position), NibblesE.HighNibble)
-               Red = GetNibble(DataFile().Data(Position + &H1%), NibblesE.LowNibble)
-               Exported.Append($"{Red:X} {Green:X} {Blue:X} {NewLine}")
-            Next Position
+         For Position As Integer = LocationsE.Palette To LocationsE.Palette + ((GBR_12_COLOR_DEPTH - &H1%) * GBR_12_COLOR_LENGTH) Step GBR_12_COLOR_LENGTH
+            Blue = GetNibble(DataFile().Data(Position), NibblesE.LowNibble)
+            Green = GetNibble(DataFile().Data(Position), NibblesE.HighNibble)
+            Red = GetNibble(DataFile().Data(Position + &H1%), NibblesE.LowNibble)
+            Exported.Append($"{Red:X} {Green:X} {Blue:X} {NewLine}")
+         Next Position
 
-            Exported.Append($"{NewLine}[Images]{NewLine}")
-            ExportImages(ExportPath).ForEach(Sub(ImageFile As String) Exported.Append($"{ImageFile}{NewLine}"))
+         Exported.Append($"{NewLine}[Images]{NewLine}")
+         ExportImages(ExportPath).ForEach(Sub(ImageFile As String) Exported.Append($"{ImageFile}{NewLine}"))
 
-            Exported.Append($"{NewLine}[Animation records]{NewLine}")
-            Array.ForEach({"#Record", "Image", "X Speed", "X Direction", "Y Speed", "Y Direction"}, Sub(Label As String) Exported.Append($"{$"{Label}:",15}"))
 
-            Exported.Append(NewLine)
+         Exported.Append($"{NewLine}[Animation records]{NewLine}")
+         Array.ForEach({$"{TEMPLATE_COMMENT}Record", "Image", "X Speed", "X Direction", "Y Speed", "Y Direction"}, Sub(Label As String) Exported.Append($"{$"{Label}:",15}"))
 
-            For Each Record As AnimationRecordStr In AnimationRecords()
-               With Record
-                  Exported.Append($"{RecordNumber,15}")
-                  Exported.Append($"{ .ImageRecord,15}")
-                  Exported.Append($"{ .XSpeed,15}")
-                  Exported.Append($"{$"{DirectionName(.XDirection, IsHorizontal:=True),-12}",15}")
-                  Exported.Append($"{ .YSpeed,15}")
-                  Exported.Append($"{$"{DirectionName(.YDirection, IsHorizontal:=False),-12}",15}{NewLine}")
+         Exported.Append(NewLine)
 
-                  RecordNumber += 1
-               End With
-            Next Record
+         For Each Record As AnimationRecordStr In AnimationRecords()
+            With Record
+               Exported.Append($"{RecordNumber,15}")
+               Exported.Append($"{ .ImageRecord,15}")
+               Exported.Append($"{ .XSpeed,15}")
+               Exported.Append($"{$"{DirectionName(.XDirection, IsHorizontal:=True),-12}",15}")
+               Exported.Append($"{ .YSpeed,15}")
+               Exported.Append($"{$"{DirectionName(.YDirection, IsHorizontal:=False),-12}",15}{NewLine}")
 
-            Exported.Append($"{NewLine}[Animation record lists]{NewLine}")
-            Array.ForEach({"#Action", "Record", "Count", "Loop"}, Sub(Label As String) Exported.Append($"{$"{Label}:",15}"))
-            Exported.Append(NewLine)
+               RecordNumber += 1
+            End With
+         Next Record
 
-            For Action As Integer = ActorAnimationLists.GetLowerBound(1) To ActorAnimationLists.GetUpperBound(1)
-               Exported.Append($"#{MenuItemName(MenuItems.Actions(Action))}{NewLine}")
-               For Way As Integer = ActorAnimationLists.GetLowerBound(2) To ActorAnimationLists.GetUpperBound(2)
-                  Exported.Append($" #{MenuItemName(MenuItems.Ways(Way))}{NewLine,-7}")
-                  For RecordList As Integer = ActorAnimationLists.GetLowerBound(0) To ActorAnimationLists.GetUpperBound(0)
-                     Exported.Append($"{ActorAnimationLists(RecordList, Action, Way),15}")
-                  Next RecordList
-                  Exported.Append(NewLine)
-               Next Way
-            Next Action
+         Exported.Append($"{NewLine}[Animation record lists]{NewLine}")
+         Array.ForEach({$"{TEMPLATE_COMMENT}Action", "Record", "Count", "Loop"}, Sub(Label As String) Exported.Append($"{$"{Label}:",15}"))
+         Exported.Append(NewLine)
 
-            File.WriteAllText(Path.Combine(ExportPath, $"{MenuItemName(Name)}.txt"), Exported.ToString())
-            Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
-         Catch ExceptionO As Exception
-            DisplayException(ExceptionO)
-         End Try
-      End Sub
+         For Action As Integer = ActorAnimationLists.GetLowerBound(1) To ActorAnimationLists.GetUpperBound(1)
+            Exported.Append($"{TEMPLATE_COMMENT}{MenuItemName(MenuItems.Actions(Action))}{NewLine}")
+            For Way As Integer = ActorAnimationLists.GetLowerBound(2) To ActorAnimationLists.GetUpperBound(2)
+               Exported.Append($" {TEMPLATE_COMMENT}{MenuItemName(MenuItems.Ways(Way))}{NewLine,-7}")
+               For RecordList As Integer = ActorAnimationLists.GetLowerBound(0) To ActorAnimationLists.GetUpperBound(0)
+                  Exported.Append($"{ActorAnimationLists(RecordList, Action, Way),15}")
+               Next RecordList
+               Exported.Append(NewLine)
+            Next Way
+         Next Action
 
-      'This procedure exports the actor's images to files at the specified path.
-      Private Function ExportImages(ExportPath As String) As List(Of String)
+         File.WriteAllText(Path.Combine(ExportPath, $"{MenuItemName(Name)}.txt"), Exported.ToString())
+         Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+   End Sub
+
+   'This procedure exports the actor's images to files at the specified path.
+   Private Function ExportImages(ExportPath As String) As List(Of String)
          Try
             Dim ImageFiles As New List(Of String)
             Dim RootName As String = MenuItemName(Name())
@@ -571,15 +572,15 @@ Public Class ActorClass
          Return Nothing
       End Function
 
-      'This procedure imports the specified actor template.
-      Private Function Import(ImportPath As String) As String
+   'This procedure imports the specified actor template.
+   Private Function Import(ImportPath As String) As String
       Try
          Dim ActionMenu As New List(Of Byte)
          Dim ActionMenuOffset As New Integer
          Dim ActorNameMenu As New List(Of Byte)
          Dim ActorNameOffset As New Integer
          Dim ActorPath As String = Nothing
-         Dim ActorTemplate As ActorTemplateClass = ParseActorTemplate(New List(Of String)(TrimAllLines((From Item In LoadTemplate() Where Not Item.Trim().StartsWith("#")).ToList())), ImportPath)
+         Dim ActorTemplate As ActorTemplateClass = ParseActorTemplate(New List(Of String)(TrimAllLines((From Item In Template() Where Not Item.Trim().StartsWith(TEMPLATE_COMMENT)).ToList())), ImportPath)
          Dim AnimationCount1Offset As New Integer
          Dim AnimationCount2Offset As New Integer
          Dim AnimationRecordListOffset As New Integer
@@ -659,13 +660,13 @@ Public Class ActorClass
          Return ActorPath
       Catch ExceptionO As Exception
          DisplayException(ExceptionO)
-         End Try
+      End Try
 
-         Return Nothing
-      End Function
+      Return Nothing
+   End Function
 
-      'This procedure returns the actions imported from the specified template.
-      Private Function ImportActions(Template As List(Of String), Line As Integer) As List(Of String)
+   'This procedure returns the actions imported from the specified template.
+   Private Function ImportActions(Template As List(Of String), Line As Integer) As List(Of String)
          Try
             Dim Actions As New List(Of String)
 

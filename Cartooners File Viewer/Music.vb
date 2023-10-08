@@ -6,7 +6,10 @@ Option Strict On
 
 Imports System
 Imports System.Collections.Generic
+Imports System.Convert
+Imports System.Diagnostics
 Imports System.Environment
+Imports System.Globalization
 Imports System.IO
 Imports System.Linq
 Imports System.Text
@@ -18,26 +21,39 @@ Public Class MusicClass
 
    'This enumeration lists the locations of known values inside a music file.
    Private Enum LocationsE As Integer
-      AdlibMIDIChannelDedicationTable = &H9%     'The Adlib MIDI channel dedication table.
+      AdlibMIDIChannelDedicationTable = &H22%    'The Adlib MIDI channel dedication table.
       CMSMIDIChannelDedicationTable = &H2B%      'The CMS MIDI channel dedication table.
       CMSMIDIChannelFinetuneOffsetTable = &H37%  'The CMS MIDI channel finetune offset table.
       MIDITrackOffset = &H0%                     'The music's MIDI track offset.
       PCSpeakerPitchAndSpeed = &H4B%             'The PC-Speaker pitch and speed.
-      RolandMIDIChannelTable = &H2%              'The Roland MIDI channel off/on table.
-      RolandMIDIVolumeTable = &H2%               'The Roland global MIDI volume table.
-      UnknownData1 = &H43%                       'Unknown data block 1.
-      UnknownData2 = &H4D%                       'Unknown data block 2.
+      RandomDataBlock1 = &H43%                   'Random data block #1.
+      RandomDataBlock2 = &H4D%                   'Random data block #2.
+      RolandMIDIChannelOffOnTable = &H2%         'The Roland MIDI channel off/on table.
+      RolandMIDIVolumeTable = &H12%              'The Roland global MIDI volume table.
+   End Enum
+
+   'This enumeration lists the locations of the music template sections.
+   Private Enum TemplateLinesE As Integer
+      AdlibMIDIChannelDedicationTable = 2        'The Adlib MIDI channel dedication table.
+      CMSMIDIChannelDedicationTable = 3          'The CMS MIDI channel dedication table.
+      CMSMIDIChannelFinetuneOffsetTable = 4      'The CMS MIDI channel finetune offset table.
+      MIDITrack = 6                              'The MIDI track.
+      PCSpeakerPitchAndSpeed = 5                 'The PC-Speaker pitch and speed.
+      RepeatFlag = 7                             'The repeat flag.
+      RolandGlobalMIDIVolumeTable = 1            'The Roland global MIDI volume table.
+      RolandMIDIChannelOffOnTable = 0            'The Roland MIDI channel off/on table.
    End Enum
 
    Private Const ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE As Integer = &H9%       'Defines the Adlib MIDI channel dedication table size.
    Private Const CMS_MIDI_CHANNEL_DEDICATIONS_SIZE As Integer = &HC%         'Defines the CMS MIDI channel dedication table size.
    Private Const CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE As Integer = &HC%    'Defines the CMS MIDI channel finetune offset table size.
    Private Const FOOTER_SIZE As Integer = &H2%                               'Defines the footer size.
-   Private Const ROLAND_MIDI_CHANNELS_SIZE As Integer = &H10%                'Defines the Roland MIDI channel off/on table size.
-   Private Const ROLAND_MIDI_VOLUMES_SIZE As Integer = &H10%                 'Defines the Roland global MIDI volume table size.
+   Private Const MIDI_EVENT_STOP_PLAYBACK As Integer = &HFC%                 'Defines the stop playback MIDI event.
    Private Const PLAY_ONCE As Integer = &H81%                                'Indicates that the music is played once.
    Private Const PLAY_REPEATEDLY As Integer = &H80%                          'Indicates that the music is played repeatedly.
-   Private Const UNKNOWN_1_SIZE As Integer = &H8%                            'Defines the size of unknown data block 1.
+   Private Const RANDOM_DATA_BLOCK_1_SIZE As Integer = &H8%                  'Defines the size of random data block #1.
+   Private Const ROLAND_MIDI_CHANNELS_SIZE As Integer = &H10%                'Defines the Roland MIDI channel off/on table size.
+   Private Const ROLAND_MIDI_VOLUMES_SIZE As Integer = &H10%                 'Defines the Roland global MIDI volume table size.
 
    'The menu items used by this class.
    Private WithEvents DisplayDataMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F1, .Text = "Display &Data"}
@@ -46,6 +62,8 @@ Public Class MusicClass
    'This procedure initializes this class.
    Public Sub New(PathO As String, Optional DataFileMenu As ToolStripMenuItem = Nothing)
       Try
+         If Path.GetExtension(PathO).ToLower() = ".txt" Then PathO = Import(PathO)
+
          If DataFile(MusicPath:=PathO).Data.Count > 0 AndAlso DataFileMenu IsNot Nothing Then
             With DataFileMenu
                .DropDownItems.Clear()
@@ -96,16 +114,16 @@ Public Class MusicClass
          With New StringBuilder
             .Append($"Music data:{NewLine}")
             .Append($"-Relative MIDI track offset: {MIDITrackOffset:X}{NewLine}")
-            .Append($"-Roland MIDI channel off/on table: {Escape(GetString(DataFile().Data, LocationsE.RolandMIDIChannelTable, ROLAND_MIDI_CHANNELS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
+            .Append($"-Roland MIDI channel off/on table: {Escape(GetString(DataFile().Data, LocationsE.RolandMIDIChannelOffOnTable, ROLAND_MIDI_CHANNELS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-Roland global MIDI volume table: {Escape(GetString(DataFile().Data, LocationsE.RolandMIDIVolumeTable, ROLAND_MIDI_VOLUMES_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-Adlib MIDI channel dedication table: {Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelDedicationTable, ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-CMS MIDI channel dedication table: {Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelDedicationTable, CMS_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-CMS MIDI channel finetune offset table: {Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelFinetuneOffsetTable, CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
-            .Append($"{NewLine}-Unknown header data 1:{NewLine}")
-            .Append(Escape(GetString(DataFile().Data, LocationsE.UnknownData1, UNKNOWN_1_SIZE), " "c, EscapeAll:=True).Trim())
-            .Append($"{NewLine}{NewLine}-PC-Speaker pitch and speed: {BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.PCSpeakerPitchAndSpeed):X}")
-            .Append($"{NewLine}{NewLine}-Unknown header data 2:{NewLine}")
-            .Append(Escape(GetString(DataFile().Data, LocationsE.UnknownData2, MIDITrackOffset - LocationsE.UnknownData2), " "c, EscapeAll:=True).Trim())
+            .Append($"{NewLine}Random data block #1:{NewLine}")
+            .Append(Escape(GetString(DataFile().Data, LocationsE.RandomDataBlock1, RANDOM_DATA_BLOCK_1_SIZE), " "c, EscapeAll:=True).Trim())
+            .Append($"{NewLine}{NewLine}PC-Speaker pitch and speed: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PCSpeakerPitchAndSpeed):X2}")
+            .Append($"{NewLine}{NewLine}Random data block #2:{NewLine}")
+            .Append(Escape(GetString(DataFile().Data, LocationsE.RandomDataBlock2, MIDITrackOffset - LocationsE.RandomDataBlock2), " "c, EscapeAll:=True).Trim())
             .Append($"{NewLine}{NewLine}MIDI track data:{NewLine}")
             .Append(Escape(GetString(DataFile().Data, MIDITrackOffset, (DataFile().Data.Count - MIDITrackOffset) - FOOTER_SIZE), " "c, EscapeAll:=True).Trim())
             .Append($"{NewLine}{NewLine}Footer:{NewLine}")
@@ -123,7 +141,7 @@ Public Class MusicClass
          With New StringBuilder
             .Append(GeneralFileInformation(DataFile().Path))
             .Append(NewLine)
-            .Append($"Midi track offset: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)} byte(s).{NewLine}")
+            .Append($"MIDI track offset: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)} byte(s).{NewLine}")
             .Append($"Play repeatedly: {IsRepeatingMusic()}")
             UpdateDataBox(.ToString())
          End With
@@ -131,6 +149,88 @@ Public Class MusicClass
          DisplayException(ExceptionO)
       End Try
    End Sub
+
+   'This procedure exports the current music.
+   Public Overloads Sub Export(ExportPath As String)
+      Try
+         Dim Exported As New StringBuilder($"[{MUSIC_TEMPLATE}]{NewLine}{NewLine}")
+         Dim MIDITrackOffset As Integer = BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)
+         Dim MusicName As String = Path.GetFileNameWithoutExtension(DataFile.Path).ToLower()
+         Dim MusicPath As String = DataFile().Path
+
+         With Exported
+            .Append($"{TEMPLATE_COMMENT} Name:{NewLine}")
+            .Append($"{MusicName}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} Roland MIDI channel off/on table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.RolandMIDIChannelOffOnTable, ROLAND_MIDI_CHANNELS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} Roland global MIDI volume table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.RolandMIDIVolumeTable, ROLAND_MIDI_VOLUMES_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} Adlib MIDI channel dedication table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelDedicationTable, ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} CMS MIDI channel dedication table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelDedicationTable, CMS_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} CMS MIDI channel finetune offset table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelFinetuneOffsetTable, CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} PC-Speaker pitch and speed:{NewLine}")
+            .Append($"{BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PCSpeakerPitchAndSpeed):X2}")
+
+            .Append($"{NewLine}{NewLine}{TEMPLATE_COMMENT} MIDI track data:{NewLine}")
+            .Append(Escape(GetString(DataFile().Data, MIDITrackOffset, (DataFile().Data.Count - MIDITrackOffset) - FOOTER_SIZE), " "c, EscapeAll:=True).Trim())
+            .Append($"{NewLine}{NewLine}{TEMPLATE_COMMENT} Repeats:{NewLine}")
+            .Append($"{If(IsRepeatingMusic(), "yes", "no")}{NewLine}")
+
+            File.WriteAllText(Path.Combine(ExportPath, $"{MusicName}.txt"), .ToString())
+            Process.Start(New ProcessStartInfo With {.FileName = ExportPath, .WindowStyle = ProcessWindowStyle.Normal})
+         End With
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+   End Sub
+
+   'This procedure imports the specified music template.
+   Private Function Import(ImportPath As String) As String
+      Try
+         Dim Data As New List(Of Byte)
+         Dim Header As New List(Of Byte)
+         Dim MIDITrackOffset As New Integer
+         Dim TemplateLines As New List(Of String)(TrimAllLines((From Item In Template() Skip 1 Where Not (Item.Trim().StartsWith(TEMPLATE_COMMENT) OrElse Item.Trim = Nothing)).ToList()))
+         Dim MusicName As String = TemplateLines.First()
+         Dim MusicPath As String = Path.Combine(Path.GetDirectoryName(ImportPath), $"{MusicName}.mus")
+
+         TemplateLines.RemoveAt(0)
+
+         With Header
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.RolandMIDIChannelOffOnTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.RolandGlobalMIDIVolumeTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.AdlibMIDIChannelDedicationTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.CMSMIDIChannelDedicationTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.CMSMIDIChannelFinetuneOffsetTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(Enumerable.Repeat(ToByte(&H0%), RANDOM_DATA_BLOCK_1_SIZE))
+            .AddRange(BitConverter.GetBytes(CUShort(Integer.Parse(TemplateLines(TemplateLinesE.PCSpeakerPitchAndSpeed).Trim(), NumberStyles.HexNumber))))
+         End With
+
+         With Data
+            .AddRange(BitConverter.GetBytes(CUShort(Header.Count + &H2%)))
+            .AddRange(Header)
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.MIDITrack).Trim()}", EscapeCharacter:=" "c)))
+            .Add(MIDI_EVENT_STOP_PLAYBACK)
+            Select Case TemplateLines(TemplateLinesE.RepeatFlag).Trim().ToLower()
+               Case "no"
+                  .Add(&H81%)
+               Case "yes"
+                  .Add(&H80%)
+            End Select
+
+            File.WriteAllBytes(MusicPath, .ToArray())
+         End With
+
+         Return MusicPath
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
 
    'This procedure returns whether or not the music is played repeatedly.
    Private Function IsRepeatingMusic() As Boolean

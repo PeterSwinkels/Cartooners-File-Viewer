@@ -343,7 +343,7 @@ End Structure
 [Notes]
 The headers typically contain the following string: "rsxx}u".
 
-[Other games with similar file midi music files]
+[Other games with similar file MIDI music files]
 See the file "Electronic Arts Music Files.ods".
 
 ===================================================================================================

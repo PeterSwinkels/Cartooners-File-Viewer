@@ -114,24 +114,24 @@ Public Class ScriptClass
          Dim ScriptFile As String = Path.GetFileNameWithoutExtension(ImportPath)
          Dim Section As String = Nothing
          Dim Sections As New List(Of String)({"[code]", "[header]"})
-         Dim Template As New List(Of String)(LoadTemplate())
+         Dim TemplateLines As New List(Of String)(Template())
 
          Line = 0
-         Do While Line < Template.Count
-            If Not Template(Line) = Nothing Then
-               Section = Template(Line).ToLower()
+         Do While Line < TemplateLines.Count
+            If Not TemplateLines(Line) = Nothing Then
+               Section = TemplateLines(Line).ToLower()
                Select Case Section
                   Case "[code]"
                      Sections.Remove(Section)
                      Do
                         Line += 1
                         If Line >= Template.Count Then Exit Do
-                        Script.Append($"{Template(Line)}{NewLine}")
+                        Script.Append($"{TemplateLines(Line)}{NewLine}")
                      Loop
                   Case "[header]"
                      Sections.Remove(Section)
                      Line += 1
-                     Header = TEXT_TO_BYTES(Unescape(Template(Line), EscapeCharacter:=" "c, ErrorAt:=ErrorAt))
+                     Header = TEXT_TO_BYTES(Unescape(TemplateLines(Line), EscapeCharacter:=" "c, ErrorAt:=ErrorAt))
                      If ErrorAt > 0 Then
                         MessageBox.Show($"Invalid escape sequence at: {ErrorAt}.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
                      End If
