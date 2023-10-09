@@ -326,7 +326,7 @@ Begin Structure: Header.
 	0x22	0x09 BYTES	Adlib MIDI channel dedication table.
 	0x2B	0x0C BYTES	CMS MIDI channel dedication table.
 	0x37	0x0C BYTES	CMS MIDI channel finetune offset table.
-	0x43	0x08 BYTES	Random data which may be anything without affecting the music/sound.
+	0x43	0x08 BYTES	Tandy sound chip related data. (Specifics unknown.)
 	0x4B	WORD		PC-Speaker pitch and speed.	
 	0x4D	BYTES		Random data which may be anything without affecting the music/sound.
 End Structure
