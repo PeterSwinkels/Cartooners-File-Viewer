@@ -21,40 +21,40 @@ Public Class MusicClass
 
    'This enumeration lists the locations of known values inside a music file.
    Private Enum LocationsE As Integer
-      AdlibMIDIChannelDedicationTable = &H22%    'The Adlib MIDI channel dedication table.
-      CMSMIDIChannelDedicationTable = &H2B%      'The CMS MIDI channel dedication table.
-      CMSMIDIChannelFinetuneOffsetTable = &H37%  'The CMS MIDI channel finetune offset table.
-      MIDITrackOffset = &H0%                     'The music's MIDI track offset.
-      PCSpeakerPitchAndSpeed = &H4B%             'The PC-Speaker pitch and speed.
-      RandomDataBlock = &H4D%                    'Random data block.
-      RolandMIDIChannelOffOnTable = &H2%         'The Roland MIDI channel off/on table.
-      RolandMIDIVolumeTable = &H12%              'The Roland global MIDI volume table.
-      TandySoundChipRelatedData = &H43%          'Tandy sound chip related data. (Specifics unknown.)
+      AdlibMIDIChannelInitializationTable = &H22%    'The Adlib MIDI channel initialization table.
+      CMSMIDIChannelInitializationTable = &H2B%      'The CMS MIDI channel initialization table.
+      CMSMIDIChannelFinetuneOffsetTable = &H37%      'The CMS MIDI channel finetune offset table.
+      MIDITrackOffset = &H0%                         'The music's MIDI track offset.
+      PCSpeakerPitchAndSpeed = &H4B%                 'The PC-Speaker pitch and speed.
+      RandomDataBlock = &H4D%                        'Random data block.
+      RolandMIDIChannelOffOnTable = &H2%             'The Roland MIDI channel off/on table.
+      RolandMIDIVolumeTable = &H12%                  'The Roland global MIDI volume table.
+      TandySoundChipInitializationTable = &H43%      'Tandy sound chip initialization table.
    End Enum
 
    'This enumeration lists the locations of the music template sections.
    Private Enum TemplateLinesE As Integer
-      AdlibMIDIChannelDedicationTable = 2        'The Adlib MIDI channel dedication table.
-      CMSMIDIChannelDedicationTable = 3          'The CMS MIDI channel dedication table.
-      CMSMIDIChannelFinetuneOffsetTable = 4      'The CMS MIDI channel finetune offset table.
-      MIDITrack = 7                              'The MIDI track.
-      PCSpeakerPitchAndSpeed = 6                 'The PC-Speaker pitch and speed.
-      RepeatFlag = 8                             'The repeat flag.
-      RolandGlobalMIDIVolumeTable = 1            'The Roland global MIDI volume table.
-      RolandMIDIChannelOffOnTable = 0            'The Roland MIDI channel off/on table.
-      TandySoundChipRelatedData = 5              'Tandy sound chip related data. (Specifics unknown.)
+      AdlibMIDIChannelInitializationTable = 2        'The Adlib MIDI channel initialization table.
+      CMSMIDIChannelInitializationTable = 3          'The CMS MIDI channel initialization table.
+      CMSMIDIChannelFinetuneOffsetTable = 4          'The CMS MIDI channel finetune offset table.
+      MIDITrack = 7                                  'The MIDI track.
+      PCSpeakerPitchAndSpeed = 6                     'The PC-Speaker pitch and speed.
+      RepeatFlag = 8                                 'The repeat flag.
+      RolandGlobalMIDIVolumeTable = 1                'The Roland global MIDI volume table.
+      RolandMIDIChannelOffOnTable = 0                'The Roland MIDI channel off/on table.
+      TandySoundChipInitializationTable = 5          'Tandy sound chip initialization table.
    End Enum
 
-   Private Const ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE As Integer = &H9%       'Defines the Adlib MIDI channel dedication table size.
-   Private Const CMS_MIDI_CHANNEL_DEDICATIONS_SIZE As Integer = &HC%         'Defines the CMS MIDI channel dedication table size.
-   Private Const CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE As Integer = &HC%    'Defines the CMS MIDI channel finetune offset table size.
-   Private Const FOOTER_SIZE As Integer = &H2%                               'Defines the footer size.
-   Private Const MIDI_EVENT_STOP_PLAYBACK As Integer = &HFC%                 'Defines the stop playback MIDI event.
-   Private Const PLAY_ONCE As Integer = &H81%                                'Indicates that the music is played once.
-   Private Const PLAY_REPEATEDLY As Integer = &H80%                          'Indicates that the music is played repeatedly.
-   Private Const ROLAND_MIDI_CHANNELS_SIZE As Integer = &H10%                'Defines the Roland MIDI channel off/on table size.
-   Private Const ROLAND_MIDI_VOLUMES_SIZE As Integer = &H10%                 'Defines the Roland global MIDI volume table size.
-   Private Const TANDY_SOUND_CHIP_RELATED_DATA_SIZE As Integer = &H8%        'Defines the Tandy sound chip related data size.
+   Private Const ADLIB_MIDI_CHANNEL_INITIALIZATION_SIZE As Integer = &H9%       'Defines the Adlib MIDI channel initialization table size.
+   Private Const CMS_MIDI_CHANNEL_INITIALIZATION_SIZE As Integer = &HC%         'Defines the CMS MIDI channel initialization table size.
+   Private Const CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE As Integer = &HC%       'Defines the CMS MIDI channel finetune offset table size.
+   Private Const FOOTER_SIZE As Integer = &H2%                                  'Defines the footer size.
+   Private Const MIDI_EVENT_STOP_PLAYBACK As Integer = &HFC%                    'Defines the stop playback MIDI event.
+   Private Const PLAY_ONCE As Integer = &H81%                                   'Indicates that the music is played once.
+   Private Const PLAY_REPEATEDLY As Integer = &H80%                             'Indicates that the music is played repeatedly.
+   Private Const ROLAND_MIDI_CHANNELS_SIZE As Integer = &H10%                   'Defines the Roland MIDI channel off/on table size.
+   Private Const ROLAND_MIDI_VOLUMES_SIZE As Integer = &H10%                    'Defines the Roland global MIDI volume table size.
+   Private Const TANDY_SOUND_CHIP_INITIALIZATION_TABLE_SIZE As Integer = &H8%   'Defines the Tandy sound chip related data size.
 
    'The menu items used by this class.
    Private WithEvents DisplayDataMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F1, .Text = "Display &Data"}
@@ -110,17 +110,17 @@ Public Class MusicClass
    'This procedure displays the current music's data.
    Private Sub DisplayDataMenu_Click(sender As Object, e As EventArgs) Handles DisplayDataMenu.Click
       Try
-         Dim MIDITrackOffset As Integer = BitConverter.ToUint16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)
+         Dim MIDITrackOffset As Integer = BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.MIDITrackOffset)
 
          With New StringBuilder
             .Append($"Music data:{NewLine}")
             .Append($"-Relative MIDI track offset: {MIDITrackOffset:X}{NewLine}")
             .Append($"-Roland MIDI channel off/on table: {Escape(GetString(DataFile().Data, LocationsE.RolandMIDIChannelOffOnTable, ROLAND_MIDI_CHANNELS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-Roland global MIDI volume table: {Escape(GetString(DataFile().Data, LocationsE.RolandMIDIVolumeTable, ROLAND_MIDI_VOLUMES_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
-            .Append($"-Adlib MIDI channel dedication table: {Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelDedicationTable, ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
-            .Append($"-CMS MIDI channel dedication table: {Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelDedicationTable, CMS_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
+            .Append($"-Adlib MIDI channel initialization table: {Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelInitializationTable, ADLIB_MIDI_CHANNEL_INITIALIZATION_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
+            .Append($"-CMS MIDI channel initialization table: {Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelInitializationTable, CMS_MIDI_CHANNEL_INITIALIZATION_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-CMS MIDI channel finetune offset table: {Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelFinetuneOffsetTable, CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
-            .Append($"-Tandy sound chip related data (specifics unknown): {Escape(GetString(DataFile().Data, LocationsE.TandySoundChipRelatedData, TANDY_SOUND_CHIP_Related_DATA_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
+            .Append($"-Tandy sound chip initialization table: {Escape(GetString(DataFile().Data, LocationsE.TandySoundChipInitializationTable, TANDY_SOUND_CHIP_INITIALIZATION_TABLE_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}")
             .Append($"-PC-Speaker pitch and speed: {BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PCSpeakerPitchAndSpeed):X2}")
             .Append($"{NewLine}{NewLine}Random data block:{NewLine}")
             .Append(Escape(GetString(DataFile().Data, LocationsE.RandomDataBlock, MIDITrackOffset - LocationsE.RandomDataBlock), " "c, EscapeAll:=True).Trim())
@@ -165,14 +165,14 @@ Public Class MusicClass
             .Append($"{Escape(GetString(DataFile().Data, LocationsE.RolandMIDIChannelOffOnTable, ROLAND_MIDI_CHANNELS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
             .Append($"{TEMPLATE_COMMENT} Roland global MIDI volume table:{NewLine}")
             .Append($"{Escape(GetString(DataFile().Data, LocationsE.RolandMIDIVolumeTable, ROLAND_MIDI_VOLUMES_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
-            .Append($"{TEMPLATE_COMMENT} Adlib MIDI channel dedication table:{NewLine}")
-            .Append($"{Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelDedicationTable, ADLIB_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
-            .Append($"{TEMPLATE_COMMENT} CMS MIDI channel dedication table:{NewLine}")
-            .Append($"{Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelDedicationTable, CMS_MIDI_CHANNEL_DEDICATIONS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} Adlib MIDI channel initialization table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.AdlibMIDIChannelInitializationTable, ADLIB_MIDI_CHANNEL_INITIALIZATION_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} CMS MIDI channel initialization table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelInitializationTable, CMS_MIDI_CHANNEL_INITIALIZATION_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
             .Append($"{TEMPLATE_COMMENT} CMS MIDI channel finetune offset table:{NewLine}")
             .Append($"{Escape(GetString(DataFile().Data, LocationsE.CMSMIDIChannelFinetuneOffsetTable, CMS_MIDI_CHANNEL_FINETUNE_OFFSETS_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
-            .Append($"{TEMPLATE_COMMENT} Tandy sound chip related data (specifics unknown)::{NewLine}")
-            .Append($"{Escape(GetString(DataFile().Data, LocationsE.TandySoundChipRelatedData, TANDY_SOUND_CHIP_RELATED_DATA_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
+            .Append($"{TEMPLATE_COMMENT} Tandy sound chip initialization table:{NewLine}")
+            .Append($"{Escape(GetString(DataFile().Data, LocationsE.TandySoundChipInitializationTable, TANDY_SOUND_CHIP_INITIALIZATION_TABLE_SIZE), " "c, EscapeAll:=True).Trim()}{NewLine}{NewLine}")
             .Append($"{TEMPLATE_COMMENT} PC-Speaker pitch and speed:{NewLine}")
             .Append($"{BitConverter.ToUInt16(DataFile().Data.ToArray(), LocationsE.PCSpeakerPitchAndSpeed):X2}")
 
@@ -204,10 +204,10 @@ Public Class MusicClass
          With Header
             .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.RolandMIDIChannelOffOnTable).Trim()}", EscapeCharacter:=" "c)))
             .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.RolandGlobalMIDIVolumeTable).Trim()}", EscapeCharacter:=" "c)))
-            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.AdlibMIDIChannelDedicationTable).Trim()}", EscapeCharacter:=" "c)))
-            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.CMSMIDIChannelDedicationTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.AdlibMIDIChannelInitializationTable).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.CMSMIDIChannelInitializationTable).Trim()}", EscapeCharacter:=" "c)))
             .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.CMSMIDIChannelFinetuneOffsetTable).Trim()}", EscapeCharacter:=" "c)))
-            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.TandySoundChipRelatedData).Trim()}", EscapeCharacter:=" "c)))
+            .AddRange(TEXT_TO_BYTES(Unescape($" {TemplateLines(TemplateLinesE.TandySoundChipInitializationTable).Trim()}", EscapeCharacter:=" "c)))
             .AddRange(BitConverter.GetBytes(CUShort(Integer.Parse(TemplateLines(TemplateLinesE.PCSpeakerPitchAndSpeed).Trim(), NumberStyles.HexNumber))))
          End With
 

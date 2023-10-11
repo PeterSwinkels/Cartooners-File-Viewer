@@ -323,10 +323,10 @@ Begin Structure: Header.
 	0x00	WORD		Relative MIDI track offset.
 	0x02	0x10 BYTES	Roland MIDI channel off/on table.
 	0x12	0x10 BYTES	Roland global MIDI volume table.
-	0x22	0x09 BYTES	Adlib MIDI channel dedication table.
-	0x2B	0x0C BYTES	CMS MIDI channel dedication table.
+	0x22	0x09 BYTES	Adlib MIDI channel initialization table.
+	0x2B	0x0C BYTES	CMS MIDI channel initializationtable.
 	0x37	0x0C BYTES	CMS MIDI channel finetune offset table.
-	0x43	0x08 BYTES	Tandy sound chip related data. (Specifics unknown.)
+	0x43	0x08 BYTES	Tandy sound chip initialization table.
 	0x4B	WORD		PC-Speaker pitch and speed.	
 	0x4D	BYTES		Random data which may be anything without affecting the music/sound.
 End Structure
