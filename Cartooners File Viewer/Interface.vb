@@ -200,10 +200,8 @@ Public Class InterfaceWindow
          Static CurrentPath As String = Nothing
 
          If Not NewPath = Nothing Then
+            NewPath = NewPath.Trim(""""c)
             Extension = Path.GetExtension(NewPath)
-
-            If NewPath.StartsWith("""") Then NewPath = NewPath.Substring(1)
-            If NewPath.EndsWith("""") Then NewPath = NewPath.Substring(0, NewPath.Length - 1)
 
             Select Case Extension.ToLower()
                Case ".act"
