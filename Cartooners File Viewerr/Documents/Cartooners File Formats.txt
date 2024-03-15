@@ -1,0 +1,584 @@
+Cartooners' File Formats, by: Peter Swinkels ***2015***
+
+[General Program Information]
+Cartooners 1988/1989 - by: Electronic Arts & IDTA
+
+Note:
+This document primarily applies to the program's MS-DOS version. The last section provides a brief summary of the file formats used by the Apple IIGS version.
+
+===================================================================================================
+
+[Animated Actors]
+
+[File Information]
+Endianess: little.
+Extension: *.act
+
+[File Layout]
+Begin Structure: Header.
+        0x00	WORD		Signature. ***
+	0x02	WORD		Relative offset of the menu item data's end offset.
+	0x04	0x10 WORDS	Palette. 0x04 nibbles repeated 0x10 times: {green, blue, null, red}. ******
+	0x24	DWORD		The total number of images.
+	0x28	WORD		Null.
+	0x2A	DWORD		The size of all image records combined.
+	0x2E	DWORD		Relative offset + 0x4B of the animation records list.
+	0x32	DWORD		Relative offset + 0x4B of the animation record count list.
+	0x36	DWORD		Relative offset + 0x4B of the animation record loop back list.
+	0x3A	DWORD		Relative offset + 0x4B of the actor's name.
+	0x3E	WORD		The number of actions the actor can perform.
+	0x40	DWORD		Relative offset + 0x4B of the action menu item data.
+	0x44	WORD		The number of ways the actor can go.
+	0x46	DWORD		Relative offset + 0x4B of the way menu item data.
+	0x4A	DWORD		Relative offset + 0x4B of the menu item data's end.
+	0x4E	WORD		Null.
+End Structure
+
+Begin Structure: Image records. (Repeat [0x24] times. Total size is indicated at [0x2A].)
+	0x00	DWORD		The absolute offset of an image.
+	0x04	WORD		The number of uncompressed bytes per pixel row.
+	0x06	WORD		The image's height specified in pixels.
+	0x08	WORD		The image's width specified in pixels.
+	0x0A	DWORD		Null.
+End Structure
+
+Begin Structure: Animation records. (Repeat until the offset indicated at [0x2E] is reached.)
+	0x00	BYTE		The vertical speed.
+	0x01	BYTE		The vertical direction (0x00 = up, 0xFF = down.)
+	0x02	BYTE		Image record number.
+	0x03	BYTE		Null.
+	0x04	BYTE		The horizontal speed.
+	0x05	BYTE		The horizontal direction (0x00 = left, 0xFF = right.)
+End Structure
+
+Begin Structure: Padding.
+	0x00	BYTE		Null.
+End Structure
+
+Begin Structure: Action animation records list (Repeat [0x3E] times.)
+	Begin Structure: Way animation records (Repeat [0x44] times.)
+		0x00	BYTE	Null.
+		0x01	BYTE	Animation record.
+	End Structure
+End Structure
+
+Begin Structure: Action animation record count list (Repeat [0x3E] times.)
+	Begin Structure: Way animation record count (Repeat [0x44] times.)
+		0x00	BYTE	Null.
+		0x01	BYTE	The number of records.
+	End Structure
+End Structure
+
+Begin Structure: Action animation record loop-back count list (Repeat [0x3E] times.)
+	Begin Structure: Way animation record loop back count (Repeat [0x44] times.)
+		0x00	BYTE	Null.
+		0x01	BYTE	The number of records to loop back.
+	End Structure
+End Structure
+
+Begin Structure: Menu
+	0x00	BYTE	Null.
+	0x01	BYTES	Actor name.
+	VAR1	BYTES	Null delimited action menu items. (Repeat [0x3E] times.)
+	VAR2	BYTES	Null delimited way menu items. Repeat [0x44] times.
+	VAR3	BYTE	Null.
+
+	Item:	Prefix:		Suffix: 
+ 	Name	"-- "		"\Nxxxxx"
+	Action	"--"		"\N256##"
+	Way	"--"		"\N2816#"
+
+	"##" = the zero based index number in decimal notation.
+End Structure
+
+Begin Structure: Image data. (Repeat [0x24] times.)
+	0x00	WORD		Image data size.
+	0x02	[0x00] BYTES	Image data. *********
+
+	Instruction:	Operand:	Meaning:
+	0x00-0x3F	BYTES		Copy 0x01-0x40 BYTES.
+	0x40-0x7F	BYTE		Repeat the BYTE 0x01-0x40 times.
+	0x81-0xBF	DWORD		Repeat the DWORD 0x02-0x40 times.
+	0xC0-0xFF	BYTE		Repeat the BYTE ((0x01-0x40) * 0x04) times.
+End Structure
+
+Note:
+*** Same for all files. The value of 0x10 could indicate the number of palette entries.
+****** This type of palette is used in the Cartooners executable as well.
+********* This RLE compression algorithm is used in the Cartooners executable as well.
+===================================================================================================
+
+[File Archives]
+
+[File Information]
+Endianess: little.
+Extension: *.pea
+
+[File Layout]
+Begin Structure: Compressed file - repeat for each file in the archive.
+	0x00	0x03 BYTES	A prefix for each archived file (0x1A + "EA").
+	0x03	0x0D BYTES	The archived file's name. Padded with 0x00 bytes.
+	0x10	WORD		The year, month, and day at which the file was created/last modified. ***
+	0x12	WORD		The hour, minute, and second at which the file was created/last modified. ******
+	0x14	BYTE		Indicates whether the file data is compressed. (0x00 = FALSE, 0x01 = TRUE)
+	0x15	DWORD		The file's uncompressed size.
+	0x19	DWORD		The file's compressed size.
+	0x1D	BYTE		The archived file header's size.
+	0x1E	0x12 BYTES	Null.
+	0x30	BYTE		LZW compressed or uncompressed file data.
+End Structure
+
+Note:
+*** Bits: YYYYYYYMMMDDDDD
+****** Bits: HHHHHMMMMMSSSSS - Seconds are stored in two second intervals.
+
+===================================================================================================
+
+[Installation Script]
+
+[File Information]
+Endianess: little.
+Extension: *.iea
+Line break: 0x0D
+
+[File Layout]
+Begin Structure: Header.
+	0x00	0x0A BYTES	Unused.
+End Structure
+
+Begin Structure: Compressed script.
+	0x00	BYTES		LZW compressed installation script.
+End Structure
+
+See the document "EA Install Utility Script Syntax.txt" for information about the scripting language.
+
+===================================================================================================
+
+[Movies]
+Endianess: little.
+Extension: *.mov
+
+[File Layout]
+Begin Structure: Header.
+	0x00	WORD		Signature. ***
+	0x02	WORD		The total length of the remaining header items following this entry.
+	0x04	0x20 BYTES	The palette for actors and scenes. 0x04 nibbles repeated 0x10 times: {green, blue, null, red}.
+	0x24	WORD		Indicates whether the movie contains scenes. (0x00 = FALSE, 0x01 = TRUE)
+	0x26	WORD		The number of frames per second. ******
+	0x28	WORD		Indicates whether the movie plays repeatedly. (0x00 = FALSE, 0x01 = TRUE)
+	0x2A	0x95 BYTES	Null.
+	0xBF	0x20 BYTES	The palette for speech balloons - same format as the first palette.
+	0xDF	WORD		Indicates whether or not the movie contains speech balloons.
+	0xE1	WORD		The speech balloon text's default color palette index.
+End Structure
+
+Begin Structure: Frame records.
+	0x00	WORD		Frame record count.
+	Begin Structure Frame record (Repeat [0x00] times.)
+		0x00	WORD	Record length.
+
+		Begin Structure Frame Record Data
+			Begin Structure Actor frame data (Repeat for each actor.)
+				0x00	BYTE	The actor/speech balloon handle. *********
+				0x01	WORD	Action and way: (Way * WayCount) + Action.
+				0x03	BYTE	Level (0x01 - 0x08.)
+				0x04	BYTE	Animation record index.
+				0x05	WORD	The actor's image index.
+				0x07	WORD	The actor's horizontal position.
+				0x09	WORD	The actor's vertical position.
+			End Structure
+
+			Begin Structure Miscellaneous frame data.
+				0x0B	WORD	Scene index: (0x0000 = none, 0x0001-0xFFFF = scene index.)
+				0x0D	BYTE	Frame pause in seconds.
+				0x0E	BYTE	Music index: (0x0000 = silence, 0x0001-0xFFFF = music index.)
+			End Structure
+		End Structure
+	End Structure
+End Structure
+
+Begin Structure: Footer
+	0x00	WORD			The number of actor/speech balloon handle records.
+
+	Begin Structure HandleRecord (Repeat [0x00] times.)
+		0x00	BYTE		The index of an actor/speech balloon.
+		0x01	BYTE		One out of five possible handles reserved for a specific actor/speech balloon.
+		0x02	BYTE		The previously reserved handle.
+		0x03	BYTE		The rank of a specific actor/speech balloon instance.
+	End Structure
+
+	VAR1	WORD			The number of actors plus one.
+	VAR2	BYTE			Null.
+	VAR3	[VAR1 - 0x01] BYTES	The actors' handles.
+	VAR4	BYTE			Unknown - always contains 0x01. (Changing this value produces a "Tool error" $0206 (handleErr) in ProDOS.)
+	VAR5	WORD			Null.
+
+	Begin Structure Actor file path (Repeat [VAR1] - 0x02 times.)
+		0x00	WORD		Length of path.
+		0x01	[0x00] BYTES	Null terminated path.		
+	End Structure
+
+	VAR6	WORD	Scene count.
+
+	Begin Structure Scene file path (Repeat [VAR6] times.)
+		0x00	WORD		Length of path.
+		0x01	[0x00] BYTES	Null terminated path.		
+	End Structure
+
+	VAR7	WORD	Music count.
+
+	Begin Structure Music file path (Repeat [VAR7] times.)
+		0x00	WORD		Length of path.
+		0x01	[0x00] BYTES	Null terminated path.		
+	End Structure
+
+	VAR8	WORD	Speech balloon count.
+
+	Begin Structure Speech balloon (Repeat [VAR8] times.)
+		0x00	WORD		The balloon's index.
+		0x02	WORD		The balloon properties' size in bytes (text not included.)
+		0x04	WORD		The balloon's type. ************
+		0x06	WORD		The balloon background color's palette index.
+		0x08	WORD		The balloon border color's palette index.
+		0x0A	DWORD		Null.
+		0x0E	WORD		The balloon's height.
+		0x10	WORD		The balloon's width.
+		0x12	WORD		The text's vertical position.
+		0x14	WORD		The text's horizontal position.
+		0x16	WORD		The text area height.
+		0x18	WORD		The text area width.
+		0x1A	WORD		The text's length.
+		0x1C	DWORD		Filler.
+		0x20	WORD		The last selected text color's palette index.
+		0x22	WORD		Null.
+		0x24	WORD		The text's alignment (0x00 = left, 0x01 = center, 0x02 = fill (Apple IIGS only.))
+		0x26	WORD		The text's font. ***************
+		0x28	WORD		The text's size in points. ***************
+		0x2A	[0x1A] BYTES	The balloon's text and optional macro's. ******************
+	End Structure
+End Structure
+
+Notes:
+***
+Same for all files. The two 0x10 values could indicate the number of entries for the two palettes.
+
+******
+The frame rate's range is 0.2 to 60.0 frames per second. The formula for calculating the number of frames per second:
+Rate = (1000 / [Header:0x26]) / (1000 / 60.0)
+
+60.0	  = The highest frame rate supported .
+1000 / 60 = The minimum number of milliseconds between frames supported.
+
+*********
+Each frame can have up to five speech balloons/actors at a time. Handles 1 to 5 are reserved for speech balloons. Handles 6 and upward are for actors.
+
+************
+Speech balloon types:
+
+0x00	Invisible
+0x01	Title
+0x02	Speech (Right)
+0x03	Speech (Left)
+0x04	Thought (Right)
+0x05	Thought (Left)
+0x06	Exclamation (Right)
+0x07	Exclamation (Left)
+
+***************
+This data is used by the Apple IIGS version but is ignored by the MS-DOS version.
+
+Fonts:
+Value:		Name:
+{0xC8, 0x00}	Funnies
+{0xFE, 0xFF}	Shaston
+
+Supported font sizes:
+8, 10, 12, 14, 16, 20, 24, 28, and 32 points.
+
+******************
+Text foreground color macro's:
+
+Begin Structure Macro
+	0x00	BYTE	Flag (0x01 = macro, other values = none.)
+	0x01	BYTE	Type ('C' (0x43) = color, 'S' (0x53) = style (Apple IIGS only.)
+	0x02	BYTE	'C' = The text foreground color's palette index.
+			'S' = Style bits.
+				Bitmask:	Style:
+				00000001	Bold.
+				00000010	Italic.
+				00000100	Underline.
+				00001000	Outline.
+				00010000	Shadow.
+	0x03	BYTE	0x00 (end of macro.)
+End Structure
+
+===================================================================================================
+
+[Music and Sounds]
+Endianess: little.
+Extension: *.mus
+
+[File Layout]
+Begin Structure: Header.
+	0x00	WORD		Relative MIDI track offset.
+	0x02	0x10 BYTES	Roland MIDI channel off/on table.
+	0x12	0x10 BYTES	Roland global MIDI volume table.
+	0x22	0x09 BYTES	Adlib MIDI channel initialization table.
+	0x2B	0x0C BYTES	CMS MIDI channel initializationtable.
+	0x37	0x0C BYTES	CMS MIDI channel finetune offset table.
+	0x43	0x08 BYTES	Tandy sound chip initialization table.
+	0x4B	WORD		PC-Speaker pitch and speed.	
+	0x4D	BYTES		Random data which may be anything without affecting the music/sound.
+End Structure
+
+Begin Structure: MIDI track data.
+	0x00	BYTES		MIDI track data.
+End Structure
+
+Begin Structure: Footer.
+	0x00	BYTE		MIDI event "Stop playback".
+	0x01	BYTE		Indicates whether or not the music/sound is played again when the end is reached: (0x80 = repeat, 0x81 stop.)
+End Structure
+
+[Notes]
+The headers typically contain the following string: "rsxx}u".
+
+[Other games with similar file MIDI music files]
+See the file "Electronic Arts Music Files.ods".
+
+===================================================================================================
+
+[Palettes]
+Endianess: little.
+Extension: *.bbm
+
+[File Layout]
+Begin Structure: Header
+	See "Scenes and Static Actors".
+End Structure
+
+Begin Structure: "CMAP" IFF record.
+	See "Scenes and Static Actors".
+End Structure
+
+Begin Structure: "GRAB" IFF record.
+	0x00	WORD 	The hotspot's x coordinate specified in pixels relative to the image's top-left corner.
+	0x02	WORD	The hotspot's y coordinate specified in pixels relative to the image's top-left corner.
+End Structure
+
+Begin Structure: "CRNG" IFF record - can occur multiple times in a row.
+	0x00	WORD 	Padding bytes. (0x00)
+	0x02	WORD 	The color cycle rate. ***#1
+	0x04	WORD 	Flags which control the cycling of colors through the palette. ***#2
+	0x07	BYTE 	The first entry's index in the color map that is part of this range. ***#2
+	0x08	BYTE 	The last entry's index in the color map that is part of this range. ***#2
+End Structure
+
+Begin Structure: "TINY" IFF record.
+	0x00	WORD 	The thumbnail's width specified in pixels.
+	0x02	WORD 	The thumbnail's height specified in pixels.
+	0x04	BYTES 	See "BODY" IFF record under "Scenes and Static Actors".
+End Structure
+
+Begin Structure: "BODY" IFF record.
+	See "Scenes and Static Actors".
+End Structure
+
+
+Notes:
+1. The units are such that a rate of 0x3C steps per second is represented as 0xD6 = 0x4000. Lower rates can be obtained by linear scaling: for 0x1E steps/second, rate = 0x2000.
+2. If the first bit is 0x01, the colors should cycle, otherwise this color register range is inactive and should have no effect.
+   If the last bit is 0x00, the colors cycle upwards.
+   I.e. each color moves into the next index position in the color map and the uppermost color in the range moves down to the lowest position.
+   If the last bit is 0x01, the colors cycle in the opposite direction. Only those colors between the low and high entries in the color map should cycle.
+===================================================================================================
+
+[Preferences File]
+Endianess: little.
+Extension: *.inf
+
+[File Layout]
+Begin Structure: Preferences.
+	0x00	WORD	"Buttons stay down." preference: (0x00 = off, 0x01 = on.)
+	0x02	WORD	"Add ... adds to movie." preference: (0x00 = off, 0x01 = on.)
+	0x04	WORD	"Play from first frame." preference: (0x00 = off, 0x01 = on.)
+	0x06	WORD	"Music off." preference: (0x00 = off, 0x01 = on.)
+End Structure
+
+Begin Structure: 0x0C .mov file entries.
+	0x00	0x93 BYTES	The full path to a .mov file with trailing nulls.
+End Structure
+
+Note:
+This file must always be 0x06EC bytes long.
+
+===================================================================================================
+
+[Printer Drivers]
+
+[File Information]
+Endianess: ?
+Extension: *.lpt
+
+[File Layout]
+0x00	DWORD		Signature.
+0x04	0x27 BYTES	Printer model name padded with 0x00 bytes.
+0x2C	BYTE		Unknown.
+0x2D	WORD		Unknown.
+0x2F	BYTE		Null.
+0x30	WORD		Unknown.
+0x32	WORD		Unknown.
+0x34	WORD		Unknown.
+0x36	WORD		Unknown.
+0x38	BYTE		Unknown.
+0x39	BYTE		Unknown.
+0x3A	BYTE		Unknown.
+0x3B	BYTE		Unknown.
+0x3C	BYTE		Unknown.
+0x3D	BYTE		Unknown.
+0x3E	BYTE		Unknown.
+0x3F	BYTE		Unknown.
+0x40	BYTE		Unknown.
+0x41	BYTE		Unknown.
+0x42	BYTE		Unknown.
+0x43	BYTE		Unknown.
+0x44	BYTE		Unknown.
+0x45	BYTE		Unknown.
+0x46	BYTE		Unknown.
+0x47	BYTE		Unknown.
+0x48	BYTE		Unknown.
+0x49	0x10 BYTES	Null.
+0x59	BYTE		Unknown.
+0x5A	BYTE		Always 0x1B - Probably a PCL command.
+0x5B	BYTE		Unknown.
+0x5C	BYTE		Unknown.
+0x5D	BYTE		Unknown.
+0x5E	BYTE		Unknown.
+0x5F	BYTE		Unknown.
+0x60	BYTE		Unknown.
+0x61	0x09 BYTES	Null.
+0x6A	BYTE		Unknown.
+0x6B	BYTE		Always 0x1B - Probably a PCL command.
+0x6C	BYTE		Unknown.
+0x6D	BYTE		Unknown.
+0x6E	BYTE		Unknown.
+0x6F	BYTE		Unknown.
+0x70	BYTE		Unknown.
+0x71	WORD		Null.
+0x73	BYTE		Unknown.
+0x74	BYTE		Appears to be a boolean. (0x00 or 0x01 only.)
+0x75	BYTE		Unknown.
+0x76	BYTE		Unknown.
+0x77	BYTE		Unknown.
+0x78	0x06 BYTES	Null.
+0x7E	BYTE		Unknown.
+0x7F	BYTE		Unknown.
+0x80	BYTE		Unknown.
+0x81	BYTE		Unknown.
+0x82	BYTE		Unknown.
+0x83	BYTE		Unknown.
+0x84	BYTE		Unknown.
+0x85	DWORD		Null.
+0x89	BYTE		Unknown.
+0x8A	BYTE		Unknown.
+0x8B	BYTE		Unknown.
+0x8C	BYTE		Unknown.
+0x8D	DWORD		Null.
+0x91	BYTE		Unknown.
+0x92	BYTE		Unknown.
+0x93	BYTE		Unknown.
+0x94	BYTE		Unknown.
+0x95	DWORD		Null.
+0x99	BYTE		Unknown.
+0x9A	BYTE		Unknown.
+0x9B	BYTE		Unknown.
+0x9C	BYTE		Unknown.
+0x9D	DWORD		Null.
+0xA1	BYTE		Unknown.
+===================================================================================================
+
+[Scenes and Static Actors]
+Endianess: little.
+Extension: *.lbm ***#1
+
+[File Layout]
+Begin Structure: Header
+	0x00	DWORD	IFF Identifier - must be "FORM".
+	0x04	DWORD	IFF file size.
+	0x08	DWORD	IFF type - must be "ILBM".	
+	
+	Begin Structure: One or more IFF records.
+		Begin Structure: IFF record header.
+			0x00	DWORD	IFF record identifier. ***#1
+			0x04	DWORD	IFF record size.
+			Begin Structure: IFF record.
+				See the following section for IFF record types discussed in this document.
+			End Structure
+		End Structure
+	End Structure
+End Structure
+
+[BMHD IFF record]
+Begin Structure: "BMHD" IFF record.
+	0x00	DWORD		The number of horizontal pixels.
+	0x04	DWORD		The number of vertical pixels.
+	0x08	DWORD		Null.
+	0x0C	BYTE		Bits per pixel. (0x01 = 0x02 colors, 0x04 = 0x10 colors, 0x08 = 0x100 colors.)
+	0x0D	BYTE		Null.
+	0x0E	BYTE		Indicates whether or not the image is compressed (0x00 = uncompressed, 0x01 = compresed.)
+	0x0F	0x09 bytes	Null.
+End Structure
+
+Begin Structure: "CMAP" IFF record.
+	0x00	BYTES	Palette. 0x03 bytes repeated 0x02 ^ [BMHD:0x0C] times: {red, green, blue}.
+End Structure
+
+Begin Structure: "BODY" IFF record. ***#2
+	0x00	BYTES		[BMHD:0x04] rows each containing [BMHD:0x0C] columns of bitplane data. ***#3
+End Structure
+
+[Decompression]
+Steps for decompression:
+
+1. Repeat steps 2 to 4 until the decompressed data's length equals or exceeds the number of horizontal pixels or the end of the file is reached.
+2. Read one byte from the file.
+3. If its value is 0x00-0x7F, then the byte represents the number of bytes (plus one) following it. These should be read from the file and added to the compressed data.
+   If its value is 0x81-0xFF, then the byte represents the number of times (minus 0x100) the following byte should be repeated and added to the compressed data.
+4. Go to step 1.
+
+All the compressed data combined will contain the bitplanes representing an image.
+
+Notes:
+1. Although this file format can have various extensions in its file name and can contain various types of IFF records, only the *.lbm extension and the "BMHD", "BODY", and "CMAP" record types are described here.
+2. Compressed pixel data must be decompressed before the data in the bitplanes can be processed.
+3. Each column of bitplane data should be [BMHD:0x00] / [BMHD:0x0C] of bytes in width.
+4. Even when Cartooners is running in VGA (320x200 pixels with 256 colors) all images are automatically downgraded to 16 colors.
+
+===================================================================================================
+
+[Sound Drivers]
+
+[File Information]
+Endianess: ?
+Extension: *.smb
+
+[File Layout]
+0x00	BYTES	X86 machine code and MIDI music related data.
+
+Note:
+
+The table below describes which driver file is used for the soundcards supported by Cartooners.
+
+File:		Soundcard:
+---------------------------------------------------------------------------------------------------
+adtoon.smb	AD LIB Board
+cstoon.smb	CMS Board
+mttoon.smb	Roland MT 32 or LAPC Board
+
+===================================================================================================
+
+[Apple IIGS]
+Type:		Description	:	MS-DOS counterpart extension:	Notes:
+ANM		Movie.			*.mov				Identical format in both versions, external file references may differ.
+BIN		Music/sound.		*.mus				The Apple IIGS version uses an IFF based format different from the MS-DOS version.
+PNT		Scence/static actor.	*.lbm				The Apple IIGS version uses a MacPaint format where the MS-DOS version uses the ILBM format.

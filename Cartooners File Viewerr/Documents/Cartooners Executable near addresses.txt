@@ -1,0 +1,5 @@
+Description:	Address:
+INT 0x08 offset.	55F4
+INT 0x08 segment.	55F6
+INT 0x33 offset.	55DE
+INT 0x33 segment.	55E0

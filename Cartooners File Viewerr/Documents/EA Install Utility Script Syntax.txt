@@ -1,0 +1,236 @@
+Electronic Arts Install Utility Script Syntax - by: Peter Swinkels, ***2023***
+
+This document describes the syntax for the Electronic Arts Install Utility - Version 1.40 supplied with the MS-DOS version of Cartooners.
+
+Possible undesired behaviors by the parser:
+	-Buffer overflows resulting in unpredictable behavior.
+	-Freezing.
+	-Ignoring fractions in numeric literals.
+	-Ignoring unexpected trailing elements in a statement.
+	-Providing incorrect descriptions of errors when a syntax error is detected.
+	-Treating parameters as string literals regardless of whether the values are enclosed in quotes if a string is expected in their place.
+
+General syntax:
+        -Comments must be on their own line and be preceded by a hash character ("#").
+	-Keywords are case insensitive.
+	-Keywords are separated from other code elements using spaces (" ").
+	-Lines including white space cannot be longer than 120 characters.
+	-Lines of code are separated using line breaks (0x0D character (carriage return)).
+	-Numeric literals can only contain the decimal digits (0-9).
+	-Parameters are delimited using a comma (",").
+	-String literals are enclosed in quotes (""").
+	-String variable names must have a "$" sigil.
+	-Variables must be implicitly declared by initializing them or by using them to contain a function's return value.
+	-White space made up of tabs, spaces and empty lines is ignored.
+
+
+	A few general operators (the rest is described in other sections of this document):
+	Operator:		Character name:	Description:
+	x + y	Plus sign.	Concatenates two strings.
+	x = y	Equal sign.	Assigns the expression "y" to the "x" variable.
+
+Variable naming:
+	-Names must start with a letter ("A-Z", "a-z") or underscore ("_").
+	-Numeric characters ("0-9") must be preceded by a letter or underscore.
+	-Names are case sensitive.
+	-Names (including any sigils) cannot be longer than 19 characters.
+
+Data types:
+	-32 bit signed long integers.
+	-Strings with a maximum length of 118 characters.
+
+Arithmetic:
+	Division and multiplication operators take precedence over addition and subtraction operators. Enclosing expressions in parentheses ("(" and ")") overrides the default operator precedence.
+
+	Operation:	Operator character:	Description:
+	x + y		plus			Addition.
+	x - y		minus			Subtraction.
+	x * y		asterisk		Multiplication.
+	x / y		forward slash		Integer division.
+
+Conditional code:
+
+	Any conditional expression that produces a non-zero value is considered equal to "true". Zero is considered equal to "false". These expressions can only be used in combination with the "if" statement. They must be enclosed in parentheses.
+
+	Single line "IF" statement:
+	if (expression) statement
+
+	Multiline "IF" statement:
+	IF (expression)
+		statements
+	[ELSE]
+		[statements]
+	ENDIF
+
+	The following operators are supported in conditional expressions:
+
+	Operation:	Operator character(s):			Description:
+	x == y		Two equal signs.			Determines whether two expressions are equal.
+	x != y		Exclamation sign + equal sign		Determines whether two expressions are not equal.
+	x < y		Less than sign.				Determines whether the left side expression is less than the right side expression.
+	x > y		Greater than sign.			Determines whether the left side expression is greater than the right side expression.
+
+Control flow:
+
+	Labels are defined by prefixing them with a colon ":". The following control flow statements are supported:
+
+	Statement:	Description:
+	EXIT code	Terminates the script with the specified exit code.
+	GOSUB label	Transfers control to the specified label. Must be used in combination with the return statement.
+	GOTO label	Transfers control to the specified label.
+	RETURN		Returns control to the line directly following the most recently executed gosub statement.
+
+
+Display:
+	The parser only supports text output. Statements that take coordinates as parameters support the following ranges:
+
+	Coordinate:	Range:
+	column (x)	0-79
+	row (y)		0-24 
+
+	The following colors are supported:
+
+	Background with blinking foreground:		8-15.
+	Background without blinking foreground:		0-7
+	Foreground:					0-15.
+
+	The following display statements are supported:
+
+	Statement:
+	ATSAY row, column, string		Displays the specified string at the specified coordinates.
+	CLS					Clears the screen.
+	COLOR foreground, background + blink	Sets the specified colors.
+	SAY string				Displays the specified string at the cursor's position.
+
+Dialogs:
+
+	Dialog functions display a prompt and return user input. When a keystroke is returned the following strings are used for special keys:
+
+	String:	Special key:
+	CR	Enter.
+	CURDN	Down arrow.
+	CURLF	Left arrow.
+	CURRT	Right arrow.
+	CURUP	Up arrow.
+	DEL	Delete.
+	END	End.
+	ESC	Escape.
+	HOME	Home.
+	INS	Insert.
+	PGDN	Page down.
+	PGUP	Page up.
+
+	The following rules apply to the parameters for the desired input length and return value parameter:
+	-A requested input length of zero indicates that a dialog function should return a single keystroke.
+	-Any other input length of more than zero indicates that a dialog function should return a string.
+	-The return value parameter must be a named string variable and cannot be a literal value.
+
+	
+	Function:						Description:
+	ATDIALOG row, column, return value, length, prompt	Displays the specified prompt at the specified location and returns the user's input.
+	DIALOG length, return value, prompt			Displays the specified prompt and returns the user's input.
+
+Character functions:
+
+	The following character functions are supported:
+
+	Function:		Description:
+	x = CHR_TO_INT y	Assigns the ASCII code value of the character indicated by "y" to the "x" variable.
+	x = INT_TO_CHR$ y	Assigns the character indicated by the ASCII code value "y" to the "x" variable.
+
+File functions:
+
+	Function:			Description:
+	COPY source, destination	Copies the specified files to the specified destination.
+	FCLOSE handle			Closes the file with the specified handle.
+	handle = FOPEN path		Opens the specified file and returns a handle for usage with other file access functions.
+	FSAY handle, string		Writes the specified string to the specified file.
+	result = DELETE file(s)		Deletes the specified file(s) and returns a value indicating success or failure.
+
+	The delete function return values:	
+	0 = Success.
+	2 = Failure.
+	3 = Failure.
+
+File system functions:
+
+	Function:			Description:
+	result = CHDIR path		Attempts to change the current directory to the specified directory.
+	result = CHRIVE drive		Attempts to change the current drive to the specified drive.
+	result = DRIVEVALID drive	Checks whether the specified drive is valid.
+	result = MAKEDIR path		Attempts to create the specified directory.
+
+	These functions return the following values:
+	0 = Failure.
+	1 = Success.
+
+	Function:			Description:
+	result  = EXISTS path		Returns whether the specified file or directory exists.
+
+	This function returns the following values:
+	0 = The specified file or directory does not exist.
+	1 = The specified file exists.
+	2 = The specified directory exists.
+
+	Function:				Description:
+	bytes free = DISKSPACE drive		Returns the number of free bytes on the specified drive.
+	volume = GETVOLUME$			Returns the current drive's volume name.
+
+Executing external programs:
+
+	Function:				Description:
+	result = CALL path [arguments]		Executes the external program at the specified path. One or more comma delimited arguments (string type) can be specified.
+	result = EXEC path [arguments]		Terminates the installer and executes the external program at the specified path. One or more comma delimited arguments (string type) can be specified.
+
+	Return values:
+	 0 = Success.
+	-1 = Failure.
+
+Predefined variables:
+
+	At startup the interpreter defines several variables the script can read from or write to.
+
+	Name:		Description:
+	Bell$		The control character used to generate a beep.
+	ColorCard	The type of videocard.
+	CopyError	Copy statement error code (0 = success, nonzero = failure.)
+	CriticalError	Unknown purpose.
+	CurrentPath$	The current path.
+	CurrentDrive$	The current drive.
+	DosVersion	The MS-DOS version.
+	Floppies	The number of floppy drives. (BIOS memory 0x0040:0x0010 - bitmask 0x0C. (+1))
+	JoySticks	Indicates whether a game port is present. (0 = not present, 1 = present.) (BIOS memory address: 0x0040:0x0011 - bitmask 0x10.)
+	MachineType	The machine identification byte at BIOS memory address 0xF000:0xFFFE.
+	MemorySize	The base memory size in kilobytes. (BIOS memory address: 0x0040:0x0013)
+	TandyID		Indicates whether the machine is a Tandy (0 = no Tandy, 1 = Tandy.) (If the byte at BIOS memory address 0xF000:0xC000 is equal to 0x21 it indicates a Tandy.)
+	VideoMode	The current video mode (BIOS memory address 0x0040:0x0049.)
+	VolName$	The current drive's volume name.
+
+	The ColorCard variable returns one of the following values:
+	 0	MDA
+	 1	?
+	 2	MCGA
+	 3	VGA
+ 	 4	EGA
+	 5	?
+	 6	Tandy
+	 7	CGA
+	 8	?
+	 9	?
+	10	Hercules
+	11	Amstrad
+
+Archive functions:
+
+	Archives are *.pea (some versions might not use this extension) files containing one or more files that may or may not be compressed. These can be unpacked as follows:
+
+	UNPACK source, destination, quiet
+
+	"Quiet" is a parameter indicating whether or not to display which files are being unpacked. "Q" or "q" indicates no output should be displayed.
+
+Undefined keywords:
+
+	These keywords have no known purpose but are reserved and should not be used:
+
+	COLORF row, column
+	THEN
