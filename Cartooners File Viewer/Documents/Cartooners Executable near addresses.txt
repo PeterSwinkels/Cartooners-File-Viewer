@@ -1,0 +1,9 @@
+Description:	Address:
+Critical error function segment.	5F64
+Critical error function offset.	5F62
+Key flag.	D966
+INT 0x08 offset.	55F4
+INT 0x08 segment.	55F6
+INT 0x33 offset.	55DE
+INT 0x33 segment.	55E0
+SP register backup.	5F66

@@ -1,5 +1,5 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
-8086 executable code.	binary	0	0	156217	Probably compiled using Microsoft C Compiler 5.10 (1988).
+8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
 Actors dialog.	text	215400	0	36	
@@ -13,6 +13,8 @@ C_FILE_INFO.	text	222775	0	11
 Cancel printing.	text	213433	0	35	
 Checked circle.	icon	201404	204320	69	
 Circle.	icon	201332	204320	69	
+Critical error interrupt handler.	8086_code	151069	0	41	Handles critical errors.
+Critical error interrupt handler setup.	8086_code	151034	0	34	Sets up the critical error handler interrupt.
 Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
 Critical unknown #02	binary	205370	0	48	Causes freezing at startup when modified.
 Critical unknown #03	binary	205463	0	3	Modification causes freezing at startup.
@@ -33,6 +35,7 @@ Critical unknown #17	binary	180320	0	1	Modification causes either freezing at ti
 Critical unknown #18	binary	201104	0	1	Modification causes a division by zero termination.
 Critical unknown #19	binary	208064	0	2	Modification influences the about dialog text.
 Cross arrows.	icon	202528	204320	51	
+CTRL-Break handler.	8086_code	8	0	32	Handles the CTRL-Break keys being pressed.
 Day and month abbreviations.	text	225252	0	58	
 Dialog line break.	binary	203406	0	4	
 Dialog. #1	text	204355	0	134	
@@ -50,10 +53,11 @@ Error messages. #1	text	200737	0	307
 Error messages. #2	text	204489	0	28	
 Error messages. #3	text	204523	0	39	
 Error messages. #4	text	206936	0	611	
+Error message retrieval.	8086_code	152322	0	40	Returns the position of an error message to be written to STDERR.
 Exclamation balloon information.	binary	158802	0	2029	
 Exclamation icon record size.	binary	203340	0	2	
 Exclamation icon.	point	203336	0	4	
-Exclamation icon.	address	203346	0	4	
+Exclamation icon.	far_address	203346	0	4	
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
 File system related characters.	text	206751	0	23	
@@ -61,36 +65,37 @@ Filled circle.	icon	201476	204320	69
 Frame number Cancel button edge type.	binary	211380	0	1	
 Frame number Cancel button id.	binary	211362	0	2	
 Frame number Cancel button style.	binary	211372	0	2	
-Frame number Cancel button text.	address	211374	0	4	
+Frame number Cancel button text.	far_address	211374	0	4	
 Frame number Cancel button.	rectangles	211364	0	8	
 Frame number dialog.	rectangles	211470	0	8	
 Frame number OK button edge type.	binary	211356	0	1	
 Frame number OK button id.	binary	211338	0	2	
 Frame number OK button style.	binary	211348	0	2	
 Frame number OK button.	rectangles	211340	0	8	
-Frame number OK button.	address	211350	0	4	
+Frame number OK button.	far_address	211350	0	4	
 Frame number text label.	rectangles	211388	0	8	
-Frame number text.	address	211398	0	4	
+Frame number text.	far_address	211398	0	4	
 Frame number textbox border.	rectangles	211448	0	8	
 Frame number textbox.	rectangles	211424	0	8	
-Frame number textbox.	address	211434	0	4	
+Frame number textbox.	far_address	211434	0	4	
 Free memory bar.	rectangles	212388	0	8	
 Free memory dialog.	rectangles	212458	0	8	
-Free memory kbs.	address	212422	0	4	
+Free memory kbs.	far_address	212422	0	4	
 Free memory label.	rectangles	212412	0	8	
 Free memory OK button id.	binary	212362	0	2	
 Free memory OK button style.	binary	212372	0	2	
-Free memory OK button text.	address	212374	0	4	
+Free memory OK button text.	far_address	212374	0	4	
 Free memory OK button.	rectangles	212364	0	8	
-Free memory.	address	212446	0	4	
+Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
-Hand icon.	address	203394	0	4	
+Hand icon.	far_address	203394	0	4	
 Hand.	icon	203088	204320	248	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
+Key retrieval.	8086_code	95848	0	38	Checks whether a key is pressed and returns which if so.
 Keyboard layout.	text	215156	0	117	
 Left arrow.	icon	201736	204320	178	
 Level rectangle #1.	rectangles	209680	0	8	
@@ -104,14 +109,14 @@ Level rectangle #8.	rectangles	209848	0	8
 Levels dialog Cancel button edge type.	binary	209672	0	1	If the second to last bit is set the button will have no rounded edges.
 Levels dialog Cancel button id.	binary	209654	0	2	
 Levels dialog Cancel button style.	binary	209664	0	2	Modification causes freezing upon opening the levels dialog.
-Levels dialog Cancel button text.	address	209666	0	4	
+Levels dialog Cancel button text.	far_address	209666	0	4	
 Levels dialog Cancel button.	rectangles	209656	0	8	
 Levels dialog Level text label layout.	binary	209874	0	6	BYTES {x, y, bottom, null, right, null}
-Levels dialog Level text.	address	209882	0	4	
+Levels dialog Level text.	far_address	209882	0	4	
 Levels dialog Ok button edge type.	binary	209648	0	1	If the second to last bit is set the button will have no rounded edges.
 Levels dialog OK button id.	binary	209630	0	2	
 Levels dialog OK button style.	binary	209640	0	2	
-Levels dialog OK button text.	address	209642	0	4	
+Levels dialog OK button text.	far_address	209642	0	4	
 Levels dialog OK button.	rectangles	209632	0	8	
 Levels dialog.	rectangles	209942	0	8	
 Locate text.	text	214590	0	8	
@@ -123,9 +128,11 @@ Menu screen CGA.	palette	170480	0	32
 Menu screen EGA.	palette	170512	0	32	
 Menu screen.	image	170544	170512	9772	
 Menu screen.	rectangles	206778	0	40	
-Mouse arrow transparency bitmask.	binary	214610	0	32	
+Mouse arrow transparency bitmask.	mousemask	214610	0	32	
 Mouse arrow.	bitmap	214642	214610	32	
-Mouse wait transparency bitmask.	binary	214674	0	32	
+Mouse handler disable.	8086_code	95974	0	23	Disables the mouse handler.
+Mouse handler setup.	8086_code	95925	0	48	Set up the mouse handler for responding to the left button.
+Mouse wait transparency bitmask.	mousemask	214674	0	32	
 Mouse wait.	bitmap	214706	214674	32	
 Moveable item screen buffer.	rectangles	207576	0	8	
 Movie dialog. #1	text	204148	0	62	
@@ -140,31 +147,34 @@ Music dialog.	text	205476	0	30
 Palette dialog.	text	215305	0	22	
 Pause dialog Cancel button edge type.	binary	211086	0	1	If the second to last bit is set the button will have no rounded edges.
 Pause dialog Cancel button id.	binary	211068	0	2	
-Pause dialog Cancel button text.	address	211080	0	4	
+Pause dialog Cancel button text.	far_address	211080	0	4	
 Pause dialog Cancel button.	rectangles	211070	0	8	
 Pause dialog Long label.	rectangles	211118	0	8	
-Pause dialog Long label.	address	211128	0	4	
+Pause dialog Long label.	far_address	211128	0	4	
 Pause dialog OK button edge type.	binary	211062	0	1	If the second to last bit is set the button will have no rounded edges.
-Pause dialog OK button text.	address	211056	0	4	
+Pause dialog OK button text.	far_address	211056	0	4	
 Pause dialog OK button.	rectangles	211046	0	8	
 Pause dialog scrollbar.	rectangles	211142	0	8	
 Pause dialog Seconds counter.	rectangles	211190	0	8	
 Pause dialog Seconds label.	rectangles	211166	0	8	
-Pause dialog Seconds text.	address	211176	0	4	
+Pause dialog Seconds text.	far_address	211176	0	4	
 Pause dialog Short label.	rectangles	211094	0	8	
-Pause dialog Short text.	address	211104	0	4	
-Pause dialog speed value.	address	211200	0	4	
+Pause dialog Short text.	far_address	211104	0	4	
+Pause dialog speed value.	far_address	211200	0	4	
 Pause dialog text.	rectangles	211214	0	8	
-Pause dialog text.	address	211224	0	4	
+Pause dialog text.	far_address	211224	0	4	
 Pause dialog.	rectangles	211236	0	8	
+PIT configuration.	8086_code	64482	0	46	Configures the system timer to run faster and redirects interrupt 0x08.
+PIT reset.	8086_code	64529	0	47	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
 PRINTING...	text	213416	0	10	
 Right arrow.	icon	201916	204320	177	
+Run-time error 203 handler.	8086_code	151818	0	35	Gives the command to display either a run-time error code 203 or 255.
 Run-time error messages.	text	225344	0	224	
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
 Speaking icon record size.	binary	203364	0	2	
 Speaking icon.	point	203360	0	4	
-Speaking icon.	address	203370	0	4	
+Speaking icon.	far_address	203370	0	4	
 Speaking.	icon	202840	204320	248	
 Speech balloon dialog buttons.	text	203578	0	18	
 Speech balloon dialog buttons.	rectangles	203596	0	24	
@@ -244,3 +254,4 @@ Version.	text	206929	0	6
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
 Way menu items. #2	text	216009	0	259	
+Write error message to STDERR.	8086_code	152365	0	40	Takes an error message's offset and outputs the message to STDERR.

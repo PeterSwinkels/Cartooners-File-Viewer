@@ -6,7 +6,7 @@ Note: this is not meant to be a complete description of Cartooners. See the manu
 Cartooners is a basic animation software package originally developed for the Apple IIGS by ITDA and published by Electronic Arts in 1987 primarily aimed at children. It has also been ported to run under MS-DOS among others. With Cartooners the user can make a simple animated movie by placing static or animated actors over optional background images. Speech balloons, dialog boxes, music and sound effects are also available. Everything except the background images can move and animated actors can perform preprogrammed actions such as walking and dancing.
 
 [The purpose of Cartooners File Viewer]
-Due to the fact that Cartooners was designed to run on computers that are quite slow by today's standards (about 8mhz vs. 3000mhz) requiring obsolete hardware and an obsolete operating system, users cannot just run this software on their computer without an emulator, for example. Furthermore, Cartooners uses file formats which are not supported by any (or only a few) current programs.
+Due to the fact that Cartooners was designed to run on computers that are quite slow by today's standards (about 8mhz vs. 3000mhz) requiring obsolete hardware and an obsolete operating system, users cannot just run this software on a modern computer without an emulator, for example. Furthermore, Cartooners uses file formats which are not supported by any (or only a few) current programs.
 
 An overview of some of the file formats used by Cartooners:
 

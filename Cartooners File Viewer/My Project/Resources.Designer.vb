@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  A strongly-typed resource class, for looking up localized strings, etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -61,25 +61,32 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Description:	Type:	Offset:	Size:
-        '''80286+ executable code.	binary	0	156224
-        '''A new actor.	text	215471	12
-        '''About text.	text	208116	226
-        '''Button edge style information.	binary	205686	38
-        '''C_FILE_INFO.	text	222823	11
-        '''Checked circle icon.	icon	201452	69
-        '''Circle icon.	icon	201380	69
-        '''Clear/erase text.	text	205466	45
-        '''Cross arrows icon.	icon	202576	51
-        '''Day and month abbreviations.	text	225300	58
-        '''Default speech balloon information.	binary	156277	1079
-        '''Dialog text.	text	211620	790
-        '''Drive letters.	text	205724	84
-        '''Eras [rest of string was truncated]&quot;;.
+        '''  Looks up a localized string similar to Description:	Type:	Offset:	Related:	Size:	Comment:
+        '''8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
+        '''PIT configuration procedure.	8086_code	64482	0	46	Configures the system timer to run faster and redirects interrupt 0x08.
+        '''About Cartooners	text	208068	0	226	
+        '''About dialog text alignment.	binary	208066	0	1	
+        '''Actors dialog.	text	215400	0	36	
+        '''Background screen buffer.	rectangles	207590	0	8	
+        '''Blank... (act option)	text	203866	0	11	
+        '''Buffer for speech balloon text in [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Cartooners_Executable() As String
             Get
                 Return ResourceManager.GetString("Cartooners_Executable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Description:	Address:
+        '''INT 0x08 offset.	55F4
+        '''INT 0x08 segment.	55F6
+        '''
+        '''.
+        '''</summary>
+        Friend ReadOnly Property Cartooners_Executable_Near_Addresses() As String
+            Get
+                Return ResourceManager.GetString("Cartooners_Executable_Near_Addresses", resourceCulture)
             End Get
         End Property
         
@@ -90,7 +97,7 @@ Namespace My.Resources
         '''Cartooners 1988/1989 - by: Electronic Arts &amp; IDTA
         '''
         '''Note:
-        '''This document applies to the game&apos;s MS-DOS version.
+        '''This document primarily applies to the program&apos;s MS-DOS version. The last section provides a brief summary of the file formats used by the Apple IIGS version.
         '''
         '''===================================================================================================
         '''
@@ -101,9 +108,7 @@ Namespace My.Resources
         '''Extension: *.act
         '''
         '''[File Layout]
-        '''Begin Structure: Header.
-        '''	0x00	BYTE		Null. ***
-        '''	0x01	0x03 BYTES	Is used to check if the file is valid. *** [rest of string was truncated]&quot;;.
+        '''B [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Cartooners_File_Formats() As String
             Get
@@ -115,9 +120,9 @@ Namespace My.Resources
         '''  Looks up a localized string similar to Cartooners File Viewer - Help
         '''
         '''[About Cartooners]
-        '''Note: this is not meant to be a complete description. See the manual that comes with this program if you want to know more.
+        '''Note: this is not meant to be a complete description of Cartooners. See the manual that comes with that program for more information.
         '''
-        '''Cartooners is a basic animation software package originally developed for the Apple IIGS by ITDA and published by Electronic Arts in 1987 primarily aimed at children. It has also been ported to run under MS-DOS among others. With Cartooners the user can make a simple animated movie by placing static or animated actors over optiona [rest of string was truncated]&quot;;.
+        '''Cartooners is a basic animation software package originally developed for the Apple IIGS by ITDA and published by Electronic Arts in 1987 primarily aimed at children. It has also been ported to run under MS-DOS among others. With Cartooners the user can make a simple animated movie by placing static or animated actors ov [rest of string was truncated]&quot;;.
         '''</summary>
         Friend ReadOnly Property Cartooners_File_Viewer_Help() As String
             Get

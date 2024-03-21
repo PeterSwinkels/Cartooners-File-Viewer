@@ -20,6 +20,12 @@ Imports System.Windows.Forms
 Public Class CartoonersClass
    Inherits DataFileClass
 
+   'This class defines near addresses used in executable code.
+   Private Class NearAddressClass
+      Public Address As String         'Defines a near address in hexadecimal notation.
+      Public Description As String     'Defines a near address's description.
+   End Class
+
    'This class defines the regions of data and code contained by the Cartooners executable.
    Private Class RegionClass
       Public Comment As String       'Defines a region's comment.
@@ -30,6 +36,12 @@ Public Class CartoonersClass
       Public Length As Integer       'Defines a region's length.
       Public EndO As Integer         'Defines a region's end.
    End Class
+
+   'This enumeration lists the Cartooner's exectuable near address's properties.
+   Private Enum NearAddressPropertiesE As Integer
+      Description   'A near address's description.
+      Address       'A near address in hexadecimal notation.
+   End Enum
 
    'This enumeration lists the Cartooner's executable region's properties.
    Private Enum RegionPropertiesE As Integer
@@ -51,7 +63,8 @@ Public Class CartoonersClass
    Private Const SCREEN_HEIGHT As Integer = &HC8%               'Defines the screen height used by Cartooners in pixels.
    Private Const SCREEN_WIDTH As Integer = &H140%               'Defines the screen width used by Cartooners in pixels.
 
-   Private ReadOnly REGION_PROPERTY_DELIMITER As Char = ControlChars.Tab   'Defines the region property delimiter.
+   Private ReadOnly NEAR_ADDRESS_PROPERTY_DELIMITER As Char = ControlChars.Tab   'Defines the near address property delimiter.
+   Private ReadOnly REGION_PROPERTY_DELIMITER As Char = ControlChars.Tab         'Defines the region property delimiter.
 
    'The menu items used by this class.
    Private WithEvents DisplayDataMenu As New ToolStripMenuItem With {.Text = "Display &Data"}
@@ -100,7 +113,9 @@ Public Class CartoonersClass
          For Each Region As RegionClass In Regions()
             For Each OtherRegion As RegionClass In Regions()
                If Region IsNot OtherRegion AndAlso Region.EndO > OtherRegion.Offset AndAlso Region.EndO <= OtherRegion.EndO Then
-                  Overlaps.Append($"""{Region.Description}"" ({Region.Type}) overlaps with ""{OtherRegion.Description}"" ({OtherRegion.Type}).{NewLine}")
+                  If Not (OtherRegion.Description.ToLower() = "8086 executable code." AndAlso Region.Type.ToLower() = "8086_code") Then
+                     Overlaps.Append($"""{Region.Description}"" ({Region.Type}) overlaps with ""{OtherRegion.Description}"" ({OtherRegion.Type}).{NewLine}")
+                  End If
                End If
             Next OtherRegion
          Next Region
@@ -161,19 +176,65 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
+   'This procedure disassembles the Cartooner's executable data at the specified position and returns the results.
+   Private Function Disassemble(StartPosition As Integer, Length As Integer) As String
+      Try
+         Dim Comment As String = Nothing
+         Dim Disassembler As New DisassemblerClass
+         Dim Disassembly As New StringBuilder
+         Dim HexadecimalCode As String = Nothing
+         Dim Instruction As String = Nothing
+         Dim Position As Integer = StartPosition
+         Dim PreviousPosition As New Integer
+
+         With Disassembler
+            Do While My.Application.OpenForms.Count > 0
+               My.Application.DoEvents()
+
+               PreviousPosition = Position + &H1%
+               Instruction = .Disassemble(DataFile().Data, Position)
+
+               HexadecimalCode = .BytesToHexadecimal(.GetBytes(DataFile().Data, PreviousPosition - &H1%, (Position - PreviousPosition) + &H1%), NoPrefix:=True, Reverse:=False)
+
+               Comment = Nothing
+               For Each NearAddress As NearAddressClass In NearAddresses()
+                  If Instruction.ToString().ToLower().Contains($"[0x{NearAddress.Address.ToLower()}]") Then
+                     Comment = $"; {NearAddress.Description}"
+                     Exit For
+                  End If
+               Next NearAddress
+
+               If Not Comment = Nothing Then Instruction = $"{Instruction,-50}{Comment}"
+               Disassembly.Append($"{(PreviousPosition - &H1%):X8} {HexadecimalCode,-25}{Instruction}{NewLine}")
+
+               If Position > StartPosition + Length Then Exit Do
+            Loop
+         End With
+
+         Return Disassembly.ToString()
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
    'This procedure displays the Cartooners's executable region with the specified description and data type.
    Private Sub DisplayRegion(Description As String, Type As String)
       Try
          Dim Comment As String = Nothing
+         Dim Disassembler As DisassemblerClass = Nothing
          Dim IconHeight As New Integer
          Dim IconType As New Integer
          Dim IconWidth As New Integer
          Dim Length As New Integer
          Dim NewText As New StringBuilder
+         Dim NewTextLine As New StringBuilder
          Dim Offset As New Integer
          Dim Palettes As List(Of List(Of Color)) = Nothing
          Dim Position As New Integer
          Dim Segment As New Integer
+         Dim StartPosition As New Integer
 
          For Each Region As RegionClass In Regions()
             If Region.Description.ToLower() = Description.ToLower() AndAlso Region.Type.ToLower() = Type.ToLower() Then
@@ -192,12 +253,14 @@ Public Class CartoonersClass
          If Not Comment = Nothing Then NewText.Append($"{Comment}{NewLine}")
 
          Select Case Type.ToLower()
-            Case "address"
+            Case "8086_code"
+               NewText.Append(Disassemble(Position, Length))
+            Case "binary", "bitmap", "image", "mousemask"
+               NewText.Append($"{Escape(GetBytes(DataFile().Data, Position, Length), " "c, EscapeAll:=True).Trim()}")
+            Case "far_address"
                Offset = BitConverter.ToInt16(GetBytes(DataFile().Data, Position, Length).ToArray(), &H0%)
                Segment = BitConverter.ToInt16(GetBytes(DataFile().Data, Position, Length).ToArray(), &H2%)
                NewText.Append($"{Segment:X4}:{Offset:X4}")
-            Case "binary", "image", "mousemask"
-               NewText.Append($"{Escape(GetBytes(DataFile().Data, Position, Length), " "c, EscapeAll:=True).Trim()}")
             Case "icon"
                IconHeight = BitConverter.ToUInt16(DataFile().Data.ToArray(), Position + &H2%)
                IconType = BitConverter.ToUInt16(DataFile().Data.ToArray(), Position)
@@ -221,6 +284,9 @@ Public Class CartoonersClass
                Next RectangleO
             Case "text"
                NewText.Append(Escape(ConvertMSDOSLineBreak(GetString(DataFile.Data, Position, Length)).Replace(DELIMITER, NewLine)))
+            Case Else
+               NewText.Append($"Unrecognized datatype.{NewLine}")
+               NewText.Append($"{Escape(GetBytes(DataFile().Data, Position, Length), " "c, EscapeAll:=True).Trim()}")
          End Select
 
          UpdateDataBox(NewText.ToString())
@@ -263,6 +329,8 @@ Public Class CartoonersClass
          For Each Region As RegionClass In Regions()
             With Region
                Select Case .Type
+                  Case "bitmap"
+                     MouseCursor(Region).Save($"{Path.Combine(ExportPath, .Description)}.png", ImageFormat.Png)
                   Case "icon"
                      IconHeight = BitConverter.ToUInt16(DataFile().Data.ToArray(), .Offset + EXEHeaderSize() + &H2%)
                      IconWidth = BitConverter.ToUInt16(DataFile().Data.ToArray(), .Offset + EXEHeaderSize() + &H4%)
@@ -271,8 +339,6 @@ Public Class CartoonersClass
                      Draw4BitImage(GetBytes(DataFile().Data, .Offset + EXEHeaderSize() + &H6%, IconSize), IconWidth, IconHeight, GBRPalette(DataFile().Data, .Related + EXEHeaderSize()), BytesPerRow).Save($"{Path.Combine(ExportPath, .Description)}.png", ImageFormat.Png)
                   Case "image"
                      Draw4BitImage(DecompressRLE(DataFile().Data, .Offset + EXEHeaderSize(), .Length), SCREEN_WIDTH, SCREEN_HEIGHT, GBRPalette(DataFile().Data, .Related + EXEHeaderSize()), BYTES_PER_ROW).Save($"{Path.Combine(ExportPath, .Description)}.png", ImageFormat.Png)
-                  Case "mousemask"
-                     MouseCursor(Region).Save($"{Path.Combine(ExportPath, .Description)}.png", ImageFormat.Png)
                   Case "rectangles"
                      ImageO = New Bitmap(SCREEN_WIDTH + 1, SCREEN_HEIGHT + 1)
                      Graphics.FromImage(ImageO).Clear(Color.White)
@@ -425,6 +491,35 @@ Public Class CartoonersClass
          Next ByteIndex
 
          Return Cursor
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure manages Cartooner's executable near address list.
+   Private Function NearAddresses() As List(Of NearAddressClass)
+      Try
+         Dim NearAddressLines As List(Of String) = Nothing
+         Dim Properties() As String = {}
+         Static CurrentNearAddresses As List(Of NearAddressClass) = Nothing
+
+         If CurrentNearAddresses Is Nothing Then
+            CurrentNearAddresses = New List(Of NearAddressClass)
+
+            NearAddressLines = New List(Of String)(My.Resources.Cartooners_Executable_Near_Addresses.Split({NewLine}, StringSplitOptions.None))
+            NearAddressLines.RemoveAt(0)
+
+            For Each NearAddressLine As String In NearAddressLines
+               If Not NearAddressLine.Trim() = Nothing Then
+                  Properties = NearAddressLine.Split(NEAR_ADDRESS_PROPERTY_DELIMITER)
+                  CurrentNearAddresses.Add(New NearAddressClass With {.Description = Properties(NearAddressPropertiesE.Description), .Address = Properties(NearAddressPropertiesE.Address)})
+               End If
+            Next NearAddressLine
+         End If
+
+         Return CurrentNearAddresses
       Catch ExceptionO As Exception
          DisplayException(ExceptionO)
       End Try

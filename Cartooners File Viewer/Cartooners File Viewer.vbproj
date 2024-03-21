@@ -72,6 +72,7 @@
     <Compile Include="Actor.vb" />
     <Compile Include="Archive.vb" />
     <Compile Include="Data File.vb" />
+    <Compile Include="Disassembler.vb" />
     <Compile Include="Exe Unpacker.vb" />
     <Compile Include="Cartooners.vb" />
     <Compile Include="GBR Palette.vb" />
@@ -139,6 +140,7 @@
     <None Include="Documents\Cartooners File Formats.txt" />
     <None Include="Documents\Cartooners File Viewer Help.txt" />
     <None Include="Documents\Cartooners Executable.txt" />
+    <None Include="Documents\Cartooners Executable near addresses.txt" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
