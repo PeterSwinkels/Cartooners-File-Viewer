@@ -1,6 +1,0 @@
-The following games are known to use an installer with a script stored in a *.iea file:
-
-Title:			Year:	Publisher(s):							Developer:
-688 Attack Sub		1989	Electronic Arts Ltd., Electronic Arts, Inc., Hit Squad, The	Electronic Arts, Inc.
-Cartooners		1989	Electronic Arts, Inc.						ITDA
-F-16 Combat Pilot	1989	Digital Integration Ltd., Electronic Arts, Inc.			Digital Integration Ltd.
