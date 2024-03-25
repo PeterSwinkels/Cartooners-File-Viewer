@@ -177,7 +177,7 @@ Public Class CartoonersClass
    End Function
 
    'This procedure disassembles the Cartooner's executable data at the specified position and returns the results.
-   Private Function Disassemble(StartPosition As Integer, Length As Integer) As String
+   Private Function Disassemble(Code As List(Of Byte), StartPosition As Integer, Length As Integer) As String
       Try
          Dim Comment As String = Nothing
          Dim Disassembler As New DisassemblerClass
@@ -188,13 +188,13 @@ Public Class CartoonersClass
          Dim PreviousPosition As New Integer
 
          With Disassembler
-            Do While My.Application.OpenForms.Count > 0
+            Do While Position < StartPosition + Length AndAlso My.Application.OpenForms.Count > 0
                My.Application.DoEvents()
 
                PreviousPosition = Position + &H1%
-               Instruction = .Disassemble(DataFile().Data, Position)
+               Instruction = .Disassemble(Code, Position)
 
-               HexadecimalCode = .BytesToHexadecimal(.GetBytes(DataFile().Data, PreviousPosition - &H1%, (Position - PreviousPosition) + &H1%), NoPrefix:=True, Reverse:=False)
+               HexadecimalCode = .BytesToHexadecimal(.GetBytes(Code, PreviousPosition - &H1%, (Position - PreviousPosition) + &H1%), NoPrefix:=True, Reverse:=False)
 
                Comment = Nothing
                For Each NearAddress As NearAddressClass In NearAddresses()
@@ -206,8 +206,6 @@ Public Class CartoonersClass
 
                If Not Comment = Nothing Then Instruction = $"{Instruction,-50}{Comment}"
                Disassembly.Append($"{(PreviousPosition - &H1%):X8} {HexadecimalCode,-25}{Instruction}{NewLine}")
-
-               If Position > StartPosition + Length Then Exit Do
             Loop
          End With
 
@@ -223,18 +221,17 @@ Public Class CartoonersClass
    Private Sub DisplayRegion(Description As String, Type As String)
       Try
          Dim Comment As String = Nothing
-         Dim Disassembler As DisassemblerClass = Nothing
+         Dim Count As New Integer
          Dim IconHeight As New Integer
          Dim IconType As New Integer
          Dim IconWidth As New Integer
          Dim Length As New Integer
          Dim NewText As New StringBuilder
-         Dim NewTextLine As New StringBuilder
          Dim Offset As New Integer
          Dim Palettes As List(Of List(Of Color)) = Nothing
          Dim Position As New Integer
          Dim Segment As New Integer
-         Dim StartPosition As New Integer
+         Dim Size As New Integer
 
          For Each Region As RegionClass In Regions()
             If Region.Description.ToLower() = Description.ToLower() AndAlso Region.Type.ToLower() = Type.ToLower() Then
@@ -254,7 +251,10 @@ Public Class CartoonersClass
 
          Select Case Type.ToLower()
             Case "8086_code"
-               NewText.Append(Disassemble(Position, Length))
+               Size = EXEHeaderSize(Data:=DataFile().Data)
+               Position -= Size
+               Count = DataFile().Data.Count - Size
+               NewText.Append(Disassemble(DataFile().Data.GetRange(Size, Count), Position, Length))
             Case "binary", "bitmap", "image", "mousemask"
                NewText.Append($"{Escape(GetBytes(DataFile().Data, Position, Length), " "c, EscapeAll:=True).Trim()}")
             Case "far_address"

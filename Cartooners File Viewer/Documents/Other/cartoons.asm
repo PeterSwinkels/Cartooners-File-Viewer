@@ -1,11 +1,7 @@
-00000000  33C0              xor ax,ax
-00000002  9A1C3E821F        call 0x1f82:0x3e1c
-00000007  CB                retf
-
 00000029  55                push bp
 0000002A  8BEC              mov bp,sp
 0000002C  B82800            mov ax,0x28
-0000002F  9A1C3E821F        call 0x1f82:0x3e1c
+0000002F  9A1C3E821F        call 0x1f82:0x3e1c	; Check for _IOSTRG.
 00000034  57                push di
 00000035  56                push si
 00000036  B884CF            mov ax,0xcf84
@@ -132,7 +128,7 @@
 00000167  55                push bp
 00000168  8BEC              mov bp,sp
 0000016A  B82800            mov ax,0x28
-0000016D  9A1C3E821F        call 0x1f82:0x3e1c
+0000016D  9A1C3E821F        call 0x1f82:0x3e1c	; Check for _IOSTRG.
 00000172  9A4F33F50F        call 0xff5:0x334f
 00000177  837E0600          cmp word [bp+0x6],byte +0x0
 0000017B  741A              jz 0x197
@@ -299,7 +295,7 @@
 000002F7  55                push bp
 000002F8  8BEC              mov bp,sp
 000002FA  33C0              xor ax,ax
-000002FC  9A1C3E821F        call 0x1f82:0x3e1c
+000002FC  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 00000301  833EC08000        cmp word [0x80c0],byte +0x0
 00000306  7417              jz 0x31f
 00000308  8B5E06            mov bx,[bp+0x6]
@@ -312,15 +308,17 @@
 0000031C  E82B00            call 0x34a
 0000031F  5D                pop bp
 00000320  CA0200            retf 0x2
+
 00000323  33C0              xor ax,ax
-00000325  9A1C3E821F        call 0x1f82:0x3e1c
+00000325  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 0000032A  833EC08000        cmp word [0x80c0],byte +0x0
 0000032F  7404              jz 0x335
 00000331  0E                push cs
 00000332  E80100            call 0x336
 00000335  CB                retf
+
 00000336  33C0              xor ax,ax
-00000338  9A1C3E821F        call 0x1f82:0x3e1c
+00000338  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 0000033D  B86500            mov ax,0x65
 00000340  1E                push ds
 00000341  50                push ax
@@ -333,15 +331,12 @@
 0000034A  55                push bp
 0000034B  8BEC              mov bp,sp
 0000034D  B80C00            mov ax,0xc
-00000350  9A1C3E821F        call 0x1f82:0x3e1c
+00000350  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 00000355  57                push di
 00000356  56                push si
 00000357  BE4E61            mov si,0x614e
 0000035A  C47E08            les di,[bp+0x8]
-0000035D  B9FFFF            mov cx,0xffff
-00000360  33C0              xor ax,ax
-00000362  F2AE              repne scasb
-00000364  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00000366  2BF9              sub di,cx
 00000368  87FE              xchg di,si
 0000036A  8CDA              mov dx,ds
@@ -371,17 +366,14 @@
 000003A3  BE4E61            mov si,0x614e
 000003A6  8CD8              mov ax,ds
 000003A8  8EC0              mov es,ax
-000003AA  B9FFFF            mov cx,0xffff
-000003AD  33C0              xor ax,ax
-000003AF  F2AE              repne scasb
-000003B1  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000003B3  2BF9              sub di,cx
 000003B5  8BD9              mov bx,cx
 000003B7  87FE              xchg di,si
-000003B9  B9FFFF            mov cx,0xffff
-000003BC  F2AE              repne scasb
-000003BE  8BC7              mov ax,di
-000003C0  F7D1              not cx
+000003B9  B9FFFF            mov cx,0xffff		; Scan for null byte.
+000003BC  F2AE              repne scasb			;
+000003BE  8BC7              mov ax,di			; Save unscanned number of bytes.
+000003C0  F7D1              not cx			;
 000003C2  2BC1              sub ax,cx
 000003C4  4F                dec di
 000003C5  8BCB              mov cx,bx
@@ -394,10 +386,7 @@
 000003D4  8BF3              mov si,bx
 000003D6  8CD0              mov ax,ss
 000003D8  8EC0              mov es,ax
-000003DA  B9FFFF            mov cx,0xffff
-000003DD  33C0              xor ax,ax
-000003DF  F2AE              repne scasb
-000003E1  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000003E3  2BF9              sub di,cx
 000003E5  8BD9              mov bx,cx
 000003E7  87FE              xchg di,si
@@ -405,10 +394,10 @@
 000003EB  06                push es
 000003EC  8EC2              mov es,dx
 000003EE  1F                pop ds
-000003EF  B9FFFF            mov cx,0xffff
-000003F2  F2AE              repne scasb
-000003F4  8BC7              mov ax,di
-000003F6  F7D1              not cx
+000003EF  B9FFFF            mov cx,0xffff		; Scan for null byte.
+000003F2  F2AE              repne scasb			;
+000003F4  8BC7              mov ax,di			; Save unscanned number of bytes.
+000003F6  F7D1              not cx			;
 000003F8  2BC1              sub ax,cx
 000003FA  4F                dec di
 000003FB  8BCB              mov cx,bx
@@ -424,10 +413,7 @@
 00000412  8CD8              mov ax,ds
 00000414  1E                push ds
 00000415  C576F4            lds si,[bp-0xc]
-00000418  B9FFFF            mov cx,0xffff
-0000041B  33C0              xor ax,ax
-0000041D  F2AE              repne scasb
-0000041F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00000421  2BF9              sub di,cx
 00000423  8BD9              mov bx,cx
 00000425  87FE              xchg di,si
@@ -458,7 +444,7 @@
 00000458  55                push bp
 00000459  8BEC              mov bp,sp
 0000045B  B80600            mov ax,0x6
-0000045E  9A1C3E821F        call 0x1f82:0x3e1c
+0000045E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000463  A168D9            mov ax,[0xd968]
 00000466  8946FE            mov [bp-0x2],ax
 00000469  C70668D90100      mov word [0xd968],0x1
@@ -523,7 +509,7 @@
 0000051C  55                push bp
 0000051D  8BEC              mov bp,sp
 0000051F  33C0              xor ax,ax
-00000521  9A1C3E821F        call 0x1f82:0x3e1c
+00000521  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 00000526  56                push si
 00000527  8A4608            mov al,[bp+0x8]
 0000052A  2AE4              sub ah,ah
@@ -597,7 +583,7 @@
 000005D3  55                push bp
 000005D4  8BEC              mov bp,sp
 000005D6  B80600            mov ax,0x6
-000005D9  9A1C3E821F        call 0x1f82:0x3e1c
+000005D9  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000005DE  B82300            mov ax,0x23
 000005E1  50                push ax
 000005E2  FF7606            push word [bp+0x6]
@@ -624,7 +610,7 @@
 0000061F  55                push bp
 00000620  8BEC              mov bp,sp
 00000622  B80600            mov ax,0x6
-00000625  9A1C3E821F        call 0x1f82:0x3e1c
+00000625  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000062A  833E4C6100        cmp word [0x614c],byte +0x0
 0000062F  7407              jz 0x638
 00000631  833E7ECF00        cmp word [0xcf7e],byte +0x0
@@ -657,7 +643,7 @@
 00000680  55                push bp
 00000681  8BEC              mov bp,sp
 00000683  B80200            mov ax,0x2
-00000686  9A1C3E821F        call 0x1f82:0x3e1c
+00000686  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 0000068B  9A6A56F50F        call 0xff5:0x566a
 00000690  8946FE            mov [bp-0x2],ax
 00000693  3D0100            cmp ax,0x1
@@ -671,7 +657,7 @@
 000006A8  5D                pop bp
 000006A9  C20400            ret 0x4
 000006AC  33C0              xor ax,ax
-000006AE  9A1C3E821F        call 0x1f82:0x3e1c
+000006AE  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000006B3  833EA06100        cmp word [0x61a0],byte +0x0
 000006B8  751A              jnz 0x6d4
 000006BA  C706A0610100      mov word [0x61a0],0x1
@@ -685,7 +671,7 @@
 000006D1  E8EEA6            call 0xadc2
 000006D4  CB                retf
 000006D5  33C0              xor ax,ax
-000006D7  9A1C3E821F        call 0x1f82:0x3e1c
+000006D7  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000006DC  A14861            mov ax,[0x6148]
 000006DF  0B064A61          or ax,[0x614a]
 000006E3  7410              jz 0x6f5
@@ -694,8 +680,9 @@
 000006ED  9A1A46821F        call 0x1f82:0x461a
 000006F2  83C404            add sp,byte +0x4
 000006F5  CB                retf
+
 000006F6  33C0              xor ax,ax
-000006F8  9A1C3E821F        call 0x1f82:0x3e1c
+000006F8  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000006FD  FF364661          push word [0x6146]
 00000701  FF364461          push word [0x6144]
 00000705  B81B00            mov ax,0x1b
@@ -703,9 +690,6 @@
 00000709  9A8255821F        call 0x1f82:0x5582
 0000070E  83C406            add sp,byte +0x6
 00000711  CB                retf
-00000712  33C0              xor ax,ax
-00000714  9A1C3E821F        call 0x1f82:0x3e1c
-00000719  CB                retf
 
 0000071A  55                push bp
 0000071B  8BEC              mov bp,sp
@@ -2303,11 +2287,7 @@
 0000179C  C45EE2            les bx,[bp-0x1e]
 0000179F  26C45F1C          les bx,[es:bx+0x1c]
 000017A3  8BFB              mov di,bx
-000017A5  B9FFFF            mov cx,0xffff
-000017A8  33C0              xor ax,ax
-000017AA  F2AE              repne scasb
-000017AC  F7D1              not cx
-000017AE  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000017AF  894EF6            mov [bp-0xa],cx
 000017B2  8B46F4            mov ax,[bp-0xc]
 000017B5  8BD1              mov dx,cx
@@ -2473,11 +2453,7 @@
 0000195C  26FF771C          push word [es:bx+0x1c]
 00001960  26C45F1C          les bx,[es:bx+0x1c]
 00001964  8BFB              mov di,bx
-00001966  B9FFFF            mov cx,0xffff
-00001969  33C0              xor ax,ax
-0000196B  F2AE              repne scasb
-0000196D  F7D1              not cx
-0000196F  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00001970  51                push cx
 00001971  E8611A            call 0x33d5
 00001974  C45EE2            les bx,[bp-0x1e]
@@ -2779,6 +2755,7 @@
 00001C51  E8FBFD            call 0x1a4f
 00001C54  5D                pop bp
 00001C55  CA0400            retf 0x4
+
 00001C58  55                push bp
 00001C59  8BEC              mov bp,sp
 00001C5B  B80600            mov ax,0x6
@@ -2862,6 +2839,7 @@
 00001D45  8BE5              mov sp,bp
 00001D47  5D                pop bp
 00001D48  CA0600            retf 0x6
+
 00001D4B  55                push bp
 00001D4C  8BEC              mov bp,sp
 00001D4E  B81000            mov ax,0x10
@@ -3134,24 +3112,24 @@
 0000202D  C45EFC            les bx,[bp-0x4]
 00002030  26837F1401        cmp word [es:bx+0x14],byte +0x1
 00002035  7507              jnz 0x203e
-00002037  26837F1600        cmp word [es:bx+0x16],byte +0x0
-0000203C  747C              jz 0x20ba
+	00002037  26837F1600        cmp word [es:bx+0x16],byte +0x0
+	0000203C  747C              jz 0x20ba
 0000203E  26837F1402        cmp word [es:bx+0x14],byte +0x2
 00002043  7507              jnz 0x204c
-00002045  26837F1600        cmp word [es:bx+0x16],byte +0x0
-0000204A  746E              jz 0x20ba
+	00002045  26837F1600        cmp word [es:bx+0x16],byte +0x0
+	0000204A  746E              jz 0x20ba
 0000204C  26837F1403        cmp word [es:bx+0x14],byte +0x3
 00002051  7507              jnz 0x205a
-00002053  26837F1600        cmp word [es:bx+0x16],byte +0x0
-00002058  7460              jz 0x20ba
+	00002053  26837F1600        cmp word [es:bx+0x16],byte +0x0
+	00002058  7460              jz 0x20ba
 0000205A  26837F1404        cmp word [es:bx+0x14],byte +0x4
 0000205F  753D              jnz 0x209e
-00002061  26837F1600        cmp word [es:bx+0x16],byte +0x0
-00002066  7536              jnz 0x209e
-00002068  837E0AFF          cmp word [bp+0xa],byte -0x1
-0000206C  7507              jnz 0x2075
-0000206E  268B471C          mov ax,[es:bx+0x1c]
-00002072  89460A            mov [bp+0xa],ax
+	00002061  26837F1600        cmp word [es:bx+0x16],byte +0x0
+	00002066  7536              jnz 0x209e
+	00002068  837E0AFF          cmp word [bp+0xa],byte -0x1
+	0000206C  7507              jnz 0x2075
+		0000206E  268B471C          mov ax,[es:bx+0x1c]
+		00002072  89460A            mov [bp+0xa],ax
 00002075  837E0CFF          cmp word [bp+0xc],byte -0x1
 00002079  7507              jnz 0x2082
 0000207B  268B471E          mov ax,[es:bx+0x1e]
@@ -3185,6 +3163,7 @@
 000020CB  8BE5              mov sp,bp
 000020CD  5D                pop bp
 000020CE  CA0800            retf 0x8
+
 000020D1  55                push bp
 000020D2  8BEC              mov bp,sp
 000020D4  B81200            mov ax,0x12
@@ -3294,6 +3273,7 @@
 000021F5  8BE5              mov sp,bp
 000021F7  5D                pop bp
 000021F8  CA0600            retf 0x6
+
 000021FB  55                push bp
 000021FC  8BEC              mov bp,sp
 000021FE  B80400            mov ax,0x4
@@ -4379,11 +4359,7 @@
 00002CF9  8BFB              mov di,bx
 00002CFB  8CD8              mov ax,ds
 00002CFD  8EC0              mov es,ax
-00002CFF  B9FFFF            mov cx,0xffff
-00002D02  33C0              xor ax,ax
-00002D04  F2AE              repne scasb
-00002D06  F7D1              not cx
-00002D08  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00002D09  894EF6            mov [bp-0xa],cx
 00002D0C  C45E08            les bx,[bp+0x8]
 00002D0F  268B4706          mov ax,[es:bx+0x6]
@@ -12172,10 +12148,10 @@
 00007D79  8EC3              mov es,bx
 00007D7B  1E                push ds
 00007D7C  C576FC            lds si,[bp-0x4]
-00007D7F  B9FFFF            mov cx,0xffff
-00007D82  33C0              xor ax,ax
-00007D84  F2AE              repne scasb
-00007D86  F7D1              not cx
+00007D7F  B9FFFF            mov cx,0xffff	; Scan for a null byte.
+00007D82  33C0              xor ax,ax		;
+00007D84  F2AE              repne scasb		;
+00007D86  F7D1              not cx		;
 00007D88  2BF9              sub di,cx
 00007D8A  F3A6              repe cmpsb
 00007D8C  7405              jz 0x7d93
@@ -12231,10 +12207,7 @@
 00007E06  8EC0              mov es,ax
 00007E08  1E                push ds
 00007E09  8EDA              mov ds,dx
-00007E0B  B9FFFF            mov cx,0xffff
-00007E0E  33C0              xor ax,ax
-00007E10  F2AE              repne scasb
-00007E12  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00007E14  2BF9              sub di,cx
 00007E16  F3A6              repe cmpsb
 00007E18  7405              jz 0x7e1f
@@ -12344,10 +12317,7 @@
 00007F19  BE000D            mov si,0xd00
 00007F1C  8CD0              mov ax,ss
 00007F1E  8EC0              mov es,ax
-00007F20  B9FFFF            mov cx,0xffff
-00007F23  33C0              xor ax,ax
-00007F25  F2AE              repne scasb
-00007F27  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00007F29  2BF9              sub di,cx
 00007F2B  87FE              xchg di,si
 00007F2D  8CDA              mov dx,ds
@@ -12367,10 +12337,7 @@
 00007F48  8DB664FF          lea si,[bp-0x9c]
 00007F4C  8CD8              mov ax,ds
 00007F4E  8EC0              mov es,ax
-00007F50  B9FFFF            mov cx,0xffff
-00007F53  33C0              xor ax,ax
-00007F55  F2AE              repne scasb
-00007F57  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00007F59  2BF9              sub di,cx
 00007F5B  8BD9              mov bx,cx
 00007F5D  87FE              xchg di,si
@@ -12434,10 +12401,7 @@
 00007FCD  BE000D            mov si,0xd00
 00007FD0  8CD0              mov ax,ss
 00007FD2  8EC0              mov es,ax
-00007FD4  B9FFFF            mov cx,0xffff
-00007FD7  33C0              xor ax,ax
-00007FD9  F2AE              repne scasb
-00007FDB  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00007FDD  2BF9              sub di,cx
 00007FDF  87FE              xchg di,si
 00007FE1  8CDA              mov dx,ds
@@ -13917,10 +13881,7 @@
 00008F5C  8DB662FF          lea si,[bp-0x9e]
 00008F60  8CD8              mov ax,ds
 00008F62  8EC0              mov es,ax
-00008F64  B9FFFF            mov cx,0xffff
-00008F67  33C0              xor ax,ax
-00008F69  F2AE              repne scasb
-00008F6B  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00008F6D  2BF9              sub di,cx
 00008F6F  87FE              xchg di,si
 00008F71  D1E9              shr cx,1
@@ -13941,10 +13902,7 @@
 00008F93  BE000D            mov si,0xd00
 00008F96  8CD0              mov ax,ss
 00008F98  8EC0              mov es,ax
-00008F9A  B9FFFF            mov cx,0xffff
-00008F9D  33C0              xor ax,ax
-00008F9F  F2AE              repne scasb
-00008FA1  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00008FA3  2BF9              sub di,cx
 00008FA5  87FE              xchg di,si
 00008FA7  D1E9              shr cx,1
@@ -14067,10 +14025,7 @@
 000090CD  C47EF8            les di,[bp-0x8]
 000090D0  1E                push ds
 000090D1  C57608            lds si,[bp+0x8]
-000090D4  B9FFFF            mov cx,0xffff
-000090D7  33C0              xor ax,ax
-000090D9  F2AE              repne scasb
-000090DB  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000090DD  2BF9              sub di,cx
 000090DF  87FE              xchg di,si
 000090E1  8BC7              mov ax,di
@@ -14098,11 +14053,7 @@
 00009114  0BD0              or dx,ax
 00009116  7518              jnz 0x9130
 00009118  C47E08            les di,[bp+0x8]
-0000911B  B9FFFF            mov cx,0xffff
-0000911E  33C0              xor ax,ax
-00009120  F2AE              repne scasb
-00009122  F7D1              not cx
-00009124  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00009125  034E08            add cx,[bp+0x8]
 00009128  8CC0              mov ax,es
 0000912A  894EFC            mov [bp-0x4],cx
@@ -14124,10 +14075,7 @@
 00009157  8EC0              mov es,ax
 00009159  1E                push ds
 0000915A  C576FC            lds si,[bp-0x4]
-0000915D  B9FFFF            mov cx,0xffff
-00009160  33C0              xor ax,ax
-00009162  F2AE              repne scasb
-00009164  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009166  2BF9              sub di,cx
 00009168  87FE              xchg di,si
 0000916A  8CDA              mov dx,ds
@@ -14219,10 +14167,7 @@
 0000923B  C47EFC            les di,[bp-0x4]
 0000923E  1E                push ds
 0000923F  C57608            lds si,[bp+0x8]
-00009242  B9FFFF            mov cx,0xffff
-00009245  33C0              xor ax,ax
-00009247  F2AE              repne scasb
-00009249  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000924B  2BF9              sub di,cx
 0000924D  87FE              xchg di,si
 0000924F  8CDA              mov dx,ds
@@ -14252,10 +14197,7 @@
 00009280  56                push si
 00009281  8BFB              mov di,bx
 00009283  BEE462            mov si,0x62e4
-00009286  B9FFFF            mov cx,0xffff
-00009289  33C0              xor ax,ax
-0000928B  F2AE              repne scasb
-0000928D  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000928F  2BF9              sub di,cx
 00009291  8BD9              mov bx,cx
 00009293  87FE              xchg di,si
@@ -14270,21 +14212,14 @@
 000092A5  5E                pop si
 000092A6  BFE462            mov di,0x62e4
 000092A9  8CD8              mov ax,ds
-000092AB  B9FFFF            mov cx,0xffff
-000092AE  33C0              xor ax,ax
-000092B0  F2AE              repne scasb
-000092B2  F7D1              not cx
-000092B4  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000092B5  81C1E462          add cx,0x62e4
 000092B9  894EF4            mov [bp-0xc],cx
 000092BC  8C5EF6            mov [bp-0xa],ds
 000092BF  56                push si
 000092C0  BEE462            mov si,0x62e4
 000092C3  C47EFC            les di,[bp-0x4]
-000092C6  B9FFFF            mov cx,0xffff
-000092C9  33C0              xor ax,ax
-000092CB  F2AE              repne scasb
-000092CD  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000092CF  2BF9              sub di,cx
 000092D1  8BD9              mov bx,cx
 000092D3  87FE              xchg di,si
@@ -14311,10 +14246,7 @@
 000092FE  BEE462            mov si,0x62e4
 00009301  8CD8              mov ax,ds
 00009303  8EC0              mov es,ax
-00009305  B9FFFF            mov cx,0xffff
-00009308  33C0              xor ax,ax
-0000930A  F2AE              repne scasb
-0000930C  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000930E  2BF9              sub di,cx
 00009310  8BD9              mov bx,cx
 00009312  87FE              xchg di,si
@@ -14351,10 +14283,7 @@
 00009358  8EC0              mov es,ax
 0000935A  1E                push ds
 0000935B  C57608            lds si,[bp+0x8]
-0000935E  B9FFFF            mov cx,0xffff
-00009361  33C0              xor ax,ax
-00009363  F2AE              repne scasb
-00009365  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009367  2BF9              sub di,cx
 00009369  87FE              xchg di,si
 0000936B  8CDA              mov dx,ds
@@ -14392,10 +14321,7 @@
 000093B3  7424              jz 0x93d9
 000093B5  8DB66CFF          lea si,[bp-0x94]
 000093B9  C47E06            les di,[bp+0x6]
-000093BC  B9FFFF            mov cx,0xffff
-000093BF  33C0              xor ax,ax
-000093C1  F2AE              repne scasb
-000093C3  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000093C5  2BF9              sub di,cx
 000093C7  87FE              xchg di,si
 000093C9  8CDA              mov dx,ds
@@ -14409,10 +14335,7 @@
 000093D7  8EDA              mov ds,dx
 000093D9  8DB66CFF          lea si,[bp-0x94]
 000093DD  C47E0A            les di,[bp+0xa]
-000093E0  B9FFFF            mov cx,0xffff
-000093E3  33C0              xor ax,ax
-000093E5  F2AE              repne scasb
-000093E7  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000093E9  2BF9              sub di,cx
 000093EB  8BD9              mov bx,cx
 000093ED  87FE              xchg di,si
@@ -14449,10 +14372,7 @@
 0000943B  8EC0              mov es,ax
 0000943D  1E                push ds
 0000943E  C5760A            lds si,[bp+0xa]
-00009441  B9FFFF            mov cx,0xffff
-00009444  33C0              xor ax,ax
-00009446  F2AE              repne scasb
-00009448  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000944A  2BF9              sub di,cx
 0000944C  87FE              xchg di,si
 0000944E  8CDA              mov dx,ds
@@ -14493,10 +14413,7 @@
 0000949F  A2980E            mov [0xe98],al
 000094A2  8DB66AFF          lea si,[bp-0x96]
 000094A6  C47E04            les di,[bp+0x4]
-000094A9  B9FFFF            mov cx,0xffff
-000094AC  33C0              xor ax,ax
-000094AE  F2AE              repne scasb
-000094B0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000094B2  2BF9              sub di,cx
 000094B4  87FE              xchg di,si
 000094B6  8BC7              mov ax,di
@@ -14516,10 +14433,7 @@
 000094D5  8CD8              mov ax,ds
 000094D7  1E                push ds
 000094D8  C57604            lds si,[bp+0x4]
-000094DB  B9FFFF            mov cx,0xffff
-000094DE  33C0              xor ax,ax
-000094E0  F2AE              repne scasb
-000094E2  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000094E4  2BF9              sub di,cx
 000094E6  87FE              xchg di,si
 000094E8  8BC7              mov ax,di
@@ -14542,10 +14456,7 @@
 00009513  C4BE5EFF          les di,[bp-0xa2]
 00009517  1E                push ds
 00009518  C5B65AFF          lds si,[bp-0xa6]
-0000951C  B9FFFF            mov cx,0xffff
-0000951F  33C0              xor ax,ax
-00009521  F2AE              repne scasb
-00009523  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009525  2BF9              sub di,cx
 00009527  8BD9              mov bx,cx
 00009529  87FE              xchg di,si
@@ -14601,10 +14512,7 @@
 000095A7  8EC0              mov es,ax
 000095A9  1E                push ds
 000095AA  C5B65AFF          lds si,[bp-0xa6]
-000095AE  B9FFFF            mov cx,0xffff
-000095B1  33C0              xor ax,ax
-000095B3  F2AE              repne scasb
-000095B5  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000095B7  2BF9              sub di,cx
 000095B9  8BD9              mov bx,cx
 000095BB  87FE              xchg di,si
@@ -14633,10 +14541,7 @@
 000095F0  C4BE5EFF          les di,[bp-0xa2]
 000095F4  1E                push ds
 000095F5  C5B662FF          lds si,[bp-0x9e]
-000095F9  B9FFFF            mov cx,0xffff
-000095FC  33C0              xor ax,ax
-000095FE  F2AE              repne scasb
-00009600  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009602  2BF9              sub di,cx
 00009604  8BD9              mov bx,cx
 00009606  87FE              xchg di,si
@@ -14657,10 +14562,7 @@
 00009623  8EC0              mov es,ax
 00009625  1E                push ds
 00009626  C57604            lds si,[bp+0x4]
-00009629  B9FFFF            mov cx,0xffff
-0000962C  33C0              xor ax,ax
-0000962E  F2AE              repne scasb
-00009630  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009632  2BF9              sub di,cx
 00009634  87FE              xchg di,si
 00009636  8CDA              mov dx,ds
@@ -14839,10 +14741,7 @@
 000097EC  57                push di
 000097ED  56                push si
 000097EE  C47E08            les di,[bp+0x8]
-000097F1  B9FFFF            mov cx,0xffff
-000097F4  33C0              xor ax,ax
-000097F6  F2AE              repne scasb
-000097F8  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000097FA  49                dec cx
 000097FB  034E08            add cx,[bp+0x8]
 000097FE  8CC0              mov ax,es
@@ -14883,10 +14782,7 @@
 00009856  C45EFC            les bx,[bp-0x4]
 00009859  26C60700          mov byte [es:bx],0x0
 0000985D  C47E08            les di,[bp+0x8]
-00009860  B9FFFF            mov cx,0xffff
-00009863  33C0              xor ax,ax
-00009865  F2AE              repne scasb
-00009867  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009869  49                dec cx
 0000986A  894EF2            mov [bp-0xe],cx
 0000986D  8BC1              mov ax,cx
@@ -14913,10 +14809,7 @@
 000098AA  8EC0              mov es,ax
 000098AC  1E                push ds
 000098AD  C576F8            lds si,[bp-0x8]
-000098B0  B9FFFF            mov cx,0xffff
-000098B3  33C0              xor ax,ax
-000098B5  F2AE              repne scasb
-000098B7  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000098B9  2BF9              sub di,cx
 000098BB  87FE              xchg di,si
 000098BD  8CDA              mov dx,ds
@@ -14980,10 +14873,7 @@
 00009951  8D76B6            lea si,[bp-0x4a]
 00009954  8CD8              mov ax,ds
 00009956  8EC0              mov es,ax
-00009958  B9FFFF            mov cx,0xffff
-0000995B  33C0              xor ax,ax
-0000995D  F2AE              repne scasb
-0000995F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009961  2BF9              sub di,cx
 00009963  87FE              xchg di,si
 00009965  D1E9              shr cx,1
@@ -15008,10 +14898,7 @@
 00009990  8D76B6            lea si,[bp-0x4a]
 00009993  8CD8              mov ax,ds
 00009995  8EC0              mov es,ax
-00009997  B9FFFF            mov cx,0xffff
-0000999A  33C0              xor ax,ax
-0000999C  F2AE              repne scasb
-0000999E  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000099A0  2BF9              sub di,cx
 000099A2  8BD9              mov bx,cx
 000099A4  87FE              xchg di,si
@@ -15033,10 +14920,7 @@
 000099C8  8CD8              mov ax,ds
 000099CA  1E                push ds
 000099CB  8B76B2            mov si,[bp-0x4e]
-000099CE  B9FFFF            mov cx,0xffff
-000099D1  33C0              xor ax,ax
-000099D3  F2AE              repne scasb
-000099D5  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000099D7  2BF9              sub di,cx
 000099D9  8BD9              mov bx,cx
 000099DB  87FE              xchg di,si
@@ -15090,10 +14974,7 @@
 00009A41  8D76B6            lea si,[bp-0x4a]
 00009A44  8CD8              mov ax,ds
 00009A46  8EC0              mov es,ax
-00009A48  B9FFFF            mov cx,0xffff
-00009A4B  33C0              xor ax,ax
-00009A4D  F2AE              repne scasb
-00009A4F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009A51  2BF9              sub di,cx
 00009A53  8BD9              mov bx,cx
 00009A55  87FE              xchg di,si
@@ -15108,11 +14989,7 @@
 00009A67  8D7EB6            lea di,[bp-0x4a]
 00009A6A  8CD0              mov ax,ss
 00009A6C  8EC0              mov es,ax
-00009A6E  B9FFFF            mov cx,0xffff
-00009A71  33C0              xor ax,ax
-00009A73  F2AE              repne scasb
-00009A75  F7D1              not cx
-00009A77  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00009A78  8BF1              mov si,cx
 00009A7A  8D42B6            lea ax,[bp+si-0x4a]
 00009A7D  8946F8            mov [bp-0x8],ax
@@ -15122,10 +14999,7 @@
 00009A85  8B3ED40D          mov di,[0xdd4]
 00009A89  1E                push ds
 00009A8A  C576F8            lds si,[bp-0x8]
-00009A8D  B9FFFF            mov cx,0xffff
-00009A90  33C0              xor ax,ax
-00009A92  F2AE              repne scasb
-00009A94  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009A96  2BF9              sub di,cx
 00009A98  87FE              xchg di,si
 00009A9A  8CDA              mov dx,ds
@@ -15152,10 +15026,7 @@
 00009AC6  8EC0              mov es,ax
 00009AC8  1E                push ds
 00009AC9  C576F8            lds si,[bp-0x8]
-00009ACC  B9FFFF            mov cx,0xffff
-00009ACF  33C0              xor ax,ax
-00009AD1  F2AE              repne scasb
-00009AD3  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009AD5  2BF9              sub di,cx
 00009AD7  87FE              xchg di,si
 00009AD9  8CDA              mov dx,ds
@@ -15202,10 +15073,7 @@
 00009B2D  753F              jnz 0x9b6e
 00009B2F  8DB66CFF          lea si,[bp-0x94]
 00009B33  8BFB              mov di,bx
-00009B35  B9FFFF            mov cx,0xffff
-00009B38  33C0              xor ax,ax
-00009B3A  F2AE              repne scasb
-00009B3C  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009B3E  2BF9              sub di,cx
 00009B40  87FE              xchg di,si
 00009B42  8CDA              mov dx,ds
@@ -15231,10 +15099,7 @@
 00009B71  8DB66CFF          lea si,[bp-0x94]
 00009B75  8CD8              mov ax,ds
 00009B77  8EC0              mov es,ax
-00009B79  B9FFFF            mov cx,0xffff
-00009B7C  33C0              xor ax,ax
-00009B7E  F2AE              repne scasb
-00009B80  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009B82  2BF9              sub di,cx
 00009B84  87FE              xchg di,si
 00009B86  8BC7              mov ax,di
@@ -15249,10 +15114,7 @@
 00009B9C  898E6AFF          mov [bp-0x96],cx
 00009BA0  8BF3              mov si,bx
 00009BA2  C4BE68FF          les di,[bp-0x98]
-00009BA6  B9FFFF            mov cx,0xffff
-00009BA9  33C0              xor ax,ax
-00009BAB  F2AE              repne scasb
-00009BAD  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009BAF  2BF9              sub di,cx
 00009BB1  8BD9              mov bx,cx
 00009BB3  87FE              xchg di,si
@@ -15288,11 +15150,7 @@
 00009BEF  57                push di
 00009BF0  56                push si
 00009BF1  C47E06            les di,[bp+0x6]
-00009BF4  B9FFFF            mov cx,0xffff
-00009BF7  33C0              xor ax,ax
-00009BF9  F2AE              repne scasb
-00009BFB  F7D1              not cx
-00009BFD  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00009BFE  894ECC            mov [bp-0x34],cx
 00009C01  8BC1              mov ax,cx
 00009C03  034606            add ax,[bp+0x6]
@@ -15323,10 +15181,7 @@
 00009C48  8EC0              mov es,ax
 00009C4A  1E                push ds
 00009C4B  C576C8            lds si,[bp-0x38]
-00009C4E  B9FFFF            mov cx,0xffff
-00009C51  33C0              xor ax,ax
-00009C53  F2AE              repne scasb
-00009C55  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009C57  2BF9              sub di,cx
 00009C59  87FE              xchg di,si
 00009C5B  06                push es
@@ -15374,10 +15229,7 @@
 00009CCF  C47E06            les di,[bp+0x6]
 00009CD2  1E                push ds
 00009CD3  C576CE            lds si,[bp-0x32]
-00009CD6  B9FFFF            mov cx,0xffff
-00009CD9  33C0              xor ax,ax
-00009CDB  F2AE              repne scasb
-00009CDD  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009CDF  2BF9              sub di,cx
 00009CE1  F3A6              repe cmpsb
 00009CE3  7405              jz 0x9cea
@@ -15547,10 +15399,7 @@
 00009E7D  C47E06            les di,[bp+0x6]
 00009E80  1E                push ds
 00009E81  C576CE            lds si,[bp-0x32]
-00009E84  B9FFFF            mov cx,0xffff
-00009E87  33C0              xor ax,ax
-00009E89  F2AE              repne scasb
-00009E8B  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009E8D  2BF9              sub di,cx
 00009E8F  87FE              xchg di,si
 00009E91  06                push es
@@ -15607,10 +15456,7 @@
 00009F13  8BFB              mov di,bx
 00009F15  1E                push ds
 00009F16  C57608            lds si,[bp+0x8]
-00009F19  B9FFFF            mov cx,0xffff
-00009F1C  33C0              xor ax,ax
-00009F1E  F2AE              repne scasb
-00009F20  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009F22  2BF9              sub di,cx
 00009F24  87FE              xchg di,si
 00009F26  8CDA              mov dx,ds
@@ -15641,10 +15487,7 @@
 00009F60  8EC0              mov es,ax
 00009F62  1E                push ds
 00009F63  C57608            lds si,[bp+0x8]
-00009F66  B9FFFF            mov cx,0xffff
-00009F69  33C0              xor ax,ax
-00009F6B  F2AE              repne scasb
-00009F6D  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009F6F  2BF9              sub di,cx
 00009F71  8BD9              mov bx,cx
 00009F73  87FE              xchg di,si
@@ -15679,10 +15522,7 @@
 00009FBA  8EC0              mov es,ax
 00009FBC  1E                push ds
 00009FBD  C57608            lds si,[bp+0x8]
-00009FC0  B9FFFF            mov cx,0xffff
-00009FC3  33C0              xor ax,ax
-00009FC5  F2AE              repne scasb
-00009FC7  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00009FC9  2BF9              sub di,cx
 00009FCB  8BD9              mov bx,cx
 00009FCD  87FE              xchg di,si
@@ -15700,11 +15540,7 @@
 00009FE3  F2A4              repne movsb
 00009FE5  1F                pop ds
 00009FE6  8B7E08            mov di,[bp+0x8]
-00009FE9  B9FFFF            mov cx,0xffff
-00009FEC  33C0              xor ax,ax
-00009FEE  F2AE              repne scasb
-00009FF0  F7D1              not cx
-00009FF2  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00009FF3  034E08            add cx,[bp+0x8]
 00009FF6  8BC2              mov ax,dx
 00009FF8  894EFC            mov [bp-0x4],cx
@@ -15717,10 +15553,7 @@
 0000A00C  8EC0              mov es,ax
 0000A00E  1E                push ds
 0000A00F  C576FC            lds si,[bp-0x4]
-0000A012  B9FFFF            mov cx,0xffff
-0000A015  33C0              xor ax,ax
-0000A017  F2AE              repne scasb
-0000A019  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000A01B  2BF9              sub di,cx
 0000A01D  8BD9              mov bx,cx
 0000A01F  87FE              xchg di,si
@@ -15747,10 +15580,7 @@
 0000A04C  8EC0              mov es,ax
 0000A04E  1E                push ds
 0000A04F  C57608            lds si,[bp+0x8]
-0000A052  B9FFFF            mov cx,0xffff
-0000A055  33C0              xor ax,ax
-0000A057  F2AE              repne scasb
-0000A059  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000A05B  2BF9              sub di,cx
 0000A05D  8BD9              mov bx,cx
 0000A05F  87FE              xchg di,si
@@ -15819,10 +15649,7 @@
 0000A0E9  BEECA3            mov si,0xa3ec
 0000A0EC  8CD0              mov ax,ss
 0000A0EE  8EC0              mov es,ax
-0000A0F0  B9FFFF            mov cx,0xffff
-0000A0F3  33C0              xor ax,ax
-0000A0F5  F2AE              repne scasb
-0000A0F7  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000A0F9  2BF9              sub di,cx
 0000A0FB  87FE              xchg di,si
 0000A0FD  8CDA              mov dx,ds
@@ -16185,10 +16012,7 @@
 0000A4A3  837E0800          cmp word [bp+0x8],byte +0x0
 0000A4A7  7416              jz 0xa4bf
 0000A4A9  C47E04            les di,[bp+0x4]
-0000A4AC  B9FFFF            mov cx,0xffff
-0000A4AF  33C0              xor ax,ax
-0000A4B1  F2AE              repne scasb
-0000A4B3  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000A4B5  51                push cx
 0000A4B6  06                push es
 0000A4B7  FF7604            push word [bp+0x4]
@@ -19693,10 +19517,7 @@
 0000CA7D  0E                push cs
 0000CA7E  E89C0B            call 0xd61d
 0000CA81  C47EF8            les di,[bp-0x8]
-0000CA84  B9FFFF            mov cx,0xffff
-0000CA87  33C0              xor ax,ax
-0000CA89  F2AE              repne scasb
-0000CA8B  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000CA8D  014EF8            add [bp-0x8],cx
 0000CA90  FF46FC            inc word [bp-0x4]
 0000CA93  8B1EBA77          mov bx,[0x77ba]
@@ -19767,10 +19588,7 @@
 0000CB49  0E                push cs
 0000CB4A  E8D00A            call 0xd61d
 0000CB4D  C47EF8            les di,[bp-0x8]
-0000CB50  B9FFFF            mov cx,0xffff
-0000CB53  33C0              xor ax,ax
-0000CB55  F2AE              repne scasb
-0000CB57  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000CB59  014EF8            add [bp-0x8],cx
 0000CB5C  FF46FC            inc word [bp-0x4]
 0000CB5F  8B46FE            mov ax,[bp-0x2]
@@ -19794,10 +19612,7 @@
 0000CB90  0E                push cs
 0000CB91  E8890A            call 0xd61d
 0000CB94  C47EF8            les di,[bp-0x8]
-0000CB97  B9FFFF            mov cx,0xffff
-0000CB9A  33C0              xor ax,ax
-0000CB9C  F2AE              repne scasb
-0000CB9E  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000CBA0  014EF8            add [bp-0x8],cx
 0000CBA3  FF46FC            inc word [bp-0x4]
 0000CBA6  8B1EBA77          mov bx,[0x77ba]
@@ -21879,11 +21694,7 @@
 0000E10A  E83ACF            call 0xb047
 0000E10D  C45E08            les bx,[bp+0x8]
 0000E110  8D7F01            lea di,[bx+0x1]
-0000E113  B9FFFF            mov cx,0xffff
-0000E116  33C0              xor ax,ax
-0000E118  F2AE              repne scasb
-0000E11A  F7D1              not cx
-0000E11C  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0000E11D  C45E08            les bx,[bp+0x8]
 0000E120  26880F            mov [es:bx],cl
 0000E123  C45EFC            les bx,[bp-0x4]
@@ -23278,10 +23089,7 @@
 0000EFEC  8CD0              mov ax,ss
 0000EFEE  8EC0              mov es,ax
 0000EFF0  8BB656FF          mov si,[bp-0xaa]
-0000EFF4  B9FFFF            mov cx,0xffff
-0000EFF7  33C0              xor ax,ax
-0000EFF9  F2AE              repne scasb
-0000EFFB  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0000EFFD  2BF9              sub di,cx
 0000EFFF  87FE              xchg di,si
 0000F001  8CDA              mov dx,ds
@@ -24900,11 +24708,7 @@
 000100E5  C45E06            les bx,[bp+0x6]
 000100E8  26894702          mov [es:bx+0x2],ax
 000100EC  C47E0A            les di,[bp+0xa]
-000100EF  B9FFFF            mov cx,0xffff
-000100F2  33C0              xor ax,ax
-000100F4  F2AE              repne scasb
-000100F6  F7D1              not cx
-000100F8  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000100F9  8BC1              mov ax,cx
 000100FB  B103              mov cl,0x3
 000100FD  D3E0              shl ax,cl
@@ -24915,23 +24719,21 @@
 0001010F  5F                pop di
 00010110  5D                pop bp
 00010111  CA0800            retf 0x8
+
 00010114  55                push bp
 00010115  8BEC              mov bp,sp
 00010117  33C0              xor ax,ax
 00010119  9A1C3E821F        call 0x1f82:0x3e1c
 0001011E  57                push di
 0001011F  C47E06            les di,[bp+0x6]
-00010122  B9FFFF            mov cx,0xffff
-00010125  33C0              xor ax,ax
-00010127  F2AE              repne scasb
-00010129  F7D1              not cx
-0001012B  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001012C  8BC1              mov ax,cx
 0001012E  B103              mov cl,0x3
 00010130  D3E0              shl ax,cl
 00010132  5F                pop di
 00010133  5D                pop bp
 00010134  CA0400            retf 0x4
+
 00010137  55                push bp
 00010138  8BEC              mov bp,sp
 0001013A  33C0              xor ax,ax
@@ -24945,6 +24747,7 @@
 0001014B  E82C00            call 0x17a
 0001014E  5D                pop bp
 0001014F  CA0200            retf 0x2
+
 00010152  55                push bp
 00010153  8BEC              mov bp,sp
 00010155  33C0              xor ax,ax
@@ -24953,17 +24756,14 @@
 0001015D  FF7608            push word [bp+0x8]
 00010160  FF7606            push word [bp+0x6]
 00010163  C47E06            les di,[bp+0x6]
-00010166  B9FFFF            mov cx,0xffff
-00010169  33C0              xor ax,ax
-0001016B  F2AE              repne scasb
-0001016D  F7D1              not cx
-0001016F  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00010170  51                push cx
 00010171  0E                push cs
 00010172  E80500            call 0x17a
 00010175  5F                pop di
 00010176  5D                pop bp
 00010177  CA0400            retf 0x4
+
 0001017A  55                push bp
 0001017B  8BEC              mov bp,sp
 0001017D  B80800            mov ax,0x8
@@ -24996,6 +24796,7 @@
 000101C8  8BE5              mov sp,bp
 000101CA  5D                pop bp
 000101CB  CA0600            retf 0x6
+
 000101CE  55                push bp
 000101CF  8BEC              mov bp,sp
 000101D1  B81400            mov ax,0x14
@@ -25513,6 +25314,7 @@
 0001072F  8BE5              mov sp,bp
 00010731  5D                pop bp
 00010732  CA0400            retf 0x4
+
 00010735  55                push bp
 00010736  8BEC              mov bp,sp
 00010738  33C0              xor ax,ax
@@ -25628,6 +25430,7 @@
 0001086A  8BE5              mov sp,bp
 0001086C  5D                pop bp
 0001086D  CA0C00            retf 0xc
+
 00010870  55                push bp
 00010871  8BEC              mov bp,sp
 00010873  33C0              xor ax,ax
@@ -25641,6 +25444,7 @@
 0001088A  FF1EC2A3          call far [0xa3c2]
 0001088E  5D                pop bp
 0001088F  CA0400            retf 0x4
+
 00010892  55                push bp
 00010893  8BEC              mov bp,sp
 00010895  33C0              xor ax,ax
@@ -25650,6 +25454,7 @@
 000108A2  FF1EC2A3          call far [0xa3c2]
 000108A6  5D                pop bp
 000108A7  CA0400            retf 0x4
+
 000108AA  55                push bp
 000108AB  8BEC              mov bp,sp
 000108AD  33C0              xor ax,ax
@@ -25679,6 +25484,7 @@
 000108F3  E8AC00            call 0x9a2
 000108F6  5D                pop bp
 000108F7  CA0400            retf 0x4
+
 000108FA  55                push bp
 000108FB  8BEC              mov bp,sp
 000108FD  33C0              xor ax,ax
@@ -26668,21 +26474,13 @@
 000112EF  8BF0              mov si,ax
 000112F1  C41E5A65          les bx,[0x655a]
 000112F5  8D7801            lea di,[bx+si+0x1]
-000112F8  B9FFFF            mov cx,0xffff
-000112FB  33C0              xor ax,ax
-000112FD  F2AE              repne scasb
-000112FF  F7D1              not cx
-00011301  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011302  8BC1              mov ax,cx
 00011304  8BD0              mov dx,ax
 00011306  BFC064            mov di,0x64c0
 00011309  8CD8              mov ax,ds
 0001130B  8EC0              mov es,ax
-0001130D  B9FFFF            mov cx,0xffff
-00011310  33C0              xor ax,ax
-00011312  F2AE              repne scasb
-00011314  F7D1              not cx
-00011316  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011317  03CA              add cx,dx
 00011319  41                inc cx
 0001131A  83F940            cmp cx,byte +0x40
@@ -26713,21 +26511,14 @@
 00011360  BFC064            mov di,0x64c0
 00011363  8CD8              mov ax,ds
 00011365  8EC0              mov es,ax
-00011367  B9FFFF            mov cx,0xffff
-0001136A  33C0              xor ax,ax
-0001136C  F2AE              repne scasb
-0001136E  F7D1              not cx
-00011370  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011371  8BD9              mov bx,cx
 00011373  80BFBF645C        cmp byte [bx+0x64bf],0x5c
 00011378  7427              jz 0x13a1
 0001137A  BFA617            mov di,0x17a6
 0001137D  BEC064            mov si,0x64c0
 00011380  8CD8              mov ax,ds
-00011382  B9FFFF            mov cx,0xffff
-00011385  33C0              xor ax,ax
-00011387  F2AE              repne scasb
-00011389  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001138B  2BF9              sub di,cx
 0001138D  8BD9              mov bx,cx
 0001138F  87FE              xchg di,si
@@ -26749,10 +26540,7 @@
 000113B5  8956C4            mov [bp-0x3c],dx
 000113B8  BEC064            mov si,0x64c0
 000113BB  C47EC2            les di,[bp-0x3e]
-000113BE  B9FFFF            mov cx,0xffff
-000113C1  33C0              xor ax,ax
-000113C3  F2AE              repne scasb
-000113C5  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000113C7  2BF9              sub di,cx
 000113C9  8BD9              mov bx,cx
 000113CB  87FE              xchg di,si
@@ -26796,10 +26584,7 @@
 00011428  C47EC2            les di,[bp-0x3e]
 0001142B  1E                push ds
 0001142C  C576BE            lds si,[bp-0x42]
-0001142F  B9FFFF            mov cx,0xffff
-00011432  33C0              xor ax,ax
-00011434  F2AE              repne scasb
-00011436  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011438  2BF9              sub di,cx
 0001143A  87FE              xchg di,si
 0001143C  8CDA              mov dx,ds
@@ -26820,10 +26605,7 @@
 0001145B  8EC0              mov es,ax
 0001145D  1E                push ds
 0001145E  C576BE            lds si,[bp-0x42]
-00011461  B9FFFF            mov cx,0xffff
-00011464  33C0              xor ax,ax
-00011466  F2AE              repne scasb
-00011468  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001146A  2BF9              sub di,cx
 0001146C  87FE              xchg di,si
 0001146E  06                push es
@@ -26849,10 +26631,7 @@
 0001149E  C47EBE            les di,[bp-0x42]
 000114A1  1E                push ds
 000114A2  C576C2            lds si,[bp-0x3e]
-000114A5  B9FFFF            mov cx,0xffff
-000114A8  33C0              xor ax,ax
-000114AA  F2AE              repne scasb
-000114AC  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000114AE  2BF9              sub di,cx
 000114B0  8BD9              mov bx,cx
 000114B2  87FE              xchg di,si
@@ -26884,21 +26663,14 @@
 000114E8  BFC064            mov di,0x64c0
 000114EB  8CD8              mov ax,ds
 000114ED  8EC0              mov es,ax
-000114EF  B9FFFF            mov cx,0xffff
-000114F2  33C0              xor ax,ax
-000114F4  F2AE              repne scasb
-000114F6  F7D1              not cx
-000114F8  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000114F9  8BD9              mov bx,cx
 000114FB  80BFBE643A        cmp byte [bx+0x64be],0x3a
 00011500  7503              jnz 0x1505
 00011502  E9DCFD            jmp 0x12e1
 00011505  BFC064            mov di,0x64c0
 00011508  8CD8              mov ax,ds
-0001150A  B9FFFF            mov cx,0xffff
-0001150D  33C0              xor ax,ax
-0001150F  F2AE              repne scasb
-00011511  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011513  49                dec cx
 00011514  8BD9              mov bx,cx
 00011516  C687BF6400        mov byte [bx+0x64bf],0x0
@@ -27053,11 +26825,7 @@
 000116B1  BFB264            mov di,0x64b2
 000116B4  8CD8              mov ax,ds
 000116B6  8EC0              mov es,ax
-000116B8  B9FFFF            mov cx,0xffff
-000116BB  33C0              xor ax,ax
-000116BD  F2AE              repne scasb
-000116BF  F7D1              not cx
-000116C1  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000116C2  890EB616          mov [0x16b6],cx
 000116C6  0BC9              or cx,cx
 000116C8  7408              jz 0x16d2
@@ -27066,10 +26834,7 @@
 000116D2  C706B4650000      mov word [0x65b4],0x0
 000116D8  BEC064            mov si,0x64c0
 000116DB  C47E10            les di,[bp+0x10]
-000116DE  B9FFFF            mov cx,0xffff
-000116E1  33C0              xor ax,ax
-000116E3  F2AE              repne scasb
-000116E5  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000116E7  2BF9              sub di,cx
 000116E9  87FE              xchg di,si
 000116EB  8CDA              mov dx,ds
@@ -27296,20 +27061,14 @@
 0001192F  E9B703            jmp 0x1ce9
 00011932  BFB264            mov di,0x64b2
 00011935  8CD8              mov ax,ds
-00011937  8EC0              mov es,ax
-00011939  B9FFFF            mov cx,0xffff
-0001193C  33C0              xor ax,ax
-0001193E  F2AE              repne scasb
+; CX is set to the position of a null byte inside string at ES:DI.
 00011940  F7D1              not cx
 00011942  49                dec cx
 00011943  8BC1              mov ax,cx
 00011945  8BD0              mov dx,ax
 00011947  BFC064            mov di,0x64c0
 0001194A  8CD8              mov ax,ds
-0001194C  B9FFFF            mov cx,0xffff
-0001194F  33C0              xor ax,ax
-00011951  F2AE              repne scasb
-00011953  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011955  49                dec cx
 00011956  03CA              add cx,dx
 00011958  41                inc cx
@@ -27356,10 +27115,7 @@
 000119B8  BEE113            mov si,0x13e1
 000119BB  8CD8              mov ax,ds
 000119BD  8EC0              mov es,ax
-000119BF  B9FFFF            mov cx,0xffff
-000119C2  33C0              xor ax,ax
-000119C4  F2AE              repne scasb
-000119C6  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000119C8  2BF9              sub di,cx
 000119CA  87FE              xchg di,si
 000119CC  D1E9              shr cx,1
@@ -27369,10 +27125,7 @@
 000119D4  BFA817            mov di,0x17a8
 000119D7  BECA13            mov si,0x13ca
 000119DA  8CD8              mov ax,ds
-000119DC  B9FFFF            mov cx,0xffff
-000119DF  33C0              xor ax,ax
-000119E1  F2AE              repne scasb
-000119E3  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000119E5  2BF9              sub di,cx
 000119E7  8BD9              mov bx,cx
 000119E9  87FE              xchg di,si
@@ -27431,10 +27184,7 @@
 00011A64  8EC0              mov es,ax
 00011A66  1E                push ds
 00011A67  C576B6            lds si,[bp-0x4a]
-00011A6A  B9FFFF            mov cx,0xffff
-00011A6D  33C0              xor ax,ax
-00011A6F  F2AE              repne scasb
-00011A71  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011A73  2BF9              sub di,cx
 00011A75  87FE              xchg di,si
 00011A77  06                push es
@@ -27454,10 +27204,7 @@
 00011A94  8EC0              mov es,ax
 00011A96  1E                push ds
 00011A97  C576B6            lds si,[bp-0x4a]
-00011A9A  B9FFFF            mov cx,0xffff
-00011A9D  33C0              xor ax,ax
-00011A9F  F2AE              repne scasb
-00011AA1  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011AA3  2BF9              sub di,cx
 00011AA5  87FE              xchg di,si
 00011AA7  06                push es
@@ -27477,10 +27224,7 @@
 00011AC4  8EC0              mov es,ax
 00011AC6  1E                push ds
 00011AC7  C576B6            lds si,[bp-0x4a]
-00011ACA  B9FFFF            mov cx,0xffff
-00011ACD  33C0              xor ax,ax
-00011ACF  F2AE              repne scasb
-00011AD1  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011AD3  2BF9              sub di,cx
 00011AD5  8BD9              mov bx,cx
 00011AD7  87FE              xchg di,si
@@ -27509,21 +27253,13 @@
 00011B05  83C406            add sp,byte +0x6
 00011B08  E9E701            jmp 0x1cf2
 00011B0B  C47E0A            les di,[bp+0xa]
-00011B0E  B9FFFF            mov cx,0xffff
-00011B11  33C0              xor ax,ax
-00011B13  F2AE              repne scasb
-00011B15  F7D1              not cx
-00011B17  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011B18  8BC1              mov ax,cx
 00011B1A  8BD0              mov dx,ax
 00011B1C  BFC064            mov di,0x64c0
 00011B1F  8CD8              mov ax,ds
 00011B21  8EC0              mov es,ax
-00011B23  B9FFFF            mov cx,0xffff
-00011B26  33C0              xor ax,ax
-00011B28  F2AE              repne scasb
-00011B2A  F7D1              not cx
-00011B2C  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011B2D  03CA              add cx,dx
 00011B2F  B80F00            mov ax,0xf
 00011B32  F76EF8            imul word [bp-0x8]
@@ -27532,11 +27268,7 @@
 00011B3B  8BC1              mov ax,cx
 00011B3D  8BD0              mov dx,ax
 00011B3F  8D7801            lea di,[bx+si+0x1]
-00011B42  B9FFFF            mov cx,0xffff
-00011B45  33C0              xor ax,ax
-00011B47  F2AE              repne scasb
-00011B49  F7D1              not cx
-00011B4B  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011B4C  03D1              add dx,cx
 00011B4E  42                inc dx
 00011B4F  42                inc dx
@@ -27547,21 +27279,14 @@
 00011B5B  BFC064            mov di,0x64c0
 00011B5E  8CD8              mov ax,ds
 00011B60  8EC0              mov es,ax
-00011B62  B9FFFF            mov cx,0xffff
-00011B65  33C0              xor ax,ax
-00011B67  F2AE              repne scasb
-00011B69  F7D1              not cx
-00011B6B  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011B6C  8BD9              mov bx,cx
 00011B6E  80BFBF645C        cmp byte [bx+0x64bf],0x5c
 00011B73  7427              jz 0x1b9c
 00011B75  BFAB17            mov di,0x17ab
 00011B78  BEC064            mov si,0x64c0
 00011B7B  8CD8              mov ax,ds
-00011B7D  B9FFFF            mov cx,0xffff
-00011B80  33C0              xor ax,ax
-00011B82  F2AE              repne scasb
-00011B84  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011B86  2BF9              sub di,cx
 00011B88  8BD9              mov bx,cx
 00011B8A  87FE              xchg di,si
@@ -27583,10 +27308,7 @@
 00011BB0  8956B8            mov [bp-0x48],dx
 00011BB3  BEC064            mov si,0x64c0
 00011BB6  C47EB6            les di,[bp-0x4a]
-00011BB9  B9FFFF            mov cx,0xffff
-00011BBC  33C0              xor ax,ax
-00011BBE  F2AE              repne scasb
-00011BC0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00011BC2  2BF9              sub di,cx
 00011BC4  8BD9              mov bx,cx
 00011BC6  87FE              xchg di,si
@@ -27621,11 +27343,7 @@
 00011C05  BFC064            mov di,0x64c0
 00011C08  8CD8              mov ax,ds
 00011C0A  8EC0              mov es,ax
-00011C0C  B9FFFF            mov cx,0xffff
-00011C0F  33C0              xor ax,ax
-00011C11  F2AE              repne scasb
-00011C13  F7D1              not cx
-00011C15  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011C16  8BD9              mov bx,cx
 00011C18  80BFBE643A        cmp byte [bx+0x64be],0x3a
 00011C1D  7503              jnz 0x1c22
@@ -27634,11 +27352,7 @@
 00011C25  BFC064            mov di,0x64c0
 00011C28  8CD8              mov ax,ds
 00011C2A  8EC0              mov es,ax
-00011C2C  B9FFFF            mov cx,0xffff
-00011C2F  33C0              xor ax,ax
-00011C31  F2AE              repne scasb
-00011C33  F7D1              not cx
-00011C35  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00011C36  8BD9              mov bx,cx
 00011C38  C687BF6400        mov byte [bx+0x64bf],0x0
 00011C3D  B85C00            mov ax,0x5c
@@ -27684,30 +27398,11 @@
 00011CA7  8B46FE            mov ax,[bp-0x2]
 00011CAA  8946E6            mov [bp-0x1a],ax
 00011CAD  EB3A              jmp short 0x1ce9
-00011CAF  E219              loop 0x1cca
-00011CB1  DA19              ficomp dword [bx+di]
-00011CB3  DA19              ficomp dword [bx+di]
-00011CB5  DA19              ficomp dword [bx+di]
-00011CB7  BB1BDA            mov bx,0xda1b
-00011CBA  19DA              sbb dx,bx
-00011CBC  19DA              sbb dx,bx
-00011CBE  19DA              sbb dx,bx
-00011CC0  19B51CDA          sbb [di-0x25e4],si
-00011CC4  1908              sbb [bx+si],cx
-00011CC6  1DDA19            sbb ax,0x19da
-00011CC9  DA19              ficomp dword [bx+di]
-00011CCB  DA19              ficomp dword [bx+di]
-00011CCD  DA19              ficomp dword [bx+di]
-00011CCF  DA19              ficomp dword [bx+di]
-00011CD1  DA19              ficomp dword [bx+di]
-00011CD3  DA19              ficomp dword [bx+di]
-00011CD5  BE19BE            mov si,0xbe19
-00011CD8  19BE19BE          sbb [bp-0x41e7],di
-00011CDC  19BE19BE          sbb [bp-0x41e7],di
-00011CE0  19BE19BE          sbb [bp-0x41e7],di
-00011CE4  19BE19BE          sbb [bp-0x41e7],di
-00011CE8  19837ED2          sbb [bp+di-0x2d82],ax
-00011CEC  027403            add dh,[si+0x3]
+
+; DATA.
+
+00011CE8  19837ED202        cmp word ptr [bp-0x2e],+0x02
+00011CED  7403              jz 0x1CF2
 00011CEF  E924FB            jmp 0x1816
 00011CF2  9ACFB00000        call 0x0:0xb0cf
 00011CF7  9A1E4D0000        call 0x0:0x4d1e
@@ -28281,10 +27976,7 @@
 000122DE  894EEA            mov [bp-0x16],cx
 000122E1  8D76F0            lea si,[bp-0x10]
 000122E4  C47EE8            les di,[bp-0x18]
-000122E7  B9FFFF            mov cx,0xffff
-000122EA  33C0              xor ax,ax
-000122EC  F2AE              repne scasb
-000122EE  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000122F0  2BF9              sub di,cx
 000122F2  87FE              xchg di,si
 000122F4  8BC7              mov ax,di
@@ -28304,10 +27996,7 @@
 00012311  8CD8              mov ax,ds
 00012313  1E                push ds
 00012314  C576E4            lds si,[bp-0x1c]
-00012317  B9FFFF            mov cx,0xffff
-0001231A  33C0              xor ax,ax
-0001231C  F2AE              repne scasb
-0001231E  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012320  2BF9              sub di,cx
 00012322  8BD9              mov bx,cx
 00012324  87FE              xchg di,si
@@ -28333,10 +28022,7 @@
 0001234F  8956E6            mov [bp-0x1a],dx
 00012352  8D76F0            lea si,[bp-0x10]
 00012355  C47EE4            les di,[bp-0x1c]
-00012358  B9FFFF            mov cx,0xffff
-0001235B  33C0              xor ax,ax
-0001235D  F2AE              repne scasb
-0001235F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012361  2BF9              sub di,cx
 00012363  87FE              xchg di,si
 00012365  8CDA              mov dx,ds
@@ -28354,10 +28040,7 @@
 0001237A  8D7EF0            lea di,[bp-0x10]
 0001237D  8CD0              mov ax,ss
 0001237F  8EC0              mov es,ax
-00012381  B9FFFF            mov cx,0xffff
-00012384  33C0              xor ax,ax
-00012386  F2AE              repne scasb
-00012388  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001238A  49                dec cx
 0001238B  51                push cx
 0001238C  90                nop
@@ -28584,11 +28267,7 @@
 000125CF  26C45F1C          les bx,[es:bx+0x1c]
 000125D3  8BD0              mov dx,ax
 000125D5  8BFB              mov di,bx
-000125D7  B9FFFF            mov cx,0xffff
-000125DA  33C0              xor ax,ax
-000125DC  F2AE              repne scasb
-000125DE  F7D1              not cx
-000125E0  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 000125E1  8BC1              mov ax,cx
 000125E3  B103              mov cl,0x3
 000125E5  D3E0              shl ax,cl
@@ -28907,10 +28586,7 @@
 0001291B  8EC0              mov es,ax
 0001291D  1E                push ds
 0001291E  C57606            lds si,[bp+0x6]
-00012921  B9FFFF            mov cx,0xffff
-00012924  33C0              xor ax,ax
-00012926  F2AE              repne scasb
-00012928  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001292A  2BF9              sub di,cx
 0001292C  87FE              xchg di,si
 0001292E  8CDA              mov dx,ds
@@ -28934,10 +28610,7 @@
 0001294F  56                push si
 00012950  BE6E65            mov si,0x656e
 00012953  C47E06            les di,[bp+0x6]
-00012956  B9FFFF            mov cx,0xffff
-00012959  33C0              xor ax,ax
-0001295B  F2AE              repne scasb
-0001295D  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001295F  2BF9              sub di,cx
 00012961  87FE              xchg di,si
 00012963  8CDA              mov dx,ds
@@ -28997,11 +28670,7 @@
 000129F0  A35A65            mov [0x655a],ax
 000129F3  89165C65          mov [0x655c],dx
 000129F7  C47E0A            les di,[bp+0xa]
-000129FA  B9FFFF            mov cx,0xffff
-000129FD  33C0              xor ax,ax
-000129FF  F2AE              repne scasb
-00012A01  F7D1              not cx
-00012A03  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00012A04  034E0A            add cx,[bp+0xa]
 00012A07  8CC0              mov ax,es
 00012A09  894EFC            mov [bp-0x4],cx
@@ -29081,10 +28750,7 @@
 00012AF4  8EC0              mov es,ax
 00012AF6  1E                push ds
 00012AF7  C576CA            lds si,[bp-0x36]
-00012AFA  B9FFFF            mov cx,0xffff
-00012AFD  33C0              xor ax,ax
-00012AFF  F2AE              repne scasb
-00012B01  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012B03  2BF9              sub di,cx
 00012B05  87FE              xchg di,si
 00012B07  06                push es
@@ -29199,10 +28865,7 @@
 00012C26  C47EF6            les di,[bp-0xa]
 00012C29  1E                push ds
 00012C2A  C576FA            lds si,[bp-0x6]
-00012C2D  B9FFFF            mov cx,0xffff
-00012C30  33C0              xor ax,ax
-00012C32  F2AE              repne scasb
-00012C34  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012C36  2BF9              sub di,cx
 00012C38  F3A6              repe cmpsb
 00012C3A  7405              jz 0x2c41
@@ -29244,10 +28907,7 @@
 00012C8A  C47EF6            les di,[bp-0xa]
 00012C8D  1E                push ds
 00012C8E  C576FA            lds si,[bp-0x6]
-00012C91  B9FFFF            mov cx,0xffff
-00012C94  33C0              xor ax,ax
-00012C96  F2AE              repne scasb
-00012C98  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012C9A  2BF9              sub di,cx
 00012C9C  F3A6              repe cmpsb
 00012C9E  7405              jz 0x2ca5
@@ -29267,10 +28927,7 @@
 00012CB8  56                push si
 00012CB9  8D76C0            lea si,[bp-0x40]
 00012CBC  C47E0C            les di,[bp+0xc]
-00012CBF  B9FFFF            mov cx,0xffff
-00012CC2  33C0              xor ax,ax
-00012CC4  F2AE              repne scasb
-00012CC6  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012CC8  2BF9              sub di,cx
 00012CCA  87FE              xchg di,si
 00012CCC  8CDA              mov dx,ds
@@ -29285,11 +28942,7 @@
 00012CDC  8D7EC0            lea di,[bp-0x40]
 00012CDF  8CD0              mov ax,ss
 00012CE1  8EC0              mov es,ax
-00012CE3  B9FFFF            mov cx,0xffff
-00012CE6  33C0              xor ax,ax
-00012CE8  F2AE              repne scasb
-00012CEA  F7D1              not cx
-00012CEC  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00012CED  8BF1              mov si,cx
 00012CEF  8D5ABF            lea bx,[bp+si-0x41]
 00012CF2  895EBC            mov [bp-0x44],bx
@@ -29314,10 +28967,7 @@
 00012D24  C47E08            les di,[bp+0x8]
 00012D27  1E                push ds
 00012D28  C576B6            lds si,[bp-0x4a]
-00012D2B  B9FFFF            mov cx,0xffff
-00012D2E  33C0              xor ax,ax
-00012D30  F2AE              repne scasb
-00012D32  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012D34  2BF9              sub di,cx
 00012D36  87FE              xchg di,si
 00012D38  8BC7              mov ax,di
@@ -29339,10 +28989,7 @@
 00012D5B  C47EB2            les di,[bp-0x4e]
 00012D5E  1E                push ds
 00012D5F  C576AE            lds si,[bp-0x52]
-00012D62  B9FFFF            mov cx,0xffff
-00012D65  33C0              xor ax,ax
-00012D67  F2AE              repne scasb
-00012D69  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012D6B  2BF9              sub di,cx
 00012D6D  8BD9              mov bx,cx
 00012D6F  87FE              xchg di,si
@@ -29385,10 +29032,7 @@
 00012DC2  56                push si
 00012DC3  8D76C0            lea si,[bp-0x40]
 00012DC6  C47E08            les di,[bp+0x8]
-00012DC9  B9FFFF            mov cx,0xffff
-00012DCC  33C0              xor ax,ax
-00012DCE  F2AE              repne scasb
-00012DD0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012DD2  2BF9              sub di,cx
 00012DD4  87FE              xchg di,si
 00012DD6  8BC7              mov ax,di
@@ -29408,10 +29052,7 @@
 00012DF3  8CD8              mov ax,ds
 00012DF5  1E                push ds
 00012DF6  C576BC            lds si,[bp-0x44]
-00012DF9  B9FFFF            mov cx,0xffff
-00012DFC  33C0              xor ax,ax
-00012DFE  F2AE              repne scasb
-00012E00  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012E02  2BF9              sub di,cx
 00012E04  8BD9              mov bx,cx
 00012E06  87FE              xchg di,si
@@ -29439,10 +29080,7 @@
 00012E35  C47EB8            les di,[bp-0x48]
 00012E38  1E                push ds
 00012E39  C576B4            lds si,[bp-0x4c]
-00012E3C  B9FFFF            mov cx,0xffff
-00012E3F  33C0              xor ax,ax
-00012E41  F2AE              repne scasb
-00012E43  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012E45  2BF9              sub di,cx
 00012E47  8BD9              mov bx,cx
 00012E49  87FE              xchg di,si
@@ -29541,10 +29179,7 @@
 00012F25  56                push si
 00012F26  8D76C0            lea si,[bp-0x40]
 00012F29  C47E08            les di,[bp+0x8]
-00012F2C  B9FFFF            mov cx,0xffff
-00012F2F  33C0              xor ax,ax
-00012F31  F2AE              repne scasb
-00012F33  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012F35  2BF9              sub di,cx
 00012F37  87FE              xchg di,si
 00012F39  8BC7              mov ax,di
@@ -29564,10 +29199,7 @@
 00012F56  8CD8              mov ax,ds
 00012F58  1E                push ds
 00012F59  C576BC            lds si,[bp-0x44]
-00012F5C  B9FFFF            mov cx,0xffff
-00012F5F  33C0              xor ax,ax
-00012F61  F2AE              repne scasb
-00012F63  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012F65  2BF9              sub di,cx
 00012F67  8BD9              mov bx,cx
 00012F69  87FE              xchg di,si
@@ -29595,10 +29227,7 @@
 00012F98  C47EB8            les di,[bp-0x48]
 00012F9B  1E                push ds
 00012F9C  C576B4            lds si,[bp-0x4c]
-00012F9F  B9FFFF            mov cx,0xffff
-00012FA2  33C0              xor ax,ax
-00012FA4  F2AE              repne scasb
-00012FA6  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00012FA8  2BF9              sub di,cx
 00012FAA  8BD9              mov bx,cx
 00012FAC  87FE              xchg di,si
@@ -29633,21 +29262,14 @@
 00012FE1  BFC064            mov di,0x64c0
 00012FE4  8CD8              mov ax,ds
 00012FE6  8EC0              mov es,ax
-00012FE8  B9FFFF            mov cx,0xffff
-00012FEB  33C0              xor ax,ax
-00012FED  F2AE              repne scasb
-00012FEF  F7D1              not cx
-00012FF1  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00012FF2  8BD9              mov bx,cx
 00012FF4  80BFBF645C        cmp byte [bx+0x64bf],0x5c
 00012FF9  7427              jz 0x3022
 00012FFB  BFD017            mov di,0x17d0
 00012FFE  BEC064            mov si,0x64c0
 00013001  8CD8              mov ax,ds
-00013003  B9FFFF            mov cx,0xffff
-00013006  33C0              xor ax,ax
-00013008  F2AE              repne scasb
-0001300A  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001300C  2BF9              sub di,cx
 0001300E  8BD9              mov bx,cx
 00013010  87FE              xchg di,si
@@ -29693,10 +29315,7 @@
 00013067  BE1465            mov si,0x6514
 0001306A  8CD8              mov ax,ds
 0001306C  8EC0              mov es,ax
-0001306E  B9FFFF            mov cx,0xffff
-00013071  33C0              xor ax,ax
-00013073  F2AE              repne scasb
-00013075  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00013077  2BF9              sub di,cx
 00013079  87FE              xchg di,si
 0001307B  8BC7              mov ax,di
@@ -29711,10 +29330,7 @@
 00013090  894EF8            mov [bp-0x8],cx
 00013093  8BF3              mov si,bx
 00013095  C47EF6            les di,[bp-0xa]
-00013098  B9FFFF            mov cx,0xffff
-0001309B  33C0              xor ax,ax
-0001309D  F2AE              repne scasb
-0001309F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000130A1  2BF9              sub di,cx
 000130A3  8BD9              mov bx,cx
 000130A5  87FE              xchg di,si
@@ -29736,10 +29352,7 @@
 000130C4  BE1465            mov si,0x6514
 000130C7  8CD8              mov ax,ds
 000130C9  8EC0              mov es,ax
-000130CB  B9FFFF            mov cx,0xffff
-000130CE  33C0              xor ax,ax
-000130D0  F2AE              repne scasb
-000130D2  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000130D4  2BF9              sub di,cx
 000130D6  87FE              xchg di,si
 000130D8  D1E9              shr cx,1
@@ -29837,6 +29450,7 @@
 000131CB  8BE5              mov sp,bp
 000131CD  5D                pop bp
 000131CE  CA0800            retf 0x8
+
 000131D1  55                push bp
 000131D2  8BEC              mov bp,sp
 000131D4  B80800            mov ax,0x8
@@ -29891,6 +29505,7 @@
 00013266  8BE5              mov sp,bp
 00013268  5D                pop bp
 00013269  CA0800            retf 0x8
+
 0001326C  33C0              xor ax,ax
 0001326E  9A1C3E821F        call 0x1f82:0x3e1c
 00013273  C706BE650000      mov word [0x65be],0x0
@@ -29899,6 +29514,7 @@
 00013280  0E                push cs
 00013281  E87DD2            call 0x501
 00013284  CB                retf
+
 00013285  33C0              xor ax,ax
 00013287  9A1C3E821F        call 0x1f82:0x3e1c
 0001328C  C706BC650000      mov word [0x65bc],0x0
@@ -29908,6 +29524,7 @@
 0001329A  0E                push cs
 0001329B  E863D2            call 0x501
 0001329E  CB                retf
+
 0001329F  33C0              xor ax,ax
 000132A1  9A1C3E821F        call 0x1f82:0x3e1c
 000132A6  C706BC650100      mov word [0x65bc],0x1
@@ -29915,6 +29532,7 @@
 000132AD  0E                push cs
 000132AE  E8FCD8            call 0xbad
 000132B1  CB                retf
+
 000132B2  33C0              xor ax,ax
 000132B4  9A1C3E821F        call 0x1f82:0x3e1c
 000132B9  FF06BE65          inc word [0x65be]
@@ -29929,6 +29547,7 @@
 000132CE  0E                push cs
 000132CF  E8493E            call 0x711b
 000132D2  CB                retf
+
 000132D3  33C0              xor ax,ax
 000132D5  9A1C3E821F        call 0x1f82:0x3e1c
 000132DA  A1BE65            mov ax,[0x65be]
@@ -29939,6 +29558,7 @@
 000132E6  0E                push cs
 000132E7  E8D33E            call 0x71bd
 000132EA  CB                retf
+
 000132EB  55                push bp
 000132EC  8BEC              mov bp,sp
 000132EE  33C0              xor ax,ax
@@ -29973,6 +29593,7 @@
 00013340  5E                pop si
 00013341  5D                pop bp
 00013342  CA0400            retf 0x4
+
 00013345  55                push bp
 00013346  8BEC              mov bp,sp
 00013348  B80800            mov ax,0x8
@@ -30087,6 +29708,7 @@
 00013447  E895D4            call 0x8df
 0001344A  5D                pop bp
 0001344B  CA0400            retf 0x4
+
 0001344E  33C0              xor ax,ax
 00013450  9A1C3E821F        call 0x1f82:0x3e1c
 00013455  0E                push cs
@@ -30094,6 +29716,7 @@
 00013459  0E                push cs
 0001345A  E855FE            call 0x32b2
 0001345D  CB                retf
+
 0001345E  33C0              xor ax,ax
 00013460  9A1C3E821F        call 0x1f82:0x3e1c
 00013465  0E                push cs
@@ -30101,6 +29724,7 @@
 00013469  0E                push cs
 0001346A  E845FE            call 0x32b2
 0001346D  CB                retf
+
 0001346E  33C0              xor ax,ax
 00013470  9A1C3E821F        call 0x1f82:0x3e1c
 00013475  0E                push cs
@@ -30108,6 +29732,7 @@
 00013479  0E                push cs
 0001347A  E835FE            call 0x32b2
 0001347D  CB                retf
+
 0001347E  33C0              xor ax,ax
 00013480  9A1C3E821F        call 0x1f82:0x3e1c
 00013485  0E                push cs
@@ -30115,6 +29740,7 @@
 00013489  0E                push cs
 0001348A  E812FE            call 0x329f
 0001348D  CB                retf
+
 0001348E  33C0              xor ax,ax
 00013490  9A1C3E821F        call 0x1f82:0x3e1c
 00013495  0E                push cs
@@ -30122,6 +29748,7 @@
 00013499  0E                push cs
 0001349A  E8E1FF            call 0x347e
 0001349D  CB                retf
+
 0001349E  33C0              xor ax,ax
 000134A0  9A1C3E821F        call 0x1f82:0x3e1c
 000134A5  0E                push cs
@@ -30129,6 +29756,7 @@
 000134A9  0E                push cs
 000134AA  E805FE            call 0x32b2
 000134AD  CB                retf
+
 000134AE  33C0              xor ax,ax
 000134B0  9A1C3E821F        call 0x1f82:0x3e1c
 000134B5  0E                push cs
@@ -30136,6 +29764,7 @@
 000134B9  0E                push cs
 000134BA  E816FE            call 0x32d3
 000134BD  CB                retf
+
 000134BE  33C0              xor ax,ax
 000134C0  9A1C3E821F        call 0x1f82:0x3e1c
 000134C5  2BC0              sub ax,ax
@@ -30149,6 +29778,7 @@
 000134D2  0E                push cs
 000134D3  E8BFD6            call 0xb95
 000134D6  CB                retf
+
 000134D7  55                push bp
 000134D8  8BEC              mov bp,sp
 000134DA  33C0              xor ax,ax
@@ -30165,6 +29795,7 @@
 000134F4  E83ED2            call 0x735
 000134F7  5D                pop bp
 000134F8  CA0800            retf 0x8
+
 000134FB  55                push bp
 000134FC  8BEC              mov bp,sp
 000134FE  33C0              xor ax,ax
@@ -30177,6 +29808,7 @@
 00013512  E8C2FF            call 0x34d7
 00013515  5D                pop bp
 00013516  CA0600            retf 0x6
+
 00013519  55                push bp
 0001351A  8BEC              mov bp,sp
 0001351C  33C0              xor ax,ax
@@ -30189,6 +29821,7 @@
 00013530  E8A4FF            call 0x34d7
 00013533  5D                pop bp
 00013534  CA0600            retf 0x6
+
 00013537  55                push bp
 00013538  8BEC              mov bp,sp
 0001353A  33C0              xor ax,ax
@@ -30206,6 +29839,7 @@
 00013557  E820CC            call 0x17a
 0001355A  5D                pop bp
 0001355B  CA0A00            retf 0xa
+
 0001355E  55                push bp
 0001355F  8BEC              mov bp,sp
 00013561  B80200            mov ax,0x2
@@ -30255,6 +29889,7 @@
 000135CE  8BE5              mov sp,bp
 000135D0  5D                pop bp
 000135D1  CA0400            retf 0x4
+
 000135D4  55                push bp
 000135D5  8BEC              mov bp,sp
 000135D7  B80200            mov ax,0x2
@@ -30290,6 +29925,7 @@
 00013624  8BE5              mov sp,bp
 00013626  5D                pop bp
 00013627  CA0400            retf 0x4
+
 0001362A  33C0              xor ax,ax
 0001362C  9A1C3E821F        call 0x1f82:0x3e1c
 00013631  90                nop
@@ -30345,6 +29981,7 @@
 0001369E  2E37              cs aaa
 000136A0  EB94              jmp short 0x3636
 000136A2  CB                retf
+
 000136A3  33C0              xor ax,ax
 000136A5  9A1C3E821F        call 0x1f82:0x3e1c
 000136AA  B81474            mov ax,0x7414
@@ -30783,10 +30420,7 @@
 00013AA9  8D7EE4            lea di,[bp-0x1c]
 00013AAC  8CD0              mov ax,ss
 00013AAE  8EC0              mov es,ax
-00013AB0  B9FFFF            mov cx,0xffff
-00013AB3  33C0              xor ax,ax
-00013AB5  F2AE              repne scasb
-00013AB7  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00013AB9  49                dec cx
 00013ABA  8BF1              mov si,cx
 00013ABC  C642E300          mov byte [bp+si-0x1d],0x0
@@ -30920,10 +30554,7 @@
 00013BDB  8EC0              mov es,ax
 00013BDD  1E                push ds
 00013BDE  C5B654FF          lds si,[bp-0xac]
-00013BE2  B9FFFF            mov cx,0xffff
-00013BE5  33C0              xor ax,ax
-00013BE7  F2AE              repne scasb
-00013BE9  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00013BEB  2BF9              sub di,cx
 00013BED  87FE              xchg di,si
 00013BEF  06                push es
@@ -30956,6 +30587,7 @@
 00013C32  C706C0800000      mov word [0x80c0],0x0
 00013C38  5D                pop bp
 00013C39  CA0400            retf 0x4
+
 00013C3C  55                push bp
 00013C3D  8BEC              mov bp,sp
 00013C3F  B81A00            mov ax,0x1a
@@ -31020,6 +30652,7 @@
 00013CF5  8BE5              mov sp,bp
 00013CF7  5D                pop bp
 00013CF8  CA0400            retf 0x4
+
 00013CFB  55                push bp
 00013CFC  8BEC              mov bp,sp
 00013CFE  33C0              xor ax,ax
@@ -31125,6 +30758,7 @@
 00013E2A  B81300            mov ax,0x13
 00013E2D  5D                pop bp
 00013E2E  CA0600            retf 0x6
+
 00013E31  55                push bp
 00013E32  8BEC              mov bp,sp
 00013E34  33C0              xor ax,ax
@@ -31225,7 +30859,7 @@
 00013F26  B81E00            mov ax,0x1e
 00013F29  9A1C3E821F        call 0x1f82:0x3e1c
 00013F2E  57                push di
-00013F2F  9AE2FB0000        call 0x0:0xfbe2 ; Call PIT configuration procedure.
+00013F2F  9AE2FB0000        call 0x0:0xfbe2	; Call PIT configuration procedure.
 00013F34  B811FC            mov ax,0xfc11
 00013F37  BA0000            mov dx,0x0
 00013F3A  52                push dx
@@ -31670,15 +31304,15 @@
 0001442D  C746F80400        mov word [bp-0x8],0x4
 00014432  837EF800          cmp word [bp-0x8],byte +0x0
 00014436  7548              jnz 0x4480
-00014438  B80F00            mov ax,0xf
-0001443B  BAD403            mov dx,0x3d4
-0001443E  EE                out dx,al
-0001443F  BAD503            mov dx,0x3d5
-00014442  EC                in al,dx
-00014443  2AE4              sub ah,ah
-00014445  8946FC            mov [bp-0x4],ax
-00014448  3455              xor al,0x55
-0001444A  EE                out dx,al
+00014438  B80F00            mov ax,0xf				; Perform some kind of graphics card related operation. 
+0001443B  BAD403            mov dx,0x3d4			;
+0001443E  EE                out dx,al				;
+0001443F  BAD503            mov dx,0x3d5			;
+00014442  EC                in al,dx				;
+00014443  2AE4              sub ah,ah				;
+00014445  8946FC            mov [bp-0x4],ax			;
+00014448  3455              xor al,0x55				;
+0001444A  EE                out dx,al				;
 0001444B  9AD8FB0000        call 0x0:0xfbd8
 00014450  9AD8FB0000        call 0x0:0xfbd8
 00014455  BAD503            mov dx,0x3d5
@@ -31695,8 +31329,8 @@
 00014472  740C              jz 0x4480
 00014474  C746F81000        mov word [bp-0x8],0x10
 00014479  8B46FC            mov ax,[bp-0x4]
-0001447C  BAD503            mov dx,0x3d5
-0001447F  EE                out dx,al
+0001447C  BAD503            mov dx,0x3d5			; Graphics card operation.
+0001447F  EE                out dx,al				;
 00014480  837EF800          cmp word [bp-0x8],byte +0x0
 00014484  7504              jnz 0x448a
 00014486  0E                push cs
@@ -32716,10 +32350,7 @@
 00014E90  E99B00            jmp 0x4f2e
 00014E93  BED865            mov si,0x65d8
 00014E96  C47E06            les di,[bp+0x6]
-00014E99  B9FFFF            mov cx,0xffff
-00014E9C  33C0              xor ax,ax
-00014E9E  F2AE              repne scasb
-00014EA0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00014EA2  2BF9              sub di,cx
 00014EA4  87FE              xchg di,si
 00014EA6  8CDA              mov dx,ds
@@ -32732,10 +32363,7 @@
 00014EB2  F2A4              repne movsb
 00014EB4  8EDA              mov ds,dx
 00014EB6  C47E06            les di,[bp+0x6]
-00014EB9  B9FFFF            mov cx,0xffff
-00014EBC  33C0              xor ax,ax
-00014EBE  F2AE              repne scasb
-00014EC0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00014EC2  49                dec cx
 00014EC3  890ECE1E          mov [0x1ece],cx
 00014EC7  B8D61E            mov ax,0x1ed6
@@ -32841,11 +32469,7 @@
 00014FBC  BF5666            mov di,0x6656
 00014FBF  8CD8              mov ax,ds
 00014FC1  8EC0              mov es,ax
-00014FC3  B9FFFF            mov cx,0xffff
-00014FC6  33C0              xor ax,ax
-00014FC8  F2AE              repne scasb
-00014FCA  F7D1              not cx
-00014FCC  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00014FCD  890E1624          mov [0x2416],cx
 00014FD1  C746F80000        mov word [bp-0x8],0x0
 00014FD6  C746F43E23        mov word [bp-0xc],0x233e
@@ -32915,11 +32539,7 @@
 00015085  BF5666            mov di,0x6656
 00015088  8CD8              mov ax,ds
 0001508A  8EC0              mov es,ax
-0001508C  B9FFFF            mov cx,0xffff
-0001508F  33C0              xor ax,ax
-00015091  F2AE              repne scasb
-00015093  F7D1              not cx
-00015095  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00015096  51                push cx
 00015097  FF76FC            push word [bp-0x4]
 0001509A  FF76FA            push word [bp-0x6]
@@ -33003,10 +32623,7 @@
 00015155  56                push si
 00015156  8D76F6            lea si,[bp-0xa]
 00015159  C47E06            les di,[bp+0x6]
-0001515C  B9FFFF            mov cx,0xffff
-0001515F  33C0              xor ax,ax
-00015161  F2AE              repne scasb
-00015163  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00015165  2BF9              sub di,cx
 00015167  87FE              xchg di,si
 00015169  8CDA              mov dx,ds
@@ -33160,10 +32777,7 @@
 000152B0  8956EC            mov [bp-0x14],dx
 000152B3  8D76F0            lea si,[bp-0x10]
 000152B6  C47EEA            les di,[bp-0x16]
-000152B9  B9FFFF            mov cx,0xffff
-000152BC  33C0              xor ax,ax
-000152BE  F2AE              repne scasb
-000152C0  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000152C2  2BF9              sub di,cx
 000152C4  87FE              xchg di,si
 000152C6  8CDA              mov dx,ds
@@ -33268,10 +32882,7 @@
 000153AE  898E22FF          mov [bp-0xde],cx
 000153B2  8BF3              mov si,bx
 000153B4  C4BE20FF          les di,[bp-0xe0]
-000153B8  B9FFFF            mov cx,0xffff
-000153BB  33C0              xor ax,ax
-000153BD  F2AE              repne scasb
-000153BF  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 000153C1  2BF9              sub di,cx
 000153C3  8BD9              mov bx,cx
 000153C5  87FE              xchg di,si
@@ -33298,10 +32909,7 @@
 000153F2  8CD8              mov ax,ds
 000153F4  1E                push ds
 000153F5  C5B61CFF          lds si,[bp-0xe4]
-000153F9  B9FFFF            mov cx,0xffff
-000153FC  33C0              xor ax,ax
-000153FE  F2AE              repne scasb
-00015400  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00015402  2BF9              sub di,cx
 00015404  8BD9              mov bx,cx
 00015406  87FE              xchg di,si
@@ -33539,11 +33147,7 @@
 00015654  BF5066            mov di,0x6650
 00015657  8CD8              mov ax,ds
 00015659  8EC0              mov es,ax
-0001565B  B9FFFF            mov cx,0xffff
-0001565E  33C0              xor ax,ax
-00015660  F2AE              repne scasb
-00015662  F7D1              not cx
-00015664  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00015665  51                push cx
 00015666  FF7606            push word [bp+0x6]
 00015669  FF7604            push word [bp+0x4]
@@ -33559,11 +33163,7 @@
 00015686  BF5066            mov di,0x6650
 00015689  8CD8              mov ax,ds
 0001568B  8EC0              mov es,ax
-0001568D  B9FFFF            mov cx,0xffff
-00015690  33C0              xor ax,ax
-00015692  F2AE              repne scasb
-00015694  F7D1              not cx
-00015696  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00015697  890E2429          mov [0x2924],cx
 0001569B  8B4608            mov ax,[bp+0x8]
 0001569E  A3CA65            mov [0x65ca],ax
@@ -33624,10 +33224,7 @@
 00015721  8EC0              mov es,ax
 00015723  1E                push ds
 00015724  C576F8            lds si,[bp-0x8]
-00015727  B9FFFF            mov cx,0xffff
-0001572A  33C0              xor ax,ax
-0001572C  F2AE              repne scasb
-0001572E  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00015730  2BF9              sub di,cx
 00015732  8BD9              mov bx,cx
 00015734  87FE              xchg di,si
@@ -33646,11 +33243,7 @@
 0001574B  BF0066            mov di,0x6600
 0001574E  8CD8              mov ax,ds
 00015750  8EC0              mov es,ax
-00015752  B9FFFF            mov cx,0xffff
-00015755  33C0              xor ax,ax
-00015757  F2AE              repne scasb
-00015759  F7D1              not cx
-0001575B  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001575C  890EEA2D          mov [0x2dea],cx
 00015760  B008              mov al,0x8
 00015762  50                push ax
@@ -33824,10 +33417,7 @@
 00015902  8BFE              mov di,si
 00015904  BE5C66            mov si,0x665c
 00015907  8EC3              mov es,bx
-00015909  B9FFFF            mov cx,0xffff
-0001590C  33C0              xor ax,ax
-0001590E  F2AE              repne scasb
-00015910  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00015912  2BF9              sub di,cx
 00015914  87FE              xchg di,si
 00015916  8CDA              mov dx,ds
@@ -33850,11 +33440,7 @@
 0001593D  BF5C66            mov di,0x665c
 00015940  8CD8              mov ax,ds
 00015942  8EC0              mov es,ax
-00015944  B9FFFF            mov cx,0xffff
-00015947  33C0              xor ax,ax
-00015949  F2AE              repne scasb
-0001594B  F7D1              not cx
-0001594D  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001594E  51                push cx
 0001594F  FF7606            push word [bp+0x6]
 00015952  FF7604            push word [bp+0x4]
@@ -33870,11 +33456,7 @@
 0001596F  BF5C66            mov di,0x665c
 00015972  8CD8              mov ax,ds
 00015974  8EC0              mov es,ax
-00015976  B9FFFF            mov cx,0xffff
-00015979  33C0              xor ax,ax
-0001597B  F2AE              repne scasb
-0001597D  F7D1              not cx
-0001597F  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 00015980  890E3030          mov [0x3030],cx
 00015984  8B4608            mov ax,[bp+0x8]
 00015987  A3CA65            mov [0x65ca],ax
@@ -41973,10 +41555,7 @@
 0001B123  8CD0              mov ax,ss
 0001B125  8EC0              mov es,ax
 0001B127  8B76FE            mov si,[bp-0x2]
-0001B12A  B9FFFF            mov cx,0xffff
-0001B12D  33C0              xor ax,ax
-0001B12F  F2AE              repne scasb
-0001B131  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001B133  2BF9              sub di,cx
 0001B135  87FE              xchg di,si
 0001B137  8CDA              mov dx,ds
@@ -42632,10 +42211,7 @@
 0001B7D2  8EC0              mov es,ax
 0001B7D4  1E                push ds
 0001B7D5  C5760A            lds si,[bp+0xa]
-0001B7D8  B9FFFF            mov cx,0xffff
-0001B7DB  33C0              xor ax,ax
-0001B7DD  F2AE              repne scasb
-0001B7DF  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001B7E1  2BF9              sub di,cx
 0001B7E3  8BD9              mov bx,cx
 0001B7E5  87FE              xchg di,si
@@ -42652,11 +42228,7 @@
 0001B7F9  F2A4              repne movsb
 0001B7FB  1F                pop ds
 0001B7FC  8B7E0A            mov di,[bp+0xa]
-0001B7FF  B9FFFF            mov cx,0xffff
-0001B802  33C0              xor ax,ax
-0001B804  F2AE              repne scasb
-0001B806  F7D1              not cx
-0001B808  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001B809  894EF6            mov [bp-0xa],cx
 0001B80C  B85C00            mov ax,0x5c
 0001B80F  50                push ax
@@ -42678,10 +42250,7 @@
 0001B839  C47E0E            les di,[bp+0xe]
 0001B83C  1E                push ds
 0001B83D  C5760A            lds si,[bp+0xa]
-0001B840  B9FFFF            mov cx,0xffff
-0001B843  33C0              xor ax,ax
-0001B845  F2AE              repne scasb
-0001B847  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001B849  2BF9              sub di,cx
 0001B84B  8BD9              mov bx,cx
 0001B84D  87FE              xchg di,si
@@ -42723,10 +42292,7 @@
 0001B89C  8EC0              mov es,ax
 0001B89E  1E                push ds
 0001B89F  C5760A            lds si,[bp+0xa]
-0001B8A2  B9FFFF            mov cx,0xffff
-0001B8A5  33C0              xor ax,ax
-0001B8A7  F2AE              repne scasb
-0001B8A9  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001B8AB  2BF9              sub di,cx
 0001B8AD  8BD9              mov bx,cx
 0001B8AF  87FE              xchg di,si
@@ -42759,10 +42325,7 @@
 0001B8E7  C47EE6            les di,[bp-0x1a]
 0001B8EA  1E                push ds
 0001B8EB  C5760A            lds si,[bp+0xa]
-0001B8EE  B9FFFF            mov cx,0xffff
-0001B8F1  33C0              xor ax,ax
-0001B8F3  F2AE              repne scasb
-0001B8F5  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001B8F7  2BF9              sub di,cx
 0001B8F9  8BD9              mov bx,cx
 0001B8FB  87FE              xchg di,si
@@ -42987,10 +42550,7 @@
 0001BB31  8D774C            lea si,[bx+0x4c]
 0001BB34  8CD0              mov ax,ss
 0001BB36  8EC0              mov es,ax
-0001BB38  B9FFFF            mov cx,0xffff
-0001BB3B  33C0              xor ax,ax
-0001BB3D  F2AE              repne scasb
-0001BB3F  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001BB41  2BF9              sub di,cx
 0001BB43  87FE              xchg di,si
 0001BB45  8CDA              mov dx,ds
@@ -46366,11 +45926,7 @@
 0001DFEA  50                push ax
 0001DFEB  C45E08            les bx,[bp+0x8]
 0001DFEE  8D7F5A            lea di,[bx+0x5a]
-0001DFF1  B9FFFF            mov cx,0xffff
-0001DFF4  33C0              xor ax,ax
-0001DFF6  F2AE              repne scasb
-0001DFF8  F7D1              not cx
-0001DFFA  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001DFFB  034E08            add cx,[bp+0x8]
 0001DFFE  8B460A            mov ax,[bp+0xa]
 0001E001  83C15A            add cx,byte +0x5a
@@ -46391,10 +45947,7 @@
 0001E02B  8EC0              mov es,ax
 0001E02D  1E                push ds
 0001E02E  C576C2            lds si,[bp-0x3e]
-0001E031  B9FFFF            mov cx,0xffff
-0001E034  33C0              xor ax,ax
-0001E036  F2AE              repne scasb
-0001E038  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 0001E03A  2BF9              sub di,cx
 0001E03C  8BD9              mov bx,cx
 0001E03E  87FE              xchg di,si
@@ -46412,11 +45965,7 @@
 0001E054  1F                pop ds
 0001E055  8B5E08            mov bx,[bp+0x8]
 0001E058  8D7F5A            lea di,[bx+0x5a]
-0001E05B  B9FFFF            mov cx,0xffff
-0001E05E  33C0              xor ax,ax
-0001E060  F2AE              repne scasb
-0001E062  F7D1              not cx
-0001E064  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001E065  C45E08            les bx,[bp+0x8]
 0001E068  26884F6A          mov [es:bx+0x6a],cl
 0001E06C  C45E08            les bx,[bp+0x8]
@@ -46593,11 +46142,7 @@
 0001E253  8D7EEC            lea di,[bp-0x14]
 0001E256  8CD0              mov ax,ss
 0001E258  8EC0              mov es,ax
-0001E25A  B9FFFF            mov cx,0xffff
-0001E25D  33C0              xor ax,ax
-0001E25F  F2AE              repne scasb
-0001E261  F7D1              not cx
-0001E263  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001E264  51                push cx
 0001E265  E81A03            call 0xe582
 0001E268  B85200            mov ax,0x52
@@ -46638,11 +46183,7 @@
 0001E2B5  8D7EEC            lea di,[bp-0x14]
 0001E2B8  8CD0              mov ax,ss
 0001E2BA  8EC0              mov es,ax
-0001E2BC  B9FFFF            mov cx,0xffff
-0001E2BF  33C0              xor ax,ax
-0001E2C1  F2AE              repne scasb
-0001E2C3  F7D1              not cx
-0001E2C5  49                dec cx
+; CX is set to the position of a null byte inside string at ES:DI minus one.
 0001E2C6  51                push cx
 0001E2C7  E8B802            call 0xe582
 0001E2CA  B84800            mov ax,0x48
@@ -47152,17 +46693,17 @@
 0001E897  83C40A            add sp,byte +0xa
 0001E89A  C746E21000        mov word [bp-0x1e],0x10
 0001E89F  8B46E2            mov ax,[bp-0x1e]
-0001E8A2  BADA03            mov dx,0x3da
-0001E8A5  EE                out dx,al
-0001E8A6  2D1000            sub ax,0x10
-0001E8A9  BADE03            mov dx,0x3de
-0001E8AC  EE                out dx,al
+0001E8A2  BADA03            mov dx,0x3da			; Graphics card status operation.
+0001E8A5  EE                out dx,al				;
+0001E8A6  2D1000            sub ax,0x10				;
+0001E8A9  BADE03            mov dx,0x3de			; Port does not exist ???
+0001E8AC  EE                out dx,al				;
 0001E8AD  FF46E2            inc word [bp-0x1e]
 0001E8B0  837EE21F          cmp word [bp-0x1e],byte +0x1f
 0001E8B4  7EE9              jng 0xe89f
-0001E8B6  2BC0              sub ax,ax
-0001E8B8  BADA03            mov dx,0x3da
-0001E8BB  EE                out dx,al
+0001E8B6  2BC0              sub ax,ax				; Graphics card status operation.
+0001E8B8  BADA03            mov dx,0x3da			;
+0001E8BB  EE                out dx,al				;
 0001E8BC  8BE5              mov sp,bp
 0001E8BE  5D                pop bp
 0001E8BF  CB                retf
@@ -47194,16 +46735,16 @@
 0001E8F6  8C56E8            mov [bp-0x18],ss
 0001E8F9  C746FE1000        mov word [bp-0x2],0x10
 0001E8FE  8B46FE            mov ax,[bp-0x2]
-0001E901  BADA03            mov dx,0x3da
-0001E904  EE                out dx,al
+0001E901  BADA03            mov dx,0x3da		; Graphics card status operation.
+0001E904  EE                out dx,al			;
 0001E905  C45EE6            les bx,[bp-0x1a]
 0001E908  268A07            mov al,[es:bx]
 0001E90B  2AE4              sub ah,ah
 0001E90D  B104              mov cl,0x4
 0001E90F  D3E8              shr ax,cl
 0001E911  8946E4            mov [bp-0x1c],ax
-0001E914  BADE03            mov dx,0x3de
-0001E917  EE                out dx,al
+0001E914  BADE03            mov dx,0x3de		; Graphics card operation.
+0001E917  EE                out dx,al			;
 0001E918  C45EEA            les bx,[bp-0x16]
 0001E91B  8BF0              mov si,ax
 0001E91D  D1E6              shl si,1
@@ -47217,8 +46758,8 @@
 0001E936  837EFE1F          cmp word [bp-0x2],byte +0x1f
 0001E93A  7EC2              jng 0xe8fe
 0001E93C  2BC0              sub ax,ax
-0001E93E  BADA03            mov dx,0x3da
-0001E941  EE                out dx,al
+0001E93E  BADA03            mov dx,0x3da		; ; Graphics card status operation.
+0001E941  EE                out dx,al			;
 0001E942  5E                pop si
 0001E943  8BE5              mov sp,bp
 0001E945  5D                pop bp
@@ -49233,10 +48774,10 @@
 0001FB24  BF00A0            mov di,0xa000
 0001FB27  8EC7              mov es,di
 0001FB29  33FF              xor di,di
-0001FB2B  BACE03            mov dx,0x3ce
-0001FB2E  8A6606            mov ah,[bp+0x6]
-0001FB31  B000              mov al,0x0
-0001FB33  EE                out dx,al
+0001FB2B  BACE03            mov dx,0x3ce		; 3CE VGA graphics index.
+0001FB2E  8A6606            mov ah,[bp+0x6]		;
+0001FB31  B000              mov al,0x0			;
+0001FB33  EE                out dx,al			;
 0001FB34  86C4              xchg al,ah
 0001FB36  42                inc dx
 0001FB37  EE                out dx,al
@@ -55683,14 +55224,14 @@
 0002356B  E2F7              loop 0x3564
 0002356D  16                push ss
 0002356E  1F                pop ds
-0002356F  BB0400            mov bx,0x4			; Gets device information for the prrinter.
-00023572  80A77E56BF        and byte [bx+0x567e],0xbf	; ???
+0002356F  BB0400            mov bx,0x4			; Gets device information for the printer.
+00023572  80A77E56BF        and byte [bx+0x567e],0xbf	; _IOREAD + _IOWRT + _IOFBF + _IOLBF + _IONBF +_IOMYBUF + _IOEOF + _IOERR + _IORW
 00023577  B80044            mov ax,0x4400		;
 0002357A  CD21              int 0x21			;
 0002357C  720A              jc 0x3588			; Checks whether an error occurred.
 0002357E  F6C280            test dl,0x80		; Checks whether the device is a character device.
 00023581  7405              jz 0x3588			;
-00023583  808F7E5640        or byte [bx+0x567e],0x40	; 0xBF OR 0x40 == 0xFF
+	00023583  808F7E5640        or byte [bx+0x567e],0x40	; Set _IOSTRG.
 00023588  4B                dec bx			; Checks whether there is any device information. ((0x00 - 0x01) == (sign flag == true))
 00023589  79E7              jns 0x3572			;
 0002358B  BE4E60            mov si,0x604e
@@ -55729,11 +55270,11 @@
 
 	000235DE  B90F00            mov cx,0xf					; Closes 16 potentially open files starting with the first non-predefined file handle.
 	000235E1  BB0500            mov bx,0x5					; 
-		000235E4  F6877E5601        test byte [bx+0x567e],0x1		;
-		000235E9  7404              jz 0x35ef				;
-		000235EB  B43E              mov ah,0x3e				;
-		000235ED  CD21              int 0x21				;
-		000235EF  43                inc bx				;
+		000235E4  F6877E5601        test byte [bx+0x567e],0x1		; Checks for _IOREAD.
+			000235E9  7404              jz 0x35ef				;
+				000235EB  B43E              mov ah,0x3e				;
+				000235ED  CD21              int 0x21				;
+			000235EF  43                inc bx				;
 		000235F0  E2F2              loop 0x35e4				;
 
 000235F2  E80700            call 0x35fc
@@ -55747,16 +55288,16 @@
 	00023605  FF1E4260          call far [0x6042]
 00023609  1E                push ds
 0002360A  C5166356          lds dx,[0x5663]
-0002360E  B80025            mov ax,0x2500
-00023611  CD21              int 0x21
+0002360E  B80025            mov ax,0x2500		; Set vector.
+00023611  CD21              int 0x21			;
 00023613  1F                pop ds
 00023614  803EA45600        cmp byte [0x56a4],0x0
 00023619  740D              jz 0x3628
 0002361B  1E                push ds
 0002361C  A0A556            mov al,[0x56a5]
 0002361F  C516A656          lds dx,[0x56a6]
-00023623  B425              mov ah,0x25
-00023625  CD21              int 0x21
+00023623  B425              mov ah,0x25			; Set vector.
+00023625  CD21              int 0x21			;
 00023627  1F                pop ds
 00023628  C3                ret
 00023629  3BF7              cmp si,di
@@ -55774,12 +55315,12 @@
 0002363E  8BDC              mov bx,sp
 00023640  2BD8              sub bx,ax
 00023642  720B              jc 0x364f
-00023644  3B1EAE56          cmp bx,[0x56ae]
-00023648  7205              jc 0x364f
-0002364A  8BE3              mov sp,bx
-0002364C  52                push dx
-0002364D  51                push cx
-0002364E  CB                retf
+	00023644  3B1EAE56          cmp bx,[0x56ae]
+	00023648  7205              jc 0x364f
+		0002364A  8BE3              mov sp,bx
+		0002364C  52                push dx
+		0002364D  51                push cx
+		0002364E  CB                retf
 	0002364F  A1AA56            mov ax,[0x56aa]
 	00023652  40                inc ax
 	00023653  7505              jnz 0x365a
@@ -55849,7 +55390,7 @@
 00023704  FF76FA            push word [bp-0x6]
 00023707  90                nop
 00023708  0E                push cs
-00023709  E88224            call 0x5b8e
+00023709  E88224            call 0x5b8e			; Checks for _IOSTRG.
 0002370C  83C402            add sp,byte +0x2
 0002370F  0BC0              or ax,ax
 00023711  7551              jnz 0x3764
@@ -55920,18 +55461,18 @@
 000237C5  EB1C              jmp short 0x37e3
 000237C7  90                nop
 000237C8  8B5EFA            mov bx,[bp-0x6]
-000237CB  F6877E5620        test byte [bx+0x567e],0x20
+000237CB  F6877E5620        test byte [bx+0x567e],0x20 ; Checks for _IOERR.
 000237D0  7411              jz 0x37e3
-000237D2  B80200            mov ax,0x2
-000237D5  50                push ax
-000237D6  2BC0              sub ax,ax
-000237D8  50                push ax
-000237D9  50                push ax
-000237DA  53                push bx
-000237DB  90                nop
-000237DC  0E                push cs
-000237DD  E85E00            call 0x383e
-000237E0  83C408            add sp,byte +0x8
+	000237D2  B80200            mov ax,0x2
+	000237D5  50                push ax
+	000237D6  2BC0              sub ax,ax
+	000237D8  50                push ax
+	000237D9  50                push ax
+	000237DA  53                push bx
+	000237DB  90                nop
+	000237DC  0E                push cs
+	000237DD  E85E00            call 0x383e
+	000237E0  83C408            add sp,byte +0x8
 000237E3  C45E08            les bx,[bp+0x8]
 000237E6  26C45F06          les bx,[es:bx+0x6]
 000237EA  8A4606            mov al,[bp+0x6]
@@ -55971,7 +55512,7 @@
 		00023830  B43E              mov ah,0x3e			; Closes a file.
 		00023832  CD21              int 0x21			;
 		00023834  7205              jc 0x383b			; Error check.
-		00023836  C6877E5600        mov byte [bx+0x567e],0x0	; Set file closing error flag.
+		00023836  C6877E5600        mov byte [bx+0x567e],0x0	; Clears all IO flags.
 0002383B  E91A1B            jmp 0x5358
 0002383E  55                push bp
 0002383F  8BEC              mov bp,sp
@@ -56014,10 +55555,10 @@
 000238A1  8B5608            mov dx,[bp+0x8]
 000238A4  8B4E0A            mov cx,[bp+0xa]
 000238A7  8A460C            mov al,[bp+0xc]
-000238AA  B442              mov ah,0x42			; Movee s file pointer.
+000238AA  B442              mov ah,0x42			; Moves file pointer.
 000238AC  CD21              int 0x21			;
 000238AE  7205              jc 0x38b5			; Error check.
-000238B0  80A77E56FD        and byte [bx+0x567e],0xfd
+	000238B0  80A77E56FD        and byte [bx+0x567e],0xfd	; Removes _IOWRT.
 000238B5  E9B31A            jmp 0x536b
 000238B8  55                push bp
 000238B9  8BEC              mov bp,sp
@@ -56054,8 +55595,8 @@
 00023905  250005            and ax,0x500
 00023908  3D0005            cmp ax,0x500
 0002390B  7509              jnz 0x3916
-0002390D  B43E              mov ah,0x3e
-0002390F  CD21              int 0x21
+0002390D  B43E              mov ah,0x3e		; Close file.
+0002390F  CD21              int 0x21		;
 00023911  B80011            mov ax,0x1100
 00023914  EBE8              jmp short 0x38fe
 00023916  C646FD01          mov byte [bp-0x3],0x1
@@ -56064,7 +55605,7 @@
 0002391F  F6C280            test dl,0x80			; Checks whether the device information is valid.
 00023922  7404              jz 0x3928				;
 	00023924  804EFC40          or byte [bp-0x4],0x40		; Sets invalid device information flag.
-00023928  F646FC40          test byte [bp-0x4],0x40		; 
+00023928  F646FC40          test byte [bp-0x4],0x40		; Checks for the invalid device information flag.
 0002392C  7403              jz 0x3931				;
 	0002392E  E9DD00            jmp 0x3a0e			;
 00023931  8B460A            mov ax,[bp+0xa]
@@ -56073,15 +55614,15 @@
 00023939  A90300            test ax,0x3
 0002393C  7409              jz 0x3947
 0002393E  33C9              xor cx,cx
-00023940  B440              mov ah,0x40
-00023942  CD21              int 0x21
+00023940  B440              mov ah,0x40				; Write to file.
+00023942  CD21              int 0x21				;
 00023944  E9C700            jmp 0x3a0e
-00023947  B43E              mov ah,0x3e
-00023949  CD21              int 0x21
+00023947  B43E              mov ah,0x3e				; Close file.
+00023949  CD21              int 0x21				;
 0002394B  1E                push ds
 0002394C  C55606            lds dx,[bp+0x6]
-0002394F  B80043            mov ax,0x4300
-00023952  CD21              int 0x21
+0002394F  B80043            mov ax,0x4300			; Get file attributes.
+00023952  CD21              int 0x21				;
 00023954  1F                pop ds
 00023955  EB67              jmp short 0x39be
 00023957  90                nop
@@ -56091,29 +55632,29 @@
 00023961  A90200            test ax,0x2
 00023964  7503              jnz 0x3969
 00023966  E9A500            jmp 0x3a0e
-00023969  B9FFFF            mov cx,0xffff
-0002396C  8BD1              mov dx,cx
-0002396E  B80242            mov ax,0x4202
-00023971  CD21              int 0x21
-00023973  F7D9              neg cx
-00023975  8D56FF            lea dx,[bp-0x1]
-00023978  B43F              mov ah,0x3f
-0002397A  CD21              int 0x21
-0002397C  0BC0              or ax,ax
-0002397E  7415              jz 0x3995
-00023980  807EFF1A          cmp byte [bp-0x1],0x1a
-00023984  750F              jnz 0x3995
-00023986  F7D9              neg cx
-00023988  8BD1              mov dx,cx
-0002398A  B80242            mov ax,0x4202
-0002398D  CD21              int 0x21
-0002398F  33C9              xor cx,cx
-00023991  B440              mov ah,0x40
-00023993  CD21              int 0x21
-00023995  33C9              xor cx,cx
-00023997  8BD1              mov dx,cx
-00023999  B80042            mov ax,0x4200
-0002399C  CD21              int 0x21
+00023969  B9FFFF            mov cx,0xffff	; Move back one byte inside a file.
+0002396C  8BD1              mov dx,cx		;
+0002396E  B80242            mov ax,0x4202	;
+00023971  CD21              int 0x21		;
+00023973  F7D9              neg cx		; CX is set to 0x1.
+00023975  8D56FF            lea dx,[bp-0x1]		; Read one byte from a file.
+00023978  B43F              mov ah,0x3f			;
+0002397A  CD21              int 0x21			;
+0002397C  0BC0              or ax,ax			; Check whether anything was read.
+0002397E  7415              jz 0x3995			;
+	00023980  807EFF1A          cmp byte [bp-0x1],0x1a	; Check data read from a file for an escape character.
+	00023984  750F              jnz 0x3995			;
+		00023986  F7D9              neg cx			; Move back one byte inside a file if an escape character was found.
+		00023988  8BD1              mov dx,cx			;
+		0002398A  B80242            mov ax,0x4202		;
+		0002398D  CD21              int 0x21			; Write zero bytes to file.
+		0002398F  33C9              xor cx,cx			;
+		00023991  B440              mov ah,0x40			;
+		00023993  CD21              int 0x21			;
+00023995  33C9              xor cx,cx		; Move to a file's start.
+00023997  8BD1              mov dx,cx		;
+00023999  B80042            mov ax,0x4200	; 
+0002399C  CD21              int 0x21		;
 0002399E  EB6E              jmp short 0x3a0e
 000239A0  90                nop
 000239A1  C646FD00          mov byte [bp-0x3],0x0
@@ -56127,8 +55668,8 @@
 000239BB  80E1FE            and cl,0xfe
 000239BE  1E                push ds
 000239BF  C55606            lds dx,[bp+0x6]
-000239C2  B43C              mov ah,0x3c
-000239C4  CD21              int 0x21
+000239C2  B43C              mov ah,0x3c		; Create file.
+000239C4  CD21              int 0x21		;
 000239C6  1F                pop ds
 000239C7  7303              jnc 0x39cc
 000239C9  E99F19            jmp 0x536b
@@ -56137,15 +55678,15 @@
 000239D1  7507              jnz 0x39da
 000239D3  F7460A0200        test word [bp+0xa],0x2
 000239D8  7534              jnz 0x3a0e
-000239DA  B43E              mov ah,0x3e
-000239DC  CD21              int 0x21
+000239DA  B43E              mov ah,0x3e		; Close file.
+000239DC  CD21              int 0x21		;
 000239DE  8A460A            mov al,[bp+0xa]
 000239E1  2403              and al,0x3
 000239E3  0A46FE            or al,[bp-0x2]
 000239E6  1E                push ds
 000239E7  C55606            lds dx,[bp+0x6]
-000239EA  B43D              mov ah,0x3d
-000239EC  CD21              int 0x21
+000239EA  B43D              mov ah,0x3d		; Open file.
+000239EC  CD21              int 0x21		;
 000239EE  1F                pop ds
 000239EF  72D8              jc 0x39c9
 000239F1  93                xchg ax,bx
@@ -56156,34 +55697,35 @@
 000239FF  80C901            or cl,0x1
 00023A02  1E                push ds
 00023A03  C55606            lds dx,[bp+0x6]
-00023A06  B80143            mov ax,0x4301
-00023A09  CD21              int 0x21
+00023A06  B80143            mov ax,0x4301	; Set file attributes.
+00023A09  CD21              int 0x21		;
 00023A0B  1F                pop ds
 00023A0C  72BB              jc 0x39c9
-00023A0E  F646FC40          test byte [bp-0x4],0x40
-00023A12  753F              jnz 0x3a53
-00023A14  1E                push ds
-00023A15  C55606            lds dx,[bp+0x6]
-00023A18  B80043            mov ax,0x4300
-00023A1B  CD21              int 0x21
-00023A1D  1F                pop ds
-00023A1E  8BC1              mov ax,cx
-00023A20  32C9              xor cl,cl
-00023A22  250100            and ax,0x1
-00023A25  7402              jz 0x3a29
-00023A27  B110              mov cl,0x10
+
+00023A0E  F646FC40          test byte [bp-0x4],0x40	; Checks for the invalid device information flag.
+00023A12  753F              jnz 0x3a53			;
+00023A14  1E                push ds			; Get a file's attributes.
+00023A15  C55606            lds dx,[bp+0x6]		;
+00023A18  B80043            mov ax,0x4300		;
+00023A1B  CD21              int 0x21			;
+00023A1D  1F                pop ds			;
+00023A1E  8BC1              mov ax,cx			;
+00023A20  32C9              xor cl,cl			; Set CL to zero.
+00023A22  250100            and ax,0x1			; Check whether a file is read-only.
+00023A25  7402              jz 0x3a29			;
+	00023A27  B110              mov cl,0x10			; File is read-only!
 00023A29  F7460A0800        test word [bp+0xa],0x8
 00023A2E  7403              jz 0x3a33
 00023A30  80C920            or cl,0x20
 00023A33  3B1E7C56          cmp bx,[0x567c]
 00023A37  720A              jc 0x3a43
-00023A39  B43E              mov ah,0x3e
-00023A3B  CD21              int 0x21
+00023A39  B43E              mov ah,0x3e			; Closes a file.
+00023A3B  CD21              int 0x21			;
 00023A3D  B80018            mov ax,0x1800
 00023A40  E9BBFE            jmp 0x38fe
-00023A43  0A4EFC            or cl,[bp-0x4]
-00023A46  80C901            or cl,0x1
-00023A49  888F7E56          mov [bx+0x567e],cl
+00023A43  0A4EFC            or cl,[bp-0x4]		; ???
+00023A46  80C901            or cl,0x1			; Add _IOREAD.
+00023A49  888F7E56          mov [bx+0x567e],cl		;
 00023A4D  8BC3              mov ax,bx
 00023A4F  8BE5              mov sp,bp
 00023A51  5D                pop bp
@@ -56211,83 +55753,83 @@
 00023A7D  33C0              xor ax,ax
 00023A7F  8B4E0C            mov cx,[bp+0xc]
 00023A82  E360              jcxz 0x3ae4
-00023A84  F6877E5602        test byte [bx+0x567e],0x2
+00023A84  F6877E5602        test byte [bx+0x567e],0x2	; Checks for _IOWRT.
 00023A89  7559              jnz 0x3ae4
-00023A8B  8B4E0C            mov cx,[bp+0xc]
-00023A8E  1E                push ds
-00023A8F  C55608            lds dx,[bp+0x8]
-00023A92  B43F              mov ah,0x3f
-00023A94  CD21              int 0x21
-00023A96  1F                pop ds
-00023A97  7304              jnc 0x3a9d
-00023A99  B409              mov ah,0x9
-00023A9B  EB47              jmp short 0x3ae4
-00023A9D  F6877E5680        test byte [bx+0x567e],0x80
+00023A8B  8B4E0C            mov cx,[bp+0xc]		; Read from a file.
+00023A8E  1E                push ds			;
+00023A8F  C55608            lds dx,[bp+0x8]		;
+00023A92  B43F              mov ah,0x3f			;
+00023A94  CD21              int 0x21			;
+00023A96  1F                pop ds			;
+00023A97  7304              jnc 0x3a9d			; Ensure there were no errors.
+	00023A99  B409              mov ah,0x9
+	00023A9B  EB47              jmp short 0x3ae4
+00023A9D  F6877E5680        test byte [bx+0x567e],0x80 ; Checks for _IORW.
 00023AA2  7440              jz 0x3ae4
-00023AA4  80A77E56FB        and byte [bx+0x567e],0xfb
-00023AA9  56                push si
-00023AAA  57                push di
-00023AAB  1E                push ds
-00023AAC  07                pop es
-00023AAD  8E5E0A            mov ds,[bp+0xa]
-00023AB0  FC                cld
-00023AB1  8BF2              mov si,dx
-00023AB3  8BFA              mov di,dx
-00023AB5  8BC8              mov cx,ax
-00023AB7  E327              jcxz 0x3ae0
-00023AB9  B40D              mov ah,0xd
-00023ABB  803C0A            cmp byte [si],0xa
-00023ABE  7506              jnz 0x3ac6
-00023AC0  26808F7E5604      or byte [es:bx+0x567e],0x4
-00023AC6  AC                lodsb
-00023AC7  3AC4              cmp al,ah
-00023AC9  741C              jz 0x3ae7
-00023ACB  3C1A              cmp al,0x1a
-00023ACD  7508              jnz 0x3ad7
-00023ACF  26808F7E5602      or byte [es:bx+0x567e],0x2
-00023AD5  EB05              jmp short 0x3adc
-00023AD7  8805              mov [di],al
-00023AD9  47                inc di
+	00023AA4  80A77E56FB        and byte [bx+0x567e],0xfb	; Remove _IONBF.
+	00023AA9  56                push si
+	00023AAA  57                push di
+	00023AAB  1E                push ds
+	00023AAC  07                pop es
+	00023AAD  8E5E0A            mov ds,[bp+0xa]
+	00023AB0  FC                cld
+	00023AB1  8BF2              mov si,dx
+	00023AB3  8BFA              mov di,dx
+	00023AB5  8BC8              mov cx,ax
+	00023AB7  E327              jcxz 0x3ae0
+	00023AB9  B40D              mov ah,0xd
+	00023ABB  803C0A            cmp byte [si],0xa
+	00023ABE  7506              jnz 0x3ac6
+	00023AC0  26808F7E5604      or byte [es:bx+0x567e],0x4
+	00023AC6  AC                lodsb
+	00023AC7  3AC4              cmp al,ah			; Exit the loop if ... ???
+	00023AC9  741C              jz 0x3ae7			;
+	00023ACB  3C1A              cmp al,0x1a			; Check for an escape character.
+	00023ACD  7508              jnz 0x3ad7			;
+		00023ACF  26808F7E5602      or byte [es:bx+0x567e],0x2	; An escape character was found, exit the loop!
+		00023AD5  EB05              jmp short 0x3adc		;
+	00023AD7  8805              mov [di],al
+	00023AD9  47                inc di
 00023ADA  E2EA              loop 0x3ac6
-00023ADC  8BC7              mov ax,di
+00023ADC  8BC7              mov ax,di			; Exit point for the above loop if an escape character was found.
 00023ADE  2BC2              sub ax,dx
 00023AE0  06                push es
 00023AE1  1F                pop ds
 00023AE2  5F                pop di
 00023AE3  5E                pop si
-00023AE4  E98418            jmp 0x536b
-00023AE7  83F901            cmp cx,byte +0x1
+00023AE4  E98418            jmp 0x536b			; <<<--- Is jumped to by the above error handler in case of an error.
+00023AE7  83F901            cmp cx,byte +0x1		; Exit point for the above loop.
 00023AEA  7407              jz 0x3af3
 00023AEC  803C0A            cmp byte [si],0xa
 00023AEF  74E9              jz 0x3ada
 00023AF1  EBE4              jmp short 0x3ad7
 00023AF3  06                push es
 00023AF4  1F                pop ds
-00023AF5  F6877E5640        test byte [bx+0x567e],0x40
+00023AF5  F6877E5640        test byte [bx+0x567e],0x40 ; Checks for _IOSTRG.
 00023AFA  7418              jz 0x3b14
-00023AFC  B80044            mov ax,0x4400
-00023AFF  CD21              int 0x21
-00023B01  F7C22000          test dx,0x20
-00023B05  7509              jnz 0x3b10
-00023B07  8D56FF            lea dx,[bp-0x1]
-00023B0A  B43F              mov ah,0x3f
-00023B0C  CD21              int 0x21
-00023B0E  72D2              jc 0x3ae2
+00023AFC  B80044            mov ax,0x4400		; Check for EOF. 
+00023AFF  CD21              int 0x21			;
+00023B01  F7C22000          test dx,0x20		;
+00023B05  7509              jnz 0x3b10			;
+	00023B07  8D56FF            lea dx,[bp-0x1]		; Read from file.
+	00023B0A  B43F              mov ah,0x3f			;
+	00023B0C  CD21              int 0x21			;
+	00023B0E  72D2              jc 0x3ae2			;
 00023B10  B00A              mov al,0xa
 00023B12  EB2C              jmp short 0x3b40
 00023B14  C646FF00          mov byte [bp-0x1],0x0
 00023B18  8D56FF            lea dx,[bp-0x1]
-00023B1B  B43F              mov ah,0x3f
-00023B1D  CD21              int 0x21
+00023B1B  B43F              mov ah,0x3f			; Read from file.
+00023B1D  CD21              int 0x21			;
 00023B1F  72C1              jc 0x3ae2
 00023B21  0BC0              or ax,ax
 00023B23  7419              jz 0x3b3e
 00023B25  837E0C01          cmp word [bp+0xc],byte +0x1
 00023B29  741F              jz 0x3b4a
-00023B2B  B9FFFF            mov cx,0xffff
-00023B2E  8BD1              mov dx,cx
-00023B30  B80142            mov ax,0x4201
-00023B33  CD21              int 0x21
+00023B2B  B9FFFF            mov cx,0xffff	; Move file pointer backwards one byte.
+00023B2E  8BD1              mov dx,cx		;
+00023B30  B80142            mov ax,0x4201	;
+00023B33  CD21              int 0x21		;
 00023B35  B90100            mov cx,0x1
 00023B38  807EFF0A          cmp byte [bp-0x1],0xa
 00023B3C  7407              jz 0x3b45
@@ -56308,14 +55850,14 @@
 00023B61  B80009            mov ax,0x900
 00023B64  F9                stc
 00023B65  E90318            jmp 0x536b
-00023B68  F6877E5620        test byte [bx+0x567e],0x20
+00023B68  F6877E5620        test byte [bx+0x567e],0x20	; Checks for _IOERR.
 00023B6D  740B              jz 0x3b7a
-00023B6F  B80242            mov ax,0x4202
-00023B72  33C9              xor cx,cx
-00023B74  8BD1              mov dx,cx
-00023B76  CD21              int 0x21
+00023B6F  B80242            mov ax,0x4202	; Move to the end of a file.
+00023B72  33C9              xor cx,cx		;
+00023B74  8BD1              mov dx,cx		;
+00023B76  CD21              int 0x21		;
 00023B78  72EB              jc 0x3b65
-00023B7A  F6877E5680        test byte [bx+0x567e],0x80
+00023B7A  F6877E5680        test byte [bx+0x567e],0x80	; Checks for _IORW.
 00023B7F  747C              jz 0x3bfd
 00023B81  8C5EFA            mov [bp-0x6],ds
 00023B84  8E460A            mov es,[bp+0xa]
@@ -56390,8 +55932,8 @@
 00023C0E  2BCA              sub cx,dx
 00023C10  E310              jcxz 0x3c22
 00023C12  8B5E06            mov bx,[bp+0x6]
-00023C15  B440              mov ah,0x40
-00023C17  CD21              int 0x21
+00023C15  B440              mov ah,0x40		; Write to file.
+00023C17  CD21              int 0x21		;
 00023C19  720E              jc 0x3c29
 00023C1B  0146FE            add [bp-0x2],ax
 00023C1E  0BC0              or ax,ax
@@ -56408,7 +55950,7 @@
 00023C2F  B409              mov ah,0x9
 00023C31  EB24              jmp short 0x3c57
 00023C33  8E5EFE            mov ds,[bp-0x2]
-00023C36  F6877E5640        test byte [bx+0x567e],0x40
+00023C36  F6877E5640        test byte [bx+0x567e],0x40	; Checks for _IOSTRG.
 00023C3B  740E              jz 0x3c4b
 00023C3D  8E5E0A            mov ds,[bp+0xa]
 00023C40  8B5E08            mov bx,[bp+0x8]
@@ -56433,8 +55975,8 @@
 00023C6B  E9FD16            jmp 0x536b
 00023C6E  1E                push ds
 00023C6F  C55608            lds dx,[bp+0x8]
-00023C72  B440              mov ah,0x40
-00023C74  CD21              int 0x21
+00023C72  B440              mov ah,0x40		; Write to file.
+00023C74  CD21              int 0x21		;
 00023C76  1E                push ds
 00023C77  07                pop es
 00023C78  1F                pop ds
@@ -56443,7 +55985,7 @@
 00023C7D  EBE0              jmp short 0x3c5f
 00023C7F  0BC0              or ax,ax
 00023C81  75DC              jnz 0x3c5f
-00023C83  F6877E5640        test byte [bx+0x567e],0x40
+00023C83  F6877E5640        test byte [bx+0x567e],0x40	; Checks for _IOSTRG.
 00023C88  740B              jz 0x3c95
 00023C8A  8BDA              mov bx,dx
 00023C8C  26803F1A          cmp byte [es:bx],0x1a
@@ -56462,6 +56004,7 @@
 00023CAA  8BE5              mov sp,bp
 00023CAC  5D                pop bp
 00023CAD  CB                retf
+
 00023CAE  55                push bp
 00023CAF  8BEC              mov bp,sp
 00023CB1  56                push si
@@ -56495,61 +56038,64 @@
 00023CF0  8BE5              mov sp,bp
 00023CF2  5D                pop bp
 00023CF3  CB                retf
+
+; strncat ???
 00023CF4  55                push bp
 00023CF5  8BEC              mov bp,sp
 00023CF7  57                push di
 00023CF8  56                push si
 00023CF9  1E                push ds
-00023CFA  C47E06            les di,[bp+0x6]
-00023CFD  8BD7              mov dx,di
-00023CFF  33C0              xor ax,ax
-00023D01  B9FFFF            mov cx,0xffff
-00023D04  F2AE              repne scasb
-00023D06  4F                dec di
-00023D07  8BF7              mov si,di
-00023D09  06                push es
-00023D0A  C47E0A            les di,[bp+0xa]
-00023D0D  8BDF              mov bx,di
-00023D0F  8B4E0E            mov cx,[bp+0xe]
-00023D12  F2AE              repne scasb
-00023D14  7501              jnz 0x3d17
-00023D16  41                inc cx
-00023D17  2B4E0E            sub cx,[bp+0xe]
-00023D1A  F7D9              neg cx
-00023D1C  8BFE              mov di,si
-00023D1E  8BF3              mov si,bx
-00023D20  06                push es
-00023D21  1F                pop ds
-00023D22  07                pop es
-00023D23  F3A4              rep movsb
-00023D25  AA                stosb
-00023D26  8BC2              mov ax,dx
-00023D28  8CC2              mov dx,es
+00023CFA  C47E06            les di,[bp+0x6]	; Load first string's address.
+00023CFD  8BD7              mov dx,di		; Save its offset.
+00023CFF  33C0              xor ax,ax		; CX is set to 0xFFFF minus the first string's terminating null character position.
+00023D01  B9FFFF            mov cx,0xffff	;
+00023D04  F2AE              repne scasb		;
+00023D06  4F                dec di		; SI is set to the first string's last character offset.
+00023D07  8BF7              mov si,di		;
+00023D09  06                push es		; Save ES.
+00023D0A  C47E0A            les di,[bp+0xa]	; Load the second string's address.
+00023D0D  8BDF              mov bx,di		; Save the second string's offset.
+00023D0F  8B4E0E            mov cx,[bp+0xe]	; CX = "size"
+00023D12  F2AE              repne scasb		; CX = "size" - "second string's null characer position".
+00023D14  7501              jnz 0x3d17		; If null character is found CX is increased by one.
+	00023D16  41                inc cx		;
+00023D17  2B4E0E            sub cx,[bp+0xe]	; CX = CX - "size"
+00023D1A  F7D9              neg cx		;
+00023D1C  8BFE              mov di,si		; DI = the first string's last character offset.
+00023D1E  8BF3              mov si,bx		; SI = the second string's offset.
+00023D20  06                push es		; DS = ES
+00023D21  1F                pop ds		;
+00023D22  07                pop es		; ES = DS
+00023D23  F3A4              rep movsb		; [DS:SI] >>> [ES:DI]
+00023D25  AA                stosb		; Add a null to the copied data.
+00023D26  8BC2              mov ax,dx		; DX:AX = the first string's address.
+00023D28  8CC2              mov dx,es		; 
 00023D2A  1F                pop ds
 00023D2B  5E                pop si
 00023D2C  5F                pop di
 00023D2D  5D                pop bp
 00023D2E  CB                retf
 
+; strncpy ???
 00023D2F  55                push bp
 00023D3A  8BEC              mov bp,sp
 00023D33  57                push di
 00023D34  56                push si
 00023D35  1E                push ds
-00023D36  C47E06            les di,[bp+0x6]
-00023D39  C5760A            lds si,[bp+0xa]
-00023D3C  8BDF              mov bx,di
-00023D3E  8B4E0E            mov cx,[bp+0xe]
+00023D36  C47E06            les di,[bp+0x6]	; First string's address.
+00023D39  C5760A            lds si,[bp+0xa]	; Second string's address.
+00023D3C  8BDF              mov bx,di		; Save the first string's offset.
+00023D3E  8B4E0E            mov cx,[bp+0xe]	; Size.
 00023D41  E30C              jcxz 0x3d4f
-00023D43  AC                lodsb
-00023D44  0AC0              or al,al
-00023D46  7403              jz 0x3d4b
-00023D48  AA                stosb
-00023D49  E2F8              loop 0x3d43
-00023D4B  32C0              xor al,al
-00023D4D  F3AA              rep stosb
-00023D4F  8BC3              mov ax,bx
-00023D51  8CC2              mov dx,es
+	00023D43  AC                lodsb	; Checks whether the second string contains a null character at the current DS:SI.
+	00023D44  0AC0              or al,al	;
+	00023D46  7403              jz 0x3d4b	;
+		00023D48  AA                stosb		; Stores the second string's character from DS:SI in the first string at ES:DI.
+		00023D49  E2F8              loop 0x3d43		;
+	00023D4B  32C0              xor al,al		; Add a null byte to the first string.
+	00023D4D  F3AA              rep stosb		;
+00023D4F  8BC3              mov ax,bx		; DX:AX = first string's address.
+00023D51  8CC2              mov dx,es		;
 00023D53  1F                pop ds
 00023D54  5E                pop si
 00023D55  5F                pop di
@@ -56558,6 +56104,7 @@
 00023D59  CB                retf
 
 00023D5A  E9DB1D            jmp 0x5b38
+
 00023D5D  55                push bp
 00023D5E  8BEC              mov bp,sp
 00023D61  56                push si
@@ -56640,6 +56187,7 @@
 00023E08  8BE5              mov sp,bp
 00023E0A  5D                pop bp
 00023E0B  CB                retf
+
 00023E0C  55                push bp
 00023E0D  8BEC              mov bp,sp
 00023E0F  8B4608            mov ax,[bp+0x8]
@@ -56673,7 +56221,7 @@
 00023E4E  FF7606            push word [bp+0x6]
 00023E51  90                nop
 00023E52  0E                push cs
-00023E53  E8CA1C            call 0x5b20
+00023E53  E8CA1C            call 0x5b20		; strlen()
 00023E56  83C404            add sp,byte +0x4
 00023E59  8BF0              mov si,ax
 00023E5B  FF76F8            push word [bp-0x8]
@@ -56729,6 +56277,7 @@
 00023ED1  8BE5              mov sp,bp
 00023ED3  5D                pop bp
 00023ED4  CB                retf
+
 00023ED5  90                nop
 00023ED6  55                push bp
 00023ED7  8BEC              mov bp,sp
@@ -56744,6 +56293,7 @@
 00023EE9  83C408            add sp,byte +0x8
 00023EEC  5D                pop bp
 00023EED  CB                retf
+
 00023EEE  55                push bp
 00023EEF  8BEC              mov bp,sp
 00023EF1  83EC08            sub sp,byte +0x8
@@ -56813,6 +56363,7 @@
 00023F76  8BE5              mov sp,bp
 00023F78  5D                pop bp
 00023F79  C3                ret
+
 00023F7A  55                push bp
 00023F7B  8BEC              mov bp,sp
 00023F7D  56                push si
@@ -56851,6 +56402,7 @@
 00023FBF  8BE5              mov sp,bp
 00023FC1  5D                pop bp
 00023FC2  CB                retf
+
 00023FC3  55                push bp
 00023FC4  8BEC              mov bp,sp
 00023FC6  56                push si
@@ -57013,47 +56565,7 @@
 00024108  8BE5              mov sp,bp
 0002410A  5D                pop bp
 0002410B  CB                retf
-0002410C  55                push bp
-0002410D  8BEC              mov bp,sp
-0002410F  56                push si
-00024110  57                push di
-00024111  1E                push ds
-00024112  C57E06            lds di,[bp+0x6]
-00024115  8B05              mov ax,[di]
-00024117  8B5D02            mov bx,[di+0x2]
-0002411A  8B4D04            mov cx,[di+0x4]
-0002411D  8B5506            mov dx,[di+0x6]
-00024120  8B7508            mov si,[di+0x8]
-00024123  8B7D0A            mov di,[di+0xa]
-00024126  1F                pop ds
-00024127  CD21              int 0x21
-00024129  1E                push ds
-0002412A  57                push di
-0002412B  C57E0A            lds di,[bp+0xa]
-0002412E  8905              mov [di],ax
-00024130  895D02            mov [di+0x2],bx
-00024133  894D04            mov [di+0x4],cx
-00024136  895506            mov [di+0x6],dx
-00024139  897508            mov [di+0x8],si
-0002413C  8F450A            pop word [di+0xa]
-0002413F  7204              jc 0x4145
-00024141  33F6              xor si,si
-00024143  EB0F              jmp short 0x4154
-00024145  1F                pop ds
-00024146  1E                push ds
-00024147  90                nop
-00024148  0E                push cs
-00024149  E82C12            call 0x5378
-0002414C  C57E0A            lds di,[bp+0xa]
-0002414F  BE0100            mov si,0x1
-00024152  8B05              mov ax,[di]
-00024154  89750C            mov [di+0xc],si
-00024157  1F                pop ds
-00024158  5F                pop di
-00024159  5E                pop si
-0002415A  8BE5              mov sp,bp
-0002415C  5D                pop bp
-0002415D  CB                retf
+
 0002415E  55                push bp
 0002415F  8BEC              mov bp,sp
 00024161  56                push si
@@ -57101,151 +56613,145 @@
 000241BC  8BE5              mov sp,bp
 000241BE  5D                pop bp
 000241BF  CB                retf
+
+; This procedure saves the ds, ax, cs, and ss registers.
 000241C0  55                push bp
 000241C1  8BEC              mov bp,sp
-000241C3  8CC0              mov ax,es
-000241C5  C45E06            les bx,[bp+0x6]
-000241C8  268C5F06          mov [es:bx+0x6],ds
-000241CC  268907            mov [es:bx],ax
-000241CF  268C4F02          mov [es:bx+0x2],cs
-000241D3  268C5704          mov [es:bx+0x4],ss
-000241D7  8EC0              mov es,ax
+	000241C3  8CC0              mov ax,es
+		000241C5  C45E06            les bx,[bp+0x6]
+		000241C8  268C5F06          mov [es:bx+0x6],ds
+		000241CC  268907            mov [es:bx],ax
+		000241CF  268C4F02          mov [es:bx+0x2],cs
+		000241D3  268C5704          mov [es:bx+0x4],ss
+	000241D7  8EC0              mov es,ax
 000241D9  8BE5              mov sp,bp
 000241DB  5D                pop bp
 000241DC  CB                retf
 
+; strchr() ???
 000241DD  55                push bp
 000241DE  8BEC              mov bp,sp
 000241E1  57                push di
-000241E2  C47E06            les di,[bp+0x6]
-000241E5  8BDF              mov bx,di
-000241E7  33C0              xor ax,ax
-000241E9  B9FFFF            mov cx,0xffff
-000241EC  F2AE              repne scasb
-000241EE  41                inc cx
-000241EF  F7D9              neg cx
-000241F1  8A460A            mov al,[bp+0xa]
-000241F4  8BFB              mov di,bx
-000241F6  F2AE              repne scasb
-000241F8  4F                dec di
-000241F9  263805            cmp [es:di],al
-000241FC  7404              jz 0x4202
-000241FE  33FF              xor di,di
-00024200  8EC7              mov es,di
-00024202  8BC7              mov ax,di
-00024204  8CC2              mov dx,es
+000241E2  C47E06            les di,[bp+0x6]	; Address of a string.
+000241E5  8BDF              mov bx,di		; Save offset of string.
+000241E7  33C0              xor ax,ax		; CX will be set to the last character before the terminating null.
+000241E9  B9FFFF            mov cx,0xffff	;
+000241EC  F2AE              repne scasb		;
+000241EE  41                inc cx		;
+000241EF  F7D9              neg cx		;
+000241F1  8A460A            mov al,[bp+0xa]     ; Search CX characters for 'AL'.
+000241F4  8BFB              mov di,bx		; 
+000241F6  F2AE              repne scasb		;
+000241F8  4F                dec di		; Check whether the last character scanned and the preceding character are the same.
+000241F9  263805            cmp [es:di],al	;
+000241FC  7404              jz 0x4202		;
+	000241FE  33FF              xor di,di		; The string's address will be null.
+	00024200  8EC7              mov es,di		;
+00024202  8BC7              mov ax,di		; Return the string's address.
+00024204  8CC2              mov dx,es		;
 00024206  5F                pop di
 00024207  8BE5              mov sp,bp
 00024209  5D                pop bp
 0002420A  CB                retf
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Notes:
+;;; 1. CMP AL, 0x1A - The carry flag will be set if AL is less than 0x1A.
+;;; 2. SBB will substract an additional value of one if the carry flag is set.
+;;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 0002420B  55                push bp
 0002420C  8BEC              mov bp,sp
-0002420F  8BD6              mov dx,si
+0002420F  8BD6              mov dx,si	; Save an offset.
 00024211  1E                push ds
-00024212  C5760A            lds si,[bp+0xa]
-00024215  C45E06            les bx,[bp+0x6]
+00024212  C5760A            lds si,[bp+0xa]	; First string address.
+00024215  C45E06            les bx,[bp+0x6]	; Second string address.
 00024218  B0FF              mov al,0xff
+; loop start
 0002421A  0AC0              or al,al
 0002421C  742D              jz 0x424b
-0002421E  AC                lodsb
-0002421F  268A27            mov ah,[es:bx]
-00024222  43                inc bx
-00024223  3AE0              cmp ah,al
-00024225  74F3              jz 0x421a
-00024227  2C41              sub al,0x41
-00024229  3C1A              cmp al,0x1a
-0002422B  1AC9              sbb cl,cl
-0002422D  80E120            and cl,0x20
-00024230  02C1              add al,cl
-00024232  0441              add al,0x41
-00024234  86E0              xchg ah,al
-00024236  2C41              sub al,0x41
-00024238  3C1A              cmp al,0x1a
-0002423A  1AC9              sbb cl,cl
-0002423C  80E120            and cl,0x20
-0002423F  02C1              add al,cl
-00024241  0441              add al,0x41
-00024243  3AC4              cmp al,ah
-00024245  74D3              jz 0x421a
-00024247  1AC0              sbb al,al
-00024249  1CFF              sbb al,0xff
-0002424B  98                cbw
+	0002421E  AC                lodsb		; AL = A character from the first string.
+	0002421F  268A27            mov ah,[es:bx]	; AH = A character from the second string.
+	00024222  43                inc bx		; Next character in second string.
+	00024223  3AE0              cmp ah,al		; Compare first and second string characters.
+	00024225  74F3              jz 0x421a		; Continue comparing if equal.
+
+	; First string character.                                                                   ____
+	00024227  2C41              sub al,0x41		; Subtract the value of ASCII character 'A'.	\
+	00024229  3C1A              cmp al,0x1a		; Check whether AL is less than 0x1A.		 \
+	0002422B  1AC9              sbb cl,cl		; CL will either be 0x00 or 0xFF.		  \________ To lower case conversion?
+	0002422D  80E120            and cl,0x20		; CL will either be 0x00 or 0x20.		  /
+	00024230  02C1              add al,cl		; Add either 0x00 or 0x20			 /
+	00024232  0441              add al,0x41		; Add the value of ASCII character 'A'.	    ____/
+
+	00024234  86E0              xchg ah,al		;
+
+	; Repeat processs for second string character.
+	00024236  2C41              sub al,0x41		;
+	00024238  3C1A              cmp al,0x1a		;
+	0002423A  1AC9              sbb cl,cl		;
+	0002423C  80E120            and cl,0x20		;
+	0002423F  02C1              add al,cl		;
+	00024241  0441              add al,0x41		;
+
+	00024243  3AC4              cmp al,ah		; Continue if AL equals AH.
+	00024245  74D3              jz 0x421a		;
+
+	00024247  1AC0              sbb al,al		; AL will be either 0x00 or 0xFF.
+	00024249  1CFF              sbb al,0xff		; AL will be either 0x00 or 0xFF.
+0002424B  98                cbw			; AX will either be 0x0000 or 0xFFFF.
 0002424C  1F                pop ds
-0002424D  8BF2              mov si,dx
+0002424D  8BF2              mov si,dx	; Restore an offset.
 0002424F  5D                pop bp
 00024250  CB                retf
 
-00024251  55                push bp
-00024254  8BEC              mov bp,sp
-00024255  57                push di
-00024256  C47E06            les di,[bp+0x6]
-00024259  33C0              xor ax,ax
-0002425B  B9FFFF            mov cx,0xffff
-0002425E  F2AE              repne scasb
-00024260  41                inc cx
-00024261  F7D9              neg cx
-00024263  4F                dec di
-00024264  8A460A            mov al,[bp+0xa]
-00024267  FD                std
-00024268  F2AE              repne scasb
-0002426A  47                inc di
-0002426B  263805            cmp [es:di],al
-0002426E  7406              jz 0x4276
-00024270  33C0              xor ax,ax
-00024272  8BD0              mov dx,ax
-00024274  EB04              jmp short 0x427a
-00024276  8BC7              mov ax,di
-00024278  8CC2              mov dx,es
-0002427A  FC                cld
-0002427B  5F                pop di
-0002427C  8BE5              mov sp,bp
-0002427E  5D                pop bp
-0002427F  CB                retf
 00024280  55                push bp
 00024281  8BEC              mov bp,sp
-00024283  8CD9              mov cx,ds
-00024285  C55E06            lds bx,[bp+0x6]
-00024288  8BD3              mov dx,bx
+00024283  8CD9              mov cx,ds		; Save data segment.
+00024285  C55E06            lds bx,[bp+0x6]	; DS:BX = string address.
+00024288  8BD3              mov dx,bx		; Save string offset.
 0002428A  8A07              mov al,[bx]
 0002428C  0AC0              or al,al
 0002428E  7411              jz 0x42a1
-00024290  2C41              sub al,0x41
-00024292  3C1A              cmp al,0x1a
-00024294  7304              jnc 0x429a
-00024296  0461              add al,0x61
-00024298  8807              mov [bx],al
-0002429A  43                inc bx
-0002429B  8A07              mov al,[bx]
-0002429D  0AC0              or al,al
-0002429F  75EF              jnz 0x4290
-000242A1  92                xchg ax,dx
-000242A2  8CDA              mov dx,ds
-000242A4  8ED9              mov ds,cx
+	00024290  2C41              sub al,0x41			; Check whether AL - 'A' is equal to or greater than 26.
+	00024292  3C1A              cmp al,0x1a			;
+	00024294  7304              jnc 0x429a			;
+		00024296  0461              add al,0x61			; Replace character with lower case by adding 'a'.
+		00024298  8807              mov [bx],al			;
+	0002429A  43                inc bx	; Next character.
+	0002429B  8A07              mov al,[bx]
+	0002429D  0AC0              or al,al
+	0002429F  75EF              jnz 0x4290
+000242A1  92                xchg ax,dx		; DX:AX = string address.
+000242A2  8CDA              mov dx,ds		;
+000242A4  8ED9              mov ds,cx		; Restore data segment.
 000242A6  5D                pop bp
 000242A7  CB                retf
+
 000242A8  55                push bp
 000242A9  8BEC              mov bp,sp
-000242AB  8CD9              mov cx,ds
-000242AD  C55E06            lds bx,[bp+0x6]
-000242B0  8BD3              mov dx,bx
+000242AB  8CD9              mov cx,ds		; Save data segment.
+000242AD  C55E06            lds bx,[bp+0x6]	; DS:BX = string address.
+000242B0  8BD3              mov dx,bx		; Save string offset.
 000242B2  8A07              mov al,[bx]
 000242B4  0AC0              or al,al
 000242B6  7411              jz 0x42c9
-000242B8  2C61              sub al,0x61
-000242BA  3C1A              cmp al,0x1a
-000242BC  7304              jnc 0x42c2
-000242BE  0441              add al,0x41
-000242C0  8807              mov [bx],al
-000242C2  43                inc bx
-000242C3  8A07              mov al,[bx]
-000242C5  0AC0              or al,al
-000242C7  75EF              jnz 0x42b8
-000242C9  92                xchg ax,dx
-000242CA  8CDA              mov dx,ds
-000242CC  8ED9              mov ds,cx
+	000242B8  2C61              sub al,0x61			; Check whether AL - 'a' is equal to or greater than 26.
+	000242BA  3C1A              cmp al,0x1a			;
+	000242BC  7304              jnc 0x42c2			;
+		000242BE  0441              add al,0x41			; Replace character with upper case by adding 'A'.
+		000242C0  8807              mov [bx],al			;
+	000242C2  43                inc bx
+	000242C3  8A07              mov al,[bx]
+	000242C5  0AC0              or al,al
+	000242C7  75EF              jnz 0x42b8
+000242C9  92                xchg ax,dx		; DX:AX = string address.
+000242CA  8CDA              mov dx,ds		;
+000242CC  8ED9              mov ds,cx		; Restore data segment.
 000242CE  5D                pop bp
 000242CF  CB                retf
+
 000242D0  55                push bp
 000242D1  8BEC              mov bp,sp
 000242D3  83EC20            sub sp,byte +0x20
@@ -57293,6 +56799,7 @@
 00024328  8BE5              mov sp,bp
 0002432A  5D                pop bp
 0002432B  CB                retf
+
 0002432C  55                push bp
 0002432D  8BEC              mov bp,sp
 0002432F  8B4E0E            mov cx,[bp+0xe]
@@ -57945,7 +57452,9 @@
 000248ED  F8                clc
 000248EE  CB                retf
 000248EF  CB                retf
+
 000248F0  36FF2E4A60        jmp far [ss:0x604a]
+
 000248F5  53                push bx
 000248F6  51                push cx
 000248F7  52                push dx
@@ -58084,7 +57593,7 @@
 00024A03  50                push ax
 00024A04  90                nop
 00024A05  0E                push cs
-00024A06  E81711            call 0x5b20
+00024A06  E81711            call 0x5b20		; strlen()
 00024A09  83C404            add sp,byte +0x4
 00024A0C  40                inc ax
 00024A0D  8946DE            mov [bp-0x22],ax
@@ -58227,6 +57736,7 @@
 00024B57  8BE5              mov sp,bp
 00024B59  5D                pop bp
 00024B5A  C3                ret
+
 00024B5B  90                nop
 00024B5C  55                push bp
 00024B5D  8BEC              mov bp,sp
@@ -58436,28 +57946,6 @@
 00024D4D  5D                pop bp
 00024D4E  CB                retf
 
-00024D4F  90                nop
-00024D50  55                push bp
-00024D51  8BEC              mov bp,sp
-00024D53  1E                push ds
-00024D54  C55606            lds dx,[bp+0x6]
-00024D57  B441              mov ah,0x41
-00024D59  CD21              int 0x21
-00024D5B  1F                pop ds
-00024D5C  E9F905            jmp 0x5358
-00024D5F  00CD              add ch,cl
-00024D61  11CB              adc bx,cx
-
-00024D63  55                pusbh bp
-00024D64  8BEC              mov bp,sp
-00024D67  8B4606            mov ax,[bp+0x6]
-00024D6A  B435              mov ah,0x35
-00024D6C  CD21              int 0x21
-00024D6E  8CC2              mov dx,es
-00024D70  8BC3              mov ax,bx
-00024D72  8BE5              mov sp,bp
-00024D74  5D                pop bp
-00024D75  CB                retf
 00024D76  55                push bp
 00024D77  8BEC              mov bp,sp
 00024D79  B74F              mov bh,0x4f
@@ -58512,24 +58000,14 @@
 00024DE1  33C0              xor ax,ax
 00024DE3  5D                pop bp
 00024DE4  CB                retf
-00024DE5  00558B            add [di-0x75],dl
-00024DE8  EC                in al,dx
-00024DE9  B419              mov ah,0x19
-00024DEB  CD21              int 0x21
-00024DED  40                inc ax
-00024DEE  B400              mov ah,0x0
-00024DF0  C45E06            les bx,[bp+0x6]
-00024DF3  268907            mov [es:bx],ax
-00024DF6  33C0              xor ax,ax
-00024DF8  5D                pop bp
-00024DF9  CB                retf
 
 00024E47  55                push bp
 00024E48  8BEC              mov bp,sp
 00024E4A  8B4606            mov ax,[bp+0x6]
 00024E4D  EBE8              jmp short 0x4e37
-00024E4F  00558B            add [di-0x75],dl
-00024E52  EC                in al,dx
+
+00024E50  55                push bp
+00024E51  8BEC              mov bp,sp
 00024E53  B430              mov ah,0x30
 00024E55  CD21              int 0x21
 00024E57  8B26665F          mov sp,[0x5f66]
@@ -58543,36 +58021,23 @@
 00024E6E  E9CAFF            jmp 0x4e3b
 00024E71  90                nop
 00024E72  90                nop
-00024E73  8BD0              mov dx,ax
-00024E75  B104              mov cl,0x4
-00024E77  D3EA              shr dx,cl
-00024E79  D2EA              shr dl,cl
-00024E7B  8ACA              mov cl,dl
-00024E7D  FEC1              inc cl
-00024E7F  8ADE              mov bl,dh
-00024E81  32FF              xor bh,bh
-00024E83  D1E3              shl bx,1
-00024E85  8B97685F          mov dx,[bx+0x5f68]
-00024E89  D3E2              shl dx,cl
-00024E8B  7302              jnc 0x4e8f
-00024E8D  B0FF              mov al,0xff
-00024E8F  E9A9FF            jmp 0x4e3b
-00024E92  90                nop
-00024E93  90                nop
-00024E94  55                push bp
-00024E95  8BEC              mov bp,sp
-00024E97  8A5606            mov dl,[bp+0x6]
-00024E9A  4A                dec dx
-00024E9B  B40E              mov ah,0xe
-00024E9D  CD21              int 0x21
-00024E9F  B400              mov ah,0x0
-00024EA1  C45E08            les bx,[bp+0x8]
-00024EA4  268907            mov [es:bx],ax
-00024EA7  33C0              xor ax,ax
-00024EA9  5D                pop bp
-00024EAA  CB                retf
-00024EAB  00558B            add [di-0x75],dl
-00024EAE  EC                in al,dx
+	00024E73  8BD0              mov dx,ax
+	00024E75  B104              mov cl,0x4
+	00024E77  D3EA              shr dx,cl
+	00024E79  D2EA              shr dl,cl
+	00024E7B  8ACA              mov cl,dl
+	00024E7D  FEC1              inc cl
+	00024E7F  8ADE              mov bl,dh
+	00024E81  32FF              xor bh,bh
+	00024E83  D1E3              shl bx,1
+	00024E85  8B97685F          mov dx,[bx+0x5f68]
+	00024E89  D3E2              shl dx,cl
+	00024E8B  7302              jnc 0x4e8f
+		00024E8D  B0FF              mov al,0xff
+		00024E8F  E9A9FF            jmp 0x4e3b
+
+00024EAC  55                push bp
+00024EAD  8BEC              mov bp,sp
 00024EAF  57                push di
 00024EB0  56                push si
 00024EB1  53                push bx
@@ -58754,8 +58219,9 @@
 00025030  D1D8              rcr ax,1
 00025032  E2FA              loop 0x502e
 00025034  CB                retf
-00025035  00558B            add [di-0x75],dl
-00025038  EC                in al,dx
+
+00025036  55                push bp
+00025037  8BEC              mov bp,sp
 00025039  8B5E06            mov bx,[bp+0x6]
 0002503C  8B07              mov ax,[bx]
 0002503E  8B5702            mov dx,[bx+0x2]
@@ -58769,8 +58235,9 @@
 00025051  8BE5              mov sp,bp
 00025053  5D                pop bp
 00025054  CA0400            retf 0x4
-00025057  00558B            add [di-0x75],dl
-0002505A  EC                in al,dx
+
+00025058  55                push bp
+00025059  8BEC              mov bp,sp
 0002505B  8B5E06            mov bx,[bp+0x6]
 0002505E  8B07              mov ax,[bx]
 00025060  8B5702            mov dx,[bx+0x2]
@@ -58784,8 +58251,9 @@
 00025073  8BE5              mov sp,bp
 00025075  5D                pop bp
 00025076  CA0400            retf 0x4
-00025079  00558B            add [di-0x75],dl
-0002507C  EC                in al,dx
+
+0002507A  55                push bp
+0002507B  8BEC              mov bp,sp
 0002507D  8B5E06            mov bx,[bp+0x6]
 00025080  8B07              mov ax,[bx]
 00025082  8B5702            mov dx,[bx+0x2]
@@ -58799,8 +58267,9 @@
 00025095  8BE5              mov sp,bp
 00025097  5D                pop bp
 00025098  CA0400            retf 0x4
-0002509B  00558B            add [di-0x75],dl
-0002509E  EC                in al,dx
+
+0002509C  55                push bp
+0002509D  8BEC              mov bp,sp
 0002509F  53                push bx
 000250A0  56                push si
 000250A1  8B460C            mov ax,[bp+0xc]
@@ -58846,12 +58315,12 @@
 000250F7  8BE5              mov sp,bp
 000250F9  5D                pop bp
 000250FA  CA0800            retf 0x8
-000250FD  0032              add [bp+si],dh
-000250FF  ED                in ax,dx
-00025100  E306              jcxz 0x5108
-00025102  D1EA              shr dx,1
-00025104  D1D8              rcr ax,1
-00025106  E2FA              loop 0x5102
+
+000250FD  32ED              xor ch,ch
+00025100  E306              jcxz 0x5108	
+	00025102  D1EA              shr dx,1
+	00025104  D1D8              rcr ax,1
+	00025106  E2FA              loop 0x5102
 00025108  CB                retf
 
 0002512E  B80200            mov ax,0x2
@@ -58877,6 +58346,7 @@
 00025155  B80100            mov ax,0x1
 00025158  5E                pop si
 00025159  CB                retf
+
 0002515A  8F06745F          pop word [0x5f74]
 0002515E  8F06765F          pop word [0x5f76]
 00025162  BA0200            mov dx,0x2
@@ -59105,11 +58575,15 @@
 00025374  8BE5              mov sp,bp
 00025376  5D                pop bp
 00025377  CB                retf
-00025378  32E4              xor ah,ah
-0002537A  E80100            call 0x537e
-0002537D  CB                retf
 
-0002537E  A27A56            mov [0x567a],al
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; intdos error handler ???
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+00025378  32E4              xor ah,ah			; Called by intdos.
+0002537A  E80100            call 0x537e			;
+0002537D  CB                retf			;
+
+0002537E  A27A56            mov [0x567a],al		; Indirectly called by intdos.
 00025381  0AE4              or ah,ah
 00025383  7523              jnz 0x53a8
 00025385  803E775603        cmp byte [0x5677],0x3
@@ -59120,17 +58594,19 @@
 00025392  7205              jc 0x5399
 00025394  B005              mov al,0x5
 00025396  EB07              jmp short 0x539f
-00025398  90                nop
 00025399  3C13              cmp al,0x13
 0002539B  7602              jna 0x539f
 0002539D  B013              mov al,0x13
 0002539F  BB785F            mov bx,0x5f78
 000253A2  D7                xlatb
-000253A3  98                cbw
+000253A3  98                cbw				; Exit point.
 000253A4  A36F56            mov [0x566f],ax
+
 000253A7  C3                ret
 000253A8  8AC4              mov al,ah
 000253AA  EBF7              jmp short 0x53a3
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 000253AC  55                push bp
 000253AD  8BEC              mov bp,sp
 000253AF  83EC1A            sub sp,byte +0x1a
@@ -59542,7 +59018,7 @@
 000257F1  50                push ax
 000257F2  90                nop
 000257F3  0E                push cs
-000257F4  E89703            call 0x5b8e
+000257F4  E89703            call 0x5b8e			; Checks for _IOSTRG.
 000257F7  83C402            add sp,byte +0x2
 000257FA  0BC0              or ax,ax
 000257FC  7503              jnz 0x5801
@@ -59590,7 +59066,7 @@
 00025878  50                push ax
 00025879  90                nop
 0002587A  0E                push cs
-0002587B  E81003            call 0x5b8e
+0002587B  E81003            call 0x5b8e				; Checks for _IOSTRG.
 0002587E  83C402            add sp,byte +0x2
 00025881  0BC0              or ax,ax
 00025883  740E              jz 0x5893
@@ -59899,10 +59375,7 @@
 00025AF5  8BFE              mov di,si
 00025AF7  8CD8              mov ax,ds
 00025AF9  8EC0              mov es,ax
-00025AFB  33C0              xor ax,ax
-00025AFD  B9FFFF            mov cx,0xffff
-00025B00  F2AE              repne scasb
-00025B02  F7D1              not cx
+; CX is set to the position of a null byte inside string at ES:DI.
 00025B04  C47E06            les di,[bp+0x6]
 00025B07  8BC7              mov ax,di
 00025B09  A801              test al,0x1
@@ -59919,19 +59392,7 @@
 00025B1C  8CC2              mov dx,es
 00025B1E  5D                pop bp
 00025B1F  CB                retf
-00025B20  55                push bp
-00025B21  8BEC              mov bp,sp
-00025B23  8BD7              mov dx,di
-00025B25  C47E06            les di,[bp+0x6]
-00025B28  33C0              xor ax,ax
-00025B2A  B9FFFF            mov cx,0xffff
-00025B2D  F2AE              repne scasb
-00025B2F  F7D1              not cx
-00025B31  49                dec cx
-00025B32  91                xchg ax,cx
-00025B33  8BFA              mov di,dx
-00025B35  5D                pop bp
-00025B36  CB                retf
+
 00025B37  00558B            add [di-0x75],dl
 00025B3A  EC                in al,dx
 00025B3B  57                push di
@@ -59981,23 +59442,9 @@
 00025B8B  5F                pop di
 00025B8C  5D                pop bp
 00025B8D  CB                retf
-00025B8E  55                push bp
-00025B8F  8BEC              mov bp,sp
-00025B91  8B5E06            mov bx,[bp+0x6]
-00025B94  3B1E7C56          cmp bx,[0x567c]
-00025B98  7D11              jnl 0x5bab
-00025B9A  83FB00            cmp bx,byte +0x0
-00025B9D  7C0C              jl 0x5bab
-00025B9F  F6877E5640        test byte [bx+0x567e],0x40
-00025BA4  7405              jz 0x5bab
-00025BA6  B80100            mov ax,0x1
-00025BA9  EB02              jmp short 0x5bad
-00025BAB  33C0              xor ax,ax
-00025BAD  8BE5              mov sp,bp
-00025BAF  5D                pop bp
-00025BB0  CB                retf
-00025BB1  00558B            add [di-0x75],dl
-00025BB4  EC                in al,dx
+
+00025BB2  558B              push bp
+00025BB4  8BEC              mov bp,sp
 00025BB5  8A6606            mov ah,[bp+0x6]
 00025BB8  8B5608            mov dx,[bp+0x8]
 00025BBB  8A460A            mov al,[bp+0xa]
@@ -60005,6 +59452,7 @@
 00025BC0  8BE5              mov sp,bp
 00025BC2  5D                pop bp
 00025BC3  CB                retf
+
 00025BC4  55                push bp
 00025BC5  8BEC              mov bp,sp
 00025BC7  83EC20            sub sp,byte +0x20
@@ -60188,6 +59636,7 @@
 00025D42  8BE5              mov sp,bp
 00025D44  5D                pop bp
 00025D45  CB                retf
+
 00025D46  8B4E0E            mov cx,[bp+0xe]
 00025D49  8B4606            mov ax,[bp+0x6]
 00025D4C  8B5608            mov dx,[bp+0x8]
@@ -60243,7 +59692,8 @@
 00025DA5  8BE5              mov sp,bp
 00025DA7  5D                pop bp
 00025DA8  CB                retf
-00025DA9  00558B            add [di-0x75],dl
+
+00025DA9  00558B            add [di-0x75],dl ;;;<<<<---!!!
 00025DAC  EC                in al,dx
 00025DAD  83EC06            sub sp,byte +0x6
 00025DB0  56                push si
@@ -60330,6 +59780,7 @@
 00025E78  8BE5              mov sp,bp
 00025E7A  5D                pop bp
 00025E7B  CB                retf
+
 00025E7C  55                push bp
 00025E7D  8BEC              mov bp,sp
 00025E7F  56                push si
@@ -60383,6 +59834,7 @@
 00025EE6  8BE5              mov sp,bp
 00025EE8  5D                pop bp
 00025EE9  CB                retf
+
 00025EEA  8B4E0E            mov cx,[bp+0xe]
 00025EED  8BF7              mov si,di
 00025EEF  394C02            cmp [si+0x2],cx
@@ -60428,6 +59880,7 @@
 00025F48  E80500            call 0x5f50
 00025F4B  FF068473          inc word [0x7384]
 00025F4F  CB                retf
+
 00025F50  55                push bp
 00025F51  8BEC              mov bp,sp
 00025F53  83EC06            sub sp,byte +0x6
@@ -60520,6 +59973,7 @@
 0002601F  8BE5              mov sp,bp
 00026021  5D                pop bp
 00026022  CB                retf
+
 00026023  90                nop
 00026024  55                push bp
 00026025  8BEC              mov bp,sp
@@ -60604,56 +60058,58 @@
 00026102  8BE5              mov sp,bp
 00026104  5D                pop bp
 00026105  CB                retf
+
 00026106  55                push bp
 00026107  8BEC              mov bp,sp
-00026109  8B4E0E            mov cx,[bp+0xe]
-0002610C  E34E              jcxz 0x615c
-0002610E  1E                push ds
-0002610F  57                push di
-00026110  56                push si
-00026111  C5760A            lds si,[bp+0xa]
-00026114  C47E06            les di,[bp+0x6]
-00026117  8BC1              mov ax,cx
-00026119  48                dec ax
-0002611A  8BD7              mov dx,di
-0002611C  F7D2              not dx
-0002611E  2BC2              sub ax,dx
-00026120  1BDB              sbb bx,bx
-00026122  23C3              and ax,bx
-00026124  03C2              add ax,dx
-00026126  8BD6              mov dx,si
-00026128  F7D2              not dx
-0002612A  2BC2              sub ax,dx
-0002612C  1BDB              sbb bx,bx
-0002612E  23C3              and ax,bx
-00026130  03C2              add ax,dx
-00026132  40                inc ax
-00026133  91                xchg ax,cx
-00026134  2BC1              sub ax,cx
-00026136  D1E9              shr cx,1
-00026138  F3A5              rep movsw
-0002613A  13C9              adc cx,cx
-0002613C  F3A4              rep movsb
-0002613E  91                xchg ax,cx
-0002613F  E318              jcxz 0x6159
-00026141  0BF6              or si,si
-00026143  7507              jnz 0x614c
-00026145  8CD8              mov ax,ds
-00026147  050010            add ax,0x1000
-0002614A  8ED8              mov ds,ax
-0002614C  0BFF              or di,di
-0002614E  75C7              jnz 0x6117
-00026150  8CC0              mov ax,es
-00026152  050010            add ax,0x1000
-00026155  8EC0              mov es,ax
-00026157  EBBE              jmp short 0x6117
-00026159  5E                pop si
-0002615A  5F                pop di
-0002615B  1F                pop ds
+00026109  8B4E0E            mov cx,[bp+0xe]			; Return if cx is zero.
+0002610C  E34E              jcxz 0x615c				;
+	0002610E  1E                push ds
+	0002610F  57                push di
+	00026110  56                push si
+	00026111  C5760A            lds si,[bp+0xa]
+	00026114  C47E06            les di,[bp+0x6]
+	00026117  8BC1              mov ax,cx		; ax = cx
+		00026119  48                dec ax		; ax = ax - 1
+		0002611A  8BD7              mov dx,di		;
+		0002611C  F7D2              not dx		; ax -= !dx
+		0002611E  2BC2              sub ax,dx		;
+		00026120  1BDB              sbb bx,bx		; bx = 0
+		00026122  23C3              and ax,bx		; ax = 0
+		00026124  03C2              add ax,dx		; 
+		00026126  8BD6              mov dx,si		; dx = !si
+		00026128  F7D2              not dx		;
+		0002612A  2BC2              sub ax,dx		; ax = -dx 
+		0002612C  1BDB              sbb bx,bx		; bx = 0
+		0002612E  23C3              and ax,bx		; ax = 0
+		00026130  03C2              add ax,dx		; ax = dx + 1
+		00026132  40                inc ax		;
+		00026133  91                xchg ax,cx		; cx = ax, ax = cx
+		00026134  2BC1              sub ax,cx		; ax = initial counter value - cx
+		00026136  D1E9              shr cx,1		; cx *= 2
+		00026138  F3A5              rep movsw		; Copy data from source to target.
+		0002613A  13C9              adc cx,cx		; cx *= 2
+		0002613C  F3A4              rep movsb		; Copy data from source to target.
+		0002613E  91                xchg ax,cx		; cx = ax, ax = cx
+		0002613F  E318              jcxz 0x6159		; Return if cx is zero.
+			00026141  0BF6              or si,si		; Move the data segment 64kb ahead if SI equals zero.
+			00026143  7507              jnz 0x614c		;
+				00026145  8CD8              mov ax,ds		;
+				00026147  050010            add ax,0x1000	;
+				0002614A  8ED8              mov ds,ax		;
+			0002614C  0BFF              or di,di		; Move the extra segment 64kb ahead if DI equals zero.
+			0002614E  75C7              jnz 0x6117		;
+			00026150  8CC0              mov ax,es		;
+			00026152  050010            add ax,0x1000	;
+			00026155  8EC0              mov es,ax		;
+		00026157  EBBE              jmp short 0x6117	; Loop.
+	00026159  5E                pop si
+	0002615A  5F                pop di
+	0002615B  1F                pop ds
 0002615C  8B4606            mov ax,[bp+0x6]
 0002615F  8B5608            mov dx,[bp+0x8]
 00026162  5D                pop bp
 00026163  CB                retf
+
 00026164  E9D1F9            jmp 0x5b38
 00026167  00558B            add [di-0x75],dl
 0002616A  EC                in al,dx
@@ -60672,7 +60128,7 @@
 0002618B  FF7606            push word [bp+0x6]
 0002618E  90                nop
 0002618F  0E                push cs
-00026190  E88DF9            call 0x5b20
+00026190  E88DF9            call 0x5b20		; strlen()
 00026193  83C404            add sp,byte +0x4
 00026196  8BF0              mov si,ax
 00026198  EB06              jmp short 0x61a0
@@ -60687,7 +60143,7 @@
 000261B0  26FF37            push word [es:bx]
 000261B3  90                nop
 000261B4  0E                push cs
-000261B5  E868F9            call 0x5b20
+000261B5  E868F9            call 0x5b20		; strlen()
 000261B8  83C404            add sp,byte +0x4
 000261BB  3BC6              cmp ax,si
 000261BD  7EDD              jng 0x619c
@@ -60703,7 +60159,7 @@
 000261D9  26FF37            push word [es:bx]
 000261DC  90                nop
 000261DD  0E                push cs
-000261DE  E81D00            call 0x61fe
+000261DE  E81D00            call 0x61fe			; strcmp() ???
 000261E1  83C40A            add sp,byte +0xa
 000261E4  0BC0              or ax,ax
 000261E6  75B4              jnz 0x619c
@@ -60719,32 +60175,34 @@
 000261FA  8BE5              mov sp,bp
 000261FC  5D                pop bp
 000261FD  CB                retf
+
+; Most likely the strncmp() function.
 000261FE  55                push bp
 000261FF  8BEC              mov bp,sp
 00026201  57                push di
 00026202  56                push si
 00026203  1E                push ds
-00026204  8B4E0E            mov cx,[bp+0xe]
-00026207  E327              jcxz 0x6230
-00026209  8BD9              mov bx,cx
-0002620B  C47E06            les di,[bp+0x6]
-0002620E  8BF7              mov si,di
-00026210  33C0              xor ax,ax
-00026212  F2AE              repne scasb
-00026214  F7D9              neg cx
-00026216  03CB              add cx,bx
-00026218  8BFE              mov di,si
-0002621A  C5760A            lds si,[bp+0xa]
-0002621D  F3A6              repe cmpsb
-0002621F  8A44FF            mov al,[si-0x1]
-00026222  33C9              xor cx,cx
-00026224  263A45FF          cmp al,[es:di-0x1]
-00026228  7704              ja 0x622e
-0002622A  7404              jz 0x6230
-0002622C  49                dec cx
-0002622D  49                dec cx
-0002622E  F7D1              not cx
-00026230  8BC1              mov ax,cx
+00026204  8B4E0E            mov cx,[bp+0xe]		; Number of bytes to scan for null byte.
+00026207  E327              jcxz 0x6230			; Return if zero bytes.
+	00026209  8BD9              mov bx,cx			; Copy the number of bytes to scan.
+	0002620B  C47E06            les di,[bp+0x6]		; Store the scanning offset.
+	0002620E  8BF7              mov si,di			; Scan for null byte.
+	00026210  33C0              xor ax,ax			;
+	00026212  F2AE              repne scasb			;
+	00026214  F7D9              neg cx			; Subtract the null byte's position from the number of bytes scanned.
+	00026216  03CB              add cx,bx			; 
+	00026218  8BFE              mov di,si			; Restore the scanning offset.
+	0002621A  C5760A            lds si,[bp+0xa]		; Compare previously scanned data to other data.
+	0002621D  F3A6              repe cmpsb			;
+	0002621F  8A44FF            mov al,[si-0x1]		; AL = the last byte at the source data.
+	00026222  33C9              xor cx,cx			; Zero cx.
+	00026224  263A45FF          cmp al,[es:di-0x1]		; CX will be 0xFFFF if the last source data byte has a value greater than destination data's last byte.
+	00026228  7704              ja 0x622e			;
+		0002622A  7404              jz 0x6230			; CX will be 0x0000 if the last source data byte has the same value as the destination data's last byte.
+			0002622C  49                dec cx			; CX will be 0xFFFE if the last source data byte has a value less than destination data's last byte.
+			0002622D  49                dec cx			;
+			0002622E  F7D1              not cx			;
+	00026230  8BC1              mov ax,cx			; Return the value of CX.
 00026232  1F                pop ds
 00026233  5E                pop si
 00026234  5F                pop di

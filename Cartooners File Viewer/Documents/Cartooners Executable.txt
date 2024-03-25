@@ -13,8 +13,8 @@ C_FILE_INFO.	text	222775	0	11
 Cancel printing.	text	213433	0	35	
 Checked circle.	icon	201404	204320	69	
 Circle.	icon	201332	204320	69	
-Critical error interrupt handler.	8086_code	151069	0	41	Handles critical errors.
-Critical error interrupt handler setup.	8086_code	151034	0	34	Sets up the critical error handler interrupt.
+Critical error interrupt handler setup.	8086_code	151034	0	35	Sets up the critical error handler interrupt.
+Critical error interrupt handler.	8086_code	151069	0	42	Handles critical errors.
 Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
 Critical unknown #02	binary	205370	0	48	Causes freezing at startup when modified.
 Critical unknown #03	binary	205463	0	3	Modification causes freezing at startup.
@@ -35,8 +35,9 @@ Critical unknown #17	binary	180320	0	1	Modification causes either freezing at ti
 Critical unknown #18	binary	201104	0	1	Modification causes a division by zero termination.
 Critical unknown #19	binary	208064	0	2	Modification influences the about dialog text.
 Cross arrows.	icon	202528	204320	51	
-CTRL-Break handler.	8086_code	8	0	32	Handles the CTRL-Break keys being pressed.
+CTRL-Break handler.	8086_code	8	0	33	Handles the CTRL-Break keys being pressed.
 Day and month abbreviations.	text	225252	0	58	
+Delete file.	8086_code	150864	0	13	
 Dialog line break.	binary	203406	0	4	
 Dialog. #1	text	204355	0	134	
 Dialog. #2	text	205418	0	45	
@@ -49,11 +50,11 @@ Dialog. #8	text	211572	0	790
 Drive letters.	text	205676	0	34	
 Driver file extensions	text	205510	0	12	
 Eraser.	icon	202096	204320	141	
+Error message retrieval.	8086_code	152322	0	41	Returns the position of an error message to be written to STDERR.
 Error messages. #1	text	200737	0	307	
 Error messages. #2	text	204489	0	28	
 Error messages. #3	text	204523	0	39	
 Error messages. #4	text	206936	0	611	
-Error message retrieval.	8086_code	152322	0	40	Returns the position of an error message to be written to STDERR.
 Exclamation balloon information.	binary	158802	0	2029	
 Exclamation icon record size.	binary	203340	0	2	
 Exclamation icon.	point	203336	0	4	
@@ -88,14 +89,18 @@ Free memory OK button text.	far_address	212374	0	4
 Free memory OK button.	rectangles	212364	0	8	
 Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
+Get current drive.	8086_code	151014	0	20	
+Get equipment flags.	8086_code	150880	0	3	
+Get interrupt vector.	8086_code	150884	0	18	
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
 Hand icon.	far_address	203394	0	4	
 Hand.	icon	203088	204320	248	
+intdos()	8086_code	147724	0	82	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
-Key retrieval.	8086_code	95848	0	38	Checks whether a key is pressed and returns which if so.
+Key retrieval.	8086_code	95848	0	39	Checks whether a key is pressed and returns which if so.
 Keyboard layout.	text	215156	0	117	
 Left arrow.	icon	201736	204320	178	
 Level rectangle #1.	rectangles	209680	0	8	
@@ -130,8 +135,8 @@ Menu screen.	image	170544	170512	9772
 Menu screen.	rectangles	206778	0	40	
 Mouse arrow transparency bitmask.	mousemask	214610	0	32	
 Mouse arrow.	bitmap	214642	214610	32	
-Mouse handler disable.	8086_code	95974	0	23	Disables the mouse handler.
-Mouse handler setup.	8086_code	95925	0	48	Set up the mouse handler for responding to the left button.
+Mouse handler disable.	8086_code	95974	0	24	Disables the mouse handler.
+Mouse handler setup.	8086_code	95925	0	49	Set up the mouse handler for responding to the left button.
 Mouse wait transparency bitmask.	mousemask	214674	0	32	
 Mouse wait.	bitmap	214706	214674	32	
 Moveable item screen buffer.	rectangles	207576	0	8	
@@ -164,14 +169,15 @@ Pause dialog speed value.	far_address	211200	0	4
 Pause dialog text.	rectangles	211214	0	8	
 Pause dialog text.	far_address	211224	0	4	
 Pause dialog.	rectangles	211236	0	8	
-PIT configuration.	8086_code	64482	0	46	Configures the system timer to run faster and redirects interrupt 0x08.
-PIT reset.	8086_code	64529	0	47	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
+PIT configuration.	8086_code	64482	0	47	Configures the system timer to run faster and redirects interrupt 0x08.
+PIT reset.	8086_code	64529	0	48	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
 PRINTING...	text	213416	0	10	
 Right arrow.	icon	201916	204320	177	
-Run-time error 203 handler.	8086_code	151818	0	35	Gives the command to display either a run-time error code 203 or 255.
+Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
 Run-time error messages.	text	225344	0	224	
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
+Select drive.	8086_code	151188	0	23	Returns the number of drives.
 Speaking icon record size.	binary	203364	0	2	
 Speaking icon.	point	203360	0	4	
 Speaking icon.	far_address	203370	0	4	
@@ -186,6 +192,8 @@ Speech balloon properties dialog.	rectangles	203426	0	152
 Speech balloon types.	text	203620	0	198	
 Speech balloon.	icon	202240	204320	141	
 Startup files.	text	203964	0	46	
+strlen()	8086_code	154400	0	23	
+strrchr()	8086_code	148050	0	47	
 Supported file extensions.	text	204244	0	30	
 Thought balloon information.	binary	157308	0	1468	
 Ticket screen CGA.	palette	193808	0	32	
@@ -250,8 +258,11 @@ Unknown #48	binary	165421	0	514	257x 2 byte records.
 Unknown #49	binary	165935	0	56	28x 2 byte records.
 Unknown #50	binary	165991	0	2159	1080x 2 byte records. 
 Unknown #51	binary	212468	0	20	Influences the Free Memory dialog.
+Verify _IOSTRG call #1.	8086_code	0	0	8	
+Verify _IOSTRG call #2.	8086_code	1810	0	8	
+Verify _IOSTRG.	8086_code	154510	0	35	Returns true if _IOSTRG is detected.
 Version.	text	206929	0	6	
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
 Way menu items. #2	text	216009	0	259	
-Write error message to STDERR.	8086_code	152365	0	40	Takes an error message's offset and outputs the message to STDERR.
+Write error message to STDERR.	8086_code	152365	0	41	Takes an error message's offset and outputs the message to STDERR.
