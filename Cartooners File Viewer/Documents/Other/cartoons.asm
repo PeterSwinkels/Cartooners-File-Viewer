@@ -305,7 +305,7 @@
 00000313  FFB7601B          push word [bx+0x1b60]
 00000317  FF36C080          push word [0x80c0]
 0000031B  0E                push cs
-0000031C  E82B00            call 0x34a
+0000031C  E82B00            call 0x34a				; Perform some disk I/O.
 0000031F  5D                pop bp
 00000320  CA0200            retf 0x2
 
@@ -314,8 +314,9 @@
 0000032A  833EC08000        cmp word [0x80c0],byte +0x0
 0000032F  7404              jz 0x335
 00000331  0E                push cs
-00000332  E80100            call 0x336
-00000335  CB                retf
+00000332  E80100            call 0x336				; ____
+00000335  CB                retf				;     |
+                                                                ;     V
 
 00000336  33C0              xor ax,ax
 00000338  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
@@ -325,7 +326,7 @@
 00000342  2BC0              sub ax,ax
 00000344  50                push ax
 00000345  0E                push cs
-00000346  E80100            call 0x34a
+00000346  E80100            call 0x34a				; Perform some disk I/O.
 00000349  CB                retf
 
 0000034A  55                push bp
@@ -670,6 +671,7 @@
 000006D0  0E                push cs
 000006D1  E8EEA6            call 0xadc2
 000006D4  CB                retf
+
 000006D5  33C0              xor ax,ax
 000006D7  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000006DC  A14861            mov ax,[0x6148]
@@ -2933,6 +2935,7 @@
 00001E47  8BE5              mov sp,bp
 00001E49  5D                pop bp
 00001E4A  CA0400            retf 0x4
+
 00001E4D  55                push bp
 00001E4E  8BEC              mov bp,sp
 00001E50  B81A00            mov ax,0x1a
@@ -3095,6 +3098,7 @@
 00002001  8BE5              mov sp,bp
 00002003  5D                pop bp
 00002004  CA1C00            retf 0x1c
+
 00002007  55                push bp
 00002008  8BEC              mov bp,sp
 0000200A  B80400            mov ax,0x4
@@ -17145,6 +17149,7 @@
 0000B0C7  268B5702          mov dx,[es:bx+0x2]
 0000B0CB  5D                pop bp
 0000B0CC  CA0400            retf 0x4
+
 0000B0CF  33C0              xor ax,ax
 0000B0D1  9A1C3E821F        call 0x1f82:0x3e1c
 0000B0D6  813E060F1463      cmp word [0xf06],0x6314
@@ -17245,6 +17250,7 @@
 0000B205  8BE5              mov sp,bp
 0000B207  5D                pop bp
 0000B208  CB                retf
+
 0000B209  55                push bp
 0000B20A  8BEC              mov bp,sp
 0000B20C  B80C00            mov ax,0xc
@@ -17301,6 +17307,7 @@
 0000B2A9  8BE5              mov sp,bp
 0000B2AB  5D                pop bp
 0000B2AC  CA0600            retf 0x6
+
 0000B2AF  55                push bp
 0000B2B0  8BEC              mov bp,sp
 0000B2B2  B80E00            mov ax,0xe
@@ -35299,6 +35306,7 @@
 00016CB0  A36A36            mov [0x366a],ax
 00016CB3  A3C080            mov [0x80c0],ax
 00016CB6  CB                retf
+
 00016CB7  55                push bp
 00016CB8  8BEC              mov bp,sp
 00016CBA  B80800            mov ax,0x8

@@ -1,0 +1,19 @@
+https://gswv.apple2.org.za/a2zine/GS.WorldView/v1999/Sep/GSWV.A2.Error.Code.files/IIgs.Error.Codes.txt
+
+   $0 - None
+ $201 - Unable to allocate
+ $202 - Illegal operation on an empty handle
+ $203 - Illegal operation on a handle that is not empty
+ $204 - Illegal operation on a locked or immovable block
+ $205 - Attempt to purge an unpurgeable block
+ $206 - Invalid handle
+ $601 - The Event Manager has already been started
+ $607 - Insufficient memory available for queue
+ $6FF - ???
+ $E02 - Unable to allocate window record
+ $E03 - Some reserved bits were not clear in Window Manager - TaskMask field of Window Manager TaskRec record
+$150A - Inappropriate item type
+$150B - Item creation failed
+$150C - No such item
+
+Stored at [0x80C0] according to the disassembled code.
