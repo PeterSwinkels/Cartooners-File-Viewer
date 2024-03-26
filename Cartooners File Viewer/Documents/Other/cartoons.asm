@@ -317,7 +317,6 @@
 00000332  E80100            call 0x336				; ____
 00000335  CB                retf				;     |
                                                                 ;     V
-
 00000336  33C0              xor ax,ax
 00000338  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 0000033D  B86500            mov ax,0x65
@@ -371,10 +370,7 @@
 000003B3  2BF9              sub di,cx
 000003B5  8BD9              mov bx,cx
 000003B7  87FE              xchg di,si
-000003B9  B9FFFF            mov cx,0xffff		; Scan for null byte.
-000003BC  F2AE              repne scasb			;
-000003BE  8BC7              mov ax,di			; Save unscanned number of bytes.
-000003C0  F7D1              not cx			;
+; CX is set to the position of a null byte inside string at ES:DI.
 000003C2  2BC1              sub ax,cx
 000003C4  4F                dec di
 000003C5  8BCB              mov cx,bx
@@ -47474,8 +47470,8 @@
 0001EF52  1E                push ds
 0001EF53  07                pop es
 0001EF54  8BF7              mov si,di
-0001EF56  B800B8            mov ax,0xb800
-0001EF59  8ED8              mov ds,ax
+0001EF56  B800B8            mov ax,0xb800		; CGA.
+0001EF59  8ED8              mov ds,ax			;
 0001EF5B  BFF241            mov di,0x41f2
 0001EF5E  B91000            mov cx,0x10
 0001EF61  2BCB              sub cx,bx
@@ -48357,8 +48353,8 @@
 0001F734  7E02              jng 0xf738
 0001F736  03C1              add ax,cx
 0001F738  8BF0              mov si,ax
-0001F73A  B800A0            mov ax,0xa000
-0001F73D  8ED8              mov ds,ax
+0001F73A  B800A0            mov ax,0xa000	; EGA/VGA
+0001F73D  8ED8              mov ds,ax		;
 0001F73F  BF9E46            mov di,0x469e
 0001F742  B91000            mov cx,0x10
 0001F745  2BCB              sub cx,bx
@@ -49356,8 +49352,8 @@
 0001FFD2  03F8              add di,ax
 0001FFD4  8A0EBCA3          mov cl,[0xa3bc]
 0001FFD8  32ED              xor ch,ch
-0001FFDA  B800A0            mov ax,0xa000
-0001FFDD  8ED8              mov ds,ax
+0001FFDA  B800A0            mov ax,0xa000		; EGA/VGA
+0001FFDD  8ED8              mov ds,ax			;
 0001FFDF  368A1EACCF        mov bl,[ss:0xcfac]
 0001FFE4  368A3E8677        mov bh,[ss:0x7786]
 0001FFE9  36803EC8CF04      cmp byte [ss:0xcfc8],0x4
@@ -52688,8 +52684,8 @@
 00021C3A  1E                push ds
 00021C3B  07                pop es
 00021C3C  8BF7              mov si,di
-00021C3E  B800B8            mov ax,0xb800
-00021C41  8ED8              mov ds,ax
+00021C3E  B800B8            mov ax,0xb800		; CGA
+00021C41  8ED8              mov ds,ax			;
 00021C43  BF3855            mov di,0x5538
 00021C46  B91000            mov cx,0x10
 00021C49  2B4EF6            sub cx,[bp-0xa]
@@ -58938,6 +58934,7 @@
 000256FA  8BE5              mov sp,bp
 000256FC  5D                pop bp
 000256FD  C3                ret
+
 000256FE  55                push bp
 000256FF  8BEC              mov bp,sp
 00025701  83EC06            sub sp,byte +0x6
