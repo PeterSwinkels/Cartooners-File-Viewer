@@ -113,7 +113,7 @@ Public Class CartoonersClass
          For Each Region As RegionClass In Regions()
             For Each OtherRegion As RegionClass In Regions()
                If Region IsNot OtherRegion AndAlso Region.EndO > OtherRegion.Offset AndAlso Region.EndO <= OtherRegion.EndO Then
-                  If Not (OtherRegion.Description.ToLower() = "8086 executable code." AndAlso Region.Type.ToLower() = "8086_code") Then
+                  If Not ((OtherRegion.Description.ToLower() = "8086 executable code." AndAlso Region.Type.ToLower() = "8086_code") OrElse Region.Description.ToLower() = "8086 executable code." AndAlso OtherRegion.Type.ToLower() = "8086_code") Then
                      Overlaps.Append($"""{Region.Description}"" ({Region.Type}) overlaps with ""{OtherRegion.Description}"" ({OtherRegion.Type}).{NewLine}")
                   End If
                End If

@@ -17117,6 +17117,7 @@
 0000B075  C706C0800000      mov word [0x80c0],0x0
 0000B07B  5D                pop bp
 0000B07C  CA0400            retf 0x4
+
 0000B07F  55                push bp
 0000B080  8BEC              mov bp,sp
 0000B082  33C0              xor ax,ax
@@ -24267,8 +24268,8 @@
 
 0000FC41  52                push dx, cx, bx, ax, es, ds, bp, si, di
 0000FC4A  8BEC              mov bp,sp
-0000FC4C  B8FE30            mov ax,0x30fe
-0000FC4F  8ED8              mov ds,ax
+0000FC4C  B8FE30            mov ax,0x30fe				;  Program data segment.
+0000FC4F  8ED8              mov ds,ax					;
 0000FC51  833EE45500        cmp word [0x55e4],byte +0x0
 0000FC56  7411              jz 0xfc69
 0000FC58  A1E855            mov ax,[0x55e8]
@@ -25742,6 +25743,7 @@
 00010B8D  FF1E80CF          call far [0xcf80]
 00010B91  5D                pop bp
 00010B92  CA0200            retf 0x2
+
 00010B95  55                push bp
 00010B96  8BEC              mov bp,sp
 00010B98  33C0              xor ax,ax
@@ -26012,6 +26014,7 @@
 00010E3A  8BE5              mov sp,bp
 00010E3C  5D                pop bp
 00010E3D  C20800            ret 0x8
+
 00010E40  55                push bp
 00010E41  8BEC              mov bp,sp
 00010E43  33C0              xor ax,ax
@@ -26031,6 +26034,7 @@
 00010E6E  FF1EA877          call far [0x77a8]
 00010E72  5D                pop bp
 00010E73  C20800            ret 0x8
+
 00010E76  55                push bp
 00010E77  8BEC              mov bp,sp
 00010E79  56                push si
@@ -27472,6 +27476,7 @@
 00011D9F  9A6B4B0000        call 0x0:0x4b6b
 00011DA4  5D                pop bp
 00011DA5  CA0400            retf 0x4
+
 00011DA8  55                push bp
 00011DA9  8BEC              mov bp,sp
 00011DAB  B80200            mov ax,0x2
@@ -31006,6 +31011,7 @@
 000140A4  8BE5              mov sp,bp
 000140A6  5D                pop bp
 000140A7  CA0400            retf 0x4
+
 000140AA  33C0              xor ax,ax
 000140AC  9A1C3E821F        call 0x1f82:0x3e1c
 000140B1  FF1EC880          call far [0x80c8]
@@ -36218,8 +36224,10 @@
 0001765E  8BE5              mov sp,bp
 00017660  5D                pop bp
 00017661  C21000            ret 0x10
+
 00017664  FB                sti
 00017665  CB                retf
+
 00017666  FA                cli
 00017667  CB                retf
 
@@ -36233,6 +36241,7 @@
 000176A0  7403              jz 0x76a5
 000176A2  0D0800            or ax,0x8
 000176A5  CB                retf
+
 000176A6  B80000            mov ax,0x0
 000176A9  8EC0              mov es,ax
 000176AB  26A16C04          mov ax,[es:0x46c]
@@ -36244,8 +36253,8 @@
 00017700  06                push es
 00017701  FA                cli
 00017702  50                push ax
-00017703  B8FE30            mov ax,0x30fe
-00017706  8ED8              mov ds,ax
+00017703  B8FE30            mov ax,0x30fe	; Program data segment.
+00017706  8ED8              mov ds,ax		;
 00017708  58                pop ax
 00017709  81E9E803          sub cx,0x3e8
 0001770D  81EAE803          sub dx,0x3e8
@@ -36387,6 +36396,7 @@
 00017870  1F                pop ds
 00017871  9D                popf
 00017872  CB                retf
+
 00017873  55                push bp
 00017874  8BEC              mov bp,sp
 00017876  B80100            mov ax,0x1
@@ -46986,6 +46996,7 @@
 0001EB2B  5E                pop si
 0001EB2C  5D                pop bp
 0001EB2D  CA0200            retf 0x2
+
 0001EB30  AA                stosb
 0001EB31  EBF4              jmp short 0xeb27
 0001EB33  80E4F0            and ah,0xf0
@@ -49563,8 +49574,8 @@
 0002018B  51                push cx
 0002018C  56                push si
 0002018D  57                push di
-0002018E  B8FE30            mov ax,0x30fe
-00020191  8EC0              mov es,ax
+0002018E  B8FE30            mov ax,0x30fe		; Program data segment.
+00020191  8EC0              mov es,ax			;
 00020193  8A66FE            mov ah,[bp-0x2]
 00020196  0AE4              or ah,ah
 00020198  7503              jnz 0x19d
@@ -49699,8 +49710,8 @@
 000202A2  0BC9              or cx,cx
 000202A4  7503              jnz 0x2a9
 000202A6  E9CF00            jmp 0x378
-000202A9  B8FE30            mov ax,0x30fe
-000202AC  8EC0              mov es,ax
+000202A9  B8FE30            mov ax,0x30fe		;  Program data segment.
+000202AC  8EC0              mov es,ax			;
 000202AE  BBFA4B            mov bx,0x4bfa
 000202B1  51                push cx
 000202B2  AC                lodsb
@@ -49802,8 +49813,8 @@
 00020372  49                dec cx
 00020373  7403              jz 0x378
 00020375  E931FF            jmp 0x2a9
-00020378  B8FE30            mov ax,0x30fe
-0002037B  8EC0              mov es,ax
+00020378  B8FE30            mov ax,0x30fe	; Program data segment.
+0002037B  8EC0              mov es,ax		;
 0002037D  BBFA4B            mov bx,0x4bfa
 00020380  8A66FC            mov ah,[bp-0x4]
 00020383  0AE4              or ah,ah
@@ -49963,6 +49974,7 @@
 000204B5  8BE5              mov sp,bp
 000204B7  5D                pop bp
 000204B8  CA0E00            retf 0xe
+
 000204BB  55                push bp
 000204BC  8BEC              mov bp,sp
 000204BE  83EC04            sub sp,byte +0x4
@@ -50038,8 +50050,8 @@
 00020560  51                push cx
 00020561  56                push si
 00020562  57                push di
-00020563  B8FE30            mov ax,0x30fe
-00020566  8EC0              mov es,ax
+00020563  B8FE30            mov ax,0x30fe	; Program data segment.
+00020566  8EC0              mov es,ax		;
 00020568  8A66FE            mov ah,[bp-0x2]
 0002056B  0AE4              or ah,ah
 0002056D  7503              jnz 0x572
@@ -50188,8 +50200,8 @@
 00020694  0BC9              or cx,cx
 00020696  7503              jnz 0x69b
 00020698  E9EC00            jmp 0x787
-0002069B  B8FE30            mov ax,0x30fe
-0002069E  8EC0              mov es,ax
+0002069B  B8FE30            mov ax,0x30fe	; Program data segment.
+0002069E  8EC0              mov es,ax		;
 000206A0  BBFA4B            mov bx,0x4bfa
 000206A3  51                push cx
 000206A4  AC                lodsb
@@ -50305,8 +50317,8 @@
 00020781  49                dec cx
 00020782  7403              jz 0x787
 00020784  E914FF            jmp 0x69b
-00020787  B8FE30            mov ax,0x30fe
-0002078A  8EC0              mov es,ax
+00020787  B8FE30            mov ax,0x30fe	; Program data segment.
+0002078A  8EC0              mov es,ax		;
 0002078C  BBFA4B            mov bx,0x4bfa
 0002078F  8A66FC            mov ah,[bp-0x4]
 00020792  0AE4              or ah,ah
@@ -52556,6 +52568,7 @@
 00021B05  5F                pop di
 00021B06  5D                pop bp
 00021B07  CA0400            retf 0x4
+
 00021B0A  8BD3              mov dx,bx
 00021B0C  86E0              xchg ah,al
 00021B0E  D1E8              shr ax,1
@@ -52569,6 +52582,7 @@
 00021B1E  D1EB              shr bx,1
 00021B20  8BFB              mov di,bx
 00021B22  C3                ret
+
 00021B23  55                push bp
 00021B24  8BEC              mov bp,sp
 00021B26  57                push di
@@ -52644,9 +52658,11 @@
 00021BDC  5F                pop di
 00021BDD  5D                pop bp
 00021BDE  CB                retf
+
 00021BDF  B8DB19            mov ax,0x19db
 00021BE2  8CCA              mov dx,cs
 00021BE4  C3                ret
+
 00021BE5  55                push bp
 00021BE6  8BEC              mov bp,sp
 00021BE8  83EC0A            sub sp,byte +0xa
@@ -53071,6 +53087,7 @@
 00021FE5  8BE5              mov sp,bp
 00021FE7  5D                pop bp
 00021FE8  CA0A00            retf 0xa
+
 00021FEB  55                push bp
 00021FEC  8BEC              mov bp,sp
 00021FEE  83EC02            sub sp,byte +0x2
@@ -53121,11 +53138,13 @@
 00022053  8BE5              mov sp,bp
 00022055  5D                pop bp
 00022056  CA0600            retf 0x6
+
 00022059  0E                push cs
 0002205A  B88619            mov ax,0x1986
 0002205D  50                push ax
 0002205E  9A1DC50000        call 0x0:0xc51d
 00022063  CB                retf
+
 00022064  55                push bp
 00022065  8BEC              mov bp,sp
 00022067  1E                push ds
@@ -53151,6 +53170,7 @@
 0002208D  1F                pop ds
 0002208E  5D                pop bp
 0002208F  CA0E00            retf 0xe
+
 00022092  55                push bp
 00022093  8BEC              mov bp,sp
 00022095  1E                push ds
@@ -53191,6 +53211,7 @@
 000220DA  1F                pop ds
 000220DB  5D                pop bp
 000220DC  CA1000            retf 0x10
+
 000220DF  55                push bp
 000220E0  8BEC              mov bp,sp
 000220E2  1E                push ds
@@ -53242,6 +53263,7 @@
 0002213A  8BE5              mov sp,bp
 0002213C  5D                pop bp
 0002213D  CA1400            retf 0x14
+
 00022140  55                push bp
 00022141  8BEC              mov bp,sp
 00022143  56                push si
@@ -53291,30 +53313,32 @@
 000221A1  5E                pop si
 000221A2  5D                pop bp
 000221A3  CA0800            retf 0x8
+
 000221A6  55                push bp
 000221A7  8BEC              mov bp,sp
 000221A9  57                push di
 000221AA  56                push si
 000221AB  1E                push ds
-000221AC  C47E06            les di,[bp+0x6]
-000221AF  8CC0              mov ax,es
-000221B1  0BC7              or ax,di
-000221B3  740E              jz 0x21c3
-000221B5  C5760A            lds si,[bp+0xa]
-000221B8  8CD8              mov ax,ds
-000221BA  0BC6              or ax,si
-000221BC  740C              jz 0x21ca
-000221BE  B90400            mov cx,0x4
-000221C1  F3A5              rep movsw
-000221C3  1F                pop ds
-000221C4  5E                pop si
-000221C5  5F                pop di
-000221C6  5D                pop bp
-000221C7  CA0800            retf 0x8
-000221CA  B90400            mov cx,0x4
-000221CD  2BC0              sub ax,ax
-000221CF  F3AA              rep stosb
-000221D1  EBF0              jmp short 0x21c3
+	000221AC  C47E06            les di,[bp+0x6]	; ES:DI = first string.
+	000221AF  8CC0              mov ax,es		; Check for null pointer.
+	000221B1  0BC7              or ax,di		;
+	000221B3  740E              jz 0x21c3		;
+		000221B5  C5760A            lds si,[bp+0xa]	; DS:SI = second string.
+		000221B8  8CD8              mov ax,ds		; Check for null pointer. 
+		000221BA  0BC6 		    or ax,si		;
+		000221BC  740C              jz 0x21ca		;
+			000221BE  B90400            mov cx,0x4		; Copy 8 bytes.
+			000221C1  F3A5              rep movsw		;
+	000221C3  1F                pop ds
+	000221C4  5E                pop si
+	000221C5  5F                pop di
+	000221C6  5D                pop bp
+	000221C7  CA0800            retf 0x8
+000221CA  B90400            mov cx,0x4			; Write 4 bytes to ES:DI (first string).
+000221CD  2BC0              sub ax,ax			;
+000221CF  F3AA              rep stosb			;
+000221D1  EBF0              jmp short 0x21c3		; Jumps to end of procedure.
+
 000221D3  55                push bp
 000221D4  8BEC              mov bp,sp
 000221D6  56                push si
@@ -53332,6 +53356,7 @@
 000221EB  5E                pop si
 000221EC  5D                pop bp
 000221ED  CA0A00            retf 0xa
+
 000221F0  55                push bp
 000221F1  8BEC              mov bp,sp
 000221F3  57                push di
@@ -53374,6 +53399,7 @@
 0002224D  5F                pop di
 0002224E  5D                pop bp
 0002224F  CB                retf
+
 00022250  55                push bp
 00022251  8BEC              mov bp,sp
 00022253  33C9              xor cx,cx
@@ -53425,13 +53451,15 @@
 000222C8  F7DA              neg dx
 000222CA  5D                pop bp
 000222CB  CB                retf
+
 000222CC  55                push bp
 000222CD  8BEC              mov bp,sp
-000222CF  8B4606            mov ax,[bp+0x6]
-000222D2  F76608            mul word [bp+0x8]
-000222D5  F7760A            div word [bp+0xa]
+000222CF  8B4606            mov ax,[bp+0x6]	; AX = x
+000222D2  F76608            mul word [bp+0x8]	; DX:AX = x * y
+000222D5  F7760A            div word [bp+0xa]	; DX:AX \= z
 000222D8  5D                pop bp
 000222D9  CB                retf
+
 000222DA  55                push bp
 000222DB  8BEC              mov bp,sp
 000222DD  33C0              xor ax,ax
@@ -53451,6 +53479,7 @@
 00022300  0BC1              or ax,cx
 00022302  5D                pop bp
 00022303  CA0600            retf 0x6
+
 00022306  55                push bp
 00022307  8BEC              mov bp,sp
 00022309  B82A02            mov ax,0x22a
@@ -53688,6 +53717,7 @@
 00022561  8BE5              mov sp,bp
 00022563  5D                pop bp
 00022564  CA0400            retf 0x4
+
 00022567  55                push bp
 00022568  8BEC              mov bp,sp
 0002256A  B85600            mov ax,0x56
@@ -53793,6 +53823,7 @@
 0002267C  8BE5              mov sp,bp
 0002267E  5D                pop bp
 0002267F  CA1400            retf 0x14
+
 00022682  55                push bp
 00022683  8BEC              mov bp,sp
 00022685  33C0              xor ax,ax
@@ -53812,6 +53843,7 @@
 000226A2  5E                pop si
 000226A3  5D                pop bp
 000226A4  CA0400            retf 0x4
+
 000226A7  55                push bp
 000226A8  8BEC              mov bp,sp
 000226AA  B80A00            mov ax,0xa
@@ -53858,6 +53890,7 @@
 0002270E  8BE5              mov sp,bp
 00022710  5D                pop bp
 00022711  CA0400            retf 0x4
+
 00022714  55                push bp
 00022715  8BEC              mov bp,sp
 00022717  B80C00            mov ax,0xc
@@ -53923,6 +53956,7 @@
 000227A3  8BE5              mov sp,bp
 000227A5  5D                pop bp
 000227A6  CA1000            retf 0x10
+
 000227A9  55                push bp
 000227AA  8BEC              mov bp,sp
 000227AC  B87A00            mov ax,0x7a
@@ -54179,6 +54213,7 @@
 00022A4A  8BE5              mov sp,bp
 00022A4C  5D                pop bp
 00022A4D  CA1400            retf 0x14
+
 00022A50  55                push bp
 00022A51  8BEC              mov bp,sp
 00022A53  B80A00            mov ax,0xa
@@ -54278,6 +54313,7 @@
 00022B55  8BE5              mov sp,bp
 00022B57  5D                pop bp
 00022B58  CA0A00            retf 0xa
+
 00022B5B  55                push bp
 00022B5C  8BEC              mov bp,sp
 00022B5E  B80C00            mov ax,0xc
@@ -54359,6 +54395,7 @@
 00022C59  8BE5              mov sp,bp
 00022C5B  5D                pop bp
 00022C5C  CA0800            retf 0x8
+
 00022C5F  55                push bp
 00022C60  8BEC              mov bp,sp
 00022C62  B80400            mov ax,0x4
@@ -54391,6 +54428,7 @@
 00022CB4  8BE5              mov sp,bp
 00022CB6  5D                pop bp
 00022CB7  CA0400            retf 0x4
+
 00022CBA  55                push bp
 00022CBB  8BEC              mov bp,sp
 00022CBD  B80400            mov ax,0x4
@@ -54432,6 +54470,7 @@
 00022D1F  8BE5              mov sp,bp
 00022D21  5D                pop bp
 00022D22  CA0800            retf 0x8
+
 00022D25  55                push bp
 00022D26  8BEC              mov bp,sp
 00022D28  B80C00            mov ax,0xc
@@ -54625,6 +54664,7 @@
 00022F67  8BE5              mov sp,bp
 00022F69  5D                pop bp
 00022F6A  CA0400            retf 0x4
+
 00022F6D  55                push bp
 00022F6E  8BEC              mov bp,sp
 00022F70  B80400            mov ax,0x4
@@ -54689,6 +54729,7 @@
 0002301E  8BE5              mov sp,bp
 00023020  5D                pop bp
 00023021  CA0C00            retf 0xc
+
 00023024  55                push bp
 00023025  8BEC              mov bp,sp
 00023027  33C0              xor ax,ax
@@ -54699,6 +54740,7 @@
 00023030  99                cwd
 00023031  5D                pop bp
 00023032  CA0400            retf 0x4
+
 00023035  55                push bp
 00023036  8BEC              mov bp,sp
 00023038  B82600            mov ax,0x26
@@ -54777,6 +54819,7 @@
 000230F6  8BE5              mov sp,bp
 000230F8  5D                pop bp
 000230F9  CA0600            retf 0x6
+
 000230FC  55                push bp
 000230FD  8BEC              mov bp,sp
 000230FF  B82800            mov ax,0x28
@@ -54896,6 +54939,7 @@
 0002323F  8BE5              mov sp,bp
 00023241  5D                pop bp
 00023242  CA0800            retf 0x8
+
 00023245  55                push bp
 00023246  8BEC              mov bp,sp
 00023248  33C0              xor ax,ax
@@ -54911,6 +54955,7 @@
 0002325A  E89FFE            call 0x30fc
 0002325D  5D                pop bp
 0002325E  CA0400            retf 0x4
+
 00023261  55                push bp
 00023262  8BEC              mov bp,sp
 00023264  B80400            mov ax,0x4
@@ -54939,6 +54984,7 @@
 000232A2  8BE5              mov sp,bp
 000232A4  5D                pop bp
 000232A5  CA0400            retf 0x4
+
 000232A8  55                push bp
 000232A9  8BEC              mov bp,sp
 000232AB  06                push es
@@ -55149,8 +55195,8 @@
 000234B1  90                nop
 000234B2  0E                push cs
 000234B3  E8E800            call 0x359e
-000234B6  B8FE30            mov ax,0x30fe
-000234B9  8ED8              mov ds,ax
+000234B6  B8FE30            mov ax,0x30fe	; Program data segment.
+000234B9  8ED8              mov ds,ax		;
 000234BB  B80300            mov ax,0x3
 000234BE  36C70602567E3D    mov word [ss:0x5602],0x3d7e
 000234C5  50                push ax
@@ -55304,6 +55350,7 @@
 00023625  CD21              int 0x21			;
 00023627  1F                pop ds
 00023628  C3                ret
+
 00023629  3BF7              cmp si,di
 0002362B  730E              jnc 0x363b
 0002362D  83EF04            sub di,byte +0x4
@@ -55355,8 +55402,8 @@
 00023689  8946F8            mov [bp-0x8],ax
 0002368C  26F6470A83        test byte [es:bx+0xa],0x83
 00023691  7407              jz 0x369a
-00023693  26F6470A40        test byte [es:bx+0xa],0x40
-00023698  740E              jz 0x36a8
+	00023693  26F6470A40        test byte [es:bx+0xa],0x40
+	00023698  740E              jz 0x36a8
 0002369A  C45E08            les bx,[bp+0x8]
 0002369D  26804F0A20        or byte [es:bx+0xa],0x20
 000236A2  B8FFFF            mov ax,0xffff
@@ -55371,7 +55418,7 @@
 000236C1  8976FC            mov [bp-0x4],si
 000236C4  26F6470A0C        test byte [es:bx+0xa],0xc
 000236C9  7403              jz 0x36ce
-000236CB  E99600            jmp 0x3764
+	000236CB  E99600            jmp 0x3764
 000236CE  8BC3              mov ax,bx
 000236D0  2DB05C            sub ax,0x5cb0
 000236D3  99                cwd
@@ -55382,49 +55429,49 @@
 000236DD  03D8              add bx,ax
 000236DF  D1E3              shl bx,1
 000236E1  F687A05D01        test byte [bx+0x5da0],0x1
-000236E6  757C              jnz 0x3764
-000236E8  817E08BC5C        cmp word [bp+0x8],0x5cbc
-000236ED  7507              jnz 0x36f6
-000236EF  817E0AFE30        cmp word [bp+0xa],0x30fe
-000236F4  740E              jz 0x3704
-000236F6  817E08C85C        cmp word [bp+0x8],0x5cc8
-000236FB  755B              jnz 0x3758
-000236FD  817E0AFE30        cmp word [bp+0xa],0x30fe
-00023702  7554              jnz 0x3758
-00023704  FF76FA            push word [bp-0x6]
-00023707  90                nop
-00023708  0E                push cs
-00023709  E88224            call 0x5b8e			; Checks for _IOSTRG.
-0002370C  83C402            add sp,byte +0x2
-0002370F  0BC0              or ax,ax
-00023711  7551              jnz 0x3764
-00023713  FF068C5F          inc word [0x5f8c]
-00023717  817E08BC5C        cmp word [bp+0x8],0x5cbc
-0002371C  7514              jnz 0x3732
-0002371E  817E0AFE30        cmp word [bp+0xa],0x30fe
-00023723  750D              jnz 0x3732
-00023725  C45E08            les bx,[bp+0x8]
-00023728  B8B058            mov ax,0x58b0
-0002372B  BAFE30            mov dx,0x30fe
-0002372E  EB0B              jmp short 0x373b
-00023730  90                nop
-00023731  90                nop
-00023732  C45E08            les bx,[bp+0x8]
-00023735  B8B05A            mov ax,0x5ab0
-00023738  BAFE30            mov dx,0x30fe
-0002373B  26894706          mov [es:bx+0x6],ax
-0002373F  26895708          mov [es:bx+0x8],dx
-00023743  268907            mov [es:bx],ax
-00023746  26895702          mov [es:bx+0x2],dx
-0002374A  8B5EF8            mov bx,[bp-0x8]
-0002374D  C747020002        mov word [bx+0x2],0x200
-00023752  C60701            mov byte [bx],0x1
-00023755  EB0D              jmp short 0x3764
-00023757  90                nop
-00023758  FF760A            push word [bp+0xa]
-0002375B  FF7608            push word [bp+0x8]
-0002375E  E8131F            call 0x5674
-00023761  83C404            add sp,byte +0x4
+	000236E6  757C              jnz 0x3764
+		000236E8  817E08BC5C        cmp word [bp+0x8],0x5cbc
+	000236ED  7507              jnz 0x36f6
+	000236EF  817E0AFE30        cmp word [bp+0xa],0x30fe
+		000236F4  740E              jz 0x3704
+	000236F6  817E08C85C        cmp word [bp+0x8],0x5cc8
+		000236FB  755B              jnz 0x3758
+	000236FD  817E0AFE30        cmp word [bp+0xa],0x30fe
+	00023702  7554              jnz 0x3758
+	00023704  FF76FA            push word [bp-0x6]
+	00023707  90                nop
+	00023708  0E                push cs
+	00023709  E88224            call 0x5b8e			; Checks for _IOSTRG.
+	0002370C  83C402            add sp,byte +0x2
+	0002370F  0BC0              or ax,ax
+	00023711  7551              jnz 0x3764
+	00023713  FF068C5F          inc word [0x5f8c]
+	00023717  817E08BC5C        cmp word [bp+0x8],0x5cbc
+	0002371C  7514              jnz 0x3732
+	0002371E  817E0AFE30        cmp word [bp+0xa],0x30fe
+	00023723  750D              jnz 0x3732
+		00023725  C45E08            les bx,[bp+0x8]
+		00023728  B8B058            mov ax,0x58b0
+		0002372B  BAFE30            mov dx,0x30fe
+		0002372E  EB0B              jmp short 0x373b
+		00023730  90                nop
+		00023731  90                nop
+	00023732  C45E08            les bx,[bp+0x8]
+	00023735  B8B05A            mov ax,0x5ab0
+	00023738  BAFE30            mov dx,0x30fe
+	0002373B  26894706          mov [es:bx+0x6],ax
+	0002373F  26895708          mov [es:bx+0x8],dx
+	00023743  268907            mov [es:bx],ax
+	00023746  26895702          mov [es:bx+0x2],dx
+	0002374A  8B5EF8            mov bx,[bp-0x8]
+	0002374D  C747020002        mov word [bx+0x2],0x200
+	00023752  C60701            mov byte [bx],0x1
+	00023755  EB0D              jmp short 0x3764
+		00023757  90                nop
+		00023758  FF760A            push word [bp+0xa]
+		0002375B  FF7608            push word [bp+0x8]
+		0002375E  E8131F            call 0x5674
+		00023761  83C404            add sp,byte +0x4
 00023764  C45E08            les bx,[bp+0x8]
 00023767  26F6470A08        test byte [es:bx+0xa],0x8
 0002376C  751A              jnz 0x3788
@@ -55745,6 +55792,7 @@
 00023A62  7503              jnz 0x3a67
 00023A64  80C901            or cl,0x1
 00023A67  C3                ret
+
 00023A68  55                push bp
 00023A69  8BEC              mov bp,sp
 00023A6B  83EC02            sub sp,byte +0x2
@@ -55948,6 +55996,7 @@
 00023C25  58                pop ax
 00023C26  8BFA              mov di,dx
 00023C28  C3                ret
+
 00023C29  1F                pop ds
 00023C2A  83C408            add sp,byte +0x8
 00023C2D  7304              jnc 0x3c33
@@ -55999,8 +56048,9 @@
 00023C95  F9                stc
 00023C96  B8001C            mov ax,0x1c00
 00023C99  EBC4              jmp short 0x3c5f
-00023C9B  00558B            add [di-0x75],dl
-00023C9E  EC                in al,dx
+
+00023CAC  55                push bp
+00023C9D  8BEC              mov bp,sp
 00023C9F  8B5E06            mov bx,[bp+0x6]
 00023CA2  0BDB              or bx,bx
 00023CA4  7404              jz 0x3caa
@@ -56129,6 +56179,7 @@
 00023D7E  57                push di
 00023D7F  B301              mov bl,0x1
 00023D81  E9C21F            jmp 0x5d46
+
 00023D84  55                push bp
 00023D85  8BEC              mov bp,sp
 00023D87  56                push si
@@ -56179,7 +56230,7 @@
 00023DF3  1F                pop ds
 00023DF4  90                nop
 00023DF5  0E                push cs
-00023DF6  E87F15            call 0x5378
+00023DF6  E87F15            call 0x5378		; intdos/intdosx error handler.
 00023DF9  1F                pop ds
 00023DFA  BE0100            mov si,0x1
 00023DFD  8B05              mov ax,[di]
@@ -56194,18 +56245,18 @@
 
 00023E0C  55                push bp
 00023E0D  8BEC              mov bp,sp
-00023E0F  8B4608            mov ax,[bp+0x8]
-00023E12  2B460C            sub ax,[bp+0xc]
-00023E15  1BD2              sbb dx,dx
-00023E17  03C0              add ax,ax
+00023E0F  8B4608            mov ax,[bp+0x8]	; x -= y
+00023E12  2B460C            sub ax,[bp+0xc]	;
+00023E15  1BD2              sbb dx,dx		; Will either be 0xFFFF or 0x0.
+00023E17  03C0              add ax,ax		; x *= 2
 00023E19  13D2              adc dx,dx
-00023E1B  03C0              add ax,ax
+00023E1B  03C0              add ax,ax		; x *= 2
 00023E1D  13D2              adc dx,dx
-00023E1F  03C0              add ax,ax
+00023E1F  03C0              add ax,ax		; x *= 2
 00023E21  13D2              adc dx,dx
-00023E23  03C0              add ax,ax
+00023E23  03C0              add ax,ax		; x *= 2
 00023E25  13D2              adc dx,dx
-00023E27  034606            add ax,[bp+0x6]
+00023E27  034606            add ax,[bp+0x6]	; x += z
 00023E2A  83D200            adc dx,byte +0x0
 00023E2D  2B460A            sub ax,[bp+0xa]
 00023E30  83DA00            sbb dx,byte +0x0
@@ -56273,9 +56324,9 @@
 00023EC1  0E                push cs
 00023EC2  E89BF7            call 0x3660
 00023EC5  83C406            add sp,byte +0x6
-00023EC8  2BC0              sub ax,ax
+00023EC8  2BC0              sub ax,ax			; false
 00023ECA  EB03              jmp short 0x3ecf
-00023ECC  B8FFFF            mov ax,0xffff
+00023ECC  B8FFFF            mov ax,0xffff		; true
 00023ECF  5E                pop si
 00023ED0  5F                pop di
 00023ED1  8BE5              mov sp,bp
@@ -56439,6 +56490,7 @@
 00023FFB  8BE5              mov sp,bp
 00023FFD  5D                pop bp
 00023FFE  CB                retf
+
 00023FFF  55                push bp
 00024000  8BEC              mov bp,sp
 00024002  56                push si
@@ -56483,6 +56535,7 @@
 0002404D  8BE5              mov sp,bp
 0002404F  5D                pop bp
 00024050  CB                retf
+
 00024051  55                push bp
 00024052  8BEC              mov bp,sp
 00024054  B80100            mov ax,0x1
@@ -56557,7 +56610,7 @@
 000240F3  1F                pop ds
 000240F4  90                nop
 000240F5  0E                push cs
-000240F6  E87F12            call 0x5378
+000240F6  E87F12            call 0x5378		; intdos/intdosx error handler.
 000240F9  1F                pop ds
 000240FA  BE0100            mov si,0x1
 000240FD  8B05              mov ax,[di]
@@ -56570,6 +56623,7 @@
 0002410A  5D                pop bp
 0002410B  CB                retf
 
+; int _CDECL intdosx(union REGS *, union REGS *, struct SREGS *); ???
 0002415E  55                push bp
 0002415F  8BEC              mov bp,sp
 00024161  56                push si
@@ -56586,7 +56640,7 @@
 0002417B  8E05              mov es,[di]
 0002417D  8E5D06            mov ds,[di+0x6]
 00024180  5F                pop di
-00024181  CD21              int 0x21
+00024181  CD21              int 0x21			; <<<--- DOS CALL
 00024183  57                push di
 00024184  1E                push ds
 00024185  C57E0E            lds di,[bp+0xe]
@@ -56606,7 +56660,7 @@
 000241A8  1E                push ds
 000241A9  90                nop
 000241AA  0E                push cs
-000241AB  E8CA11            call 0x5378
+000241AB  E8CA11            call 0x5378			; Alleged intdos/intdosx error handler.
 000241AE  C57E0A            lds di,[bp+0xa]
 000241B1  BE0100            mov si,0x1
 000241B4  8B05              mov ax,[di]
@@ -56617,20 +56671,6 @@
 000241BC  8BE5              mov sp,bp
 000241BE  5D                pop bp
 000241BF  CB                retf
-
-; This procedure saves the ds, ax, cs, and ss registers.
-000241C0  55                push bp
-000241C1  8BEC              mov bp,sp
-	000241C3  8CC0              mov ax,es
-		000241C5  C45E06            les bx,[bp+0x6]
-		000241C8  268C5F06          mov [es:bx+0x6],ds
-		000241CC  268907            mov [es:bx],ax
-		000241CF  268C4F02          mov [es:bx+0x2],cs
-		000241D3  268C5704          mov [es:bx+0x4],ss
-	000241D7  8EC0              mov es,ax
-000241D9  8BE5              mov sp,bp
-000241DB  5D                pop bp
-000241DC  CB                retf
 
 ; strchr() ???
 000241DD  55                push bp
@@ -56831,9 +56871,9 @@
 00024359  49                dec cx
 0002435A  03F1              add si,cx
 0002435C  7307              jnc 0x4365
-0002435E  8CD8              mov ax,ds
-00024360  050010            add ax,0x1000
-00024363  8ED8              mov ds,ax
+0002435E  8CD8              mov ax,ds			; Move the data segment to the next 64 kb.
+00024360  050010            add ax,0x1000		;
+00024363  8ED8              mov ds,ax			;
 00024365  03F9              add di,cx
 00024367  7307              jnc 0x4370
 00024369  8CC0              mov ax,es
@@ -56860,9 +56900,9 @@
 0002438D  E35C              jcxz 0x43eb
 0002438F  83FEFF            cmp si,byte -0x1
 00024392  7507              jnz 0x439b
-00024394  8CD8              mov ax,ds
-00024396  2D0010            sub ax,0x1000
-00024399  8ED8              mov ds,ax
+00024394  8CD8              mov ax,ds			;  Move the data segment to the next 64 kb.
+00024396  2D0010            sub ax,0x1000		;
+00024399  8ED8              mov ds,ax			;
 0002439B  83FFFF            cmp di,byte -0x1
 0002439E  75D1              jnz 0x4371
 000243A0  8CC0              mov ax,es
@@ -56894,9 +56934,9 @@
 000243D1  E318              jcxz 0x43eb
 000243D3  0BF6              or si,si
 000243D5  7507              jnz 0x43de
-000243D7  8CD8              mov ax,ds
-000243D9  050010            add ax,0x1000
-000243DC  8ED8              mov ds,ax
+000243D7  8CD8              mov ax,ds			; Move the data segment to the next 64 kb.
+000243D9  050010            add ax,0x1000		;
+000243DC  8ED8              mov ds,ax			;
 000243DE  0BFF              or di,di
 000243E0  75C7              jnz 0x43a9
 000243E2  8CC0              mov ax,es
@@ -56910,6 +56950,7 @@
 000243F1  8B5608            mov dx,[bp+0x8]
 000243F4  5D                pop bp
 000243F5  CB                retf
+
 000243F6  55                push bp
 000243F7  8BEC              mov bp,sp
 000243F9  B8FFFF            mov ax,0xffff
@@ -57032,6 +57073,7 @@
 00024516  8BE5              mov sp,bp
 00024518  5D                pop bp
 00024519  CB                retf
+
 0002451A  55                push bp
 0002451B  8BEC              mov bp,sp
 0002451D  B80800            mov ax,0x8
@@ -57217,6 +57259,7 @@
 000246EB  8BE5              mov sp,bp
 000246ED  5D                pop bp
 000246EE  C20800            ret 0x8
+
 000246F1  90                nop
 000246F2  55                push bp
 000246F3  8BEC              mov bp,sp
@@ -57255,6 +57298,7 @@
 00024745  8BE5              mov sp,bp
 00024747  5D                pop bp
 00024748  C20A00            ret 0xa
+
 0002474B  90                nop
 0002474C  8BC5              mov ax,bp
 0002474E  8BEC              mov bp,sp
@@ -57273,6 +57317,7 @@
 00024771  8BE8              mov bp,ax
 00024773  33C0              xor ax,ax
 00024775  CB                retf
+
 00024776  8BEC              mov bp,sp
 00024778  8B4608            mov ax,[bp+0x8]
 0002477B  0BC0              or ax,ax
@@ -57364,6 +57409,7 @@
 00024845  8BE5              mov sp,bp
 00024847  5D                pop bp
 00024848  CB                retf
+
 00024849  55                push bp
 0002484A  8BEC              mov bp,sp
 0002484C  8D1E854F          lea bx,[0x4f85]
@@ -57385,13 +57431,14 @@
 0002486D  8BE5              mov sp,bp
 0002486F  5D                pop bp
 00024870  CB                retf
+
 00024871  50                push ax
 00024872  9F                lahf
 00024873  50                push ax
 00024874  1E                push ds
 00024875  52                push dx
-00024876  B8FE30            mov ax,0x30fe
-00024879  8ED8              mov ds,ax
+00024876  B8FE30            mov ax,0x30fe	;  Program data segment.
+00024879  8ED8              mov ds,ax		;
 0002487B  833EA25600        cmp word [0x56a2],byte +0x0
 00024880  7514              jnz 0x4896
 00024882  A1305F            mov ax,[0x5f30]
@@ -57426,6 +57473,7 @@
 000248C0  58                pop ax
 000248C1  F9                stc
 000248C2  CB                retf
+
 000248C3  A3485F            mov [0x5f48],ax
 000248C6  89164A5F          mov [0x5f4a],dx
 000248CA  06                push es
@@ -57455,6 +57503,7 @@
 000248EC  58                pop ax
 000248ED  F8                clc
 000248EE  CB                retf
+
 000248EF  CB                retf
 
 000248F0  36FF2E4A60        jmp far [ss:0x604a]
@@ -57544,6 +57593,7 @@
 00024987  83C408            add sp,byte +0x8
 0002498A  5D                pop bp
 0002498B  CB                retf
+
 0002498C  55                push bp
 0002498D  8BEC              mov bp,sp
 0002498F  83EC62            sub sp,byte +0x62
@@ -57645,6 +57695,7 @@
 00024A76  8BE5              mov sp,bp
 00024A78  5D                pop bp
 00024A79  CB                retf
+
 00024A7A  55                push bp
 00024A7B  8BEC              mov bp,sp
 00024A7D  83EC08            sub sp,byte +0x8
@@ -57971,8 +58022,9 @@
 00024D9B  CD21              int 0x21
 00024D9D  1F                pop ds
 00024D9E  E9BF05            jmp 0x5360
-00024DA1  00558B            add [di-0x75],dl
-00024DA4  EC                in al,dx
+
+00024DA2  55                push bp
+00024DA3  8BEC              mov bp,sp
 00024DA5  8B4606            mov ax,[bp+0x6]
 00024DA8  1E                push ds
 00024DA9  C55608            lds dx,[bp+0x8]
@@ -57983,8 +58035,9 @@
 00024DB3  8BE5              mov sp,bp
 00024DB5  5D                pop bp
 00024DB6  CB                retf
-00024DB7  00558B            add [di-0x75],dl
-00024DBA  EC                in al,dx
+
+00024DB8  55                push bp
+00024DB9  8BEC              mov bp,sp
 00024DBB  8A5606            mov dl,[bp+0x6]
 00024DBE  B436              mov ah,0x36
 00024DC0  CD21              int 0x21
@@ -58114,6 +58167,7 @@
 00024F42  8BE5              mov sp,bp
 00024F44  5D                pop bp
 00024F45  CA0800            retf 0x8
+
 00024F48  55                push bp
 00024F49  8BEC              mov bp,sp
 00024F4B  8B4608            mov ax,[bp+0x8]
@@ -58126,6 +58180,7 @@
 00024F5D  8BE5              mov sp,bp
 00024F5F  5D                pop bp
 00024F60  CA0800            retf 0x8
+
 00024F63  F7E3              mul bx
 00024F65  8BC8              mov cx,ax
 00024F67  8B4606            mov ax,[bp+0x6]
@@ -58137,6 +58192,7 @@
 00024F76  8BE5              mov sp,bp
 00024F78  5D                pop bp
 00024F79  CA0800            retf 0x8
+
 00024F7C  55                push bp
 00024F7D  8BEC              mov bp,sp
 00024F7F  53                push bx
@@ -58210,15 +58266,17 @@
 00025018  8BE5              mov sp,bp
 0002501A  5D                pop bp
 0002501B  CA0800            retf 0x8
+
 0002501E  32ED              xor ch,ch
 00025020  E306              jcxz 0x5028
 00025022  D1E0              shl ax,1
 00025024  D1D2              rcl dx,1
 00025026  E2FA              loop 0x5022
 00025028  CB                retf
-00025029  0032              add [bp+si],dh
-0002502B  ED                in ax,dx
-0002502C  E306              jcxz 0x5034
+
+0002502A  55                push bp
+0002502B  8BEC              mov bp,sp
+0002502D  E306              jcxz 0x5034
 0002502E  D1FA              sar dx,1
 00025030  D1D8              rcr ax,1
 00025032  E2FA              loop 0x502e
@@ -58885,6 +58943,7 @@
 0002566F  8BE5              mov sp,bp
 00025671  5D                pop bp
 00025672  CB                retf
+
 00025673  90                nop
 00025674  55                push bp
 00025675  8BEC              mov bp,sp
@@ -59001,6 +59060,7 @@
 000257B4  8BE5              mov sp,bp
 000257B6  5D                pop bp
 000257B7  CB                retf
+
 000257B8  55                push bp
 000257B9  8BEC              mov bp,sp
 000257BB  83EC04            sub sp,byte +0x4
@@ -59084,14 +59144,15 @@
 00025893  8BE5              mov sp,bp
 00025895  5D                pop bp
 00025896  CB                retf
+
 00025897  90                nop
 00025898  59                pop cx
 00025899  5A                pop dx
-0002589A  A1AE56            mov ax,[0x56ae]
-0002589D  3BC4              cmp ax,sp
-0002589F  7307              jnc 0x58a8
-000258A1  2BC4              sub ax,sp
-000258A3  F7D8              neg ax
+0002589A  A1AE56            mov ax,[0x56ae]		; The stack pointer should be equal or greater than a value at [0x56ae].
+0002589D  3BC4              cmp ax,sp			;
+0002589F  7307              jnc 0x58a8			;
+000258A1  2BC4              sub ax,sp			; Calculate and return the difference between the stack pointer and [0x56ae] 
+000258A3  F7D8              neg ax			;
 000258A5  52                push dx
 000258A6  51                push cx
 000258A7  CB                retf
@@ -59099,14 +59160,15 @@
 000258AA  EBF9              jmp short 0x58a5
 000258AC  55                push bp
 000258AD  8BEC              mov bp,sp
-000258AF  C45E06            les bx,[bp+0x6]
-000258B2  8CC0              mov ax,es
-000258B4  0BC3              or ax,bx
-000258B6  7405              jz 0x58bd
-000258B8  26804FFE01        or byte [es:bx-0x2],0x1
+000258AF  C45E06            les bx,[bp+0x6]		; Check whether ES:BX is a null pointer.
+000258B2  8CC0              mov ax,es			;
+000258B4  0BC3              or ax,bx			;
+000258B6  7405              jz 0x58bd			;
+000258B8  26804FFE01        or byte [es:bx-0x2],0x1	; ES:BX is not a null pointer.
 000258BD  8BE5              mov sp,bp
 000258BF  5D                pop bp
 000258C0  CB                retf
+
 000258C1  55                push bp
 000258C2  8BEC              mov bp,sp
 000258C4  83EC02            sub sp,byte +0x2
@@ -59136,6 +59198,7 @@
 000258FC  8BE5              mov sp,bp
 000258FE  5D                pop bp
 000258FF  CB                retf
+
 00025900  BBF000            mov bx,0xf0
 00025903  395E06            cmp [bp+0x6],bx
 00025906  7607              jna 0x590f
@@ -59184,6 +59247,7 @@
 0002596A  8CD8              mov ax,ds
 0002596C  1F                pop ds
 0002596D  C3                ret
+
 0002596E  8CD8              mov ax,ds
 00025970  8EC0              mov es,ax
 00025972  8B4E06            mov cx,[bp+0x6]
@@ -59194,6 +59258,7 @@
 00025980  8CC1              mov cx,es
 00025982  8ED9              mov ds,cx
 00025984  C3                ret
+
 00025985  00E9              add cl,ch
 00025987  CE                into
 00025988  004174            add [bx+di+0x74],al
@@ -59238,6 +59303,7 @@
 000259D8  268C1E945F        mov [es:0x5f94],ds
 000259DD  897F02            mov [bx+0x2],di
 000259E0  C3                ret
+
 000259E1  26C6069A5F02      mov byte [es:0x5f9a],0x2
 000259E7  3DFEFF            cmp ax,0xfffe
 000259EA  7425              jz 0x5a11
@@ -59302,6 +59368,7 @@
 00025A68  33C0              xor ax,ax
 00025A6A  99                cwd
 00025A6B  C3                ret
+
 00025A6C  51                push cx
 00025A6D  8B45FE            mov ax,[di-0x2]
 00025A70  A801              test al,0x1
@@ -59331,6 +59398,7 @@
 00025AA2  33C0              xor ax,ax
 00025AA4  59                pop cx
 00025AA5  C3                ret
+
 00025AA6  52                push dx
 00025AA7  51                push cx
 00025AA8  E81D00            call 0x5ac8
@@ -59349,6 +59417,7 @@
 00025AC5  59                pop cx
 00025AC6  5A                pop dx
 00025AC7  C3                ret
+
 00025AC8  53                push bx
 00025AC9  50                push ax
 00025ACA  33D2              xor dx,dx
@@ -59371,8 +59440,9 @@
 00025AE4  7402              jz 0x5ae8
 00025AE6  0BD2              or dx,dx
 00025AE8  C3                ret
-00025AE9  00558B            add [di-0x75],dl
-00025AEC  EC                in al,dx
+
+00024DEA  55                push bp
+00024DEB  8BEC              mov bp,sp
 00025AED  8BD7              mov dx,di
 00025AEF  8BDE              mov bx,si
 00025AF1  1E                push ds
@@ -59398,8 +59468,8 @@
 00025B1E  5D                pop bp
 00025B1F  CB                retf
 
-00025B37  00558B            add [di-0x75],dl
-00025B3A  EC                in al,dx
+00024D38  55                push bp
+00024D39  8BEC              mov bp,sp
 00025B3B  57                push di
 00025B3C  56                push si
 00025B3D  1E                push ds
@@ -59561,7 +59631,7 @@
 00025C92  8946FC            mov [bp-0x4],ax
 00025C95  90                nop
 00025C96  0E                push cs
-00025C97  E8A602            call 0x5f40
+00025C97  E8A602            call 0x5f40				; Only call to that particular procedure.
 00025C9A  A1F65F            mov ax,[0x5ff6]
 00025C9D  8B16F85F          mov dx,[0x5ff8]
 00025CA1  0146EA            add [bp-0x16],ax
@@ -59593,6 +59663,7 @@
 00025CE3  8BE5              mov sp,bp
 00025CE5  5D                pop bp
 00025CE6  CB                retf
+
 00025CE7  90                nop
 00025CE8  55                push bp
 00025CE9  8BEC              mov bp,sp
@@ -59698,8 +59769,8 @@
 00025DA7  5D                pop bp
 00025DA8  CB                retf
 
-00025DA9  00558B            add [di-0x75],dl ;;;<<<<---!!!
-00025DAC  EC                in al,dx
+00025DAA  55                push bp
+00025DAB  8BEC              mov bp,sp
 00025DAD  83EC06            sub sp,byte +0x6
 00025DB0  56                push si
 00025DB1  B8B05C            mov ax,0x5cb0
@@ -59729,6 +59800,7 @@
 00025DE9  8BE5              mov sp,bp
 00025DEB  5D                pop bp
 00025DEC  CB                retf
+
 00025DED  90                nop
 00025DEE  55                push bp
 00025DEF  8BEC              mov bp,sp
@@ -59820,13 +59892,13 @@
 00025EC0  B8FFFF            mov ax,0xffff
 00025EC3  99                cwd
 00025EC4  EB1D              jmp short 0x5ee3
-00025EC6  8BDA              mov bx,dx
-00025EC8  83C30F            add bx,byte +0xf
-00025ECB  D1DB              rcr bx,1
-00025ECD  B103              mov cl,0x3
-00025ECF  D3EB              shr bx,cl
-00025ED1  B448              mov ah,0x48
-00025ED3  CD21              int 0x21
+00025EC6  8BDA              mov bx,dx			; Allocate memory.
+00025EC8  83C30F            add bx,byte +0xf		;
+00025ECB  D1DB              rcr bx,1			;
+00025ECD  B103              mov cl,0x3			;
+00025ECF  D3EB              shr bx,cl			;
+00025ED1  B448              mov ah,0x48			;
+00025ED3  CD21              int 0x21			;
 00025ED5  72E9              jc 0x5ec0
 00025ED7  92                xchg ax,dx
 00025ED8  8904              mov [si],ax
@@ -59865,13 +59937,13 @@
 00025F1D  D1EB              shr bx,1
 00025F1F  3BF7              cmp si,di
 00025F21  7509              jnz 0x5f2c
-00025F23  03D9              add bx,cx
-00025F25  A17556            mov ax,[0x5675]
-00025F28  2BD8              sub bx,ax
-00025F2A  8EC0              mov es,ax
-00025F2C  B44A              mov ah,0x4a
-00025F2E  CD21              int 0x21
-00025F30  720D              jc 0x5f3f
+00025F23  03D9              add bx,cx			;  Modify Allocated Memory Block (SETBLOCK)
+00025F25  A17556            mov ax,[0x5675]		;
+00025F28  2BD8              sub bx,ax			;
+00025F2A  8EC0              mov es,ax			;
+00025F2C  B44A              mov ah,0x4a			;
+00025F2E  CD21              int 0x21			;
+00025F30  720D              jc 0x5f3f			; Check for error.
 00025F32  3BF7              cmp si,di
 00025F34  7504              jnz 0x5f3a
 00025F36  8916FE55          mov [0x55fe],dx
@@ -59879,13 +59951,16 @@
 00025F3B  8704              xchg ax,[si]
 00025F3D  8BD1              mov dx,cx
 00025F3F  C3                ret
-00025F40  833E847300        cmp word [0x7384],byte +0x0
+
+; Called from 0x00025BC4.
+00025F40  833E847300        cmp word [0x7384],byte +0x0		; Counter is local to this procedure.
 00025F45  7508              jnz 0x5f4f
-00025F47  0E                push cs
-00025F48  E80500            call 0x5f50
-00025F4B  FF068473          inc word [0x7384]
+	00025F47  0E                push cs
+	00025F48  E80500            call 0x5f50
+	00025F4B  FF068473          inc word [0x7384]
 00025F4F  CB                retf
 
+; Called from 0x00025F40.
 00025F50  55                push bp
 00025F51  8BEC              mov bp,sp
 00025F53  83EC06            sub sp,byte +0x6
@@ -60064,60 +60139,10 @@
 00026104  5D                pop bp
 00026105  CB                retf
 
-00026106  55                push bp
-00026107  8BEC              mov bp,sp
-00026109  8B4E0E            mov cx,[bp+0xe]			; Return if cx is zero.
-0002610C  E34E              jcxz 0x615c				;
-	0002610E  1E                push ds
-	0002610F  57                push di
-	00026110  56                push si
-	00026111  C5760A            lds si,[bp+0xa]
-	00026114  C47E06            les di,[bp+0x6]
-	00026117  8BC1              mov ax,cx		; ax = cx
-		00026119  48                dec ax		; ax = ax - 1
-		0002611A  8BD7              mov dx,di		;
-		0002611C  F7D2              not dx		; ax -= !dx
-		0002611E  2BC2              sub ax,dx		;
-		00026120  1BDB              sbb bx,bx		; bx = 0
-		00026122  23C3              and ax,bx		; ax = 0
-		00026124  03C2              add ax,dx		; 
-		00026126  8BD6              mov dx,si		; dx = !si
-		00026128  F7D2              not dx		;
-		0002612A  2BC2              sub ax,dx		; ax = -dx 
-		0002612C  1BDB              sbb bx,bx		; bx = 0
-		0002612E  23C3              and ax,bx		; ax = 0
-		00026130  03C2              add ax,dx		; ax = dx + 1
-		00026132  40                inc ax		;
-		00026133  91                xchg ax,cx		; cx = ax, ax = cx
-		00026134  2BC1              sub ax,cx		; ax = initial counter value - cx
-		00026136  D1E9              shr cx,1		; cx *= 2
-		00026138  F3A5              rep movsw		; Copy data from source to target.
-		0002613A  13C9              adc cx,cx		; cx *= 2
-		0002613C  F3A4              rep movsb		; Copy data from source to target.
-		0002613E  91                xchg ax,cx		; cx = ax, ax = cx
-		0002613F  E318              jcxz 0x6159		; Return if cx is zero.
-			00026141  0BF6              or si,si		; Move the data segment 64kb ahead if SI equals zero.
-			00026143  7507              jnz 0x614c		;
-				00026145  8CD8              mov ax,ds		;
-				00026147  050010            add ax,0x1000	;
-				0002614A  8ED8              mov ds,ax		;
-			0002614C  0BFF              or di,di		; Move the extra segment 64kb ahead if DI equals zero.
-			0002614E  75C7              jnz 0x6117		;
-			00026150  8CC0              mov ax,es		;
-			00026152  050010            add ax,0x1000	;
-			00026155  8EC0              mov es,ax		;
-		00026157  EBBE              jmp short 0x6117	; Loop.
-	00026159  5E                pop si
-	0002615A  5F                pop di
-	0002615B  1F                pop ds
-0002615C  8B4606            mov ax,[bp+0x6]
-0002615F  8B5608            mov dx,[bp+0x8]
-00026162  5D                pop bp
-00026163  CB                retf
-
 00026164  E9D1F9            jmp 0x5b38
-00026167  00558B            add [di-0x75],dl
-0002616A  EC                in al,dx
+
+00026168  55                push bp
+00026169  8BEC              mov bp,sp
 0002616B  83EC06            sub sp,byte +0x6
 0002616E  56                push si
 0002616F  A19856            mov ax,[0x5698]
@@ -60125,15 +60150,15 @@
 00026176  8946FA            mov [bp-0x6],ax
 00026179  8956FC            mov [bp-0x4],dx
 0002617C  0BC2              or ax,dx
-0002617E  7476              jz 0x61f6
+0002617E  7476              jz 0x61f6				; return.
 00026180  8B4606            mov ax,[bp+0x6]
 00026183  0B4608            or ax,[bp+0x8]
-00026186  746E              jz 0x61f6
+00026186  746E              jz 0x61f6				; return.
 00026188  FF7608            push word [bp+0x8]
 0002618B  FF7606            push word [bp+0x6]
 0002618E  90                nop
 0002618F  0E                push cs
-00026190  E88DF9            call 0x5b20		; strlen()
+00026190  E88DF9            call 0x5b20				; strlen()
 00026193  83C404            add sp,byte +0x4
 00026196  8BF0              mov si,ax
 00026198  EB06              jmp short 0x61a0
@@ -60143,15 +60168,15 @@
 000261A0  C45EFA            les bx,[bp-0x6]
 000261A3  268B07            mov ax,[es:bx]
 000261A6  260B4702          or ax,[es:bx+0x2]
-000261AA  744A              jz 0x61f6
+000261AA  744A              jz 0x61f6				; return.
 000261AC  26FF7702          push word [es:bx+0x2]
 000261B0  26FF37            push word [es:bx]
 000261B3  90                nop
 000261B4  0E                push cs
-000261B5  E868F9            call 0x5b20		; strlen()
+000261B5  E868F9            call 0x5b20				; strlen()
 000261B8  83C404            add sp,byte +0x4
 000261BB  3BC6              cmp ax,si
-000261BD  7EDD              jng 0x619c
+000261BD  7EDD              jle 0x619c
 000261BF  C45EFA            les bx,[bp-0x6]
 000261C2  26C41F            les bx,[es:bx]
 000261C5  2680383D          cmp byte [es:bx+si],0x3d
@@ -60164,7 +60189,7 @@
 000261D9  26FF37            push word [es:bx]
 000261DC  90                nop
 000261DD  0E                push cs
-000261DE  E81D00            call 0x61fe			; strcmp() ???
+000261DE  E81D00            call 0x61fe				; strncmp()
 000261E1  83C40A            add sp,byte +0xa
 000261E4  0BC0              or ax,ax
 000261E6  75B4              jnz 0x619c
@@ -60174,6 +60199,7 @@
 000261F1  8CC2              mov dx,es
 000261F3  EB04              jmp short 0x61f9
 000261F5  90                nop
+; Exit:
 000261F6  2BC0              sub ax,ax
 000261F8  99                cwd
 000261F9  5E                pop si
@@ -60181,36 +60207,4 @@
 000261FC  5D                pop bp
 000261FD  CB                retf
 
-; Most likely the strncmp() function.
-000261FE  55                push bp
-000261FF  8BEC              mov bp,sp
-00026201  57                push di
-00026202  56                push si
-00026203  1E                push ds
-00026204  8B4E0E            mov cx,[bp+0xe]		; Number of bytes to scan for null byte.
-00026207  E327              jcxz 0x6230			; Return if zero bytes.
-	00026209  8BD9              mov bx,cx			; Copy the number of bytes to scan.
-	0002620B  C47E06            les di,[bp+0x6]		; Store the scanning offset.
-	0002620E  8BF7              mov si,di			; Scan for null byte.
-	00026210  33C0              xor ax,ax			;
-	00026212  F2AE              repne scasb			;
-	00026214  F7D9              neg cx			; Subtract the null byte's position from the number of bytes scanned.
-	00026216  03CB              add cx,bx			; 
-	00026218  8BFE              mov di,si			; Restore the scanning offset.
-	0002621A  C5760A            lds si,[bp+0xa]		; Compare previously scanned data to other data.
-	0002621D  F3A6              repe cmpsb			;
-	0002621F  8A44FF            mov al,[si-0x1]		; AL = the last byte at the source data.
-	00026222  33C9              xor cx,cx			; Zero cx.
-	00026224  263A45FF          cmp al,[es:di-0x1]		; CX will be 0xFFFF if the last source data byte has a value greater than destination data's last byte.
-	00026228  7704              ja 0x622e			;
-		0002622A  7404              jz 0x6230			; CX will be 0x0000 if the last source data byte has the same value as the destination data's last byte.
-			0002622C  49                dec cx			; CX will be 0xFFFE if the last source data byte has a value less than destination data's last byte.
-			0002622D  49                dec cx			;
-			0002622E  F7D1              not cx			;
-	00026230  8BC1              mov ax,cx			; Return the value of CX.
-00026232  1F                pop ds
-00026233  5E                pop si
-00026234  5F                pop di
-00026235  8BE5              mov sp,bp
-00026237  5D                pop bp
-00026238  CB                retf
+
