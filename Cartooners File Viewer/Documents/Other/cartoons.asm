@@ -18,7 +18,6 @@
 00000052  8D46EE            lea ax,[bp-0x12]
 00000055  16                push ss
 00000056  50                push ax
-00000057  90                nop
 00000058  0E                push cs
 00000059  E823B0            call 0xb07f
 0000005C  52                push dx
@@ -134,23 +133,19 @@
 0000017B  741A              jz 0x197
 0000017D  2BC0              sub ax,ax
 0000017F  50                push ax
-00000180  90                nop
 00000181  0E                push cs
 00000182  E800C8            call 0xc985
 00000185  B80100            mov ax,0x1
 00000188  50                push ax
-00000189  90                nop
 0000018A  0E                push cs
 0000018B  E85180            call 0x81df
 0000018E  B80100            mov ax,0x1
 00000191  50                push ax
-00000192  90                nop
 00000193  0E                push cs
 00000194  E8EEC7            call 0xc985
 00000197  A0A8CF            mov al,[0xcfa8]
 0000019A  2AE4              sub ah,ah
 0000019C  50                push ax
-0000019D  90                nop
 0000019E  0E                push cs
 0000019F  E80DB1            call 0xb2af
 000001A2  C706C0800000      mov word [0x80c0],0x0
@@ -158,10 +153,8 @@
 000001AB  1E                push ds
 000001AC  50                push ax
 000001AD  9A420BF50F        call 0xff5:0xb42
-000001B2  90                nop
 000001B3  0E                push cs
 000001B4  E8BBCC            call 0xce72
-000001B7  90                nop
 000001B8  0E                push cs
 000001B9  E87E35            call 0x373a
 000001BC  9AC6A0F50F        call 0xff5:0xa0c6
@@ -179,7 +172,6 @@
 000001ED  8D46EC            lea ax,[bp-0x14]
 000001F0  16                push ss
 000001F1  50                push ax
-000001F2  90                nop
 000001F3  0E                push cs
 000001F4  E888AE            call 0xb07f
 000001F7  52                push dx
@@ -216,7 +208,6 @@
 00000247  8D46DA            lea ax,[bp-0x26]
 0000024A  16                push ss
 0000024B  50                push ax
-0000024C  90                nop
 0000024D  0E                push cs
 0000024E  E82EAE            call 0xb07f
 00000251  52                push dx
@@ -229,20 +220,16 @@
 00000262  8946D8            mov [bp-0x28],ax
 00000265  50                push ax
 00000266  FF36B480          push word [0x80b4]
-0000026A  90                nop
 0000026B  0E                push cs
 0000026C  E844C3            call 0xc5b3
-0000026F  90                nop
 00000270  0E                push cs
 00000271  E85BAE            call 0xb0cf
 00000274  2BC0              sub ax,ax
 00000276  50                push ax
 00000277  FF76D8            push word [bp-0x28]
-0000027A  90                nop
 0000027B  0E                push cs
 0000027C  E895D1            call 0xd414
 0000027F  9A3A71F50F        call 0xff5:0x713a
-00000284  90                nop
 00000285  0E                push cs
 00000286  E846AE            call 0xb0cf
 00000289  833EC0A300        cmp word [0xa3c0],byte +0x0
@@ -256,7 +243,6 @@
 0000029F  FF36B280          push word [0x80b2]
 000002A3  FF36AC80          push word [0x80ac]
 000002A7  FF36AA80          push word [0x80aa]
-000002AB  90                nop
 000002AC  0E                push cs
 000002AD  E83635            call 0x37e6
 000002B0  EBCD              jmp short 0x27f
@@ -272,7 +258,6 @@
 000002CC  EB02              jmp short 0x2d0
 000002CE  2BC0              sub ax,ax
 000002D0  50                push ax
-000002D1  90                nop
 000002D2  0E                push cs
 000002D3  E84343            call 0x4619
 000002D6  EBA7              jmp short 0x27f
@@ -281,11 +266,9 @@
 000002DF  A0A680            mov al,[0x80a6]
 000002E2  2AE4              sub ah,ah
 000002E4  50                push ax
-000002E5  90                nop
 000002E6  0E                push cs
 000002E7  E89945            call 0x4883
 000002EA  EB93              jmp short 0x27f
-000002EC  90                nop
 000002ED  0E                push cs
 000002EE  E832CB            call 0xce23
 000002F1  8BE5              mov sp,bp
@@ -335,18 +318,18 @@
 00000355  57                push di
 00000356  56                push si
 00000357  BE4E61            mov si,0x614e
-0000035A  C47E08            les di,[bp+0x8]
+0000035A  C47E08            les di,[bp+0x8]			; ES:DI = string.
 ; CX is set to the position of a null byte inside string at ES:DI.
 00000366  2BF9              sub di,cx
 00000368  87FE              xchg di,si
 0000036A  8CDA              mov dx,ds
-0000036C  06                push es
-0000036D  8EC2              mov es,dx
-0000036F  1F                pop ds
-00000370  D1E9              shr cx,1
-00000372  F2A5              repne movsw
-00000374  13C9              adc cx,cx
-00000376  F2A4              repne movsb
+0000036C  06                push es				; Save ES.
+0000036D  8EC2              mov es,dx				; ES = DS
+0000036F  1F                pop ds				;
+00000370  D1E9              shr cx,1				; CX \= 2.
+00000372  F2A5              repne movsw				; Copy data at 2 bytes per iteration.
+00000374  13C9              adc cx,cx				; Copy the remaining byte if the number bytes to copy is an odd number.
+00000376  F2A4              repne movsb				;
 00000378  8EDA              mov ds,dx
 0000037A  837E0600          cmp word [bp+0x6],byte +0x0
 0000037E  7503              jnz 0x383
@@ -567,13 +550,11 @@
 000005BA  6D                insw
 000005BB  059005            add ax,0x590
 000005BE  7805              js 0x5c5
-000005C0  90                nop
 000005C1  057805            add ax,0x578
 000005C4  7805              js 0x5cb
 000005C6  7805              js 0x5cd
 000005C8  830590            add word [di],byte -0x70
 000005CB  059005            add ax,0x590
-000005CE  90                nop
 000005CF  055E5D            add ax,0x5d5e
 000005D2  CB                retf
 
@@ -653,17 +634,16 @@
 000006A6  8BE5              mov sp,bp
 000006A8  5D                pop bp
 000006A9  C20400            ret 0x4
+
 000006AC  33C0              xor ax,ax
 000006AE  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 000006B3  833EA06100        cmp word [0x61a0],byte +0x0
 000006B8  751A              jnz 0x6d4
 000006BA  C706A0610100      mov word [0x61a0],0x1
-000006C0  90                nop
 000006C1  0E                push cs
 000006C2  E84CC8            call 0xcf11
 000006C5  9A2C6DF50F        call 0xff5:0x6d2c
 000006CA  9A3A0BF50F        call 0xff5:0xb3a
-000006CF  90                nop
 000006D0  0E                push cs
 000006D1  E8EEA6            call 0xadc2
 000006D4  CB                retf
@@ -692,11 +672,10 @@
 0000071A  55                push bp
 0000071B  8BEC              mov bp,sp
 0000071D  B81800            mov ax,0x18
-00000720  9A1C3E821F        call 0x1f82:0x3e1c
+00000720  9A1C3E821F        call 0x1f82:0x3e1c			; Check for _IOSTRG.
 00000725  8D46EE            lea ax,[bp-0x12]
 00000728  16                push ss
 00000729  50                push ax
-0000072A  90                nop
 0000072B  0E                push cs
 0000072C  E850A9            call 0xb07f
 0000072F  52                push dx
@@ -707,7 +686,6 @@
 0000073B  7411              jz 0x74e
 0000073D  9A3533F50F        call 0xff5:0x3335
 00000742  9AEA52F50F        call 0xff5:0x52ea
-00000747  90                nop
 00000748  0E                push cs
 00000749  E8A0A9            call 0xb0ec
 0000074C  EB5B              jmp short 0x7a9
@@ -733,14 +711,12 @@
 00000789  0E                push cs
 0000078A  E85709            call 0x10e4
 0000078D  FF76E8            push word [bp-0x18]
-00000790  90                nop
 00000791  0E                push cs
 00000792  E8346F            call 0x76c9
 00000795  8346E826          add word [bp-0x18],byte +0x26
 00000799  8346EA0E          add word [bp-0x16],byte +0xe
 0000079D  817EE8A480        cmp word [bp-0x18],0x80a4
 000007A2  72D4              jc 0x778
-000007A4  90                nop
 000007A5  0E                push cs
 000007A6  E826A9            call 0xb0cf
 000007A9  8BE5              mov sp,bp
@@ -750,7 +726,7 @@
 000007AD  55                push bp
 000007AE  8BEC              mov bp,sp
 000007B0  B81200            mov ax,0x12
-000007B3  9A1C3E821F        call 0x1f82:0x3e1c
+000007B3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000007B8  B84600            mov ax,0x46
 000007BB  50                push ax
 000007BC  B84402            mov ax,0x244
@@ -781,14 +757,12 @@
 000007FD  2BC0              sub ax,ax
 000007FF  89474A            mov [bx+0x4a],ax
 00000802  894748            mov [bx+0x48],ax
-00000805  90                nop
 00000806  0E                push cs
 00000807  E8E2A8            call 0xb0ec
 0000080A  EB79              jmp short 0x885
 0000080C  8D46EE            lea ax,[bp-0x12]
 0000080F  16                push ss
 00000810  50                push ax
-00000811  90                nop
 00000812  0E                push cs
 00000813  E869A8            call 0xb07f
 00000816  52                push dx
@@ -804,13 +778,11 @@
 0000082D  50                push ax
 0000082E  B8C000            mov ax,0xc0
 00000831  50                push ax
-00000832  90                nop
 00000833  0E                push cs
 00000834  E8D2A9            call 0xb209
 00000837  8B5E06            mov bx,[bp+0x6]
 0000083A  894748            mov [bx+0x48],ax
 0000083D  89574A            mov [bx+0x4a],dx
-00000840  90                nop
 00000841  0E                push cs
 00000842  E88AA8            call 0xb0cf
 00000845  B8A325            mov ax,0x25a3
@@ -840,7 +812,7 @@
 0000088B  55                push bp
 0000088C  8BEC              mov bp,sp
 0000088E  33C0              xor ax,ax
-00000890  9A1C3E821F        call 0x1f82:0x3e1c
+00000890  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000895  56                push si
 00000896  B80E00            mov ax,0xe
 00000899  F76E06            imul word [bp+0x6]
@@ -871,7 +843,7 @@
 000008CB  55                push bp
 000008CC  8BEC              mov bp,sp
 000008CE  B80200            mov ax,0x2
-000008D1  9A1C3E821F        call 0x1f82:0x3e1c
+000008D1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000008D6  C45E12            les bx,[bp+0x12]
 000008D9  268B4708          mov ax,[es:bx+0x8]
 000008DD  26F76F0A          imul word [es:bx+0xa]
@@ -886,12 +858,10 @@
 000008F9  C45E12            les bx,[bp+0x12]
 000008FC  26FF7702          push word [es:bx+0x2]
 00000900  26FF37            push word [es:bx]
-00000903  90                nop
 00000904  0E                push cs
 00000905  E8B8AB            call 0xb4c0
 00000908  833EC08000        cmp word [0x80c0],byte +0x0
 0000090D  742F              jz 0x93e
-0000090F  90                nop
 00000910  0E                push cs
 00000911  E8D8A7            call 0xb0ec
 00000914  EB28              jmp short 0x93e
@@ -905,7 +875,6 @@
 0000092A  50                push ax
 0000092B  B88000            mov ax,0x80
 0000092E  50                push ax
-0000092F  90                nop
 00000930  0E                push cs
 00000931  E8D5A8            call 0xb209
 00000934  C45E12            les bx,[bp+0x12]
@@ -930,7 +899,7 @@
 00000963  55                push bp
 00000964  8BEC              mov bp,sp
 00000966  B82200            mov ax,0x22
-00000969  9A1C3E821F        call 0x1f82:0x3e1c
+00000969  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000096E  57                push di
 0000096F  C45E12            les bx,[bp+0x12]
 00000972  268B4708          mov ax,[es:bx+0x8]
@@ -938,7 +907,6 @@
 0000097A  8946F0            mov [bp-0x10],ax
 0000097D  26FF7702          push word [es:bx+0x2]
 00000981  26FF37            push word [es:bx]
-00000984  90                nop
 00000985  0E                push cs
 00000986  E8BEA6            call 0xb047
 00000989  C45E12            les bx,[bp+0x12]
@@ -964,7 +932,6 @@
 000009C7  8D46DE            lea ax,[bp-0x22]
 000009CA  16                push ss
 000009CB  50                push ax
-000009CC  90                nop
 000009CD  0E                push cs
 000009CE  E8AEA6            call 0xb07f
 000009D1  52                push dx
@@ -981,23 +948,19 @@
 000009EA  2BC0              sub ax,ax
 000009EC  50                push ax
 000009ED  E86300            call 0xa53
-000009F0  90                nop
 000009F1  0E                push cs
 000009F2  E8DAA6            call 0xb0cf
 000009F5  EB25              jmp short 0xa1c
 000009F7  C45E12            les bx,[bp+0x12]
 000009FA  26FF7702          push word [es:bx+0x2]
 000009FE  26FF37            push word [es:bx]
-00000A01  90                nop
 00000A02  0E                push cs
 00000A03  E85DA6            call 0xb063
 00000A06  C45E12            les bx,[bp+0x12]
 00000A09  26FF7702          push word [es:bx+0x2]
 00000A0D  26FF37            push word [es:bx]
-00000A10  90                nop
 00000A11  0E                push cs
 00000A12  E836A9            call 0xb34b
-00000A15  90                nop
 00000A16  0E                push cs
 00000A17  E8D2A6            call 0xb0ec
 00000A1A  EB30              jmp short 0xa4c
@@ -1014,7 +977,6 @@
 00000A3D  C45E12            les bx,[bp+0x12]
 00000A40  26FF7702          push word [es:bx+0x2]
 00000A44  26FF37            push word [es:bx]
-00000A47  90                nop
 00000A48  0E                push cs
 00000A49  E817A6            call 0xb063
 00000A4C  5F                pop di
@@ -1025,7 +987,7 @@
 00000A53  55                push bp
 00000A54  8BEC              mov bp,sp
 00000A56  B81800            mov ax,0x18
-00000A59  9A1C3E821F        call 0x1f82:0x3e1c
+00000A59  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000A5E  57                push di
 00000A5F  56                push si
 00000A60  C45E0A            les bx,[bp+0xa]
@@ -1051,7 +1013,6 @@
 00000A96  50                push ax
 00000A97  B88100            mov ax,0x81
 00000A9A  50                push ax
-00000A9B  90                nop
 00000A9C  0E                push cs
 00000A9D  E869A7            call 0xb209
 00000AA0  8946FA            mov [bp-0x6],ax
@@ -1229,7 +1190,6 @@
 00000C7D  75B8              jnz 0xc37
 00000C7F  FF76FC            push word [bp-0x4]
 00000C82  FF76FA            push word [bp-0x6]
-00000C85  90                nop
 00000C86  0E                push cs
 00000C87  E823A2            call 0xaead
 00000C8A  EB08              jmp short 0xc94
@@ -1239,7 +1199,6 @@
 00000C94  C45E0A            les bx,[bp+0xa]
 00000C97  26FF771A          push word [es:bx+0x1a]
 00000C9B  26FF7718          push word [es:bx+0x18]
-00000C9F  90                nop
 00000CA0  0E                push cs
 00000CA1  E8A3A3            call 0xb047
 00000CA4  FF760C            push word [bp+0xc]
@@ -1247,19 +1206,16 @@
 00000CAA  FF7604            push word [bp+0x4]
 00000CAD  FF7608            push word [bp+0x8]
 00000CB0  FF7606            push word [bp+0x6]
-00000CB3  90                nop
 00000CB4  0E                push cs
 00000CB5  E89667            call 0x744e
 00000CB8  8946F2            mov [bp-0xe],ax
 00000CBB  C45E0A            les bx,[bp+0xa]
 00000CBE  26FF771A          push word [es:bx+0x1a]
 00000CC2  26FF7718          push word [es:bx+0x18]
-00000CC6  90                nop
 00000CC7  0E                push cs
 00000CC8  E898A3            call 0xb063
 00000CCB  837EF200          cmp word [bp-0xe],byte +0x0
 00000CCF  7405              jz 0xcd6
-00000CD1  90                nop
 00000CD2  0E                push cs
 00000CD3  E816A4            call 0xb0ec
 00000CD6  5E                pop si
@@ -1271,7 +1227,7 @@
 00000CDE  55                push bp
 00000CDF  8BEC              mov bp,sp
 00000CE1  33C0              xor ax,ax
-00000CE3  9A1C3E821F        call 0x1f82:0x3e1c
+00000CE3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000CE8  837E0A00          cmp word [bp+0xa],byte +0x0
 00000CEC  751C              jnz 0xd0a
 00000CEE  837E0800          cmp word [bp+0x8],byte +0x0
@@ -1303,7 +1259,7 @@
 00000D35  55                push bp
 00000D36  8BEC              mov bp,sp
 00000D38  B80800            mov ax,0x8
-00000D3B  9A1C3E821F        call 0x1f82:0x3e1c
+00000D3B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000D40  57                push di
 00000D41  8B460C            mov ax,[bp+0xc]
 00000D44  2B460E            sub ax,[bp+0xe]
@@ -1375,7 +1331,7 @@
 00000DF6  55                push bp
 00000DF7  8BEC              mov bp,sp
 00000DF9  B83C00            mov ax,0x3c
-00000DFC  9A1C3E821F        call 0x1f82:0x3e1c
+00000DFC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000E01  57                push di
 00000E02  56                push si
 00000E03  C45E04            les bx,[bp+0x4]
@@ -1542,7 +1498,7 @@
 00000FD7  55                push bp
 00000FD8  8BEC              mov bp,sp
 00000FDA  B80200            mov ax,0x2
-00000FDD  9A1C3E821F        call 0x1f82:0x3e1c
+00000FDD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00000FE2  C746FEBC77        mov word [bp-0x2],0x77bc
 00000FE7  1E                push ds
 00000FE8  FF76FE            push word [bp-0x2]
@@ -1557,7 +1513,7 @@
 00000FFD  55                push bp
 00000FFE  8BEC              mov bp,sp
 00001000  B81200            mov ax,0x12
-00001003  9A1C3E821F        call 0x1f82:0x3e1c
+00001003  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001008  C45E04            les bx,[bp+0x4]
 0000100B  26C7070300        mov word [es:bx],0x3
 00001010  C45E04            les bx,[bp+0x4]
@@ -1595,13 +1551,11 @@
 0000107B  740D              jz 0x108a
 0000107D  26FF771A          push word [es:bx+0x1a]
 00001081  26FF7718          push word [es:bx+0x18]
-00001085  90                nop
 00001086  0E                push cs
 00001087  E8239E            call 0xaead
 0000108A  8D46EE            lea ax,[bp-0x12]
 0000108D  16                push ss
 0000108E  50                push ax
-0000108F  90                nop
 00001090  0E                push cs
 00001091  E8EB9F            call 0xb07f
 00001094  52                push dx
@@ -1617,13 +1571,11 @@
 000010AA  50                push ax
 000010AB  2BC0              sub ax,ax
 000010AD  50                push ax
-000010AE  90                nop
 000010AF  0E                push cs
 000010B0  E856A1            call 0xb209
 000010B3  C45E04            les bx,[bp+0x4]
 000010B6  26894718          mov [es:bx+0x18],ax
 000010BA  2689571A          mov [es:bx+0x1a],dx
-000010BE  90                nop
 000010BF  0E                push cs
 000010C0  E80CA0            call 0xb0cf
 000010C3  EB10              jmp short 0x10d5
@@ -1631,7 +1583,6 @@
 000010C9  FF36701B          push word [0x1b70]
 000010CD  2BC0              sub ax,ax
 000010CF  50                push ax
-000010D0  90                nop
 000010D1  0E                push cs
 000010D2  E875F2            call 0x34a
 000010D5  C45E04            les bx,[bp+0x4]
@@ -1643,7 +1594,7 @@
 000010E4  55                push bp
 000010E5  8BEC              mov bp,sp
 000010E7  33C0              xor ax,ax
-000010E9  9A1C3E821F        call 0x1f82:0x3e1c
+000010E9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000010EE  C45E0A            les bx,[bp+0xa]
 000010F1  268B470A          mov ax,[es:bx+0xa]
 000010F5  262B4706          sub ax,[es:bx+0x6]
@@ -1666,7 +1617,7 @@
 00001126  55                push bp
 00001127  8BEC              mov bp,sp
 00001129  33C0              xor ax,ax
-0000112B  9A1C3E821F        call 0x1f82:0x3e1c
+0000112B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001130  C45E06            les bx,[bp+0x6]
 00001133  268B07            mov ax,[es:bx]
 00001136  B103              mov cl,0x3
@@ -1699,7 +1650,7 @@
 0000116E  55                push bp
 0000116F  8BEC              mov bp,sp
 00001171  B85200            mov ax,0x52
-00001174  9A1C3E821F        call 0x1f82:0x3e1c
+00001174  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001179  57                push di
 0000117A  56                push si
 0000117B  C746AE0000        mov word [bp-0x52],0x0
@@ -1732,7 +1683,6 @@
 000011C8  75CB              jnz 0x1195
 000011CA  FF76B4            push word [bp-0x4c]
 000011CD  FF76B2            push word [bp-0x4e]
-000011D0  90                nop
 000011D1  0E                push cs
 000011D2  E88E9E            call 0xb063
 000011D5  FF46BA            inc word [bp-0x46]
@@ -1750,7 +1700,6 @@
 000011F8  8956B4            mov [bp-0x4c],dx
 000011FB  52                push dx
 000011FC  50                push ax
-000011FD  90                nop
 000011FE  0E                push cs
 000011FF  E8459E            call 0xb047
 00001202  C45EB2            les bx,[bp-0x4e]
@@ -1780,7 +1729,6 @@
 0000124E  75CB              jnz 0x121b
 00001250  FF76B4            push word [bp-0x4c]
 00001253  FF76B2            push word [bp-0x4e]
-00001256  90                nop
 00001257  0E                push cs
 00001258  E8089E            call 0xb063
 0000125B  FF46BA            inc word [bp-0x46]
@@ -1799,7 +1747,6 @@
 00001281  8956B4            mov [bp-0x4c],dx
 00001284  52                push dx
 00001285  50                push ax
-00001286  90                nop
 00001287  0E                push cs
 00001288  E8BC9D            call 0xb047
 0000128B  C45EB2            les bx,[bp-0x4e]
@@ -1831,7 +1778,6 @@
 000012DE  7418              jz 0x12f8
 000012E0  26FF7702          push word [es:bx+0x2]
 000012E4  26FF37            push word [es:bx]
-000012E7  90                nop
 000012E8  0E                push cs
 000012E9  E8C19B            call 0xaead
 000012EC  C45EB6            les bx,[bp-0x4a]
@@ -1848,7 +1794,6 @@
 00001309  0E                push cs
 0000130A  E8D7FD            call 0x10e4
 0000130D  FF76B0            push word [bp-0x50]
-00001310  90                nop
 00001311  0E                push cs
 00001312  E8B463            call 0x76c9
 00001315  8346B026          add word [bp-0x50],byte +0x26
@@ -1864,11 +1809,10 @@
 00001331  5D                pop bp
 00001332  CB                retf
 
-00001333  90                nop
 00001334  55                push bp
 00001335  8BEC              mov bp,sp
 00001337  B83600            mov ax,0x36
-0000133A  9A1C3E821F        call 0x1f82:0x3e1c
+0000133A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000133F  8B4606            mov ax,[bp+0x6]
 00001342  B108              mov cl,0x8
 00001344  D3E8              shr ax,cl
@@ -2169,10 +2113,9 @@
 00001668  55                push bp
 00001669  8BEC              mov bp,sp
 0000166B  B80C00            mov ax,0xc
-0000166E  9A1C3E821F        call 0x1f82:0x3e1c
+0000166E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001673  FF7608            push word [bp+0x8]
 00001676  FF7606            push word [bp+0x6]
-00001679  90                nop
 0000167A  0E                push cs
 0000167B  E8C999            call 0xb047
 0000167E  C45E06            les bx,[bp+0x6]
@@ -2187,13 +2130,11 @@
 0000169C  8956FA            mov [bp-0x6],dx
 0000169F  FF7608            push word [bp+0x8]
 000016A2  FF7606            push word [bp+0x6]
-000016A5  90                nop
 000016A6  0E                push cs
 000016A7  E8B999            call 0xb063
 000016AA  EB27              jmp short 0x16d3
 000016AC  FF76F6            push word [bp-0xa]
 000016AF  FF76F4            push word [bp-0xc]
-000016B2  90                nop
 000016B3  0E                push cs
 000016B4  E89099            call 0xb047
 000016B7  C45EF4            les bx,[bp-0xc]
@@ -2219,11 +2160,10 @@
 000016EF  55                push bp
 000016F0  8BEC              mov bp,sp
 000016F2  B84200            mov ax,0x42
-000016F5  9A1C3E821F        call 0x1f82:0x3e1c
+000016F5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000016FA  57                push di
 000016FB  FF7606            push word [bp+0x6]
 000016FE  FF7604            push word [bp+0x4]
-00001701  90                nop
 00001702  0E                push cs
 00001703  E84199            call 0xb047
 00001706  C45E04            les bx,[bp+0x4]
@@ -2544,7 +2484,6 @@
 00001A34  83C40A            add sp,byte +0xa
 00001A37  FF7606            push word [bp+0x6]
 00001A3A  FF7604            push word [bp+0x4]
-00001A3D  90                nop
 00001A3E  0E                push cs
 00001A3F  E82196            call 0xb063
 00001A42  C706C0800000      mov word [0x80c0],0x0
@@ -2556,10 +2495,9 @@
 00001A4F  55                push bp
 00001A50  8BEC              mov bp,sp
 00001A52  B81000            mov ax,0x10
-00001A55  9A1C3E821F        call 0x1f82:0x3e1c
+00001A55  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001A5A  FF7606            push word [bp+0x6]
 00001A5D  FF7604            push word [bp+0x4]
-00001A60  90                nop
 00001A61  0E                push cs
 00001A62  E8E295            call 0xb047
 00001A65  C45E04            les bx,[bp+0x4]
@@ -2590,7 +2528,6 @@
 00001AA0  26804F1080        or byte [es:bx+0x10],0x80
 00001AA5  FF7606            push word [bp+0x6]
 00001AA8  FF7604            push word [bp+0x4]
-00001AAB  90                nop
 00001AAC  0E                push cs
 00001AAD  E8B395            call 0xb063
 00001AB0  C706C0800000      mov word [0x80c0],0x0
@@ -2601,10 +2538,9 @@
 00001ABC  55                push bp
 00001ABD  8BEC              mov bp,sp
 00001ABF  B81000            mov ax,0x10
-00001AC2  9A1C3E821F        call 0x1f82:0x3e1c
+00001AC2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001AC7  FF7608            push word [bp+0x8]
 00001ACA  FF7606            push word [bp+0x6]
-00001ACD  90                nop
 00001ACE  0E                push cs
 00001ACF  E87595            call 0xb047
 00001AD2  C45E06            les bx,[bp+0x6]
@@ -2623,14 +2559,12 @@
 00001AFD  8956F6            mov [bp-0xa],dx
 00001B00  FF7608            push word [bp+0x8]
 00001B03  FF7606            push word [bp+0x6]
-00001B06  90                nop
 00001B07  0E                push cs
 00001B08  E85895            call 0xb063
 00001B0B  C746F80000        mov word [bp-0x8],0x0
 00001B10  EB4A              jmp short 0x1b5c
 00001B12  FF76F2            push word [bp-0xe]
 00001B15  FF76F0            push word [bp-0x10]
-00001B18  90                nop
 00001B19  0E                push cs
 00001B1A  E82A95            call 0xb047
 00001B1D  C45EF0            les bx,[bp-0x10]
@@ -2669,10 +2603,9 @@
 00001B7B  55                push bp
 00001B7C  8BEC              mov bp,sp
 00001B7E  B80400            mov ax,0x4
-00001B81  9A1C3E821F        call 0x1f82:0x3e1c
+00001B81  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001B86  FF7608            push word [bp+0x8]
 00001B89  FF7606            push word [bp+0x6]
-00001B8C  90                nop
 00001B8D  0E                push cs
 00001B8E  E8B694            call 0xb047
 00001B91  C45E06            les bx,[bp+0x6]
@@ -2683,7 +2616,6 @@
 00001BA2  8956FE            mov [bp-0x2],dx
 00001BA5  FF7608            push word [bp+0x8]
 00001BA8  FF7606            push word [bp+0x6]
-00001BAB  90                nop
 00001BAC  0E                push cs
 00001BAD  E8B394            call 0xb063
 00001BB0  C706C0800000      mov word [0x80c0],0x0
@@ -2696,10 +2628,9 @@
 00001BC2  55                push bp
 00001BC3  8BEC              mov bp,sp
 00001BC5  B80400            mov ax,0x4
-00001BC8  9A1C3E821F        call 0x1f82:0x3e1c
+00001BC8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001BCD  FF7608            push word [bp+0x8]
 00001BD0  FF7606            push word [bp+0x6]
-00001BD3  90                nop
 00001BD4  0E                push cs
 00001BD5  E86F94            call 0xb047
 00001BD8  C45E06            les bx,[bp+0x6]
@@ -2710,7 +2641,6 @@
 00001BE8  8956FE            mov [bp-0x2],dx
 00001BEB  06                push es
 00001BEC  53                push bx
-00001BED  90                nop
 00001BEE  0E                push cs
 00001BEF  E87194            call 0xb063
 00001BF2  C706C0800000      mov word [0x80c0],0x0
@@ -2723,10 +2653,9 @@
 00001C04  55                push bp
 00001C05  8BEC              mov bp,sp
 00001C07  B80200            mov ax,0x2
-00001C0A  9A1C3E821F        call 0x1f82:0x3e1c
+00001C0A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001C0F  FF7608            push word [bp+0x8]
 00001C12  FF7606            push word [bp+0x6]
-00001C15  90                nop
 00001C16  0E                push cs
 00001C17  E82D94            call 0xb047
 00001C1A  C45E06            les bx,[bp+0x6]
@@ -2735,7 +2664,6 @@
 00001C24  8946FE            mov [bp-0x2],ax
 00001C27  FF7608            push word [bp+0x8]
 00001C2A  FF7606            push word [bp+0x6]
-00001C2D  90                nop
 00001C2E  0E                push cs
 00001C2F  E83194            call 0xb063
 00001C32  C706C0800000      mov word [0x80c0],0x0
@@ -2747,7 +2675,7 @@
 00001C41  55                push bp
 00001C42  8BEC              mov bp,sp
 00001C44  33C0              xor ax,ax
-00001C46  9A1C3E821F        call 0x1f82:0x3e1c
+00001C46  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001C4B  FF7608            push word [bp+0x8]
 00001C4E  FF7606            push word [bp+0x6]
 00001C51  E8FBFD            call 0x1a4f
@@ -2757,10 +2685,9 @@
 00001C58  55                push bp
 00001C59  8BEC              mov bp,sp
 00001C5B  B80600            mov ax,0x6
-00001C5E  9A1C3E821F        call 0x1f82:0x3e1c
+00001C5E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001C63  FF7608            push word [bp+0x8]
 00001C66  FF7606            push word [bp+0x6]
-00001C69  90                nop
 00001C6A  0E                push cs
 00001C6B  E8D993            call 0xb047
 00001C6E  C45E06            les bx,[bp+0x6]
@@ -2830,7 +2757,6 @@
 00001D31  83C40A            add sp,byte +0xa
 00001D34  FF7608            push word [bp+0x8]
 00001D37  FF7606            push word [bp+0x6]
-00001D3A  90                nop
 00001D3B  0E                push cs
 00001D3C  E82493            call 0xb063
 00001D3F  C706C0800000      mov word [0x80c0],0x0
@@ -2841,10 +2767,9 @@
 00001D4B  55                push bp
 00001D4C  8BEC              mov bp,sp
 00001D4E  B81000            mov ax,0x10
-00001D51  9A1C3E821F        call 0x1f82:0x3e1c
+00001D51  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001D56  FF7608            push word [bp+0x8]
 00001D59  FF7606            push word [bp+0x6]
-00001D5C  90                nop
 00001D5D  0E                push cs
 00001D5E  E8E692            call 0xb047
 00001D61  C45E06            les bx,[bp+0x6]
@@ -2858,13 +2783,11 @@
 00001D7C  EB1E              jmp short 0x1d9c
 00001D7E  FF76F2            push word [bp-0xe]
 00001D81  FF76F0            push word [bp-0x10]
-00001D84  90                nop
 00001D85  0E                push cs
 00001D86  E8DA92            call 0xb063
 00001D89  EB0B              jmp short 0x1d96
 00001D8B  FF76F2            push word [bp-0xe]
 00001D8E  FF76F0            push word [bp-0x10]
-00001D91  90                nop
 00001D92  0E                push cs
 00001D93  E81791            call 0xaead
 00001D96  8B46F4            mov ax,[bp-0xc]
@@ -2876,7 +2799,6 @@
 00001DA6  E98000            jmp 0x1e29
 00001DA9  52                push dx
 00001DAA  FF76F0            push word [bp-0x10]
-00001DAD  90                nop
 00001DAE  0E                push cs
 00001DAF  E89592            call 0xb047
 00001DB2  C45EF0            les bx,[bp-0x10]
@@ -2924,7 +2846,6 @@
 00001E32  26894708          mov [es:bx+0x8],ax
 00001E36  FF7608            push word [bp+0x8]
 00001E39  FF7606            push word [bp+0x6]
-00001E3C  90                nop
 00001E3D  0E                push cs
 00001E3E  E82292            call 0xb063
 00001E41  C706C0800000      mov word [0x80c0],0x0
@@ -2935,11 +2856,10 @@
 00001E4D  55                push bp
 00001E4E  8BEC              mov bp,sp
 00001E50  B81A00            mov ax,0x1a
-00001E53  9A1C3E821F        call 0x1f82:0x3e1c
+00001E53  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00001E58  8D46E6            lea ax,[bp-0x1a]
 00001E5B  16                push ss
 00001E5C  50                push ax
-00001E5D  90                nop
 00001E5E  0E                push cs
 00001E5F  E81D92            call 0xb07f
 00001E62  52                push dx
@@ -2958,12 +2878,10 @@
 00001E81  50                push ax
 00001E82  B88000            mov ax,0x80
 00001E85  50                push ax
-00001E86  90                nop
 00001E87  0E                push cs
 00001E88  E87E93            call 0xb209
 00001E8B  8946F8            mov [bp-0x8],ax
 00001E8E  8956FA            mov [bp-0x6],dx
-00001E91  90                nop
 00001E92  0E                push cs
 00001E93  E83992            call 0xb0cf
 00001E96  C45EF8            les bx,[bp-0x8]
@@ -3062,7 +2980,6 @@
 00001FA5  83C40A            add sp,byte +0xa
 00001FA8  FF7620            push word [bp+0x20]
 00001FAB  FF761E            push word [bp+0x1e]
-00001FAE  90                nop
 00001FAF  0E                push cs
 00001FB0  E89490            call 0xb047
 00001FB3  C45E1E            les bx,[bp+0x1e]
@@ -3080,12 +2997,10 @@
 00001FDB  2689570A          mov [es:bx+0xa],dx
 00001FDF  FF7620            push word [bp+0x20]
 00001FE2  FF761E            push word [bp+0x1e]
-00001FE5  90                nop
 00001FE6  0E                push cs
 00001FE7  E87990            call 0xb063
 00001FEA  FF76FA            push word [bp-0x6]
 00001FED  FF76F8            push word [bp-0x8]
-00001FF0  90                nop
 00001FF1  0E                push cs
 00001FF2  E86E90            call 0xb063
 00001FF5  C706C0800000      mov word [0x80c0],0x0
@@ -3098,10 +3013,9 @@
 00002007  55                push bp
 00002008  8BEC              mov bp,sp
 0000200A  B80400            mov ax,0x4
-0000200D  9A1C3E821F        call 0x1f82:0x3e1c
+0000200D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002012  FF7608            push word [bp+0x8]
 00002015  FF7606            push word [bp+0x6]
-00002018  90                nop
 00002019  0E                push cs
 0000201A  E82A90            call 0xb047
 0000201D  C45E06            les bx,[bp+0x6]
@@ -3156,7 +3070,6 @@
 000020B7  83C40A            add sp,byte +0xa
 000020BA  FF7608            push word [bp+0x8]
 000020BD  FF7606            push word [bp+0x6]
-000020C0  90                nop
 000020C1  0E                push cs
 000020C2  E89E8F            call 0xb063
 000020C5  C706C0800000      mov word [0x80c0],0x0
@@ -3167,10 +3080,9 @@
 000020D1  55                push bp
 000020D2  8BEC              mov bp,sp
 000020D4  B81200            mov ax,0x12
-000020D7  9A1C3E821F        call 0x1f82:0x3e1c
+000020D7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000020DC  FF7608            push word [bp+0x8]
 000020DF  FF7606            push word [bp+0x6]
-000020E2  90                nop
 000020E3  0E                push cs
 000020E4  E8608F            call 0xb047
 000020E7  C45E06            les bx,[bp+0x6]
@@ -3266,7 +3178,6 @@
 000021E1  83C40A            add sp,byte +0xa
 000021E4  FF7608            push word [bp+0x8]
 000021E7  FF7606            push word [bp+0x6]
-000021EA  90                nop
 000021EB  0E                push cs
 000021EC  E8748E            call 0xb063
 000021EF  C706C0800000      mov word [0x80c0],0x0
@@ -3277,10 +3188,9 @@
 000021FB  55                push bp
 000021FC  8BEC              mov bp,sp
 000021FE  B80400            mov ax,0x4
-00002201  9A1C3E821F        call 0x1f82:0x3e1c
+00002201  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002206  FF7608            push word [bp+0x8]
 00002209  FF7606            push word [bp+0x6]
-0000220C  90                nop
 0000220D  0E                push cs
 0000220E  E8368E            call 0xb047
 00002211  C45E06            les bx,[bp+0x6]
@@ -3293,7 +3203,6 @@
 00002229  7513              jnz 0x223e
 0000222B  FF7608            push word [bp+0x8]
 0000222E  FF7606            push word [bp+0x6]
-00002231  90                nop
 00002232  0E                push cs
 00002233  E82D8E            call 0xb063
 00002236  C706C0800000      mov word [0x80c0],0x0
@@ -3306,13 +3215,13 @@
 0000224F  8BE5              mov sp,bp
 00002251  5D                pop bp
 00002252  CA0400            retf 0x4
+
 00002255  55                push bp
 00002256  8BEC              mov bp,sp
 00002258  B83200            mov ax,0x32
-0000225B  9A1C3E821F        call 0x1f82:0x3e1c
+0000225B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002260  FF7606            push word [bp+0x6]
 00002263  FF7604            push word [bp+0x4]
-00002266  90                nop
 00002267  0E                push cs
 00002268  E8DC8D            call 0xb047
 0000226B  C45E04            les bx,[bp+0x4]
@@ -3461,7 +3370,6 @@
 000023DA  C746F60000        mov word [bp-0xa],0x0
 000023DF  FF7606            push word [bp+0x6]
 000023E2  FF7604            push word [bp+0x4]
-000023E5  90                nop
 000023E6  0E                push cs
 000023E7  E8798C            call 0xb063
 000023EA  C706C0800000      mov word [0x80c0],0x0
@@ -3469,13 +3377,13 @@
 000023F3  8BE5              mov sp,bp
 000023F5  5D                pop bp
 000023F6  C20800            ret 0x8
+
 000023F9  55                push bp
 000023FA  8BEC              mov bp,sp
 000023FC  B87A00            mov ax,0x7a
-000023FF  9A1C3E821F        call 0x1f82:0x3e1c
+000023FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002404  FF7608            push word [bp+0x8]
 00002407  FF7606            push word [bp+0x6]
-0000240A  90                nop
 0000240B  0E                push cs
 0000240C  E8388C            call 0xb047
 0000240F  C45E06            les bx,[bp+0x6]
@@ -3509,7 +3417,6 @@
 00002450  8946F6            mov [bp-0xa],ax
 00002453  FF7608            push word [bp+0x8]
 00002456  FF7606            push word [bp+0x6]
-00002459  90                nop
 0000245A  0E                push cs
 0000245B  E8058C            call 0xb063
 0000245E  8B4610            mov ax,[bp+0x10]
@@ -3766,7 +3673,6 @@
 000026E5  E94403            jmp 0x2a2c
 000026E8  FF7608            push word [bp+0x8]
 000026EB  FF7606            push word [bp+0x6]
-000026EE  90                nop
 000026EF  0E                push cs
 000026F0  E85489            call 0xb047
 000026F3  C45E06            les bx,[bp+0x6]
@@ -3793,7 +3699,6 @@
 0000271B  E86A06            call 0x2d88
 0000271E  FF7608            push word [bp+0x8]
 00002721  FF7606            push word [bp+0x6]
-00002724  90                nop
 00002725  0E                push cs
 00002726  E83A89            call 0xb063
 00002729  837EDA05          cmp word [bp-0x26],byte +0x5
@@ -3918,7 +3823,6 @@
 00002866  EBF2              jmp short 0x285a
 00002868  FF7608            push word [bp+0x8]
 0000286B  FF7606            push word [bp+0x6]
-0000286E  90                nop
 0000286F  0E                push cs
 00002870  E8D487            call 0xb047
 00002873  C45E06            les bx,[bp+0x6]
@@ -3945,7 +3849,6 @@
 0000289B  E8EA04            call 0x2d88
 0000289E  FF7608            push word [bp+0x8]
 000028A1  FF7606            push word [bp+0x6]
-000028A4  90                nop
 000028A5  0E                push cs
 000028A6  E8BA87            call 0xb063
 000028A9  8B46D4            mov ax,[bp-0x2c]
@@ -3988,7 +3891,6 @@
 000028F8  8956AA            mov [bp-0x56],dx
 000028FB  FF7608            push word [bp+0x8]
 000028FE  FF7606            push word [bp+0x6]
-00002901  90                nop
 00002902  0E                push cs
 00002903  E84187            call 0xb047
 00002906  C45E06            les bx,[bp+0x6]
@@ -4073,7 +3975,6 @@
 000029E2  26C747120000      mov word [es:bx+0x12],0x0
 000029E8  FF7608            push word [bp+0x8]
 000029EB  FF7606            push word [bp+0x6]
-000029EE  90                nop
 000029EF  0E                push cs
 000029F0  E87086            call 0xb063
 000029F3  FF7608            push word [bp+0x8]
@@ -4209,7 +4110,6 @@
 00002B51  E914FD            jmp 0x2868
 00002B54  FF7608            push word [bp+0x8]
 00002B57  FF7606            push word [bp+0x6]
-00002B5A  90                nop
 00002B5B  0E                push cs
 00002B5C  E8E884            call 0xb047
 00002B5F  C45E06            les bx,[bp+0x6]
@@ -4226,7 +4126,6 @@
 00002B7C  E8D9F0            call 0x1c58
 00002B7F  FF7608            push word [bp+0x8]
 00002B82  FF7606            push word [bp+0x6]
-00002B85  90                nop
 00002B86  0E                push cs
 00002B87  E8D984            call 0xb063
 00002B8A  8B460A            mov ax,[bp+0xa]
@@ -4244,7 +4143,7 @@
 00002BA7  55                push bp
 00002BA8  8BEC              mov bp,sp
 00002BAA  33C0              xor ax,ax
-00002BAC  9A1C3E821F        call 0x1f82:0x3e1c
+00002BAC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002BB1  C606C68001        mov byte [0x80c6],0x1
 00002BB6  C606D08001        mov byte [0x80d0],0x1
 00002BBB  FF760A            push word [bp+0xa]
@@ -4288,10 +4187,11 @@
 00002C24  9A7E02F50F        call 0xff5:0x27e
 00002C29  5D                pop bp
 00002C2A  C20800            ret 0x8
+
 00002C2D  55                push bp
 00002C2E  8BEC              mov bp,sp
 00002C30  B80A00            mov ax,0xa
-00002C33  9A1C3E821F        call 0x1f82:0x3e1c
+00002C33  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002C38  FF760A            push word [bp+0xa]
 00002C3B  FF7608            push word [bp+0x8]
 00002C3E  8D46F6            lea ax,[bp-0xa]
@@ -4327,10 +4227,11 @@
 00002C9C  8BE5              mov sp,bp
 00002C9E  5D                pop bp
 00002C9F  C20800            ret 0x8
+
 00002CA2  55                push bp
 00002CA3  8BEC              mov bp,sp
 00002CA5  B80E00            mov ax,0xe
-00002CA8  9A1C3E821F        call 0x1f82:0x3e1c
+00002CA8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002CAD  57                push di
 00002CAE  C45E08            les bx,[bp+0x8]
 00002CB1  268B4706          mov ax,[es:bx+0x6]
@@ -4413,7 +4314,7 @@
 00002D88  55                push bp
 00002D89  8BEC              mov bp,sp
 00002D8B  B81200            mov ax,0x12
-00002D8E  9A1C3E821F        call 0x1f82:0x3e1c
+00002D8E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00002D93  C45E1C            les bx,[bp+0x1c]
 00002D96  268B471E          mov ax,[es:bx+0x1e]
 00002D9A  2BD2              sub dx,dx
@@ -4761,10 +4662,9 @@
 000031B4  55                push bp
 000031B5  8BEC              mov bp,sp
 000031B7  B83800            mov ax,0x38
-000031BA  9A1C3E821F        call 0x1f82:0x3e1c
+000031BA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000031BF  FF7606            push word [bp+0x6]
 000031C2  FF7604            push word [bp+0x4]
-000031C5  90                nop
 000031C6  0E                push cs
 000031C7  E87D7E            call 0xb047
 000031CA  C45E04            les bx,[bp+0x4]
@@ -4822,7 +4722,6 @@
 00003238  E8A902            call 0x34e4
 0000323B  FF7606            push word [bp+0x6]
 0000323E  FF7604            push word [bp+0x4]
-00003241  90                nop
 00003242  0E                push cs
 00003243  E81D7E            call 0xb063
 00003246  8BE5              mov sp,bp
@@ -4832,7 +4731,7 @@
 0000324C  55                push bp
 0000324D  8BEC              mov bp,sp
 0000324F  33C0              xor ax,ax
-00003251  9A1C3E821F        call 0x1f82:0x3e1c
+00003251  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00003256  56                push si
 00003257  C45E0C            les bx,[bp+0xc]
 0000325A  268B07            mov ax,[es:bx]
@@ -4871,7 +4770,7 @@
 000032B8  55                push bp
 000032B9  8BEC              mov bp,sp
 000032BB  B80400            mov ax,0x4
-000032BE  9A1C3E821F        call 0x1f82:0x3e1c
+000032BE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000032C3  C45E06            les bx,[bp+0x6]
 000032C6  268B4706          mov ax,[es:bx+0x6]
 000032CA  C45E0A            les bx,[bp+0xa]
@@ -4920,10 +4819,9 @@
 0000333C  55                push bp
 0000333D  8BEC              mov bp,sp
 0000333F  33C0              xor ax,ax
-00003341  9A1C3E821F        call 0x1f82:0x3e1c
+00003341  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00003346  FF7610            push word [bp+0x10]
 00003349  FF760E            push word [bp+0xe]
-0000334C  90                nop
 0000334D  0E                push cs
 0000334E  E8F67C            call 0xb047
 00003351  C45E0E            les bx,[bp+0xe]
@@ -4938,7 +4836,6 @@
 0000336D  268907            mov [es:bx],ax
 00003370  FF7610            push word [bp+0x10]
 00003373  FF760E            push word [bp+0xe]
-00003376  90                nop
 00003377  0E                push cs
 00003378  E8E87C            call 0xb063
 0000337B  5D                pop bp
@@ -4947,7 +4844,7 @@
 0000337F  55                push bp
 00003380  8BEC              mov bp,sp
 00003382  33C0              xor ax,ax
-00003384  9A1C3E821F        call 0x1f82:0x3e1c
+00003384  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00003389  C45E10            les bx,[bp+0x10]
 0000338C  26FF7706          push word [es:bx+0x6]
 00003390  26FF7704          push word [es:bx+0x4]
@@ -4978,7 +4875,7 @@
 000033D5  55                push bp
 000033D6  8BEC              mov bp,sp
 000033D8  33C0              xor ax,ax
-000033DA  9A1C3E821F        call 0x1f82:0x3e1c
+000033DA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000033DF  2BC0              sub ax,ax
 000033E1  50                push ax
 000033E2  9A760BF50F        call 0xff5:0xb76
@@ -4995,7 +4892,7 @@
 00003404  55                push bp
 00003405  8BEC              mov bp,sp
 00003407  33C0              xor ax,ax
-00003409  9A1C3E821F        call 0x1f82:0x3e1c
+00003409  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000340E  FF760C            push word [bp+0xc]
 00003411  FF760A            push word [bp+0xa]
 00003414  FF7610            push word [bp+0x10]
@@ -5009,6 +4906,7 @@
 0000342E  E80400            call 0x3435
 00003431  5D                pop bp
 00003432  C20E00            ret 0xe
+
 00003435  55                push bp
 00003436  8BEC              mov bp,sp
 00003438  33C0              xor ax,ax
@@ -5033,7 +4931,7 @@
 00003470  55                push bp
 00003471  8BEC              mov bp,sp
 00003473  33C0              xor ax,ax
-00003475  9A1C3E821F        call 0x1f82:0x3e1c
+00003475  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000347A  B80200            mov ax,0x2
 0000347D  50                push ax
 0000347E  9A8E0BF50F        call 0xff5:0xb8e
@@ -5051,7 +4949,7 @@
 000034A3  55                push bp
 000034A4  8BEC              mov bp,sp
 000034A6  33C0              xor ax,ax
-000034A8  9A1C3E821F        call 0x1f82:0x3e1c
+000034A8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000034AD  FF760A            push word [bp+0xa]
 000034B0  FF7608            push word [bp+0x8]
 000034B3  FF7606            push word [bp+0x6]
@@ -5067,7 +4965,6 @@
 000034D4  50                push ax
 000034D5  8B4604            mov ax,[bp+0x4]
 000034D8  F7D8              neg ax
-
 000034DA  50                push ax
 000034DB  9AC305F50F        call 0xff5:0x5c3
 000034E0  5D                pop bp
@@ -5076,7 +4973,7 @@
 000034E4  55                push bp
 000034E5  8BEC              mov bp,sp
 000034E7  33C0              xor ax,ax
-000034E9  9A1C3E821F        call 0x1f82:0x3e1c
+000034E9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000034EE  FF760E            push word [bp+0xe]
 000034F1  FF760C            push word [bp+0xc]
 000034F4  9A8434F50F        call 0xff5:0x3484
@@ -5092,9 +4989,9 @@
 0000351A  9A8F09F50F        call 0xff5:0x98f
 0000351F  5D                pop bp
 00003520  C20C00            ret 0xc
-00003523  90                nop
+
 00003524  33C0              xor ax,ax
-00003526  9A1C3E821F        call 0x1f82:0x3e1c
+00003526  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000352B  FF36A6CF          push word [0xcfa6]
 0000352F  FF36A4CF          push word [0xcfa4]
 00003533  B88203            mov ax,0x382
@@ -5116,7 +5013,6 @@
 0000354C  2BC0              sub ax,ax
 0000354E  50                push ax
 0000354F  50                push ax
-00003550  90                nop
 00003551  0E                push cs
 00003552  E8F8E8            call 0x1e4d
 00003555  A3B061            mov [0x61b0],ax
@@ -5144,7 +5040,6 @@
 00003581  2BC0              sub ax,ax
 00003583  50                push ax
 00003584  50                push ax
-00003585  90                nop
 00003586  0E                push cs
 00003587  E8C3E8            call 0x1e4d
 0000358A  A3BE61            mov [0x61be],ax
@@ -5174,7 +5069,6 @@
 000035BB  2BC0              sub ax,ax
 000035BD  50                push ax
 000035BE  50                push ax
-000035BF  90                nop
 000035C0  0E                push cs
 000035C1  E889E8            call 0x1e4d
 000035C4  A3B461            mov [0x61b4],ax
@@ -5184,19 +5078,18 @@
 000035CF  800EC18010        or byte [0x80c1],0x10
 000035D4  B80100            mov ax,0x1
 000035D7  50                push ax
-000035D8  90                nop
 000035D9  0E                push cs
 000035DA  E81ACD            call 0x2f7
 000035DD  B82435            mov ax,0x3524
 000035E0  BA0000            mov dx,0x0
 000035E3  52                push dx
 000035E4  50                push ax
-000035E5  90                nop
 000035E6  0E                push cs
 000035E7  E8338F            call 0xc51d
 000035EA  CB                retf
+
 000035EB  33C0              xor ax,ax
-000035ED  9A1C3E821F        call 0x1f82:0x3e1c
+000035ED  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000035F2  833EB6CF00        cmp word [0xcfb6],byte +0x0
 000035F7  7503              jnz 0x35fc
 000035F9  E93D01            jmp 0x3739
@@ -5210,7 +5103,6 @@
 0000360B  9AAE34F50F        call 0xff5:0x34ae
 00003610  FF36A6CF          push word [0xcfa6]
 00003614  FF36A4CF          push word [0xcfa4]
-00003618  90                nop
 00003619  0E                push cs
 0000361A  E84BE0            call 0x1668
 0000361D  B82604            mov ax,0x426
@@ -5325,14 +5217,15 @@
 00003735  0E                push cs
 00003736  E85509            call 0x408e
 00003739  CB                retf
+
 0000373A  33C0              xor ax,ax
-0000373C  9A1C3E821F        call 0x1f82:0x3e1c
+0000373C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00003741  CB                retf
 
 00003742  55                push bp
 00003743  8BEC              mov bp,sp
 00003745  B80A00            mov ax,0xa
-00003748  9A1C3E821F        call 0x1f82:0x3e1c
+00003748  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000374D  B8A461            mov ax,0x61a4
 00003750  1E                push ds
 00003751  50                push ax
@@ -5391,10 +5284,11 @@
 000037E2  8BE5              mov sp,bp
 000037E4  5D                pop bp
 000037E5  CB                retf
+
 000037E6  55                push bp
 000037E7  8BEC              mov bp,sp
 000037E9  B82C00            mov ax,0x2c
-000037EC  9A1C3E821F        call 0x1f82:0x3e1c
+000037EC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000037F1  56                push si
 000037F2  C746FC0000        mov word [bp-0x4],0x0
 000037F7  833EB6CF00        cmp word [0xcfb6],byte +0x0
@@ -5408,7 +5302,6 @@
 0000380D  26FF37            push word [es:bx]
 00003810  FF36A6CF          push word [0xcfa6]
 00003814  FF36A4CF          push word [0xcfa4]
-00003818  90                nop
 00003819  0E                push cs
 0000381A  E89FE2            call 0x1abc
 0000381D  8946F6            mov [bp-0xa],ax
@@ -5447,7 +5340,6 @@
 0000387B  50                push ax
 0000387C  FF76F4            push word [bp-0xc]
 0000387F  FF76F2            push word [bp-0xe]
-00003882  90                nop
 00003883  0E                push cs
 00003884  E872EB            call 0x23f9
 00003887  0BC0              or ax,ax
@@ -5473,7 +5365,6 @@
 000038BE  50                push ax
 000038BF  B80300            mov ax,0x3
 000038C2  50                push ax
-000038C3  90                nop
 000038C4  0E                push cs
 000038C5  E81455            call 0x8ddc
 000038C8  E9AF06            jmp 0x3f7a
@@ -5502,14 +5393,12 @@
 00003909  50                push ax
 0000390A  FF76F4            push word [bp-0xc]
 0000390D  FF76F2            push word [bp-0xe]
-00003910  90                nop
 00003911  0E                push cs
 00003912  E8E4EA            call 0x23f9
 00003915  0BC0              or ax,ax
 00003917  7410              jz 0x3929
 00003919  FF76F4            push word [bp-0xc]
 0000391C  FF76F2            push word [bp-0xe]
-0000391F  90                nop
 00003920  0E                push cs
 00003921  E8E0E2            call 0x1c04
 00003924  50                push ax
@@ -5704,7 +5593,6 @@
 00003AF0  8B460A            mov ax,[bp+0xa]
 00003AF3  258000            and ax,0x80
 00003AF6  50                push ax
-00003AF7  90                nop
 00003AF8  0E                push cs
 00003AF9  E87345            call 0x806f
 00003AFC  E97B04            jmp 0x3f7a
@@ -5731,7 +5619,6 @@
 00003B2D  0BC0              or ax,ax
 00003B2F  7503              jnz 0x3b34
 00003B31  E94604            jmp 0x3f7a
-00003B34  90                nop
 00003B35  0E                push cs
 00003B36  E84729            call 0x6480
 00003B39  E93E04            jmp 0x3f7a
@@ -5854,7 +5741,6 @@
 00003C6C  8D46D8            lea ax,[bp-0x28]
 00003C6F  16                push ss
 00003C70  50                push ax
-00003C71  90                nop
 00003C72  0E                push cs
 00003C73  E80974            call 0xb07f
 00003C76  52                push dx
@@ -5865,28 +5751,23 @@
 00003C82  7527              jnz 0x3cab
 00003C84  2BC0              sub ax,ax
 00003C86  50                push ax
-00003C87  90                nop
 00003C88  0E                push cs
 00003C89  E81C8D            call 0xc9a8
 00003C8C  8B46FC            mov ax,[bp-0x4]
 00003C8F  A3BA77            mov [0x77ba],ax
 00003C92  B80100            mov ax,0x1
 00003C95  50                push ax
-00003C96  90                nop
 00003C97  0E                push cs
 00003C98  E80D8D            call 0xc9a8
 00003C9B  2BC0              sub ax,ax
 00003C9D  50                push ax
-00003C9E  90                nop
 00003C9F  0E                push cs
 00003CA0  E8EF28            call 0x6592
-00003CA3  90                nop
 00003CA4  0E                push cs
 00003CA5  E82774            call 0xb0cf
 00003CA8  E9CF02            jmp 0x3f7a
 00003CAB  2BC0              sub ax,ax
 00003CAD  50                push ax
-00003CAE  90                nop
 00003CAF  0E                push cs
 00003CB0  E8F58C            call 0xc9a8
 00003CB3  8B46FE            mov ax,[bp-0x2]
@@ -5919,7 +5800,6 @@
 00003D02  9A0C4B821F        call 0x1f82:0x4b0c
 00003D07  83C40A            add sp,byte +0xa
 00003D0A  9A8333F50F        call 0xff5:0x3383
-00003D0F  90                nop
 00003D10  0E                push cs
 00003D11  E8BCBE            call 0xfbd0
 00003D14  050500            add ax,0x5
@@ -5940,7 +5820,6 @@
 00003D42  7D08              jnl 0x3d4c
 00003D44  9A6233F50F        call 0xff5:0x3362
 00003D49  E94B02            jmp 0x3f97
-00003D4C  90                nop
 00003D4D  0E                push cs
 00003D4E  E87FBE            call 0xfbd0
 00003D51  3B56D6            cmp dx,[bp-0x2a]
@@ -5962,7 +5841,6 @@
 00003D80  9A0A93F50F        call 0xff5:0x930a
 00003D85  0BC0              or ax,ax
 00003D87  7CBB              jl 0x3d44
-00003D89  90                nop
 00003D8A  0E                push cs
 00003D8B  E842BE            call 0xfbd0
 00003D8E  3B56D6            cmp dx,[bp-0x2a]
@@ -5985,7 +5863,6 @@
 00003DC2  0BC0              or ax,ax
 00003DC4  7D03              jnl 0x3dc9
 00003DC6  E97BFF            jmp 0x3d44
-00003DC9  90                nop
 00003DCA  0E                push cs
 00003DCB  E802BE            call 0xfbd0
 00003DCE  3B56D6            cmp dx,[bp-0x2a]
@@ -6012,7 +5889,6 @@
 00003E0A  9A6233F50F        call 0xff5:0x3362
 00003E0F  2BC0              sub ax,ax
 00003E11  50                push ax
-00003E12  90                nop
 00003E13  0E                push cs
 00003E14  E8918B            call 0xc9a8
 00003E17  8B46FC            mov ax,[bp-0x4]
@@ -6075,7 +5951,6 @@
 00003EB7  50                push ax
 00003EB8  B82802            mov ax,0x228
 00003EBB  50                push ax
-00003EBC  90                nop
 00003EBD  0E                push cs
 00003EBE  E873D4            call 0x1334
 00003EC1  8946EA            mov [bp-0x16],ax
@@ -6122,7 +5997,6 @@
 00003F39  9AF370F50F        call 0xff5:0x70f3
 00003F3E  2BC0              sub ax,ax
 00003F40  50                push ax
-00003F41  90                nop
 00003F42  0E                push cs
 00003F43  E8628A            call 0xc9a8
 00003F46  8B46FC            mov ax,[bp-0x4]
@@ -6138,7 +6012,6 @@
 00003F6B  C706BA770000      mov word [0x77ba],0x0
 00003F71  B80100            mov ax,0x1
 00003F74  50                push ax
-00003F75  90                nop
 00003F76  0E                push cs
 00003F77  E82E8A            call 0xc9a8
 00003F7A  837EFC00          cmp word [bp-0x4],byte +0x0
@@ -6154,10 +6027,11 @@
 00003F98  8BE5              mov sp,bp
 00003F9A  5D                pop bp
 00003F9B  CA0A00            retf 0xa
+
 00003F9E  55                push bp
 00003F9F  8BEC              mov bp,sp
 00003FA1  B80800            mov ax,0x8
-00003FA4  9A1C3E821F        call 0x1f82:0x3e1c
+00003FA4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00003FA9  FF7610            push word [bp+0x10]
 00003FAC  FF760E            push word [bp+0xe]
 00003FAF  FF760C            push word [bp+0xc]
@@ -6239,14 +6113,14 @@
 00004088  8BE5              mov sp,bp
 0000408A  5D                pop bp
 0000408B  CA0C00            retf 0xc
+
 0000408E  33C0              xor ax,ax
-00004090  9A1C3E821F        call 0x1f82:0x3e1c
+00004090  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004095  833EB6CF00        cmp word [0xcfb6],byte +0x0
 0000409A  744E              jz 0x40ea
 0000409C  FF36C0CF          push word [0xcfc0]
 000040A0  FF36B661          push word [0x61b6]
 000040A4  FF36B461          push word [0x61b4]
-000040A8  90                nop
 000040A9  0E                push cs
 000040AA  E824E0            call 0x20d1
 000040AD  FF36C0CF          push word [0xcfc0]
@@ -6270,10 +6144,11 @@
 000040E5  F7D8              neg ax
 000040E7  A3A261            mov [0x61a2],ax
 000040EA  CB                retf
+
 000040EB  55                push bp
 000040EC  8BEC              mov bp,sp
 000040EE  B81000            mov ax,0x10
-000040F1  9A1C3E821F        call 0x1f82:0x3e1c
+000040F1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000040F6  B80A00            mov ax,0xa
 000040F9  50                push ax
 000040FA  8D46F0            lea ax,[bp-0x10]
@@ -6306,8 +6181,9 @@
 0000413E  8BE5              mov sp,bp
 00004140  5D                pop bp
 00004141  C20200            ret 0x2
+
 00004144  33C0              xor ax,ax
-00004146  9A1C3E821F        call 0x1f82:0x3e1c
+00004146  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000414B  833EB6CF00        cmp word [0xcfb6],byte +0x0
 00004150  7432              jz 0x4184
 00004152  833EEAA300        cmp word [0xa3ea],byte +0x0
@@ -6327,16 +6203,16 @@
 0000417F  F7D8              neg ax
 00004181  A3BC61            mov [0x61bc],ax
 00004184  CB                retf
+
 00004185  55                push bp
 00004186  8BEC              mov bp,sp
 00004188  33C0              xor ax,ax
-0000418A  9A1C3E821F        call 0x1f82:0x3e1c
+0000418A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000418F  A1C0CF            mov ax,[0xcfc0]
 00004192  394606            cmp [bp+0x6],ax
 00004195  745C              jz 0x41f3
 00004197  2BC0              sub ax,ax
 00004199  50                push ax
-0000419A  90                nop
 0000419B  0E                push cs
 0000419C  E8E687            call 0xc985
 0000419F  9A3AA3F50F        call 0xff5:0xa33a
@@ -6364,15 +6240,15 @@
 000041E5  9AC6A0F50F        call 0xff5:0xa0c6
 000041EA  B80100            mov ax,0x1
 000041ED  50                push ax
-000041EE  90                nop
 000041EF  0E                push cs
 000041F0  E89287            call 0xc985
 000041F3  5D                pop bp
 000041F4  CA0200            retf 0x2
+
 000041F7  55                push bp
 000041F8  8BEC              mov bp,sp
 000041FA  B80200            mov ax,0x2
-000041FD  9A1C3E821F        call 0x1f82:0x3e1c
+000041FD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004202  837E0600          cmp word [bp+0x6],byte +0x0
 00004206  7455              jz 0x425d
 00004208  833EC0CF00        cmp word [0xcfc0],byte +0x0
@@ -6405,19 +6281,21 @@
 0000425D  8BE5              mov sp,bp
 0000425F  5D                pop bp
 00004260  CA0200            retf 0x2
+
 00004263  55                push bp
 00004264  8BEC              mov bp,sp
 00004266  33C0              xor ax,ax
-00004268  9A1C3E821F        call 0x1f82:0x3e1c
+00004268  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000426D  FF7606            push word [bp+0x6]
 00004270  0E                push cs
 00004271  E883FF            call 0x41f7
 00004274  5D                pop bp
 00004275  CB                retf
+
 00004276  55                push bp
 00004277  8BEC              mov bp,sp
 00004279  B80200            mov ax,0x2
-0000427C  9A1C3E821F        call 0x1f82:0x3e1c
+0000427C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004281  837E0600          cmp word [bp+0x6],byte +0x0
 00004285  7457              jz 0x42de
 00004287  813EC0CFCF07      cmp word [0xcfc0],0x7cf
@@ -6450,19 +6328,21 @@
 000042DE  8BE5              mov sp,bp
 000042E0  5D                pop bp
 000042E1  CA0200            retf 0x2
+
 000042E4  55                push bp
 000042E5  8BEC              mov bp,sp
 000042E7  33C0              xor ax,ax
-000042E9  9A1C3E821F        call 0x1f82:0x3e1c
+000042E9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000042EE  FF7606            push word [bp+0x6]
 000042F1  0E                push cs
 000042F2  E881FF            call 0x4276
 000042F5  5D                pop bp
 000042F6  CB                retf
+
 000042F7  55                push bp
 000042F8  8BEC              mov bp,sp
 000042FA  33C0              xor ax,ax
-000042FC  9A1C3E821F        call 0x1f82:0x3e1c
+000042FC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004301  56                push si
 00004302  837E0600          cmp word [bp+0x6],byte +0x0
 00004306  7452              jz 0x435a
@@ -6493,15 +6373,15 @@
 0000435A  5E                pop si
 0000435B  5D                pop bp
 0000435C  CB                retf
+
 0000435D  55                push bp
 0000435E  8BEC              mov bp,sp
 00004360  33C0              xor ax,ax
-00004362  9A1C3E821F        call 0x1f82:0x3e1c
+00004362  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004367  A1C0CF            mov ax,[0xcfc0]
 0000436A  A378CF            mov [0xcf78],ax
 0000436D  2BC0              sub ax,ax
 0000436F  50                push ax
-00004370  90                nop
 00004371  0E                push cs
 00004372  E81086            call 0xc985
 00004375  9A3AA3F50F        call 0xff5:0xa33a
@@ -6519,7 +6399,6 @@
 00004399  50                push ax
 0000439A  FF760A            push word [bp+0xa]
 0000439D  FF7608            push word [bp+0x8]
-000043A0  90                nop
 000043A1  0E                push cs
 000043A2  E854E0            call 0x23f9
 000043A5  EB18              jmp short 0x43bf
@@ -6536,20 +6415,19 @@
 000043BF  9AC6A0F50F        call 0xff5:0xa0c6
 000043C4  B80100            mov ax,0x1
 000043C7  50                push ax
-000043C8  90                nop
 000043C9  0E                push cs
 000043CA  E8B885            call 0xc985
 000043CD  5D                pop bp
 000043CE  C20E00            ret 0xe
+
 000043D1  55                push bp
 000043D2  8BEC              mov bp,sp
 000043D4  33C0              xor ax,ax
-000043D6  9A1C3E821F        call 0x1f82:0x3e1c
+000043D6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000043DB  A1C0CF            mov ax,[0xcfc0]
 000043DE  A378CF            mov [0xcf78],ax
 000043E1  2BC0              sub ax,ax
 000043E3  50                push ax
-000043E4  90                nop
 000043E5  0E                push cs
 000043E6  E89C85            call 0xc985
 000043E9  9A3AA3F50F        call 0xff5:0xa33a
@@ -6567,7 +6445,6 @@
 0000440D  50                push ax
 0000440E  FF760A            push word [bp+0xa]
 00004411  FF7608            push word [bp+0x8]
-00004414  90                nop
 00004415  0E                push cs
 00004416  E8E0DF            call 0x23f9
 00004419  EB18              jmp short 0x4433
@@ -6584,20 +6461,19 @@
 00004433  9AC6A0F50F        call 0xff5:0xa0c6
 00004438  B80100            mov ax,0x1
 0000443B  50                push ax
-0000443C  90                nop
 0000443D  0E                push cs
 0000443E  E84485            call 0xc985
 00004441  5D                pop bp
 00004442  C20E00            ret 0xe
+
 00004445  55                push bp
 00004446  8BEC              mov bp,sp
 00004448  33C0              xor ax,ax
-0000444A  9A1C3E821F        call 0x1f82:0x3e1c
+0000444A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000444F  A1C0CF            mov ax,[0xcfc0]
 00004452  A378CF            mov [0xcf78],ax
 00004455  2BC0              sub ax,ax
 00004457  50                push ax
-00004458  90                nop
 00004459  0E                push cs
 0000445A  E82885            call 0xc985
 0000445D  9A3AA3F50F        call 0xff5:0xa33a
@@ -6610,22 +6486,21 @@
 00004473  50                push ax
 00004474  FF7606            push word [bp+0x6]
 00004477  FF7604            push word [bp+0x4]
-0000447A  90                nop
 0000447B  0E                push cs
 0000447C  E87ADF            call 0x23f9
 0000447F  9A30AAF50F        call 0xff5:0xaa30
 00004484  9A84AAF50F        call 0xff5:0xaa84
 00004489  B80100            mov ax,0x1
 0000448C  50                push ax
-0000448D  90                nop
 0000448E  0E                push cs
 0000448F  E8F384            call 0xc985
 00004492  5D                pop bp
 00004493  C20800            ret 0x8
+
 00004496  55                push bp
 00004497  8BEC              mov bp,sp
 00004499  33C0              xor ax,ax
-0000449B  9A1C3E821F        call 0x1f82:0x3e1c
+0000449B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000044A0  B89A03            mov ax,0x39a
 000044A3  1E                push ds
 000044A4  50                push ax
@@ -6634,7 +6509,6 @@
 000044AD  A378CF            mov [0xcf78],ax
 000044B0  2BC0              sub ax,ax
 000044B2  50                push ax
-000044B3  90                nop
 000044B4  0E                push cs
 000044B5  E8CD84            call 0xc985
 000044B8  9A3AA3F50F        call 0xff5:0xa33a
@@ -6654,7 +6528,6 @@
 000044DC  9AC6A0F50F        call 0xff5:0xa0c6
 000044E1  B80100            mov ax,0x1
 000044E4  50                push ax
-000044E5  90                nop
 000044E6  0E                push cs
 000044E7  E89B84            call 0xc985
 000044EA  B89A03            mov ax,0x39a
@@ -6663,10 +6536,11 @@
 000044EF  9A7806F50F        call 0xff5:0x678
 000044F4  5D                pop bp
 000044F5  C20200            ret 0x2
+
 000044F8  55                push bp
 000044F9  8BEC              mov bp,sp
 000044FB  33C0              xor ax,ax
-000044FD  9A1C3E821F        call 0x1f82:0x3e1c
+000044FD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004502  B8A203            mov ax,0x3a2
 00004505  1E                push ds
 00004506  50                push ax
@@ -6675,7 +6549,6 @@
 0000450F  A378CF            mov [0xcf78],ax
 00004512  2BC0              sub ax,ax
 00004514  50                push ax
-00004515  90                nop
 00004516  0E                push cs
 00004517  E86B84            call 0xc985
 0000451A  9A3AA3F50F        call 0xff5:0xa33a
@@ -6695,7 +6568,6 @@
 0000453F  9AC6A0F50F        call 0xff5:0xa0c6
 00004544  B80100            mov ax,0x1
 00004547  50                push ax
-00004548  90                nop
 00004549  0E                push cs
 0000454A  E83884            call 0xc985
 0000454D  B8A203            mov ax,0x3a2
@@ -6704,20 +6576,19 @@
 00004552  9A7806F50F        call 0xff5:0x678
 00004557  5D                pop bp
 00004558  C20200            ret 0x2
+
 0000455B  33C0              xor ax,ax
-0000455D  9A1C3E821F        call 0x1f82:0x3e1c
+0000455D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004562  B80200            mov ax,0x2
 00004565  50                push ax
 00004566  FF36C061          push word [0x61c0]
 0000456A  FF36BE61          push word [0x61be]
-0000456E  90                nop
 0000456F  0E                push cs
 00004570  E8E5D6            call 0x1c58
 00004573  A1C0CF            mov ax,[0xcfc0]
 00004576  A378CF            mov [0xcf78],ax
 00004579  2BC0              sub ax,ax
 0000457B  50                push ax
-0000457C  90                nop
 0000457D  0E                push cs
 0000457E  E80484            call 0xc985
 00004581  9A3AA3F50F        call 0xff5:0xa33a
@@ -6742,19 +6613,18 @@
 000045BD  9A84AAF50F        call 0xff5:0xaa84
 000045C2  B80100            mov ax,0x1
 000045C5  50                push ax
-000045C6  90                nop
 000045C7  0E                push cs
 000045C8  E8BA83            call 0xc985
 000045CB  2BC0              sub ax,ax
 000045CD  50                push ax
 000045CE  FF36C061          push word [0x61c0]
 000045D2  FF36BE61          push word [0x61be]
-000045D6  90                nop
 000045D7  0E                push cs
 000045D8  E87DD6            call 0x1c58
 000045DB  C3                ret
+
 000045DC  33C0              xor ax,ax
-000045DE  9A1C3E821F        call 0x1f82:0x3e1c
+000045DE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000045E3  B80A04            mov ax,0x40a
 000045E6  50                push ax
 000045E7  B8A480            mov ax,0x80a4
@@ -6777,10 +6647,11 @@
 00004614  EB02              jmp short 0x4618
 00004616  2BC0              sub ax,ax
 00004618  CB                retf
+
 00004619  55                push bp
 0000461A  8BEC              mov bp,sp
 0000461C  B80400            mov ax,0x4
-0000461F  9A1C3E821F        call 0x1f82:0x3e1c
+0000461F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004624  8B460A            mov ax,[bp+0xa]
 00004627  3D5600            cmp ax,0x56
 0000462A  7503              jnz 0x462f
@@ -6800,21 +6671,18 @@
 0000464E  3D0300            cmp ax,0x3
 00004651  7403              jz 0x4656
 00004653  E92702            jmp 0x487d
-00004656  90                nop
 00004657  0E                push cs
 00004658  E8893A            call 0x80e4
 0000465B  E91F02            jmp 0x487d
 0000465E  837E0600          cmp word [bp+0x6],byte +0x0
 00004662  7403              jz 0x4667
 00004664  E91602            jmp 0x487d
-00004667  90                nop
 00004668  0E                push cs
 00004669  E81D39            call 0x7f89
 0000466C  E90E02            jmp 0x487d
 0000466F  837E0600          cmp word [bp+0x6],byte +0x0
 00004673  7403              jz 0x4678
 00004675  E90502            jmp 0x487d
-00004678  90                nop
 00004679  0E                push cs
 0000467A  E80C38            call 0x7e89
 0000467D  E9FD01            jmp 0x487d
@@ -6829,7 +6697,6 @@
 00004693  50                push ax
 00004694  B80300            mov ax,0x3
 00004697  50                push ax
-00004698  90                nop
 00004699  0E                push cs
 0000469A  E83F47            call 0x8ddc
 0000469D  E9DD01            jmp 0x487d
@@ -6874,7 +6741,6 @@
 00004720  A378CF            mov [0xcf78],ax
 00004723  2BC0              sub ax,ax
 00004725  50                push ax
-00004726  90                nop
 00004727  0E                push cs
 00004728  E85A82            call 0xc985
 0000472B  9A3AA3F50F        call 0xff5:0xa33a
@@ -6890,7 +6756,6 @@
 00004744  9A84AAF50F        call 0xff5:0xaa84
 00004749  B80100            mov ax,0x1
 0000474C  50                push ax
-0000474D  90                nop
 0000474E  0E                push cs
 0000474F  E83382            call 0xc985
 00004752  E92801            jmp 0x487d
@@ -6899,11 +6764,9 @@
 0000475B  E91F01            jmp 0x487d
 0000475E  833EB6CF00        cmp word [0xcfb6],byte +0x0
 00004763  7408              jz 0x476d
-00004765  90                nop
 00004766  0E                push cs
 00004767  E8B986            call 0xce23
 0000476A  E91001            jmp 0x487d
-0000476D  90                nop
 0000476E  0E                push cs
 0000476F  E80087            call 0xce72
 00004772  E90801            jmp 0x487d
@@ -6995,10 +6858,11 @@
 0000487B  A0468B            mov al,[0x8b46]
 0000487E  E55D              in ax,0x5d
 00004880  CA0600            retf 0x6
+
 00004883  55                push bp
 00004884  8BEC              mov bp,sp
 00004886  33C0              xor ax,ax
-00004888  9A1C3E821F        call 0x1f82:0x3e1c
+00004888  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000488D  8B4606            mov ax,[bp+0x6]
 00004890  3D4700            cmp ax,0x47
 00004893  7455              jz 0x48ea
@@ -7022,7 +6886,6 @@
 000048C9  A378CF            mov [0xcf78],ax
 000048CC  2BC0              sub ax,ax
 000048CE  50                push ax
-000048CF  90                nop
 000048D0  0E                push cs
 000048D1  E8B180            call 0xc985
 000048D4  9A3AA3F50F        call 0xff5:0xa33a
@@ -7048,7 +6911,6 @@
 0000490C  A378CF            mov [0xcf78],ax
 0000490F  2BC0              sub ax,ax
 00004911  50                push ax
-00004912  90                nop
 00004913  0E                push cs
 00004914  E86E80            call 0xc985
 00004917  9A3AA3F50F        call 0xff5:0xa33a
@@ -7059,15 +6921,15 @@
 00004924  9AC6A0F50F        call 0xff5:0xa0c6
 00004929  B80100            mov ax,0x1
 0000492C  50                push ax
-0000492D  90                nop
 0000492E  0E                push cs
 0000492F  E85380            call 0xc985
 00004932  5D                pop bp
 00004933  CA0200            retf 0x2
+
 00004936  55                push bp
 00004937  8BEC              mov bp,sp
 00004939  B80800            mov ax,0x8
-0000493C  9A1C3E821F        call 0x1f82:0x3e1c
+0000493C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004941  56                push si
 00004942  FF7608            push word [bp+0x8]
 00004945  FF7606            push word [bp+0x6]
@@ -7139,9 +7001,9 @@
 000049F5  8BE5              mov sp,bp
 000049F7  5D                pop bp
 000049F8  C20600            ret 0x6
-000049FB  90                nop
+
 000049FC  33C0              xor ax,ax
-000049FE  9A1C3E821F        call 0x1f82:0x3e1c
+000049FE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004A03  2BC0              sub ax,ax
 00004A05  50                push ax
 00004A06  50                push ax
@@ -7163,10 +7025,11 @@
 00004A3E  C706D0610100      mov word [0x61d0],0x1
 00004A44  C706C0800000      mov word [0x80c0],0x0
 00004A4A  CB                retf
+
 00004A4B  55                push bp
 00004A4C  8BEC              mov bp,sp
 00004A4E  33C0              xor ax,ax
-00004A50  9A1C3E821F        call 0x1f82:0x3e1c
+00004A50  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004A55  FF760C            push word [bp+0xc]
 00004A58  FF760A            push word [bp+0xa]
 00004A5B  FF7608            push word [bp+0x8]
@@ -7177,10 +7040,11 @@
 00004A65  E82717            call 0x618f
 00004A68  5D                pop bp
 00004A69  CA0800            retf 0x8
+
 00004A6C  55                push bp
 00004A6D  8BEC              mov bp,sp
 00004A6F  33C0              xor ax,ax
-00004A71  9A1C3E821F        call 0x1f82:0x3e1c
+00004A71  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004A76  FF760C            push word [bp+0xc]
 00004A79  FF760A            push word [bp+0xa]
 00004A7C  FF7608            push word [bp+0x8]
@@ -7191,13 +7055,13 @@
 00004A87  E80517            call 0x618f
 00004A8A  5D                pop bp
 00004A8B  CA0800            retf 0x8
+
 00004A8E  55                push bp
 00004A8F  8BEC              mov bp,sp
 00004A91  B81000            mov ax,0x10
-00004A94  9A1C3E821F        call 0x1f82:0x3e1c
+00004A94  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004A99  FF7608            push word [bp+0x8]
 00004A9C  FF7606            push word [bp+0x6]
-00004A9F  90                nop
 00004AA0  0E                push cs
 00004AA1  E8A365            call 0xb047
 00004AA4  C45E06            les bx,[bp+0x6]
@@ -7207,7 +7071,6 @@
 00004AB2  EB49              jmp short 0x4afd
 00004AB4  FF76F2            push word [bp-0xe]
 00004AB7  FF76F0            push word [bp-0x10]
-00004ABA  90                nop
 00004ABB  0E                push cs
 00004ABC  E88865            call 0xb047
 00004ABF  C45EF0            les bx,[bp-0x10]
@@ -7222,12 +7085,10 @@
 00004ADC  8956F6            mov [bp-0xa],dx
 00004ADF  26FF7722          push word [es:bx+0x22]
 00004AE3  26FF7720          push word [es:bx+0x20]
-00004AE7  90                nop
 00004AE8  0E                push cs
 00004AE9  E8C163            call 0xaead
 00004AEC  FF76F2            push word [bp-0xe]
 00004AEF  FF76F0            push word [bp-0x10]
-00004AF2  90                nop
 00004AF3  0E                push cs
 00004AF4  E86C65            call 0xb063
 00004AF7  8B46F4            mov ax,[bp-0xc]
@@ -7260,7 +7121,6 @@
 00004B3E  9AC305F50F        call 0xff5:0x5c3
 00004B43  FF7608            push word [bp+0x8]
 00004B46  FF7606            push word [bp+0x6]
-00004B49  90                nop
 00004B4A  0E                push cs
 00004B4B  E81565            call 0xb063
 00004B4E  FF7608            push word [bp+0x8]
@@ -7274,13 +7134,13 @@
 00004B65  8BE5              mov sp,bp
 00004B67  5D                pop bp
 00004B68  CA0400            retf 0x4
+
 00004B6B  55                push bp
 00004B6C  8BEC              mov bp,sp
 00004B6E  B80400            mov ax,0x4
-00004B71  9A1C3E821F        call 0x1f82:0x3e1c
+00004B71  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004B76  FF7608            push word [bp+0x8]
 00004B79  FF7606            push word [bp+0x6]
-00004B7C  90                nop
 00004B7D  0E                push cs
 00004B7E  E8C664            call 0xb047
 00004B81  C45E06            les bx,[bp+0x6]
@@ -7337,32 +7197,31 @@
 00004C1D  9AC305F50F        call 0xff5:0x5c3
 00004C22  FF7608            push word [bp+0x8]
 00004C25  FF7606            push word [bp+0x6]
-00004C28  90                nop
 00004C29  0E                push cs
 00004C2A  E83664            call 0xb063
 00004C2D  FF7608            push word [bp+0x8]
 00004C30  FF7606            push word [bp+0x6]
-00004C33  90                nop
 00004C34  0E                push cs
 00004C35  E830CA            call 0x1668
 00004C38  C706C0800000      mov word [0x80c0],0x0
 00004C3E  8BE5              mov sp,bp
 00004C40  5D                pop bp
 00004C41  CA0400            retf 0x4
+
 00004C44  33C0              xor ax,ax
-00004C46  9A1C3E821F        call 0x1f82:0x3e1c
+00004C46  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004C4B  2BC0              sub ax,ax
 00004C4D  A3D861            mov [0x61d8],ax
 00004C50  A3D661            mov [0x61d6],ax
 00004C53  A3EC61            mov [0x61ec],ax
 00004C56  A3D461            mov [0x61d4],ax
 00004C59  CB                retf
+
 00004C5A  55                push bp
 00004C5B  8BEC              mov bp,sp
 00004C5D  B80200            mov ax,0x2
-00004C60  9A1C3E821F        call 0x1f82:0x3e1c
+00004C60  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004C65  C746FE0000        mov word [bp-0x2],0x0
-00004C6A  90                nop
 00004C6B  0E                push cs
 00004C6C  E861AF            call 0xfbd0
 00004C6F  A3CC61            mov [0x61cc],ax
@@ -7424,8 +7283,9 @@
 00004D18  8BE5              mov sp,bp
 00004D1A  5D                pop bp
 00004D1B  CA0600            retf 0x6
+
 00004D1E  33C0              xor ax,ax
-00004D20  9A1C3E821F        call 0x1f82:0x3e1c
+00004D20  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004D25  833ED46100        cmp word [0x61d4],byte +0x0
 00004D2A  7413              jz 0x4d3f
 00004D2C  B80F00            mov ax,0xf
@@ -7435,10 +7295,11 @@
 00004D38  FF36F061          push word [0x61f0]
 00004D3C  E80100            call 0x4d40
 00004D3F  CB                retf
+
 00004D40  55                push bp
 00004D41  8BEC              mov bp,sp
 00004D43  B80200            mov ax,0x2
-00004D46  9A1C3E821F        call 0x1f82:0x3e1c
+00004D46  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004D4B  9A7205F50F        call 0xff5:0x572
 00004D50  8946FE            mov [bp-0x2],ax
 00004D53  FF7608            push word [bp+0x8]
@@ -7457,10 +7318,11 @@
 00004D7D  8BE5              mov sp,bp
 00004D7F  5D                pop bp
 00004D80  C20800            ret 0x8
+
 00004D83  55                push bp
 00004D84  8BEC              mov bp,sp
 00004D86  33C0              xor ax,ax
-00004D88  9A1C3E821F        call 0x1f82:0x3e1c
+00004D88  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004D8D  FF7614            push word [bp+0x14]
 00004D90  FF7612            push word [bp+0x12]
 00004D93  FF7610            push word [bp+0x10]
@@ -7474,10 +7336,11 @@
 00004DA9  E80400            call 0x4db0
 00004DAC  5D                pop bp
 00004DAD  CA1000            retf 0x10
+
 00004DB0  55                push bp
 00004DB1  8BEC              mov bp,sp
 00004DB3  B8A400            mov ax,0xa4
-00004DB6  9A1C3E821F        call 0x1f82:0x3e1c
+00004DB6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00004DBB  57                push di
 00004DBC  56                push si
 00004DBD  F6460402          test byte [bp+0x4],0x2
@@ -7960,10 +7823,11 @@
 00005326  8BE5              mov sp,bp
 00005328  5D                pop bp
 00005329  C21200            ret 0x12
+
 0000532C  55                push bp
 0000532D  8BEC              mov bp,sp
 0000532F  33C0              xor ax,ax
-00005331  9A1C3E821F        call 0x1f82:0x3e1c
+00005331  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005336  8B4604            mov ax,[bp+0x4]
 00005339  0B4606            or ax,[bp+0x6]
 0000533C  750E              jnz 0x534c
@@ -7977,13 +7841,13 @@
 00005359  C706C0800000      mov word [0x80c0],0x0
 0000535F  5D                pop bp
 00005360  C20400            ret 0x4
+
 00005363  55                push bp
 00005364  8BEC              mov bp,sp
 00005366  B80C00            mov ax,0xc
-00005369  9A1C3E821F        call 0x1f82:0x3e1c
+00005369  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000536E  FF760A            push word [bp+0xa]
 00005371  FF7608            push word [bp+0x8]
-00005374  90                nop
 00005375  0E                push cs
 00005376  E8CE5C            call 0xb047
 00005379  C45E08            les bx,[bp+0x8]
@@ -7994,12 +7858,10 @@
 00005389  C45EFC            les bx,[bp-0x4]
 0000538C  26FF7722          push word [es:bx+0x22]
 00005390  26FF7720          push word [es:bx+0x20]
-00005394  90                nop
 00005395  0E                push cs
 00005396  E8CA5C            call 0xb063
 00005399  FF76F6            push word [bp-0xa]
 0000539C  FF76F4            push word [bp-0xc]
-0000539F  90                nop
 000053A0  0E                push cs
 000053A1  E8BF5C            call 0xb063
 000053A4  8B46F8            mov ax,[bp-0x8]
@@ -8010,7 +7872,6 @@
 000053B2  747C              jz 0x5430
 000053B4  52                push dx
 000053B5  FF76F4            push word [bp-0xc]
-000053B8  90                nop
 000053B9  0E                push cs
 000053BA  E88A5C            call 0xb047
 000053BD  C45EF4            les bx,[bp-0xc]
@@ -8025,7 +7886,6 @@
 000053DA  8956FA            mov [bp-0x6],dx
 000053DD  26FF7722          push word [es:bx+0x22]
 000053E1  26FF7720          push word [es:bx+0x20]
-000053E5  90                nop
 000053E6  0E                push cs
 000053E7  E85D5C            call 0xb047
 000053EA  C45EFC            les bx,[bp-0x4]
@@ -8037,17 +7897,14 @@
 000053FC  C45EFC            les bx,[bp-0x4]
 000053FF  26FF7722          push word [es:bx+0x22]
 00005403  26FF7720          push word [es:bx+0x20]
-00005407  90                nop
 00005408  0E                push cs
 00005409  E8575C            call 0xb063
 0000540C  FF76F6            push word [bp-0xa]
 0000540F  FF76F4            push word [bp-0xc]
-00005412  90                nop
 00005413  0E                push cs
 00005414  E84C5C            call 0xb063
 00005417  FF760A            push word [bp+0xa]
 0000541A  FF7608            push word [bp+0x8]
-0000541D  90                nop
 0000541E  0E                push cs
 0000541F  E8415C            call 0xb063
 00005422  C706C0800000      mov word [0x80c0],0x0
@@ -8056,7 +7913,6 @@
 0000542E  EB14              jmp short 0x5444
 00005430  FF760A            push word [bp+0xa]
 00005433  FF7608            push word [bp+0x8]
-00005436  90                nop
 00005437  0E                push cs
 00005438  E8285C            call 0xb063
 0000543B  C706C0800C15      mov word [0x80c0],0x150c
@@ -8065,10 +7921,11 @@
 00005444  8BE5              mov sp,bp
 00005446  5D                pop bp
 00005447  CA0600            retf 0x6
+
 0000544A  55                push bp
 0000544B  8BEC              mov bp,sp
 0000544D  B80400            mov ax,0x4
-00005450  9A1C3E821F        call 0x1f82:0x3e1c
+00005450  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005455  A1C861            mov ax,[0x61c8]
 00005458  8B16CA61          mov dx,[0x61ca]
 0000545C  8946FC            mov [bp-0x4],ax
@@ -8083,10 +7940,11 @@
 0000547B  8BE5              mov sp,bp
 0000547D  5D                pop bp
 0000547E  CA0400            retf 0x4
+
 00005481  55                push bp
 00005482  8BEC              mov bp,sp
 00005484  B80800            mov ax,0x8
-00005487  9A1C3E821F        call 0x1f82:0x3e1c
+00005487  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000548C  FF760E            push word [bp+0xe]
 0000548F  FF760C            push word [bp+0xc]
 00005492  FF760A            push word [bp+0xa]
@@ -8098,7 +7956,6 @@
 000054A1  743C              jz 0x54df
 000054A3  FF76FA            push word [bp-0x6]
 000054A6  50                push ax
-000054A7  90                nop
 000054A8  0E                push cs
 000054A9  E816C7            call 0x1bc2
 000054AC  8946FC            mov [bp-0x4],ax
@@ -8126,10 +7983,11 @@
 000054EF  8BE5              mov sp,bp
 000054F1  5D                pop bp
 000054F2  CA0A00            retf 0xa
+
 000054F5  55                push bp
 000054F6  8BEC              mov bp,sp
 000054F8  B80400            mov ax,0x4
-000054FB  9A1C3E821F        call 0x1f82:0x3e1c
+000054FB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005500  FF760A            push word [bp+0xa]
 00005503  FF7608            push word [bp+0x8]
 00005506  FF7606            push word [bp+0x6]
@@ -8141,7 +7999,6 @@
 00005515  740B              jz 0x5522
 00005517  FF76FE            push word [bp-0x2]
 0000551A  50                push ax
-0000551B  90                nop
 0000551C  0E                push cs
 0000551D  E8E4C6            call 0x1c04
 00005520  EB02              jmp short 0x5524
@@ -8149,10 +8006,11 @@
 00005524  8BE5              mov sp,bp
 00005526  5D                pop bp
 00005527  CA0600            retf 0x6
+
 0000552A  55                push bp
 0000552B  8BEC              mov bp,sp
 0000552D  33C0              xor ax,ax
-0000552F  9A1C3E821F        call 0x1f82:0x3e1c
+0000552F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005534  FF760A            push word [bp+0xa]
 00005537  FF7608            push word [bp+0x8]
 0000553A  C45E04            les bx,[bp+0x4]
@@ -8170,10 +8028,11 @@
 0000555D  E82B03            call 0x588b
 00005560  5D                pop bp
 00005561  C20800            ret 0x8
+
 00005564  55                push bp
 00005565  8BEC              mov bp,sp
 00005567  B80C00            mov ax,0xc
-0000556A  9A1C3E821F        call 0x1f82:0x3e1c
+0000556A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000556F  56                push si
 00005570  FF7608            push word [bp+0x8]
 00005573  FF7606            push word [bp+0x6]
@@ -8230,10 +8089,11 @@
 000055FB  8BE5              mov sp,bp
 000055FD  5D                pop bp
 000055FE  CA0400            retf 0x4
+
 00005601  55                push bp
 00005602  8BEC              mov bp,sp
 00005604  B80400            mov ax,0x4
-00005607  9A1C3E821F        call 0x1f82:0x3e1c
+00005607  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000560C  FF760A            push word [bp+0xa]
 0000560F  FF7608            push word [bp+0x8]
 00005612  FF7606            push word [bp+0x6]
@@ -8245,16 +8105,16 @@
 00005621  7409              jz 0x562c
 00005623  FF76FE            push word [bp-0x2]
 00005626  50                push ax
-00005627  90                nop
 00005628  0E                push cs
 00005629  E815C6            call 0x1c41
 0000562C  8BE5              mov sp,bp
 0000562E  5D                pop bp
 0000562F  CA0600            retf 0x6
+
 00005632  55                push bp
 00005633  8BEC              mov bp,sp
 00005635  33C0              xor ax,ax
-00005637  9A1C3E821F        call 0x1f82:0x3e1c
+00005637  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000563C  FF760C            push word [bp+0xc]
 0000563F  FF760A            push word [bp+0xa]
 00005642  FF7608            push word [bp+0x8]
@@ -8263,10 +8123,11 @@
 00005649  E80400            call 0x5650
 0000564C  5D                pop bp
 0000564D  CA0800            retf 0x8
+
 00005650  55                push bp
 00005651  8BEC              mov bp,sp
 00005653  B82800            mov ax,0x28
-00005656  9A1C3E821F        call 0x1f82:0x3e1c
+00005656  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000565B  C746FC0000        mov word [bp-0x4],0x0
 00005660  9A2272F50F        call 0xff5:0x7222
 00005665  8946E8            mov [bp-0x18],ax
@@ -8339,12 +8200,10 @@
 0000571F  74A2              jz 0x56c3
 00005721  FF760C            push word [bp+0xc]
 00005724  FF760A            push word [bp+0xa]
-00005727  90                nop
 00005728  0E                push cs
 00005729  E81B59            call 0xb047
 0000572C  FF76DE            push word [bp-0x22]
 0000572F  FF76DC            push word [bp-0x24]
-00005732  90                nop
 00005733  0E                push cs
 00005734  E81059            call 0xb047
 00005737  C45E0A            les bx,[bp+0xa]
@@ -8363,19 +8222,16 @@
 00005761  8946F6            mov [bp-0xa],ax
 00005764  FF76DE            push word [bp-0x22]
 00005767  FF76DC            push word [bp-0x24]
-0000576A  90                nop
 0000576B  0E                push cs
 0000576C  E8F458            call 0xb063
 0000576F  FF76DE            push word [bp-0x22]
 00005772  FF76DC            push word [bp-0x24]
-00005775  90                nop
 00005776  0E                push cs
 00005777  E8E958            call 0xb063
 0000577A  C746EC0100        mov word [bp-0x14],0x1
 0000577F  C746FC0100        mov word [bp-0x4],0x1
 00005784  FF760C            push word [bp+0xc]
 00005787  FF760A            push word [bp+0xa]
-0000578A  90                nop
 0000578B  0E                push cs
 0000578C  E8B858            call 0xb047
 0000578F  8D46F6            lea ax,[bp-0xa]
@@ -8388,7 +8244,6 @@
 000057A3  8946E0            mov [bp-0x20],ax
 000057A6  FF760C            push word [bp+0xc]
 000057A9  FF760A            push word [bp+0xa]
-000057AC  90                nop
 000057AD  0E                push cs
 000057AE  E8B258            call 0xb063
 000057B1  837EE000          cmp word [bp-0x20],byte +0x0
@@ -8401,7 +8256,6 @@
 000057C2  FF76F6            push word [bp-0xa]
 000057C5  FF760C            push word [bp+0xc]
 000057C8  FF760A            push word [bp+0xa]
-000057CB  90                nop
 000057CC  0E                push cs
 000057CD  E8ECC2            call 0x1abc
 000057D0  8946EA            mov [bp-0x16],ax
@@ -8410,7 +8264,6 @@
 000057D7  E9E9FE            jmp 0x56c3
 000057DA  FF76DE            push word [bp-0x22]
 000057DD  FF76DC            push word [bp-0x24]
-000057E0  90                nop
 000057E1  0E                push cs
 000057E2  E86258            call 0xb047
 000057E5  C45EDC            les bx,[bp-0x24]
@@ -8421,12 +8274,10 @@
 000057F6  8956E6            mov [bp-0x1a],dx
 000057F9  FF76DE            push word [bp-0x22]
 000057FC  FF76DC            push word [bp-0x24]
-000057FF  90                nop
 00005800  0E                push cs
 00005801  E85F58            call 0xb063
 00005804  FF76E6            push word [bp-0x1a]
 00005807  FF76E4            push word [bp-0x1c]
-0000580A  90                nop
 0000580B  0E                push cs
 0000580C  E83858            call 0xb047
 0000580F  C45EE4            les bx,[bp-0x1c]
@@ -8446,7 +8297,6 @@
 0000583B  8946E2            mov [bp-0x1e],ax
 0000583E  FF76E6            push word [bp-0x1a]
 00005841  FF76E4            push word [bp-0x1c]
-00005844  90                nop
 00005845  0E                push cs
 00005846  E81A58            call 0xb063
 00005849  FF76F8            push word [bp-0x8]
@@ -8462,7 +8312,6 @@
 00005861  50                push ax
 00005862  FF76DE            push word [bp-0x22]
 00005865  FF76DC            push word [bp-0x24]
-00005868  90                nop
 00005869  0E                push cs
 0000586A  E88CCB            call 0x23f9
 0000586D  8946EA            mov [bp-0x16],ax
@@ -8477,14 +8326,14 @@
 00005885  8BE5              mov sp,bp
 00005887  5D                pop bp
 00005888  CA0800            retf 0x8
+
 0000588B  55                push bp
 0000588C  8BEC              mov bp,sp
 0000588E  B82A00            mov ax,0x2a
-00005891  9A1C3E821F        call 0x1f82:0x3e1c
+00005891  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005896  8D46DA            lea ax,[bp-0x26]
 00005899  16                push ss
 0000589A  50                push ax
-0000589B  90                nop
 0000589C  0E                push cs
 0000589D  E8DF57            call 0xb07f
 000058A0  52                push dx
@@ -8503,12 +8352,10 @@
 000058BF  50                push ax
 000058C0  B88000            mov ax,0x80
 000058C3  50                push ax
-000058C4  90                nop
 000058C5  0E                push cs
 000058C6  E84059            call 0xb209
 000058C9  8946F0            mov [bp-0x10],ax
 000058CC  8956F2            mov [bp-0xe],dx
-000058CF  90                nop
 000058D0  0E                push cs
 000058D1  E8FB57            call 0xb0cf
 000058D4  C45EF0            les bx,[bp-0x10]
@@ -8639,7 +8486,6 @@
 00005A63  EB2D              jmp short 0x5a92
 00005A65  FF76F2            push word [bp-0xe]
 00005A68  FF76F0            push word [bp-0x10]
-00005A6B  90                nop
 00005A6C  0E                push cs
 00005A6D  E83D54            call 0xaead
 00005A70  C706C0800A15      mov word [0x80c0],0x150a
@@ -8650,12 +8496,9 @@
 00005A7B  59                pop cx
 00005A7C  7059              jo 0x5ad7
 00005A7E  8359CC59          sbb word [bx+di-0x34],byte +0x59
-00005A82  DB594D            fistp dword [bx+di+0x4d]
-00005A85  5A                pop dx
-00005A86  655A              gs pop dx
-00005A88  F4                hlt
-00005A89  59                pop cx
-00005A8A  655A              gs pop dx
+
+00005A82  ; data
+
 00005A8C  0D5A25            or ax,0x255a
 00005A8F  5A                pop dx
 00005A90  4D                dec bp
@@ -8674,7 +8517,6 @@
 00005AB3  FF76F6            push word [bp-0xa]
 00005AB6  FF76F2            push word [bp-0xe]
 00005AB9  FF76F0            push word [bp-0x10]
-00005ABC  90                nop
 00005ABD  0E                push cs
 00005ABE  E88CC3            call 0x1e4d
 00005AC1  8946EC            mov [bp-0x14],ax
@@ -8683,24 +8525,23 @@
 00005AC9  7513              jnz 0x5ade
 00005ACB  FF76F2            push word [bp-0xe]
 00005ACE  FF76F0            push word [bp-0x10]
-00005AD1  90                nop
 00005AD2  0E                push cs
 00005AD3  E8D753            call 0xaead
 00005AD6  C706C0800B15      mov word [0x80c0],0x150b
 00005ADC  EB11              jmp short 0x5aef
 00005ADE  FF76F2            push word [bp-0xe]
 00005AE1  FF76F0            push word [bp-0x10]
-00005AE4  90                nop
 00005AE5  0E                push cs
 00005AE6  E87A55            call 0xb063
 00005AE9  C706C0800000      mov word [0x80c0],0x0
 00005AEF  8BE5              mov sp,bp
 00005AF1  5D                pop bp
 00005AF2  C21400            ret 0x14
+
 00005AF5  55                push bp
 00005AF6  8BEC              mov bp,sp
 00005AF8  B80400            mov ax,0x4
-00005AFB  9A1C3E821F        call 0x1f82:0x3e1c
+00005AFB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005B00  FF7608            push word [bp+0x8]
 00005B03  FF7606            push word [bp+0x6]
 00005B06  9AEC3CF50F        call 0xff5:0x3cec
@@ -8728,10 +8569,11 @@
 00005B42  8BE5              mov sp,bp
 00005B44  5D                pop bp
 00005B45  C20600            ret 0x6
+
 00005B48  55                push bp
 00005B49  8BEC              mov bp,sp
 00005B4B  33C0              xor ax,ax
-00005B4D  9A1C3E821F        call 0x1f82:0x3e1c
+00005B4D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005B52  FF760C            push word [bp+0xc]
 00005B55  FF760A            push word [bp+0xa]
 00005B58  FF7608            push word [bp+0x8]
@@ -8742,10 +8584,11 @@
 00005B63  E82906            call 0x618f
 00005B66  5D                pop bp
 00005B67  CA0800            retf 0x8
+
 00005B6A  55                push bp
 00005B6B  8BEC              mov bp,sp
 00005B6D  33C0              xor ax,ax
-00005B6F  9A1C3E821F        call 0x1f82:0x3e1c
+00005B6F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005B74  8B4612            mov ax,[bp+0x12]
 00005B77  0B4614            or ax,[bp+0x14]
 00005B7A  740D              jz 0x5b89
@@ -8777,10 +8620,11 @@
 00005BC8  C706C0800000      mov word [0x80c0],0x0
 00005BCE  5D                pop bp
 00005BCF  CA1000            retf 0x10
+
 00005BD2  55                push bp
 00005BD3  8BEC              mov bp,sp
 00005BD5  B80400            mov ax,0x4
-00005BD8  9A1C3E821F        call 0x1f82:0x3e1c
+00005BD8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005BDD  FF760A            push word [bp+0xa]
 00005BE0  FF7608            push word [bp+0x8]
 00005BE3  FF7606            push word [bp+0x6]
@@ -8793,16 +8637,16 @@
 00005BF4  FF760C            push word [bp+0xc]
 00005BF7  FF76FE            push word [bp-0x2]
 00005BFA  50                push ax
-00005BFB  90                nop
 00005BFC  0E                push cs
 00005BFD  E8D1C4            call 0x20d1
 00005C00  8BE5              mov sp,bp
 00005C02  5D                pop bp
 00005C03  CA0800            retf 0x8
+
 00005C06  55                push bp
 00005C07  8BEC              mov bp,sp
 00005C09  B80400            mov ax,0x4
-00005C0C  9A1C3E821F        call 0x1f82:0x3e1c
+00005C0C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005C11  FF760A            push word [bp+0xa]
 00005C14  FF7608            push word [bp+0x8]
 00005C17  FF7606            push word [bp+0x6]
@@ -8814,16 +8658,16 @@
 00005C26  7409              jz 0x5c31
 00005C28  FF76FE            push word [bp-0x2]
 00005C2B  50                push ax
-00005C2C  90                nop
 00005C2D  0E                push cs
 00005C2E  E8CAC5            call 0x21fb
 00005C31  8BE5              mov sp,bp
 00005C33  5D                pop bp
 00005C34  CA0600            retf 0x6
+
 00005C37  55                push bp
 00005C38  8BEC              mov bp,sp
 00005C3A  33C0              xor ax,ax
-00005C3C  9A1C3E821F        call 0x1f82:0x3e1c
+00005C3C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005C41  FF760C            push word [bp+0xc]
 00005C44  FF760A            push word [bp+0xa]
 00005C47  FF7608            push word [bp+0x8]
@@ -8834,10 +8678,11 @@
 00005C52  E83A05            call 0x618f
 00005C55  5D                pop bp
 00005C56  CA0800            retf 0x8
+
 00005C59  55                push bp
 00005C5A  8BEC              mov bp,sp
 00005C5C  B80400            mov ax,0x4
-00005C5F  9A1C3E821F        call 0x1f82:0x3e1c
+00005C5F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005C64  837E0600          cmp word [bp+0x6],byte +0x0
 00005C68  753B              jnz 0x5ca5
 00005C6A  EB5C              jmp short 0x5cc8
@@ -8850,14 +8695,12 @@
 00005C7A  83C406            add sp,byte +0x6
 00005C7D  837E0600          cmp word [bp+0x6],byte +0x0
 00005C81  7422              jz 0x5ca5
-00005C83  90                nop
 00005C84  0E                push cs
 00005C85  E8489F            call 0xfbd0
 00005C88  051400            add ax,0x14
 00005C8B  83D200            adc dx,byte +0x0
 00005C8E  8946FC            mov [bp-0x4],ax
 00005C91  8956FE            mov [bp-0x2],dx
-00005C94  90                nop
 00005C95  0E                push cs
 00005C96  E8379F            call 0xfbd0
 00005C99  3B56FE            cmp dx,[bp-0x2]
@@ -8880,10 +8723,11 @@
 00005CC8  8BE5              mov sp,bp
 00005CCA  5D                pop bp
 00005CCB  CA0200            retf 0x2
+
 00005CCE  55                push bp
 00005CCF  8BEC              mov bp,sp
 00005CD1  B81800            mov ax,0x18
-00005CD4  9A1C3E821F        call 0x1f82:0x3e1c
+00005CD4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005CD9  837E0600          cmp word [bp+0x6],byte +0x0
 00005CDD  7506              jnz 0x5ce5
 00005CDF  2BC0              sub ax,ax
@@ -8891,7 +8735,6 @@
 00005CE2  E9E200            jmp 0x5dc7
 00005CE5  FF760A            push word [bp+0xa]
 00005CE8  FF7608            push word [bp+0x8]
-00005CEB  90                nop
 00005CEC  0E                push cs
 00005CED  E85753            call 0xb047
 00005CF0  C45E08            les bx,[bp+0x8]
@@ -8910,12 +8753,10 @@
 00005D1C  8956F2            mov [bp-0xe],dx
 00005D1F  FF760A            push word [bp+0xa]
 00005D22  FF7608            push word [bp+0x8]
-00005D25  90                nop
 00005D26  0E                push cs
 00005D27  E83953            call 0xb063
 00005D2A  FF76F6            push word [bp-0xa]
 00005D2D  FF76F4            push word [bp-0xc]
-00005D30  90                nop
 00005D31  0E                push cs
 00005D32  E81253            call 0xb047
 00005D35  C45EF4            les bx,[bp-0xc]
@@ -8932,7 +8773,6 @@
 00005D59  8946EA            mov [bp-0x16],ax
 00005D5C  FF76F6            push word [bp-0xa]
 00005D5F  FF76F4            push word [bp-0xc]
-00005D62  90                nop
 00005D63  0E                push cs
 00005D64  E8FC52            call 0xb063
 00005D67  8B4606            mov ax,[bp+0x6]
@@ -8957,7 +8797,6 @@
 00005D9C  50                push ax
 00005D9D  FF760A            push word [bp+0xa]
 00005DA0  FF7608            push word [bp+0x8]
-00005DA3  90                nop
 00005DA4  0E                push cs
 00005DA5  E829C3            call 0x20d1
 00005DA8  E934FF            jmp 0x5cdf
@@ -8972,10 +8811,11 @@
 00005DC7  8BE5              mov sp,bp
 00005DC9  5D                pop bp
 00005DCA  CB                retf
+
 00005DCB  55                push bp
 00005DCC  8BEC              mov bp,sp
 00005DCE  B80800            mov ax,0x8
-00005DD1  9A1C3E821F        call 0x1f82:0x3e1c
+00005DD1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005DD6  57                push di
 00005DD7  C45E0C            les bx,[bp+0xc]
 00005DDA  268B07            mov ax,[es:bx]
@@ -9027,10 +8867,11 @@
 00005E4A  8BE5              mov sp,bp
 00005E4C  5D                pop bp
 00005E4D  CB                retf
+
 00005E4E  55                push bp
 00005E4F  8BEC              mov bp,sp
 00005E51  B80800            mov ax,0x8
-00005E54  9A1C3E821F        call 0x1f82:0x3e1c
+00005E54  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005E59  C45E0C            les bx,[bp+0xc]
 00005E5C  268B07            mov ax,[es:bx]
 00005E5F  268B5702          mov dx,[es:bx+0x2]
@@ -9084,10 +8925,11 @@
 00005EDA  8BE5              mov sp,bp
 00005EDC  5D                pop bp
 00005EDD  CB                retf
+
 00005EDE  55                push bp
 00005EDF  8BEC              mov bp,sp
 00005EE1  B80A00            mov ax,0xa
-00005EE4  9A1C3E821F        call 0x1f82:0x3e1c
+00005EE4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005EE9  C45E0C            les bx,[bp+0xc]
 00005EEC  268B07            mov ax,[es:bx]
 00005EEF  268B5702          mov dx,[es:bx+0x2]
@@ -9110,7 +8952,6 @@
 00005F1C  C45EFC            les bx,[bp-0x4]
 00005F1F  26FF7722          push word [es:bx+0x22]
 00005F23  26FF7720          push word [es:bx+0x20]
-00005F27  90                nop
 00005F28  0E                push cs
 00005F29  E81B51            call 0xb047
 00005F2C  C45EFC            les bx,[bp-0x4]
@@ -9121,7 +8962,6 @@
 00005F3C  C45EFC            les bx,[bp-0x4]
 00005F3F  26FF7722          push word [es:bx+0x22]
 00005F43  26FF7720          push word [es:bx+0x20]
-00005F47  90                nop
 00005F48  0E                push cs
 00005F49  E81751            call 0xb063
 00005F4C  FF76F6            push word [bp-0xa]
@@ -9156,10 +8996,11 @@
 00005F9C  8BE5              mov sp,bp
 00005F9E  5D                pop bp
 00005F9F  CB                retf
+
 00005FA0  55                push bp
 00005FA1  8BEC              mov bp,sp
 00005FA3  B80C00            mov ax,0xc
-00005FA6  9A1C3E821F        call 0x1f82:0x3e1c
+00005FA6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00005FAB  C45E0C            les bx,[bp+0xc]
 00005FAE  268B07            mov ax,[es:bx]
 00005FB1  268B5702          mov dx,[es:bx+0x2]
@@ -9179,7 +9020,6 @@
 00005FD6  C45EFC            les bx,[bp-0x4]
 00005FD9  26FF7706          push word [es:bx+0x6]
 00005FDD  26FF7704          push word [es:bx+0x4]
-00005FE1  90                nop
 00005FE2  0E                push cs
 00005FE3  E86150            call 0xb047
 00005FE6  C45EFC            les bx,[bp-0x4]
@@ -9195,7 +9035,6 @@
 00006007  C45EFC            les bx,[bp-0x4]
 0000600A  26FF7706          push word [es:bx+0x6]
 0000600E  26FF7704          push word [es:bx+0x4]
-00006012  90                nop
 00006013  0E                push cs
 00006014  E84C50            call 0xb063
 00006017  C45EFC            les bx,[bp-0x4]
@@ -9229,14 +9068,14 @@
 00006064  8BE5              mov sp,bp
 00006066  5D                pop bp
 00006067  CB                retf
+
 00006068  55                push bp
 00006069  8BEC              mov bp,sp
 0000606B  B80400            mov ax,0x4
-0000606E  9A1C3E821F        call 0x1f82:0x3e1c
+0000606E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006073  C45E08            les bx,[bp+0x8]
 00006076  26FF7706          push word [es:bx+0x6]
 0000607A  26FF7704          push word [es:bx+0x4]
-0000607E  90                nop
 0000607F  0E                push cs
 00006080  E8C44F            call 0xb047
 00006083  C45E08            les bx,[bp+0x8]
@@ -9252,7 +9091,6 @@
 000060A4  C45E08            les bx,[bp+0x8]
 000060A7  26FF7706          push word [es:bx+0x6]
 000060AB  26FF7704          push word [es:bx+0x4]
-000060AF  90                nop
 000060B0  0E                push cs
 000060B1  E8AF4F            call 0xb063
 000060B4  8B4608            mov ax,[bp+0x8]
@@ -9314,10 +9152,11 @@
 00006140  8BE5              mov sp,bp
 00006142  5D                pop bp
 00006143  C20800            ret 0x8
+
 00006146  55                push bp
 00006147  8BEC              mov bp,sp
 00006149  B80400            mov ax,0x4
-0000614C  9A1C3E821F        call 0x1f82:0x3e1c
+0000614C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006151  837E0400          cmp word [bp+0x4],byte +0x0
 00006155  7F04              jg 0x615b
 00006157  2BC0              sub ax,ax
@@ -9343,10 +9182,11 @@
 00006189  8BE5              mov sp,bp
 0000618B  5D                pop bp
 0000618C  C20400            ret 0x4
+
 0000618F  55                push bp
 00006190  8BEC              mov bp,sp
 00006192  B81000            mov ax,0x10
-00006195  9A1C3E821F        call 0x1f82:0x3e1c
+00006195  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000619A  56                push si
 0000619B  C45E0C            les bx,[bp+0xc]
 0000619E  A1D261            mov ax,[0x61d2]
@@ -9471,33 +9311,33 @@
 000062F6  8BE5              mov sp,bp
 000062F8  5D                pop bp
 000062F9  C20C00            ret 0xc
+
 000062FC  55                push bp
 000062FD  8BEC              mov bp,sp
 000062FF  33C0              xor ax,ax
-00006301  9A1C3E821F        call 0x1f82:0x3e1c
+00006301  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006306  5D                pop bp
 00006307  CA0400            retf 0x4
+
 0000630A  33C0              xor ax,ax
-0000630C  9A1C3E821F        call 0x1f82:0x3e1c
-00006311  90                nop
+0000630C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006312  0E                push cs
 00006313  E8216E            call 0xd137
 00006316  E87112            call 0x758a
 00006319  E89A12            call 0x75b6
 0000631C  FF368A62          push word [0x628a]
 00006320  FF368862          push word [0x6288]
-00006324  90                nop
 00006325  0E                push cs
 00006326  E83FB3            call 0x1668
 00006329  C3                ret
+
 0000632A  55                push bp
 0000632B  8BEC              mov bp,sp
 0000632D  B80800            mov ax,0x8
-00006330  9A1C3E821F        call 0x1f82:0x3e1c
+00006330  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006335  9AA205F50F        call 0xff5:0x5a2
 0000633A  8946F8            mov [bp-0x8],ax
 0000633D  8956FA            mov [bp-0x6],dx
-00006340  90                nop
 00006341  0E                push cs
 00006342  E84C70            call 0xd391
 00006345  8946FC            mov [bp-0x4],ax
@@ -9510,26 +9350,22 @@
 00006358  89168A62          mov [0x628a],dx
 0000635C  B80200            mov ax,0x2
 0000635F  50                push ax
-00006360  90                nop
 00006361  0E                push cs
 00006362  E8929F            call 0x2f7
 00006365  B8520B            mov ax,0xb52
 00006368  1E                push ds
 00006369  50                push ax
-0000636A  90                nop
 0000636B  0E                push cs
 0000636C  E8587B            call 0xdec7
 0000636F  A38462            mov [0x6284],ax
 00006372  89168662          mov [0x6286],dx
 00006376  52                push dx
 00006377  50                push ax
-00006378  90                nop
 00006379  0E                push cs
 0000637A  E8357C            call 0xdfb2
 0000637D  B8840B            mov ax,0xb84
 00006380  1E                push ds
 00006381  50                push ax
-00006382  90                nop
 00006383  0E                push cs
 00006384  E8087A            call 0xdd8f
 00006387  A30C62            mov [0x620c],ax
@@ -9538,13 +9374,11 @@
 0000638F  50                push ax
 00006390  2BC0              sub ax,ax
 00006392  50                push ax
-00006393  90                nop
 00006394  0E                push cs
 00006395  E82D72            call 0xd5c5
 00006398  B84C0C            mov ax,0xc4c
 0000639B  1E                push ds
 0000639C  50                push ax
-0000639D  90                nop
 0000639E  0E                push cs
 0000639F  E8ED79            call 0xdd8f
 000063A2  A3FE61            mov [0x61fe],ax
@@ -9553,10 +9387,8 @@
 000063AA  50                push ax
 000063AB  B80D00            mov ax,0xd
 000063AE  50                push ax
-000063AF  90                nop
 000063B0  0E                push cs
 000063B1  E81172            call 0xd5c5
-000063B4  90                nop
 000063B5  0E                push cs
 000063B6  E8F16E            call 0xd2aa
 000063B9  A35062            mov [0x6250],ax
@@ -9580,7 +9412,6 @@
 000063DA  2BC0              sub ax,ax
 000063DC  50                push ax
 000063DD  50                push ax
-000063DE  90                nop
 000063DF  0E                push cs
 000063E0  E86ABA            call 0x1e4d
 000063E3  A34C62            mov [0x624c],ax
@@ -9607,7 +9438,6 @@
 0000640C  2BC0              sub ax,ax
 0000640E  50                push ax
 0000640F  50                push ax
-00006410  90                nop
 00006411  0E                push cs
 00006412  E838BA            call 0x1e4d
 00006415  A37C62            mov [0x627c],ax
@@ -9634,7 +9464,6 @@
 0000643E  2BC0              sub ax,ax
 00006440  50                push ax
 00006441  50                push ax
-00006442  90                nop
 00006443  0E                push cs
 00006444  E806BA            call 0x1e4d
 00006447  A33862            mov [0x6238],ax
@@ -9646,7 +9475,6 @@
 00006458  9AB70BF50F        call 0xff5:0xbb7
 0000645D  FF76FE            push word [bp-0x2]
 00006460  FF76FC            push word [bp-0x4]
-00006463  90                nop
 00006464  0E                push cs
 00006465  E84A7B            call 0xdfb2
 00006468  EB05              jmp short 0x646f
@@ -9655,16 +9483,16 @@
 00006472  BA0000            mov dx,0x0
 00006475  52                push dx
 00006476  50                push ax
-00006477  90                nop
 00006478  0E                push cs
 00006479  E8A160            call 0xc51d
 0000647C  8BE5              mov sp,bp
 0000647E  5D                pop bp
 0000647F  CB                retf
+
 00006480  55                push bp
 00006481  8BEC              mov bp,sp
 00006483  B80800            mov ax,0x8
-00006486  9A1C3E821F        call 0x1f82:0x3e1c
+00006486  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000648B  833E7FA400        cmp word [0xa47f],byte +0x0
 00006490  7D03              jnl 0x6495
 00006492  E9F900            jmp 0x658e
@@ -9755,10 +9583,11 @@
 0000658E  8BE5              mov sp,bp
 00006590  5D                pop bp
 00006591  CB                retf
+
 00006592  55                push bp
 00006593  8BEC              mov bp,sp
 00006595  B86000            mov ax,0x60
-00006598  9A1C3E821F        call 0x1f82:0x3e1c
+00006598  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000659D  57                push di
 0000659E  56                push si
 0000659F  C746F40000        mov word [bp-0xc],0x0
@@ -9809,7 +9638,6 @@
 00006618  8D46AA            lea ax,[bp-0x56]
 0000661B  16                push ss
 0000661C  50                push ax
-0000661D  90                nop
 0000661E  0E                push cs
 0000661F  E85D4A            call 0xb07f
 00006622  52                push dx
@@ -9850,20 +9678,17 @@
 0000667C  50                push ax
 0000667D  B88000            mov ax,0x80
 00006680  50                push ax
-00006681  90                nop
 00006682  0E                push cs
 00006683  E8834B            call 0xb209
 00006686  A36A62            mov [0x626a],ax
 00006689  89166C62          mov [0x626c],dx
 0000668D  837E0600          cmp word [bp+0x6],byte +0x0
 00006691  7405              jz 0x6698
-00006693  90                nop
 00006694  0E                push cs
 00006695  E8374A            call 0xb0cf
 00006698  8B5EA0            mov bx,[bp-0x60]
 0000669B  FF771A            push word [bx+0x1a]
 0000669E  FF7718            push word [bx+0x18]
-000066A1  90                nop
 000066A2  0E                push cs
 000066A3  E8A149            call 0xb047
 000066A6  8B5EA0            mov bx,[bp-0x60]
@@ -9879,7 +9704,6 @@
 000066C9  8B5EA0            mov bx,[bp-0x60]
 000066CC  FF771A            push word [bx+0x1a]
 000066CF  FF7718            push word [bx+0x18]
-000066D2  90                nop
 000066D3  0E                push cs
 000066D4  E88C49            call 0xb063
 000066D7  B85862            mov ax,0x6258
@@ -9918,7 +9742,6 @@
 00006727  9AA205F50F        call 0xff5:0x5a2
 0000672C  8946A6            mov [bp-0x5a],ax
 0000672F  8956A8            mov [bp-0x58],dx
-00006732  90                nop
 00006733  0E                push cs
 00006734  E85A6C            call 0xd391
 00006737  8946F6            mov [bp-0xa],ax
@@ -9929,26 +9752,22 @@
 00006746  16                push ss
 00006747  50                push ax
 00006748  9A1005F50F        call 0xff5:0x510
-0000674D  90                nop
 0000674E  0E                push cs
 0000674F  E8D166            call 0xce23
 00006752  FF368662          push word [0x6286]
 00006756  FF368462          push word [0x6284]
-0000675A  90                nop
 0000675B  0E                push cs
 0000675C  E85378            call 0xdfb2
 0000675F  B82F6B            mov ax,0x6b2f
 00006762  BA0000            mov dx,0x0
 00006765  52                push dx
 00006766  50                push ax
-00006767  90                nop
 00006768  0E                push cs
 00006769  E8EC70            call 0xd858
 0000676C  B82F6B            mov ax,0x6b2f
 0000676F  BA0000            mov dx,0x0
 00006772  52                push dx
 00006773  50                push ax
-00006774  90                nop
 00006775  0E                push cs
 00006776  E8D1EC            call 0x544a
 00006779  8946BC            mov [bp-0x44],ax
@@ -9973,7 +9792,6 @@
 0000679E  9AB70BF50F        call 0xff5:0xbb7
 000067A3  FF368A62          push word [0x628a]
 000067A7  FF368862          push word [0x6288]
-000067AB  90                nop
 000067AC  0E                push cs
 000067AD  E8BBE3            call 0x4b6b
 000067B0  B8E701            mov ax,0x1e7
@@ -9985,7 +9803,6 @@
 000067C1  8D46C0            lea ax,[bp-0x40]
 000067C4  16                push ss
 000067C5  50                push ax
-000067C6  90                nop
 000067C7  0E                push cs
 000067C8  E8B448            call 0xb07f
 000067CB  52                push dx
@@ -10007,7 +9824,6 @@
 000067F2  A15262            mov ax,[0x6252]
 000067F5  80C40A            add ah,0xa
 000067F8  50                push ax
-000067F9  90                nop
 000067FA  0E                push cs
 000067FB  E87567            call 0xcf73
 000067FE  B80100            mov ax,0x1
@@ -10015,7 +9831,6 @@
 00006802  A17262            mov ax,[0x6272]
 00006805  80C40E            add ah,0xe
 00006808  50                push ax
-00006809  90                nop
 0000680A  0E                push cs
 0000680B  E86567            call 0xcf73
 0000680E  B80100            mov ax,0x1
@@ -10040,7 +9855,6 @@
 0000683B  50                push ax
 0000683C  FF368662          push word [0x6286]
 00006840  FF368462          push word [0x6284]
-00006844  90                nop
 00006845  0E                push cs
 00006846  E83070            call 0xd879
 00006849  833EB48000        cmp word [0x80b4],byte +0x0
@@ -10051,7 +9865,6 @@
 0000685B  2BC0              sub ax,ax
 0000685D  50                push ax
 0000685E  FF36B680          push word [0x80b6]
-00006862  90                nop
 00006863  0E                push cs
 00006864  E8AD6B            call 0xd414
 00006867  EB3B              jmp short 0x68a4
@@ -10096,7 +9909,6 @@
 000068CE  2B063E62          sub ax,[0x623e]
 000068D2  50                push ax
 000068D3  FF368062          push word [0x6280]
-000068D7  90                nop
 000068D8  0E                push cs
 000068D9  E87EE3            call 0x4c5a
 000068DC  A1A480            mov ax,[0x80a4]
@@ -10141,12 +9953,10 @@
 0000693B  FF366862          push word [0x6268]
 0000693F  FF366C62          push word [0x626c]
 00006943  FF366A62          push word [0x626a]
-00006947  90                nop
 00006948  0E                push cs
 00006949  E8054C            call 0xb551
 0000694C  B80300            mov ax,0x3
 0000694F  50                push ax
-00006950  90                nop
 00006951  0E                push cs
 00006952  E8A299            call 0x2f7
 00006955  B82600            mov ax,0x26
@@ -10162,7 +9972,6 @@
 0000696B  FF76A0            push word [bp-0x60]
 0000696E  FF76A4            push word [bp-0x5c]
 00006971  FF76A2            push word [bp-0x5e]
-00006974  90                nop
 00006975  0E                push cs
 00006976  E86BA7            call 0x10e4
 00006979  8B1EBA77          mov bx,[0x77ba]
@@ -10180,11 +9989,9 @@
 0000699F  FF76A0            push word [bp-0x60]
 000069A2  0E                push cs
 000069A3  E8230D            call 0x76c9
-000069A6  90                nop
 000069A7  0E                push cs
 000069A8  E82447            call 0xb0cf
 000069AB  EB27              jmp short 0x69d4
-000069AD  90                nop
 000069AE  0E                push cs
 000069AF  E81D47            call 0xb0cf
 000069B2  B86A62            mov ax,0x626a
@@ -10211,7 +10018,6 @@
 000069E5  A15262            mov ax,[0x6252]
 000069E8  80C40A            add ah,0xa
 000069EB  50                push ax
-000069EC  90                nop
 000069ED  0E                push cs
 000069EE  E88265            call 0xcf73
 000069F1  2BC0              sub ax,ax
@@ -10219,7 +10025,6 @@
 000069F4  A17662            mov ax,[0x6276]
 000069F7  80C40C            add ah,0xc
 000069FA  50                push ax
-000069FB  90                nop
 000069FC  0E                push cs
 000069FD  E87365            call 0xcf73
 00006A00  2BC0              sub ax,ax
@@ -10227,7 +10032,6 @@
 00006A03  A17262            mov ax,[0x6272]
 00006A06  80C40E            add ah,0xe
 00006A09  50                push ax
-00006A0A  90                nop
 00006A0B  0E                push cs
 00006A0C  E86465            call 0xcf73
 00006A0F  2BC0              sub ax,ax
@@ -10248,25 +10052,20 @@
 00006A37  BAF50F            mov dx,0xff5
 00006A3A  52                push dx
 00006A3B  50                push ax
-00006A3C  90                nop
 00006A3D  0E                push cs
 00006A3E  E8176E            call 0xd858
 00006A41  FF76BE            push word [bp-0x42]
 00006A44  FF76BC            push word [bp-0x44]
-00006A47  90                nop
 00006A48  0E                push cs
 00006A49  E8FEE9            call 0x544a
 00006A4C  FF76F8            push word [bp-0x8]
 00006A4F  FF76F6            push word [bp-0xa]
-00006A52  90                nop
 00006A53  0E                push cs
 00006A54  E85B75            call 0xdfb2
 00006A57  837EFA00          cmp word [bp-0x6],byte +0x0
 00006A5B  740A              jz 0x6a67
-00006A5D  90                nop
 00006A5E  0E                push cs
 00006A5F  E81064            call 0xce72
-00006A62  90                nop
 00006A63  0E                push cs
 00006A64  E8D3CC            call 0x373a
 00006A67  B8F461            mov ax,0x61f4
@@ -10317,7 +10116,6 @@
 00006AF3  7409              jz 0x6afe
 00006AF5  B80100            mov ax,0x1
 00006AF8  50                push ax
-00006AF9  90                nop
 00006AFA  0E                push cs
 00006AFB  E8AA5E            call 0xc9a8
 00006AFE  5E                pop si
@@ -10325,14 +10123,14 @@
 00006B00  8BE5              mov sp,bp
 00006B02  5D                pop bp
 00006B03  CA0200            retf 0x2
+
 00006B06  55                push bp
 00006B07  8BEC              mov bp,sp
 00006B09  33C0              xor ax,ax
-00006B0B  9A1C3E821F        call 0x1f82:0x3e1c
+00006B0B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006B10  C45E04            les bx,[bp+0x4]
 00006B13  26FF7702          push word [es:bx+0x2]
 00006B17  26FF37            push word [es:bx]
-00006B1A  90                nop
 00006B1B  0E                push cs
 00006B1C  E88E43            call 0xaead
 00006B1F  C45E04            les bx,[bp+0x4]
@@ -10341,10 +10139,11 @@
 00006B28  268907            mov [es:bx],ax
 00006B2B  5D                pop bp
 00006B2C  C20400            ret 0x4
+
 00006B2F  55                push bp
 00006B30  8BEC              mov bp,sp
 00006B32  33C0              xor ax,ax
-00006B34  9A1C3E821F        call 0x1f82:0x3e1c
+00006B34  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006B39  FF7608            push word [bp+0x8]
 00006B3C  FF7606            push word [bp+0x6]
 00006B3F  0E                push cs
@@ -10352,10 +10151,11 @@
 00006B43  E8440A            call 0x758a
 00006B46  5D                pop bp
 00006B47  CA0400            retf 0x4
+
 00006B4A  55                push bp
 00006B4B  8BEC              mov bp,sp
 00006B4D  33C0              xor ax,ax
-00006B4F  9A1C3E821F        call 0x1f82:0x3e1c
+00006B4F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006B54  FF7608            push word [bp+0x8]
 00006B57  FF7606            push word [bp+0x6]
 00006B5A  9A8434F50F        call 0xff5:0x3484
@@ -10366,15 +10166,15 @@
 00006B6B  E8480A            call 0x75b6
 00006B6E  FF368A62          push word [0x628a]
 00006B72  FF368862          push word [0x6288]
-00006B76  90                nop
 00006B77  0E                push cs
 00006B78  E8EDAA            call 0x1668
 00006B7B  5D                pop bp
 00006B7C  CA0400            retf 0x4
+
 00006B7F  55                push bp
 00006B80  8BEC              mov bp,sp
 00006B82  33C0              xor ax,ax
-00006B84  9A1C3E821F        call 0x1f82:0x3e1c
+00006B84  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006B89  FF7606            push word [bp+0x6]
 00006B8C  FF7604            push word [bp+0x4]
 00006B8F  B80D00            mov ax,0xd
@@ -10384,10 +10184,11 @@
 00006B97  9A5A09F50F        call 0xff5:0x95a
 00006B9C  5D                pop bp
 00006B9D  C20400            ret 0x4
+
 00006BA0  55                push bp
 00006BA1  8BEC              mov bp,sp
 00006BA3  33C0              xor ax,ax
-00006BA5  9A1C3E821F        call 0x1f82:0x3e1c
+00006BA5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006BAA  FF7606            push word [bp+0x6]
 00006BAD  FF7604            push word [bp+0x4]
 00006BB0  B8F3FF            mov ax,0xfff3
@@ -10397,10 +10198,11 @@
 00006BB8  9A5A09F50F        call 0xff5:0x95a
 00006BBD  5D                pop bp
 00006BBE  C20400            ret 0x4
+
 00006BC1  55                push bp
 00006BC2  8BEC              mov bp,sp
 00006BC4  B80200            mov ax,0x2
-00006BC7  9A1C3E821F        call 0x1f82:0x3e1c
+00006BC7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006BCC  8A4604            mov al,[bp+0x4]
 00006BCF  2AE4              sub ah,ah
 00006BD1  8946FE            mov [bp-0x2],ax
@@ -10417,7 +10219,6 @@
 00006BEB  A15262            mov ax,[0x6252]
 00006BEE  80C40A            add ah,0xa
 00006BF1  50                push ax
-00006BF2  90                nop
 00006BF3  0E                push cs
 00006BF4  E87C63            call 0xcf73
 00006BF7  8B46FE            mov ax,[bp-0x2]
@@ -10427,7 +10228,6 @@
 00006C01  A15262            mov ax,[0x6252]
 00006C04  80C40A            add ah,0xa
 00006C07  50                push ax
-00006C08  90                nop
 00006C09  0E                push cs
 00006C0A  E86663            call 0xcf73
 00006C0D  E8A604            call 0x70b6
@@ -10457,10 +10257,11 @@
 00006C49  8BE5              mov sp,bp
 00006C4B  5D                pop bp
 00006C4C  C20400            ret 0x4
+
 00006C4F  55                push bp
 00006C50  8BEC              mov bp,sp
 00006C52  B80A00            mov ax,0xa
-00006C55  9A1C3E821F        call 0x1f82:0x3e1c
+00006C55  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006C5A  C45E06            les bx,[bp+0x6]
 00006C5D  268B4702          mov ax,[es:bx+0x2]
 00006C61  8946F8            mov [bp-0x8],ax
@@ -10507,7 +10308,6 @@
 00006CC6  50                push ax
 00006CC7  B81400            mov ax,0x14
 00006CCA  50                push ax
-00006CCB  90                nop
 00006CCC  0E                push cs
 00006CCD  E864A6            call 0x1334
 00006CD0  52                push dx
@@ -10526,7 +10326,6 @@
 00006CF1  26FF37            push word [es:bx]
 00006CF4  FF368A62          push word [0x628a]
 00006CF8  FF368862          push word [0x6288]
-00006CFC  90                nop
 00006CFD  0E                push cs
 00006CFE  E8BBAD            call 0x1abc
 00006D01  0BC0              or ax,ax
@@ -10546,7 +10345,6 @@
 00006D26  50                push ax
 00006D27  FF76FE            push word [bp-0x2]
 00006D2A  FF76FC            push word [bp-0x4]
-00006D2D  90                nop
 00006D2E  0E                push cs
 00006D2F  E8C7B6            call 0x23f9
 00006D32  0BC0              or ax,ax
@@ -10568,7 +10366,6 @@
 00006D5D  50                push ax
 00006D5E  FF76FE            push word [bp-0x2]
 00006D61  FF76FC            push word [bp-0x4]
-00006D64  90                nop
 00006D65  0E                push cs
 00006D66  E890B6            call 0x23f9
 00006D69  0BC0              or ax,ax
@@ -10589,7 +10386,6 @@
 00006D92  50                push ax
 00006D93  FF76FE            push word [bp-0x2]
 00006D96  FF76FC            push word [bp-0x4]
-00006D99  90                nop
 00006D9A  0E                push cs
 00006D9B  E85BB6            call 0x23f9
 00006D9E  0BC0              or ax,ax
@@ -10630,7 +10426,6 @@
 00006DFE  2BC0              sub ax,ax
 00006E00  50                push ax
 00006E01  50                push ax
-00006E02  90                nop
 00006E03  0E                push cs
 00006E04  E897D1            call 0x3f9e
 00006E07  0BC0              or ax,ax
@@ -10666,8 +10461,9 @@
 00006E5C  8BE5              mov sp,bp
 00006E5E  5D                pop bp
 00006E5F  C20600            ret 0x6
+
 00006E62  33C0              xor ax,ax
-00006E64  9A1C3E821F        call 0x1f82:0x3e1c
+00006E64  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006E69  9A4F33F50F        call 0xff5:0x334f
 00006E6E  E83701            call 0x6fa8
 00006E71  E80C00            call 0x6e80
@@ -10675,14 +10471,14 @@
 00006E77  E8BE07            call 0x7638
 00006E7A  9A3533F50F        call 0xff5:0x3335
 00006E7F  C3                ret
+
 00006E80  33C0              xor ax,ax
-00006E82  9A1C3E821F        call 0x1f82:0x3e1c
+00006E82  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006E87  A14862            mov ax,[0x6248]
 00006E8A  0B064A62          or ax,[0x624a]
 00006E8E  7451              jz 0x6ee1
 00006E90  FF364A62          push word [0x624a]
 00006E94  FF364862          push word [0x6248]
-00006E98  90                nop
 00006E99  0E                push cs
 00006E9A  E8AA41            call 0xb047
 00006E9D  9A8333F50F        call 0xff5:0x3383
@@ -10705,21 +10501,20 @@
 00006ECF  9A6233F50F        call 0xff5:0x3362
 00006ED4  FF364A62          push word [0x624a]
 00006ED8  FF364862          push word [0x6248]
-00006EDC  90                nop
 00006EDD  0E                push cs
 00006EDE  E88241            call 0xb063
 00006EE1  C3                ret
+
 00006EE2  55                push bp
 00006EE3  8BEC              mov bp,sp
 00006EE5  B82400            mov ax,0x24
-00006EE8  9A1C3E821F        call 0x1f82:0x3e1c
+00006EE8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006EED  B85262            mov ax,0x6252
 00006EF0  1E                push ds
 00006EF1  50                push ax
 00006EF2  8D46DC            lea ax,[bp-0x24]
 00006EF5  16                push ss
 00006EF6  50                push ax
-00006EF7  90                nop
 00006EF8  0E                push cs
 00006EF9  E8E8A1            call 0x10e4
 00006EFC  A14862            mov ax,[0x6248]
@@ -10732,7 +10527,6 @@
 00006F11  8D46EA            lea ax,[bp-0x16]
 00006F14  16                push ss
 00006F15  50                push ax
-00006F16  90                nop
 00006F17  0E                push cs
 00006F18  E86441            call 0xb07f
 00006F1B  52                push dx
@@ -10753,21 +10547,17 @@
 00006F37  50                push ax
 00006F38  B8FF00            mov ax,0xff
 00006F3B  50                push ax
-00006F3C  90                nop
 00006F3D  0E                push cs
 00006F3E  E88A99            call 0x8cb
 00006F41  9A5379F50F        call 0xff5:0x7953
 00006F46  0BC0              or ax,ax
 00006F48  7505              jnz 0x6f4f
-00006F4A  90                nop
 00006F4B  0E                push cs
 00006F4C  E89D41            call 0xb0ec
-00006F4F  90                nop
 00006F50  0E                push cs
 00006F51  E87B41            call 0xb0cf
 00006F54  FF76FE            push word [bp-0x2]
 00006F57  FF76FC            push word [bp-0x4]
-00006F5A  90                nop
 00006F5B  0E                push cs
 00006F5C  E84E3F            call 0xaead
 00006F5F  C706C0800000      mov word [0x80c0],0x0
@@ -10778,7 +10568,6 @@
 00006F72  EB30              jmp short 0x6fa4
 00006F74  FF76DE            push word [bp-0x22]
 00006F77  FF76DC            push word [bp-0x24]
-00006F7A  90                nop
 00006F7B  0E                push cs
 00006F7C  E82E3F            call 0xaead
 00006F7F  C706C0800000      mov word [0x80c0],0x0
@@ -10790,23 +10579,22 @@
 00006F95  8B56FE            mov dx,[bp-0x2]
 00006F98  A34862            mov [0x6248],ax
 00006F9B  89164A62          mov [0x624a],dx
-00006F9F  90                nop
 00006FA0  0E                push cs
 00006FA1  E84841            call 0xb0ec
 00006FA4  8BE5              mov sp,bp
 00006FA6  5D                pop bp
 00006FA7  C3                ret
+
 00006FA8  55                push bp
 00006FA9  8BEC              mov bp,sp
 00006FAB  B82000            mov ax,0x20
-00006FAE  9A1C3E821F        call 0x1f82:0x3e1c
+00006FAE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00006FB3  B85262            mov ax,0x6252
 00006FB6  1E                push ds
 00006FB7  50                push ax
 00006FB8  8D46E0            lea ax,[bp-0x20]
 00006FBB  16                push ss
 00006FBC  50                push ax
-00006FBD  90                nop
 00006FBE  0E                push cs
 00006FBF  E822A1            call 0x10e4
 00006FC2  A14862            mov ax,[0x6248]
@@ -10816,7 +10604,6 @@
 00006FCF  8D46EE            lea ax,[bp-0x12]
 00006FD2  16                push ss
 00006FD3  50                push ax
-00006FD4  90                nop
 00006FD5  0E                push cs
 00006FD6  E8A640            call 0xb07f
 00006FD9  52                push dx
@@ -10837,24 +10624,22 @@
 00006FF5  50                push ax
 00006FF6  B8FF00            mov ax,0xff
 00006FF9  50                push ax
-00006FFA  90                nop
 00006FFB  0E                push cs
 00006FFC  E86499            call 0x963
-00006FFF  90                nop
 00007000  0E                push cs
 00007001  E8CB40            call 0xb0cf
 00007004  EB0A              jmp short 0x7010
 00007006  9A2653F50F        call 0xff5:0x5326
-0000700B  90                nop
 0000700C  0E                push cs
 0000700D  E8DC40            call 0xb0ec
 00007010  8BE5              mov sp,bp
 00007012  5D                pop bp
 00007013  C3                ret
+
 00007014  55                push bp
 00007015  8BEC              mov bp,sp
 00007017  B81400            mov ax,0x14
-0000701A  9A1C3E821F        call 0x1f82:0x3e1c
+0000701A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000701F  C746FE0000        mov word [bp-0x2],0x0
 00007024  8B4604            mov ax,[bp+0x4]
 00007027  0B4606            or ax,[bp+0x6]
@@ -10870,7 +10655,6 @@
 0000703E  8D46EC            lea ax,[bp-0x14]
 00007041  16                push ss
 00007042  50                push ax
-00007043  90                nop
 00007044  0E                push cs
 00007045  E83740            call 0xb07f
 00007048  52                push dx
@@ -10880,7 +10664,6 @@
 00007052  0BC0              or ax,ax
 00007054  750A              jnz 0x7060
 00007056  E889FE            call 0x6ee2
-00007059  90                nop
 0000705A  0E                push cs
 0000705B  E87140            call 0xb0cf
 0000705E  EB1D              jmp short 0x707d
@@ -10902,10 +10685,11 @@
 00007083  8BE5              mov sp,bp
 00007085  5D                pop bp
 00007086  C20400            ret 0x4
+
 00007089  55                push bp
 0000708A  8BEC              mov bp,sp
 0000708C  33C0              xor ax,ax
-0000708E  9A1C3E821F        call 0x1f82:0x3e1c
+0000708E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007093  8B4606            mov ax,[bp+0x6]
 00007096  01065E62          add [0x625e],ax
 0000709A  8B4604            mov ax,[bp+0x4]
@@ -10917,19 +10701,20 @@
 000070AF  E80400            call 0x70b6
 000070B2  5D                pop bp
 000070B3  C20400            ret 0x4
+
 000070B6  33C0              xor ax,ax
-000070B8  9A1C3E821F        call 0x1f82:0x3e1c
+000070B8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000070BD  B85262            mov ax,0x6252
 000070C0  1E                push ds
 000070C1  50                push ax
-000070C2  90                nop
 000070C3  0E                push cs
 000070C4  E85FA0            call 0x1126
 000070C7  C3                ret
+
 000070C8  55                push bp
 000070C9  8BEC              mov bp,sp
 000070CB  B81E00            mov ax,0x1e
-000070CE  9A1C3E821F        call 0x1f82:0x3e1c
+000070CE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000070D3  8B4604            mov ax,[bp+0x4]
 000070D6  3D0800            cmp ax,0x8
 000070D9  7503              jnz 0x70de
@@ -11087,10 +10872,11 @@
 0000726E  8BE5              mov sp,bp
 00007270  5D                pop bp
 00007271  C20200            ret 0x2
+
 00007274  55                push bp
 00007275  8BEC              mov bp,sp
 00007277  B80800            mov ax,0x8
-0000727A  9A1C3E821F        call 0x1f82:0x3e1c
+0000727A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000727F  56                push si
 00007280  C746FE0000        mov word [bp-0x2],0x0
 00007285  C41E6A62          les bx,[0x626a]
@@ -11130,10 +10916,11 @@
 000072F0  8BE5              mov sp,bp
 000072F2  5D                pop bp
 000072F3  C3                ret
+
 000072F4  55                push bp
 000072F5  8BEC              mov bp,sp
 000072F7  B80400            mov ax,0x4
-000072FA  9A1C3E821F        call 0x1f82:0x3e1c
+000072FA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000072FF  56                push si
 00007300  C41E6A62          les bx,[0x626a]
 00007304  268B07            mov ax,[es:bx]
@@ -11169,10 +10956,11 @@
 0000735D  8BE5              mov sp,bp
 0000735F  5D                pop bp
 00007360  C20200            ret 0x2
+
 00007363  55                push bp
 00007364  8BEC              mov bp,sp
 00007366  B80400            mov ax,0x4
-00007369  9A1C3E821F        call 0x1f82:0x3e1c
+00007369  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000736E  56                push si
 0000736F  C41E6A62          les bx,[0x626a]
 00007373  268B07            mov ax,[es:bx]
@@ -11197,10 +10985,11 @@
 000073B3  8BE5              mov sp,bp
 000073B5  5D                pop bp
 000073B6  C3                ret
+
 000073B7  55                push bp
 000073B8  8BEC              mov bp,sp
 000073BA  B80C00            mov ax,0xc
-000073BD  9A1C3E821F        call 0x1f82:0x3e1c
+000073BD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000073C2  56                push si
 000073C3  C41E6A62          les bx,[0x626a]
 000073C7  268B07            mov ax,[es:bx]
@@ -11255,10 +11044,11 @@
 0000744A  8BE5              mov sp,bp
 0000744C  5D                pop bp
 0000744D  C3                ret
+
 0000744E  55                push bp
 0000744F  8BEC              mov bp,sp
 00007451  B80A00            mov ax,0xa
-00007454  9A1C3E821F        call 0x1f82:0x3e1c
+00007454  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007459  8B4606            mov ax,[bp+0x6]
 0000745C  0B4608            or ax,[bp+0x8]
 0000745F  7514              jnz 0x7475
@@ -11336,7 +11126,6 @@
 00007526  50                push ax
 00007527  FF7608            push word [bp+0x8]
 0000752A  FF7606            push word [bp+0x6]
-0000752D  90                nop
 0000752E  0E                push cs
 0000752F  E851D8            call 0x4d83
 00007532  A1C080            mov ax,[0x80c0]
@@ -11351,8 +11140,9 @@
 0000754B  8BE5              mov sp,bp
 0000754D  5D                pop bp
 0000754E  CA0A00            retf 0xa
+
 00007551  33C0              xor ax,ax
-00007553  9A1C3E821F        call 0x1f82:0x3e1c
+00007553  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007558  C70602620000      mov word [0x6202],0x0
 0000755E  B88062            mov ax,0x6280
 00007561  1E                push ds
@@ -11367,13 +11157,13 @@
 00007574  2B063E62          sub ax,[0x623e]
 00007578  3B066062          cmp ax,[0x6260]
 0000757C  7C0B              jl 0x7589
-0000757E  90                nop
 0000757F  0E                push cs
 00007580  E8C1D6            call 0x4c44
 00007583  C70602620100      mov word [0x6202],0x1
 00007589  C3                ret
+
 0000758A  33C0              xor ax,ax
-0000758C  9A1C3E821F        call 0x1f82:0x3e1c
+0000758C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007591  9A4F33F50F        call 0xff5:0x334f
 00007596  C606C68002        mov byte [0x80c6],0x2
 0000759B  C606D08001        mov byte [0x80d0],0x1
@@ -11385,10 +11175,11 @@
 000075AD  E807FE            call 0x73b7
 000075B0  9A3533F50F        call 0xff5:0x3335
 000075B5  C3                ret
+
 000075B6  55                push bp
 000075B7  8BEC              mov bp,sp
 000075B9  B80200            mov ax,0x2
-000075BC  9A1C3E821F        call 0x1f82:0x3e1c
+000075BC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000075C1  813EBCCFDB1B      cmp word [0xcfbc],0x1bdb
 000075C7  7508              jnz 0x75d1
 000075C9  813EBECF821F      cmp word [0xcfbe],0x1f82
@@ -11428,8 +11219,9 @@
 00007634  8BE5              mov sp,bp
 00007636  5D                pop bp
 00007637  C3                ret
+
 00007638  33C0              xor ax,ax
-0000763A  9A1C3E821F        call 0x1f82:0x3e1c
+0000763A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000763F  833E526200        cmp word [0x6252],byte +0x0
 00007644  7405              jz 0x764b
 00007646  A15462            mov ax,[0x6254]
@@ -11479,10 +11271,11 @@
 000076C2  50                push ax
 000076C3  9A760BF50F        call 0xff5:0xb76
 000076C8  C3                ret
+
 000076C9  55                push bp
 000076CA  8BEC              mov bp,sp
 000076CC  B81000            mov ax,0x10
-000076CF  9A1C3E821F        call 0x1f82:0x3e1c
+000076CF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000076D4  57                push di
 000076D5  56                push si
 000076D6  8B4606            mov ax,[bp+0x6]
@@ -11522,7 +11315,6 @@
 00007734  8B5E06            mov bx,[bp+0x6]
 00007737  FF771A            push word [bx+0x1a]
 0000773A  FF7718            push word [bx+0x18]
-0000773D  90                nop
 0000773E  0E                push cs
 0000773F  E80539            call 0xb047
 00007742  8B5E06            mov bx,[bp+0x6]
@@ -11573,7 +11365,6 @@
 000077C8  8B5E06            mov bx,[bp+0x6]
 000077CB  FF771A            push word [bx+0x1a]
 000077CE  FF7718            push word [bx+0x18]
-000077D1  90                nop
 000077D2  0E                push cs
 000077D3  E88D38            call 0xb063
 000077D6  8B5E06            mov bx,[bp+0x6]
@@ -11701,10 +11492,11 @@
 000078E5  8BE5              mov sp,bp
 000078E7  5D                pop bp
 000078E8  CA0200            retf 0x2
+
 000078EB  55                push bp
 000078EC  8BEC              mov bp,sp
 000078EE  B80800            mov ax,0x8
-000078F1  9A1C3E821F        call 0x1f82:0x3e1c
+000078F1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000078F6  A1A3A4            mov ax,[0xa4a3]
 000078F9  A33C62            mov [0x623c],ax
 000078FC  C70636620000      mov word [0x6236],0x0
@@ -11760,16 +11552,16 @@
 00007996  8BE5              mov sp,bp
 00007998  5D                pop bp
 00007999  C3                ret
+
 0000799A  55                push bp
 0000799B  8BEC              mov bp,sp
 0000799D  B80400            mov ax,0x4
-000079A0  9A1C3E821F        call 0x1f82:0x3e1c
+000079A0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000079A5  833E706200        cmp word [0x6270],byte +0x0
 000079AA  750E              jnz 0x79ba
 000079AC  FF7604            push word [bp+0x4]
 000079AF  B8000D            mov ax,0xd00
 000079B2  50                push ax
-000079B3  90                nop
 000079B4  0E                push cs
 000079B5  E8BB55            call 0xcf73
 000079B8  EB2D              jmp short 0x79e7
@@ -11782,7 +11574,6 @@
 000079CF  8B46FE            mov ax,[bp-0x2]
 000079D2  80C40D            add ah,0xd
 000079D5  50                push ax
-000079D6  90                nop
 000079D7  0E                push cs
 000079D8  E89855            call 0xcf73
 000079DB  FF46FE            inc word [bp-0x2]
@@ -11792,8 +11583,9 @@
 000079E7  8BE5              mov sp,bp
 000079E9  5D                pop bp
 000079EA  C20200            ret 0x2
+
 000079ED  33C0              xor ax,ax
-000079EF  9A1C3E821F        call 0x1f82:0x3e1c
+000079EF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000079F4  FF36FC61          push word [0x61fc]
 000079F8  E83100            call 0x7a2c
 000079FB  FF363C62          push word [0x623c]
@@ -11802,7 +11594,7 @@
 00007A03  55                push bp
 00007A04  8BEC              mov bp,sp
 00007A06  33C0              xor ax,ax
-00007A08  9A1C3E821F        call 0x1f82:0x3e1c
+00007A08  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007A0D  A17062            mov ax,[0x6270]
 00007A10  394604            cmp [bp+0x4],ax
 00007A13  7413              jz 0x7a28
@@ -11817,9 +11609,10 @@
 00007A28  5D                pop bp
 00007A29  C20200            ret 0x2
 00007A2C  55                push bp
+
 00007A2D  8BEC              mov bp,sp
 00007A2F  33C0              xor ax,ax
-00007A31  9A1C3E821F        call 0x1f82:0x3e1c
+00007A31  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007A36  A17262            mov ax,[0x6272]
 00007A39  394604            cmp [bp+0x4],ax
 00007A3C  7428              jz 0x7a66
@@ -11828,7 +11621,6 @@
 00007A41  A17262            mov ax,[0x6272]
 00007A44  80C40E            add ah,0xe
 00007A47  50                push ax
-00007A48  90                nop
 00007A49  0E                push cs
 00007A4A  E82655            call 0xcf73
 00007A4D  8B4604            mov ax,[bp+0x4]
@@ -11838,16 +11630,16 @@
 00007A57  A17262            mov ax,[0x6272]
 00007A5A  80C40E            add ah,0xe
 00007A5D  50                push ax
-00007A5E  90                nop
 00007A5F  0E                push cs
 00007A60  E81055            call 0xcf73
 00007A63  E851F9            call 0x73b7
 00007A66  5D                pop bp
 00007A67  C20200            ret 0x2
+
 00007A6A  55                push bp
 00007A6B  8BEC              mov bp,sp
 00007A6D  33C0              xor ax,ax
-00007A6F  9A1C3E821F        call 0x1f82:0x3e1c
+00007A6F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007A74  A16E62            mov ax,[0x626e]
 00007A77  394604            cmp [bp+0x4],ax
 00007A7A  7409              jz 0x7a85
@@ -11856,10 +11648,11 @@
 00007A82  E8DDF3            call 0x6e62
 00007A85  5D                pop bp
 00007A86  C20200            ret 0x2
+
 00007A89  55                push bp
 00007A8A  8BEC              mov bp,sp
 00007A8C  33C0              xor ax,ax
-00007A8E  9A1C3E821F        call 0x1f82:0x3e1c
+00007A8E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007A93  837E0800          cmp word [bp+0x8],byte +0x0
 00007A97  7507              jnz 0x7aa0
 00007A99  9AA60BF50F        call 0xff5:0xba6
@@ -11871,13 +11664,13 @@
 00007AAE  9A8F09F50F        call 0xff5:0x98f
 00007AB3  5D                pop bp
 00007AB4  C20600            ret 0x6
+
 00007AB7  55                push bp
 00007AB8  8BEC              mov bp,sp
 00007ABA  B80400            mov ax,0x4
-00007ABD  9A1C3E821F        call 0x1f82:0x3e1c
+00007ABD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007AC2  2BC0              sub ax,ax
 00007AC4  50                push ax
-00007AC5  90                nop
 00007AC6  0E                push cs
 00007AC7  E8DE4E            call 0xc9a8
 00007ACA  FF36C480          push word [0x80c4]
@@ -11918,10 +11711,11 @@
 00007B3A  8BE5              mov sp,bp
 00007B3C  5D                pop bp
 00007B3D  C3                ret
+
 00007B3E  55                push bp
 00007B3F  8BEC              mov bp,sp
 00007B41  B80A00            mov ax,0xa
-00007B44  9A1C3E821F        call 0x1f82:0x3e1c
+00007B44  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007B49  57                push di
 00007B4A  56                push si
 00007B4B  C45E08            les bx,[bp+0x8]
@@ -12018,10 +11812,11 @@
 00007C24  8BE5              mov sp,bp
 00007C26  5D                pop bp
 00007C27  C20800            ret 0x8
+
 00007C2A  55                push bp
 00007C2B  8BEC              mov bp,sp
 00007C2D  33C0              xor ax,ax
-00007C2F  9A1C3E821F        call 0x1f82:0x3e1c
+00007C2F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007C34  FF760E            push word [bp+0xe]
 00007C37  0E                push cs
 00007C38  E8471B            call 0x9782
@@ -12032,10 +11827,11 @@
 00007C47  E8F4FE            call 0x7b3e
 00007C4A  5D                pop bp
 00007C4B  CA0A00            retf 0xa
+
 00007C4E  55                push bp
 00007C4F  8BEC              mov bp,sp
 00007C51  33C0              xor ax,ax
-00007C53  9A1C3E821F        call 0x1f82:0x3e1c
+00007C53  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007C58  FF7616            push word [bp+0x16]
 00007C5B  FF7614            push word [bp+0x14]
 00007C5E  FF7612            push word [bp+0x12]
@@ -12063,10 +11859,11 @@
 00007C95  2BC0              sub ax,ax
 00007C97  5D                pop bp
 00007C98  CA1200            retf 0x12
+
 00007C9B  55                push bp
 00007C9C  8BEC              mov bp,sp
 00007C9E  33C0              xor ax,ax
-00007CA0  9A1C3E821F        call 0x1f82:0x3e1c
+00007CA0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007CA5  B81E00            mov ax,0x1e
 00007CA8  50                push ax
 00007CA9  50                push ax
@@ -12081,10 +11878,11 @@
 00007CBE  9AA911F50F        call 0xff5:0x11a9
 00007CC3  5D                pop bp
 00007CC4  CA0800            retf 0x8
+
 00007CC7  55                push bp
 00007CC8  8BEC              mov bp,sp
 00007CCA  B80200            mov ax,0x2
-00007CCD  9A1C3E821F        call 0x1f82:0x3e1c
+00007CCD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007CD2  FF760C            push word [bp+0xc]
 00007CD5  FF760A            push word [bp+0xa]
 00007CD8  FF7608            push word [bp+0x8]
@@ -12107,10 +11905,11 @@
 00007D0C  8BE5              mov sp,bp
 00007D0E  5D                pop bp
 00007D0F  CA0800            retf 0x8
+
 00007D12  55                push bp
 00007D13  8BEC              mov bp,sp
 00007D15  B80600            mov ax,0x6
-00007D18  9A1C3E821F        call 0x1f82:0x3e1c
+00007D18  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007D1D  57                push di
 00007D1E  56                push si
 00007D1F  C45E0A            les bx,[bp+0xa]
@@ -12172,10 +11971,11 @@
 00007DAB  8BE5              mov sp,bp
 00007DAD  5D                pop bp
 00007DAE  CA0800            retf 0x8
+
 00007DB1  55                push bp
 00007DB2  8BEC              mov bp,sp
 00007DB4  B80A00            mov ax,0xa
-00007DB7  9A1C3E821F        call 0x1f82:0x3e1c
+00007DB7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007DBC  57                push di
 00007DBD  56                push si
 00007DBE  C746F80000        mov word [bp-0x8],0x0
@@ -12255,10 +12055,11 @@
 00007E83  8BE5              mov sp,bp
 00007E85  5D                pop bp
 00007E86  CA0400            retf 0x4
+
 00007E89  55                push bp
 00007E8A  8BEC              mov bp,sp
 00007E8C  B8B000            mov ax,0xb0
-00007E8F  9A1C3E821F        call 0x1f82:0x3e1c
+00007E8F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007E94  57                push di
 00007E95  56                push si
 00007E96  B80300            mov ax,0x3
@@ -12365,10 +12166,11 @@
 00007F85  8BE5              mov sp,bp
 00007F87  5D                pop bp
 00007F88  CB                retf
+
 00007F89  55                push bp
 00007F8A  8BEC              mov bp,sp
 00007F8C  B8A800            mov ax,0xa8
-00007F8F  9A1C3E821F        call 0x1f82:0x3e1c
+00007F8F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00007F94  57                push di
 00007F95  56                push si
 00007F96  0E                push cs
@@ -12429,14 +12231,14 @@
 00008009  8BE5              mov sp,bp
 0000800B  5D                pop bp
 0000800C  CB                retf
+
 0000800D  33C0              xor ax,ax
-0000800F  9A1C3E821F        call 0x1f82:0x3e1c
+0000800F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008014  0E                push cs
 00008015  E8DA16            call 0x96f2
 00008018  9A4F33F50F        call 0xff5:0x334f
 0000801D  2BC0              sub ax,ax
 0000801F  50                push ax
-00008020  90                nop
 00008021  0E                push cs
 00008022  E86049            call 0xc985
 00008025  833ED880FF        cmp word [0x80d8],byte -0x1
@@ -12458,23 +12260,21 @@
 0000804D  9ACEB3F50F        call 0xff5:0xb3ce
 00008052  B80100            mov ax,0x1
 00008055  50                push ax
-00008056  90                nop
 00008057  0E                push cs
 00008058  E83771            call 0xf192
-0000805B  90                nop
 0000805C  0E                push cs
 0000805D  E80E91            call 0x116e
 00008060  B80100            mov ax,0x1
 00008063  50                push ax
-00008064  90                nop
 00008065  0E                push cs
 00008066  E81C49            call 0xc985
 00008069  9A3533F50F        call 0xff5:0x3335
 0000806E  CB                retf
+
 0000806F  55                push bp
 00008070  8BEC              mov bp,sp
 00008072  33C0              xor ax,ax
-00008074  9A1C3E821F        call 0x1f82:0x3e1c
+00008074  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008079  0E                push cs
 0000807A  E87516            call 0x96f2
 0000807D  833EBEA300        cmp word [0xa3be],byte +0x0
@@ -12497,7 +12297,6 @@
 000080AD  C606000D00        mov byte [0xd00],0x0
 000080B2  2BC0              sub ax,ax
 000080B4  50                push ax
-000080B5  90                nop
 000080B6  0E                push cs
 000080B7  E8CB48            call 0xc985
 000080BA  9A4F33F50F        call 0xff5:0x334f
@@ -12511,13 +12310,13 @@
 000080D2  9A3533F50F        call 0xff5:0x3335
 000080D7  B80100            mov ax,0x1
 000080DA  50                push ax
-000080DB  90                nop
 000080DC  0E                push cs
 000080DD  E8A548            call 0xc985
 000080E0  5D                pop bp
 000080E1  CA0200            retf 0x2
+
 000080E4  33C0              xor ax,ax
-000080E6  9A1C3E821F        call 0x1f82:0x3e1c
+000080E6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000080EB  0E                push cs
 000080EC  E80316            call 0x96f2
 000080EF  B8820E            mov ax,0xe82
@@ -12529,7 +12328,6 @@
 000080FE  C606000D00        mov byte [0xd00],0x0
 00008103  2BC0              sub ax,ax
 00008105  50                push ax
-00008106  90                nop
 00008107  0E                push cs
 00008108  E87A48            call 0xc985
 0000810B  9A4F33F50F        call 0xff5:0x334f
@@ -12540,23 +12338,22 @@
 00008118  9A3533F50F        call 0xff5:0x3335
 0000811D  B80100            mov ax,0x1
 00008120  50                push ax
-00008121  90                nop
 00008122  0E                push cs
 00008123  E85F48            call 0xc985
 00008126  9AB16AF50F        call 0xff5:0x6ab1
 0000812B  A0A8CF            mov al,[0xcfa8]
 0000812E  2AE4              sub ah,ah
 00008130  50                push ax
-00008131  90                nop
 00008132  0E                push cs
 00008133  E87931            call 0xb2af
 00008136  C706C0800000      mov word [0x80c0],0x0
 0000813C  C706C0A30100      mov word [0xa3c0],0x1
 00008142  CB                retf
+
 00008143  55                push bp
 00008144  8BEC              mov bp,sp
 00008146  B80600            mov ax,0x6
-00008149  9A1C3E821F        call 0x1f82:0x3e1c
+00008149  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000814E  FF7608            push word [bp+0x8]
 00008151  0E                push cs
 00008152  E88A00            call 0x81df
@@ -12585,7 +12382,6 @@
 000081A8  72EC              jc 0x8196
 000081AA  C746FAECC3        mov word [bp-0x6],0xc3ec
 000081AF  FF76FA            push word [bp-0x6]
-000081B2  90                nop
 000081B3  0E                push cs
 000081B4  E8EF6E            call 0xf0a6
 000081B7  8146FABB00        add word [bp-0x6],0xbb
@@ -12594,20 +12390,19 @@
 000081C3  A0A8CF            mov al,[0xcfa8]
 000081C6  2AE4              sub ah,ah
 000081C8  50                push ax
-000081C9  90                nop
 000081CA  0E                push cs
 000081CB  E8E130            call 0xb2af
 000081CE  C706C0800000      mov word [0x80c0],0x0
-000081D4  90                nop
 000081D5  0E                push cs
 000081D6  E84185            call 0x71a
 000081D9  8BE5              mov sp,bp
 000081DB  5D                pop bp
 000081DC  CA0400            retf 0x4
+
 000081DF  55                push bp
 000081E0  8BEC              mov bp,sp
 000081E2  33C0              xor ax,ax
-000081E4  9A1C3E821F        call 0x1f82:0x3e1c
+000081E4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000081E9  837E0600          cmp word [bp+0x6],byte +0x0
 000081ED  7404              jz 0x81f3
 000081EF  0E                push cs
@@ -12621,29 +12416,26 @@
 00008205  C70678CF0000      mov word [0xcf78],0x0
 0000820B  C706D880FFFF      mov word [0x80d8],0xffff
 00008211  C706CE80FFFF      mov word [0x80ce],0xffff
-00008217  90                nop
 00008218  0E                push cs
 00008219  E8FD46            call 0xc919
 0000821C  2BC0              sub ax,ax
 0000821E  50                push ax
-0000821F  90                nop
 00008220  0E                push cs
 00008221  E8B34B            call 0xcdd7
-00008224  90                nop
 00008225  0E                push cs
 00008226  E865BE            call 0x408e
 00008229  C706E8A30600      mov word [0xa3e8],0x6
 0000822F  C706EAA30000      mov word [0xa3ea],0x0
 00008235  C606ECA300        mov byte [0xa3ec],0x0
-0000823A  90                nop
 0000823B  0E                push cs
 0000823C  E805BF            call 0x4144
 0000823F  C706BEA30000      mov word [0xa3be],0x0
 00008245  9AC6A0F50F        call 0xff5:0xa0c6
 0000824A  5D                pop bp
 0000824B  CA0200            retf 0x2
+
 0000824E  33C0              xor ax,ax
-00008250  9A1C3E821F        call 0x1f82:0x3e1c
+00008250  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008255  C706E6A30000      mov word [0xa3e6],0x0
 0000825B  B82000            mov ax,0x20
 0000825E  50                push ax
@@ -12661,7 +12453,7 @@
 0000827E  55                push bp
 0000827F  8BEC              mov bp,sp
 00008281  B81C00            mov ax,0x1c
-00008284  9A1C3E821F        call 0x1f82:0x3e1c
+00008284  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008289  56                push si
 0000828A  0E                push cs
 0000828B  E86414            call 0x96f2
@@ -12672,7 +12464,6 @@
 0000829F  2BC0              sub ax,ax
 000082A1  50                push ax
 000082A2  50                push ax
-000082A3  90                nop
 000082A4  0E                push cs
 000082A5  E8B081            call 0x458
 000082A8  0BC0              or ax,ax
@@ -12924,7 +12715,6 @@
 00008542  8B5EFC            mov bx,[bp-0x4]
 00008545  FF771A            push word [bx+0x1a]
 00008548  FF7718            push word [bx+0x18]
-0000854B  90                nop
 0000854C  0E                push cs
 0000854D  E8F72A            call 0xb047
 00008550  8B5EFC            mov bx,[bp-0x4]
@@ -12940,14 +12730,12 @@
 00008572  740E              jz 0x8582
 00008574  FF771A            push word [bx+0x1a]
 00008577  FF7718            push word [bx+0x18]
-0000857A  90                nop
 0000857B  0E                push cs
 0000857C  E8E42A            call 0xb063
 0000857F  E958FD            jmp 0x82da
 00008582  8B5EFC            mov bx,[bp-0x4]
 00008585  FF771A            push word [bx+0x1a]
 00008588  FF7718            push word [bx+0x18]
-0000858B  90                nop
 0000858C  0E                push cs
 0000858D  E8D32A            call 0xb063
 00008590  8346FC26          add word [bp-0x4],byte +0x26
@@ -12968,10 +12756,11 @@
 000085C4  8BE5              mov sp,bp
 000085C6  5D                pop bp
 000085C7  C20400            ret 0x4
+
 000085CA  55                push bp
 000085CB  8BEC              mov bp,sp
 000085CD  B86200            mov ax,0x62
-000085D0  9A1C3E821F        call 0x1f82:0x3e1c
+000085D0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000085D5  9A4F33F50F        call 0xff5:0x334f
 000085DA  B8F0D8            mov ax,0xd8f0
 000085DD  8946A0            mov [bp-0x60],ax
@@ -12991,7 +12780,6 @@
 00008600  7408              jz 0x860a
 00008602  2BC0              sub ax,ax
 00008604  50                push ax
-00008605  90                nop
 00008606  0E                push cs
 00008607  E87B43            call 0xc985
 0000860A  8B4606            mov ax,[bp+0x6]
@@ -13010,7 +12798,6 @@
 00008631  A0A8CF            mov al,[0xcfa8]
 00008634  2AE4              sub ah,ah
 00008636  50                push ax
-00008637  90                nop
 00008638  0E                push cs
 00008639  E8732C            call 0xb2af
 0000863C  C706C0800000      mov word [0x80c0],0x0
@@ -13045,7 +12832,6 @@
 00008698  8D46D0            lea ax,[bp-0x30]
 0000869B  16                push ss
 0000869C  50                push ax
-0000869D  90                nop
 0000869E  0E                push cs
 0000869F  E8DD29            call 0xb07f
 000086A2  52                push dx
@@ -13148,7 +12934,6 @@
 000087B4  72DC              jc 0x8792
 000087B6  C746C6ECC3        mov word [bp-0x3a],0xc3ec
 000087BB  FF76C6            push word [bp-0x3a]
-000087BE  90                nop
 000087BF  0E                push cs
 000087C0  E8536E            call 0xf616
 000087C3  8146C6BB00        add word [bp-0x3a],0xbb
@@ -13292,7 +13077,6 @@
 0000894C  05ECC3            add ax,0xc3ec
 0000894F  3B46C6            cmp ax,[bp-0x3a]
 00008952  77E6              ja 0x893a
-00008954  90                nop
 00008955  0E                push cs
 00008956  E87E86            call 0xfd7
 00008959  B83C00            mov ax,0x3c
@@ -13352,7 +13136,6 @@
 000089E9  7416              jz 0x8a01
 000089EB  FF771A            push word [bx+0x1a]
 000089EE  FF7718            push word [bx+0x18]
-000089F1  90                nop
 000089F2  0E                push cs
 000089F3  E8B724            call 0xaead
 000089F6  8B5EFC            mov bx,[bp-0x4]
@@ -13372,13 +13155,11 @@
 00008A23  FF36CE62          push word [0x62ce]
 00008A27  9AFE3F821F        call 0x1f82:0x3ffe
 00008A2C  83C402            add sp,byte +0x2
-00008A2F  90                nop
 00008A30  0E                push cs
 00008A31  E89B26            call 0xb0cf
 00008A34  8D46D0            lea ax,[bp-0x30]
 00008A37  16                push ss
 00008A38  50                push ax
-00008A39  90                nop
 00008A3A  0E                push cs
 00008A3B  E84126            call 0xb07f
 00008A3E  52                push dx
@@ -13401,7 +13182,6 @@
 00008A6D  9A76C0F50F        call 0xff5:0xc076
 00008A72  0BC0              or ax,ax
 00008A74  7405              jz 0x8a7b
-00008A76  90                nop
 00008A77  0E                push cs
 00008A78  E87126            call 0xb0ec
 00008A7B  C746FCBC77        mov word [bp-0x4],0x77bc
@@ -13413,14 +13193,12 @@
 00008A91  8946CC            mov [bp-0x34],ax
 00008A94  8956CE            mov [bp-0x32],dx
 00008A97  FF76FC            push word [bp-0x4]
-00008A9A  90                nop
 00008A9B  0E                push cs
 00008A9C  E82AEC            call 0x76c9
 00008A9F  1E                push ds
 00008AA0  FF76FC            push word [bp-0x4]
 00008AA3  FF76CE            push word [bp-0x32]
 00008AA6  FF76CC            push word [bp-0x34]
-00008AA9  90                nop
 00008AAA  0E                push cs
 00008AAB  E83686            call 0x10e4
 00008AAE  8346FC26          add word [bp-0x4],byte +0x26
@@ -13518,7 +13296,6 @@
 00008BAE  803F00            cmp byte [bx],0x0
 00008BB1  7431              jz 0x8be4
 00008BB3  53                push bx
-00008BB4  90                nop
 00008BB5  0E                push cs
 00008BB6  E8FB6A            call 0xf6b4
 00008BB9  0BC0              or ax,ax
@@ -13533,13 +13310,11 @@
 00008BCB  7403              jz 0x8bd0
 00008BCD  E967FF            jmp 0x8b37
 00008BD0  FF76C6            push word [bp-0x3a]
-00008BD3  90                nop
 00008BD4  0E                push cs
 00008BD5  E8DC6A            call 0xf6b4
 00008BD8  0BC0              or ax,ax
 00008BDA  7408              jz 0x8be4
 00008BDC  FF76C6            push word [bp-0x3a]
-00008BDF  90                nop
 00008BE0  0E                push cs
 00008BE1  E83667            call 0xf31a
 00008BE4  8146C6BB00        add word [bp-0x3a],0xbb
@@ -13548,7 +13323,6 @@
 00008BEF  05ECC3            add ax,0xc3ec
 00008BF2  3B46C6            cmp ax,[bp-0x3a]
 00008BF5  77B4              ja 0x8bab
-00008BF7  90                nop
 00008BF8  0E                push cs
 00008BF9  E8686B            call 0xf764
 00008BFC  803EECA300        cmp byte [0xa3ec],0x0
@@ -13566,7 +13340,6 @@
 00008C18  9A5379F50F        call 0xff5:0x7953
 00008C1D  0BC0              or ax,ax
 00008C1F  7505              jnz 0x8c26
-00008C21  90                nop
 00008C22  0E                push cs
 00008C23  E8C624            call 0xb0ec
 00008C26  F6460602          test byte [bp+0x6],0x2
@@ -13575,10 +13348,8 @@
 00008C30  9AC6A0F50F        call 0xff5:0xa0c6
 00008C35  B80100            mov ax,0x1
 00008C38  50                push ax
-00008C39  90                nop
 00008C3A  0E                push cs
 00008C3B  E8473D            call 0xc985
-00008C3E  90                nop
 00008C3F  0E                push cs
 00008C40  E801B5            call 0x4144
 00008C43  2BC0              sub ax,ax
@@ -13632,7 +13403,6 @@
 00008CCD  B81027            mov ax,0x2710
 00008CD0  50                push ax
 00008CD1  9A3E79F50F        call 0xff5:0x793e
-00008CD6  90                nop
 00008CD7  0E                push cs
 00008CD8  E8F423            call 0xb0cf
 00008CDB  2BC0              sub ax,ax
@@ -13642,14 +13412,12 @@
 00008CE5  52                push dx
 00008CE6  50                push ax
 00008CE7  E82600            call 0x8d10
-00008CEA  90                nop
 00008CEB  0E                push cs
 00008CEC  E8E023            call 0xb0cf
 00008CEF  F6460602          test byte [bp+0x6],0x2
 00008CF3  7409              jz 0x8cfe
 00008CF5  B80100            mov ax,0x1
 00008CF8  50                push ax
-00008CF9  90                nop
 00008CFA  0E                push cs
 00008CFB  E8873C            call 0xc985
 00008CFE  B81027            mov ax,0x2710
@@ -13659,14 +13427,14 @@
 00008D0A  8BE5              mov sp,bp
 00008D0C  5D                pop bp
 00008D0D  CA0600            retf 0x6
+
 00008D10  55                push bp
 00008D11  8BEC              mov bp,sp
 00008D13  B80200            mov ax,0x2
-00008D16  9A1C3E821F        call 0x1f82:0x3e1c
+00008D16  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008D1B  C70668D90000      mov word [0xd968],0x0
 00008D21  9AEBC7F50F        call 0xff5:0xc7eb
 00008D26  9A1ABBF50F        call 0xff5:0xbb1a
-00008D2B  90                nop
 00008D2C  0E                push cs
 00008D2D  E8346A            call 0xf764
 00008D30  C746FEDA80        mov word [bp-0x2],0x80da
@@ -13697,10 +13465,11 @@
 00008D7F  8BE5              mov sp,bp
 00008D81  5D                pop bp
 00008D82  C20400            ret 0x4
+
 00008D85  55                push bp
 00008D86  8BEC              mov bp,sp
 00008D88  B80200            mov ax,0x2
-00008D8B  9A1C3E821F        call 0x1f82:0x3e1c
+00008D8B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008D90  B8DC0C            mov ax,0xcdc
 00008D93  1E                push ds
 00008D94  50                push ax
@@ -13738,10 +13507,11 @@
 00008DD8  8BE5              mov sp,bp
 00008DDA  5D                pop bp
 00008DDB  CB                retf
+
 00008DDC  55                push bp
 00008DDD  8BEC              mov bp,sp
 00008DDF  B8A400            mov ax,0xa4
-00008DE2  9A1C3E821F        call 0x1f82:0x3e1c
+00008DE2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008DE7  57                push di
 00008DE8  56                push si
 00008DE9  8B4606            mov ax,[bp+0x6]
@@ -13752,18 +13522,15 @@
 00008DFA  8946F8            mov [bp-0x8],ax
 00008DFD  0BC0              or ax,ax
 00008DFF  7405              jz 0x8e06
-00008E01  90                nop
 00008E02  0E                push cs
 00008E03  E81D40            call 0xce23
 00008E06  A1C0CF            mov ax,[0xcfc0]
 00008E09  A378CF            mov [0xcf78],ax
 00008E0C  FF760C            push word [bp+0xc]
-00008E0F  90                nop
 00008E10  0E                push cs
 00008E11  E871B3            call 0x4185
 00008E14  2BC0              sub ax,ax
 00008E16  50                push ax
-00008E17  90                nop
 00008E18  0E                push cs
 00008E19  E8693B            call 0xc985
 00008E1C  9A3AA3F50F        call 0xff5:0xa33a
@@ -13784,7 +13551,6 @@
 00008E4B  7D03              jnl 0x8e50
 00008E4D  E96701            jmp 0x8fb7
 00008E50  C746FC0000        mov word [bp-0x4],0x0
-00008E55  90                nop
 00008E56  0E                push cs
 00008E57  E8766D            call 0xfbd0
 00008E5A  89865EFF          mov [bp-0xa2],ax
@@ -13815,7 +13581,6 @@
 00008EA6  0BC0              or ax,ax
 00008EA8  7403              jz 0x8ead
 00008EAA  E90A01            jmp 0x8fb7
-00008EAD  90                nop
 00008EAE  0E                push cs
 00008EAF  E81E6D            call 0xfbd0
 00008EB2  3B9660FF          cmp dx,[bp-0xa0]
@@ -13826,7 +13591,6 @@
 00008EC0  A1D880            mov ax,[0x80d8]
 00008EC3  3906C0CF          cmp [0xcfc0],ax
 00008EC7  7D69              jnl 0x8f32
-00008EC9  90                nop
 00008ECA  0E                push cs
 00008ECB  E8026D            call 0xfbd0
 00008ECE  89865EFF          mov [bp-0xa2],ax
@@ -13855,7 +13619,6 @@
 00008F16  0BC0              or ax,ax
 00008F18  7403              jz 0x8f1d
 00008F1A  E99A00            jmp 0x8fb7
-00008F1D  90                nop
 00008F1E  0E                push cs
 00008F1F  E8AE6C            call 0xfbd0
 00008F22  3B9660FF          cmp dx,[bp-0xa0]
@@ -13870,7 +13633,6 @@
 00008F3D  833EEAA300        cmp word [0xa3ea],byte +0x0
 00008F42  7403              jz 0x8f47
 00008F44  E9EBFE            jmp 0x8e32
-00008F47  90                nop
 00008F48  0E                push cs
 00008F49  E87968            call 0xf7c5
 00008F4C  F6460601          test byte [bp+0x6],0x1
@@ -13911,7 +13673,6 @@
 00008FAD  F2A4              repne movsb
 00008FAF  E980FE            jmp 0x8e32
 00008FB2  C746F60000        mov word [bp-0xa],0x0
-00008FB7  90                nop
 00008FB8  0E                push cs
 00008FB9  E80968            call 0xf7c5
 00008FBC  B8FFFF            mov ax,0xffff
@@ -13922,12 +13683,10 @@
 00008FC8  9AC6A0F50F        call 0xff5:0xa0c6
 00008FCD  B80100            mov ax,0x1
 00008FD0  50                push ax
-00008FD1  90                nop
 00008FD2  0E                push cs
 00008FD3  E8AF39            call 0xc985
 00008FD6  837EF800          cmp word [bp-0x8],byte +0x0
 00008FDA  7405              jz 0x8fe1
-00008FDC  90                nop
 00008FDD  0E                push cs
 00008FDE  E8913E            call 0xce72
 00008FE1  9A4E35F50F        call 0xff5:0x354e
@@ -13937,10 +13696,11 @@
 00008FEB  8BE5              mov sp,bp
 00008FED  5D                pop bp
 00008FEE  CA0800            retf 0x8
+
 00008FF1  55                push bp
 00008FF2  8BEC              mov bp,sp
 00008FF4  B80400            mov ax,0x4
-00008FF7  9A1C3E821F        call 0x1f82:0x3e1c
+00008FF7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00008FFC  C746FE0000        mov word [bp-0x2],0x0
 00009001  B88A04            mov ax,0x48a
 00009004  50                push ax
@@ -13974,15 +13734,12 @@
 00009051  8946FE            mov [bp-0x2],ax
 00009054  0BC0              or ax,ax
 00009056  7407              jz 0x905f
-00009058  90                nop
 00009059  0E                push cs
 0000905A  E86867            call 0xf7c5
 0000905D  EBA2              jmp short 0x9001
-0000905F  90                nop
 00009060  0E                push cs
 00009061  E8186A            call 0xfa7c
 00009064  EB9B              jmp short 0x9001
-00009066  90                nop
 00009067  0E                push cs
 00009068  E85A67            call 0xf7c5
 0000906B  9A4E35F50F        call 0xff5:0x354e
@@ -13991,7 +13748,6 @@
 00009078  9A5E35F50F        call 0xff5:0x355e
 0000907D  837EFC01          cmp word [bp-0x4],byte +0x1
 00009081  7509              jnz 0x908c
-00009083  90                nop
 00009084  0E                push cs
 00009085  E8F469            call 0xfa7c
 00009088  2BC0              sub ax,ax
@@ -14003,7 +13759,7 @@
 00009093  55                push bp
 00009094  8BEC              mov bp,sp
 00009096  B80800            mov ax,0x8
-00009099  9A1C3E821F        call 0x1f82:0x3e1c
+00009099  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000909E  57                push di
 0000909F  56                push si
 000090A0  B82F00            mov ax,0x2f
@@ -14092,10 +13848,11 @@
 0000917B  8BE5              mov sp,bp
 0000917D  5D                pop bp
 0000917E  CA0600            retf 0x6
+
 00009181  55                push bp
 00009182  8BEC              mov bp,sp
 00009184  B8B800            mov ax,0xb8
-00009187  9A1C3E821F        call 0x1f82:0x3e1c
+00009187  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000918C  57                push di
 0000918D  56                push si
 0000918E  C45E08            les bx,[bp+0x8]
@@ -14309,10 +14066,11 @@
 00009395  8BE5              mov sp,bp
 00009397  5D                pop bp
 00009398  CA0600            retf 0x6
+
 0000939B  55                push bp
 0000939C  8BEC              mov bp,sp
 0000939E  B89400            mov ax,0x94
-000093A1  9A1C3E821F        call 0x1f82:0x3e1c
+000093A1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000093A6  57                push di
 000093A7  56                push si
 000093A8  C6866CFF00        mov byte [bp-0x94],0x0
@@ -14393,10 +14151,11 @@
 0000946C  8BE5              mov sp,bp
 0000946E  5D                pop bp
 0000946F  C20A00            ret 0xa
+
 00009472  55                push bp
 00009473  8BEC              mov bp,sp
 00009475  B8A600            mov ax,0xa6
-00009478  9A1C3E821F        call 0x1f82:0x3e1c
+00009478  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000947D  57                push di
 0000947E  56                push si
 0000947F  C45E04            les bx,[bp+0x4]
@@ -14594,10 +14353,11 @@
 00009671  8BE5              mov sp,bp
 00009673  5D                pop bp
 00009674  C20400            ret 0x4
+
 00009677  55                push bp
 00009678  8BEC              mov bp,sp
 0000967A  B80400            mov ax,0x4
-0000967D  9A1C3E821F        call 0x1f82:0x3e1c
+0000967D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009682  8B4604            mov ax,[bp+0x4]
 00009685  8B5606            mov dx,[bp+0x6]
 00009688  8946FC            mov [bp-0x4],ax
@@ -14620,8 +14380,9 @@
 000096B9  8BE5              mov sp,bp
 000096BB  5D                pop bp
 000096BC  C20400            ret 0x4
+
 000096BF  33C0              xor ax,ax
-000096C1  9A1C3E821F        call 0x1f82:0x3e1c
+000096C1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000096C6  57                push di
 000096C7  B9007D            mov cx,0x7d00
 000096CA  C43EF21A          les di,[0x1af2]
@@ -14638,25 +14399,25 @@
 000096EB  9A6233F50F        call 0xff5:0x3362
 000096F0  5F                pop di
 000096F1  CB                retf
+
 000096F2  33C0              xor ax,ax
-000096F4  9A1C3E821F        call 0x1f82:0x3e1c
+000096F4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000096F9  2BC0              sub ax,ax
 000096FB  50                push ax
-000096FC  90                nop
 000096FD  0E                push cs
 000096FE  E88432            call 0xc985
 00009701  9A3AA3F50F        call 0xff5:0xa33a
 00009706  9AC6A0F50F        call 0xff5:0xa0c6
 0000970B  B80100            mov ax,0x1
 0000970E  50                push ax
-0000970F  90                nop
 00009710  0E                push cs
 00009711  E87132            call 0xc985
 00009714  CB                retf
+
 00009715  55                push bp
 00009716  8BEC              mov bp,sp
 00009718  33C0              xor ax,ax
-0000971A  9A1C3E821F        call 0x1f82:0x3e1c
+0000971A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000971F  8D4604            lea ax,[bp+0x4]
 00009722  16                push ss
 00009723  50                push ax
@@ -14665,10 +14426,11 @@
 00009728  E80400            call 0x972f
 0000972B  5D                pop bp
 0000972C  C20200            ret 0x2
+
 0000972F  55                push bp
 00009730  8BEC              mov bp,sp
 00009732  33C0              xor ax,ax
-00009734  9A1C3E821F        call 0x1f82:0x3e1c
+00009734  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009739  FF7604            push word [bp+0x4]
 0000973C  FF7608            push word [bp+0x8]
 0000973F  FF7606            push word [bp+0x6]
@@ -14686,10 +14448,11 @@
 00009761  83C406            add sp,byte +0x6
 00009764  5D                pop bp
 00009765  C20600            ret 0x6
+
 00009768  55                push bp
 00009769  8BEC              mov bp,sp
 0000976B  33C0              xor ax,ax
-0000976D  9A1C3E821F        call 0x1f82:0x3e1c
+0000976D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009772  8D4604            lea ax,[bp+0x4]
 00009775  16                push ss
 00009776  50                push ax
@@ -14698,10 +14461,11 @@
 0000977B  E8B1FF            call 0x972f
 0000977E  5D                pop bp
 0000977F  C20200            ret 0x2
+
 00009782  55                push bp
 00009783  8BEC              mov bp,sp
 00009785  33C0              xor ax,ax
-00009787  9A1C3E821F        call 0x1f82:0x3e1c
+00009787  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000978C  8B4606            mov ax,[bp+0x6]
 0000978F  2D0300            sub ax,0x3
 00009792  A30C63            mov [0x630c],ax
@@ -14716,10 +14480,11 @@
 000097AC  9AF329F50F        call 0xff5:0x29f3
 000097B1  5D                pop bp
 000097B2  CA0200            retf 0x2
+
 000097B5  55                push bp
 000097B6  8BEC              mov bp,sp
 000097B8  B89400            mov ax,0x94
-000097BB  9A1C3E821F        call 0x1f82:0x3e1c
+000097BB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000097C0  8D866CFF          lea ax,[bp-0x94]
 000097C4  16                push ss
 000097C5  50                push ax
@@ -14734,10 +14499,11 @@
 000097DB  8BE5              mov sp,bp
 000097DD  5D                pop bp
 000097DE  CA0200            retf 0x2
+
 000097E1  55                push bp
 000097E2  8BEC              mov bp,sp
 000097E4  B80E00            mov ax,0xe
-000097E7  9A1C3E821F        call 0x1f82:0x3e1c
+000097E7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000097EC  57                push di
 000097ED  56                push si
 000097EE  C47E08            les di,[bp+0x8]
@@ -14835,10 +14601,11 @@
 000098E7  8BE5              mov sp,bp
 000098E9  5D                pop bp
 000098EA  CA0600            retf 0x6
+
 000098ED  55                push bp
 000098EE  8BEC              mov bp,sp
 000098F0  B84E00            mov ax,0x4e
-000098F3  9A1C3E821F        call 0x1f82:0x3e1c
+000098F3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000098F8  57                push di
 000098F9  56                push si
 000098FA  8D46FC            lea ax,[bp-0x4]
@@ -15052,7 +14819,6 @@
 00009B02  BA0000            mov dx,0x0
 00009B05  52                push dx
 00009B06  50                push ax
-00009B07  90                nop
 00009B08  0E                push cs
 00009B09  E8112A            call 0xc51d
 00009B0C  5E                pop si
@@ -15060,10 +14826,11 @@
 00009B0E  8BE5              mov sp,bp
 00009B10  5D                pop bp
 00009B11  CB                retf
+
 00009B12  55                push bp
 00009B13  8BEC              mov bp,sp
 00009B15  B89800            mov ax,0x98
-00009B18  9A1C3E821F        call 0x1f82:0x3e1c
+00009B18  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009B1D  57                push di
 00009B1E  56                push si
 00009B1F  C45E04            les bx,[bp+0x4]
@@ -15143,10 +14910,11 @@
 00009BDE  8BE5              mov sp,bp
 00009BE0  5D                pop bp
 00009BE1  C20600            ret 0x6
+
 00009BE4  55                push bp
 00009BE5  8BEC              mov bp,sp
 00009BE7  B83800            mov ax,0x38
-00009BEA  9A1C3E821F        call 0x1f82:0x3e1c
+00009BEA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009BEF  57                push di
 00009BF0  56                push si
 00009BF1  C47E06            les di,[bp+0x6]
@@ -15277,7 +15045,6 @@
 00009D53  8D46D2            lea ax,[bp-0x2e]
 00009D56  16                push ss
 00009D57  50                push ax
-00009D58  90                nop
 00009D59  0E                push cs
 00009D5A  E82213            call 0xb07f
 00009D5D  52                push dx
@@ -15295,7 +15062,6 @@
 00009D78  50                push ax
 00009D79  2BC0              sub ax,ax
 00009D7B  50                push ax
-00009D7C  90                nop
 00009D7D  0E                push cs
 00009D7E  E88814            call 0xb209
 00009D81  8946F8            mov [bp-0x8],ax
@@ -15312,7 +15078,6 @@
 00009D9E  50                push ax
 00009D9F  FF76FE            push word [bp-0x2]
 00009DA2  FF76FC            push word [bp-0x4]
-00009DA5  90                nop
 00009DA6  0E                push cs
 00009DA7  E8A717            call 0xb551
 00009DAA  C45EFC            les bx,[bp-0x4]
@@ -15343,7 +15108,6 @@
 00009DF0  50                push ax
 00009DF1  9A0C4B821F        call 0x1f82:0x4b0c
 00009DF6  83C40A            add sp,byte +0xa
-00009DF9  90                nop
 00009DFA  0E                push cs
 00009DFB  E8D112            call 0xb0cf
 00009DFE  EB5D              jmp short 0x9e5d
@@ -15355,7 +15119,6 @@
 00009E0A  50                push ax
 00009E0B  2BC0              sub ax,ax
 00009E0D  50                push ax
-00009E0E  90                nop
 00009E0F  0E                push cs
 00009E10  E8F613            call 0xb209
 00009E13  8946F8            mov [bp-0x8],ax
@@ -15367,7 +15130,6 @@
 00009E22  50                push ax
 00009E23  2BC0              sub ax,ax
 00009E25  50                push ax
-00009E26  90                nop
 00009E27  0E                push cs
 00009E28  E8DE13            call 0xb209
 00009E2B  8B5E0A            mov bx,[bp+0xa]
@@ -15422,10 +15184,11 @@
 00009EB3  8BE5              mov sp,bp
 00009EB5  5D                pop bp
 00009EB6  C20800            ret 0x8
+
 00009EB9  55                push bp
 00009EBA  8BEC              mov bp,sp
 00009EBC  B80E00            mov ax,0xe
-00009EBF  9A1C3E821F        call 0x1f82:0x3e1c
+00009EBF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00009EC4  57                push di
 00009EC5  56                push si
 00009EC6  83460640          add word [bp+0x6],byte +0x40
@@ -15608,10 +15371,11 @@
 0000A08F  8BE5              mov sp,bp
 0000A091  5D                pop bp
 0000A092  CA0600            retf 0x6
+
 0000A095  55                push bp
 0000A096  8BEC              mov bp,sp
 0000A098  B8A800            mov ax,0xa8
-0000A09B  9A1C3E821F        call 0x1f82:0x3e1c
+0000A09B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A0A0  57                push di
 0000A0A1  56                push si
 0000A0A2  803EECA300        cmp byte [0xa3ec],0x0
@@ -15666,10 +15430,11 @@
 0000A10F  8BE5              mov sp,bp
 0000A111  5D                pop bp
 0000A112  CB                retf
+
 0000A113  55                push bp
 0000A114  8BEC              mov bp,sp
 0000A116  B80200            mov ax,0x2
-0000A119  9A1C3E821F        call 0x1f82:0x3e1c
+0000A119  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A11E  57                push di
 0000A11F  C746FE0000        mov word [bp-0x2],0x0
 0000A124  C70668D90100      mov word [0xd968],0x1
@@ -15740,17 +15505,17 @@
 0000A1E1  BA0000            mov dx,0x0
 0000A1E4  52                push dx
 0000A1E5  50                push ax
-0000A1E6  90                nop
 0000A1E7  0E                push cs
 0000A1E8  E83223            call 0xc51d
 0000A1EB  5F                pop di
 0000A1EC  8BE5              mov sp,bp
 0000A1EE  5D                pop bp
 0000A1EF  CB                retf
+
 0000A1F0  55                push bp
 0000A1F1  8BEC              mov bp,sp
 0000A1F3  B80200            mov ax,0x2
-0000A1F6  9A1C3E821F        call 0x1f82:0x3e1c
+0000A1F6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A1FB  9A4F33F50F        call 0xff5:0x334f
 0000A200  C70668D90100      mov word [0xd968],0x1
 0000A206  C746FE0000        mov word [bp-0x2],0x0
@@ -15787,7 +15552,6 @@
 0000A254  BAF50F            mov dx,0xff5
 0000A257  52                push dx
 0000A258  50                push ax
-0000A259  90                nop
 0000A25A  0E                push cs
 0000A25B  E8FA61            call 0x458
 0000A25E  0BC0              or ax,ax
@@ -15853,10 +15617,11 @@
 0000A303  8BE5              mov sp,bp
 0000A305  5D                pop bp
 0000A306  CB                retf
+
 0000A307  55                push bp
 0000A308  8BEC              mov bp,sp
 0000A30A  B80400            mov ax,0x4
-0000A30D  9A1C3E821F        call 0x1f82:0x3e1c
+0000A30D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A312  B82300            mov ax,0x23
 0000A315  50                push ax
 0000A316  1E                push ds
@@ -15881,10 +15646,11 @@
 0000A34A  8BE5              mov sp,bp
 0000A34C  5D                pop bp
 0000A34D  C20200            ret 0x2
+
 0000A350  55                push bp
 0000A351  8BEC              mov bp,sp
 0000A353  B84C00            mov ax,0x4c
-0000A356  9A1C3E821F        call 0x1f82:0x3e1c
+0000A356  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A35B  57                push di
 0000A35C  56                push si
 0000A35D  8D46BA            lea ax,[bp-0x46]
@@ -15934,10 +15700,11 @@
 0000A3DD  8BE5              mov sp,bp
 0000A3DF  5D                pop bp
 0000A3E0  C3                ret
+
 0000A3E1  55                push bp
 0000A3E2  8BEC              mov bp,sp
 0000A3E4  33C0              xor ax,ax
-0000A3E6  9A1C3E821F        call 0x1f82:0x3e1c
+0000A3E6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A3EB  FF7608            push word [bp+0x8]
 0000A3EE  E824F3            call 0x9715
 0000A3F1  FF7606            push word [bp+0x6]
@@ -15946,16 +15713,16 @@
 0000A3FA  E832F3            call 0x972f
 0000A3FD  5D                pop bp
 0000A3FE  C20600            ret 0x6
+
 0000A401  55                push bp
 0000A402  8BEC              mov bp,sp
 0000A404  B80200            mov ax,0x2
-0000A407  9A1C3E821F        call 0x1f82:0x3e1c
+0000A407  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A40C  8B4606            mov ax,[bp+0x6]
 0000A40F  0B4608            or ax,[bp+0x8]
 0000A412  7478              jz 0xa48c
 0000A414  FF7608            push word [bp+0x8]
 0000A417  FF7606            push word [bp+0x6]
-0000A41A  90                nop
 0000A41B  0E                push cs
 0000A41C  E8280C            call 0xb047
 0000A41F  B80200            mov ax,0x2
@@ -15985,7 +15752,6 @@
 0000A463  C746FE0100        mov word [bp-0x2],0x1
 0000A468  FF7608            push word [bp+0x8]
 0000A46B  FF7606            push word [bp+0x6]
-0000A46E  90                nop
 0000A46F  0E                push cs
 0000A470  E8F00B            call 0xb063
 0000A473  837EFE00          cmp word [bp-0x2],byte +0x0
@@ -16004,10 +15770,11 @@
 0000A492  8BE5              mov sp,bp
 0000A494  5D                pop bp
 0000A495  C20600            ret 0x6
+
 0000A498  55                push bp
 0000A499  8BEC              mov bp,sp
 0000A49B  33C0              xor ax,ax
-0000A49D  9A1C3E821F        call 0x1f82:0x3e1c
+0000A49D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A4A2  57                push di
 0000A4A3  837E0800          cmp word [bp+0x8],byte +0x0
 0000A4A7  7416              jz 0xa4bf
@@ -16024,14 +15791,14 @@
 0000A4C5  5F                pop di
 0000A4C6  5D                pop bp
 0000A4C7  C20600            ret 0x6
+
 0000A4CA  55                push bp
 0000A4CB  8BEC              mov bp,sp
 0000A4CD  B81200            mov ax,0x12
-0000A4D0  9A1C3E821F        call 0x1f82:0x3e1c
+0000A4D0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A4D5  8D46EE            lea ax,[bp-0x12]
 0000A4D8  16                push ss
 0000A4D9  50                push ax
-0000A4DA  90                nop
 0000A4DB  0E                push cs
 0000A4DC  E8A00B            call 0xb07f
 0000A4DF  52                push dx
@@ -16047,7 +15814,6 @@
 0000A4F9  FF7604            push word [bp+0x4]
 0000A4FC  26FF7702          push word [es:bx+0x2]
 0000A500  26FF37            push word [es:bx]
-0000A503  90                nop
 0000A504  0E                push cs
 0000A505  E84910            call 0xb551
 0000A508  EB1B              jmp short 0xa525
@@ -16057,13 +15823,11 @@
 0000A512  50                push ax
 0000A513  2BC0              sub ax,ax
 0000A515  50                push ax
-0000A516  90                nop
 0000A517  0E                push cs
 0000A518  E8EE0C            call 0xb209
 0000A51B  C45E06            les bx,[bp+0x6]
 0000A51E  268907            mov [es:bx],ax
 0000A521  26895702          mov [es:bx+0x2],dx
-0000A525  90                nop
 0000A526  0E                push cs
 0000A527  E8A50B            call 0xb0cf
 0000A52A  833EC08000        cmp word [0x80c0],byte +0x0
@@ -16072,7 +15836,6 @@
 0000A534  2BC0              sub ax,ax
 0000A536  26894702          mov [es:bx+0x2],ax
 0000A53A  268907            mov [es:bx],ax
-0000A53D  90                nop
 0000A53E  0E                push cs
 0000A53F  E8AA0B            call 0xb0ec
 0000A542  C45E06            les bx,[bp+0x6]
@@ -16084,13 +15847,13 @@
 0000A553  8BE5              mov sp,bp
 0000A555  5D                pop bp
 0000A556  C20600            ret 0x6
+
 0000A559  55                push bp
 0000A55A  8BEC              mov bp,sp
 0000A55C  B80200            mov ax,0x2
-0000A55F  9A1C3E821F        call 0x1f82:0x3e1c
+0000A55F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A564  FF760A            push word [bp+0xa]
 0000A567  FF7608            push word [bp+0x8]
-0000A56A  90                nop
 0000A56B  0E                push cs
 0000A56C  E8D80A            call 0xb047
 0000A56F  FF7606            push word [bp+0x6]
@@ -16108,7 +15871,6 @@
 0000A594  8946FE            mov [bp-0x2],ax
 0000A597  FF760A            push word [bp+0xa]
 0000A59A  FF7608            push word [bp+0x8]
-0000A59D  90                nop
 0000A59E  0E                push cs
 0000A59F  E8C10A            call 0xb063
 0000A5A2  837EFE00          cmp word [bp-0x2],byte +0x0
@@ -16123,10 +15885,11 @@
 0000A5B9  8BE5              mov sp,bp
 0000A5BB  5D                pop bp
 0000A5BC  CA0600            retf 0x6
+
 0000A5BF  55                push bp
 0000A5C0  8BEC              mov bp,sp
 0000A5C2  B80200            mov ax,0x2
-0000A5C5  9A1C3E821F        call 0x1f82:0x3e1c
+0000A5C5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A5CA  E85900            call 0xa626
 0000A5CD  8946FE            mov [bp-0x2],ax
 0000A5D0  0BC0              or ax,ax
@@ -16141,10 +15904,11 @@
 0000A5E7  8BE5              mov sp,bp
 0000A5E9  5D                pop bp
 0000A5EA  C20400            ret 0x4
+
 0000A5ED  55                push bp
 0000A5EE  8BEC              mov bp,sp
 0000A5F0  33C0              xor ax,ax
-0000A5F2  9A1C3E821F        call 0x1f82:0x3e1c
+0000A5F2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A5F7  FF7604            push word [bp+0x4]
 0000A5FA  FF7608            push word [bp+0x8]
 0000A5FD  FF7606            push word [bp+0x6]
@@ -16162,10 +15926,11 @@
 0000A61F  83C406            add sp,byte +0x6
 0000A622  5D                pop bp
 0000A623  C20600            ret 0x6
+
 0000A626  55                push bp
 0000A627  8BEC              mov bp,sp
 0000A629  B80200            mov ax,0x2
-0000A62C  9A1C3E821F        call 0x1f82:0x3e1c
+0000A62C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A631  8D46FE            lea ax,[bp-0x2]
 0000A634  16                push ss
 0000A635  50                push ax
@@ -16176,10 +15941,11 @@
 0000A640  8BE5              mov sp,bp
 0000A642  5D                pop bp
 0000A643  C3                ret
+
 0000A644  55                push bp
 0000A645  8BEC              mov bp,sp
 0000A647  B80200            mov ax,0x2
-0000A64A  9A1C3E821F        call 0x1f82:0x3e1c
+0000A64A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A64F  E8D4FF            call 0xa626
 0000A652  8946FE            mov [bp-0x2],ax
 0000A655  394604            cmp [bp+0x4],ax
@@ -16195,10 +15961,11 @@
 0000A66E  8BE5              mov sp,bp
 0000A670  5D                pop bp
 0000A671  C20200            ret 0x2
+
 0000A674  55                push bp
 0000A675  8BEC              mov bp,sp
 0000A677  B80200            mov ax,0x2
-0000A67A  9A1C3E821F        call 0x1f82:0x3e1c
+0000A67A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A67F  8D46FE            lea ax,[bp-0x2]
 0000A682  16                push ss
 0000A683  50                push ax
@@ -16210,10 +15977,11 @@
 0000A690  8BE5              mov sp,bp
 0000A692  5D                pop bp
 0000A693  C3                ret
+
 0000A694  55                push bp
 0000A695  8BEC              mov bp,sp
 0000A697  B80400            mov ax,0x4
-0000A69A  9A1C3E821F        call 0x1f82:0x3e1c
+0000A69A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A69F  57                push di
 0000A6A0  56                push si
 0000A6A1  FF7606            push word [bp+0x6]
@@ -16250,10 +16018,11 @@
 0000A6EA  8BE5              mov sp,bp
 0000A6EC  5D                pop bp
 0000A6ED  CA0600            retf 0x6
+
 0000A6F0  55                push bp
 0000A6F1  8BEC              mov bp,sp
 0000A6F3  B80200            mov ax,0x2
-0000A6F6  9A1C3E821F        call 0x1f82:0x3e1c
+0000A6F6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A6FB  C746FE007D        mov word [bp-0x2],0x7d00
 0000A700  B84000            mov ax,0x40
 0000A703  BA9F29            mov dx,0x299f
@@ -16267,7 +16036,6 @@
 0000A711  8D46FE            lea ax,[bp-0x2]
 0000A714  16                push ss
 0000A715  50                push ax
-0000A716  90                nop
 0000A717  0E                push cs
 0000A718  E80B48            call 0xef26
 0000A71B  813EBCCFDB1B      cmp word [0xcfbc],0x1bdb
@@ -16285,10 +16053,11 @@
 0000A740  8BE5              mov sp,bp
 0000A742  5D                pop bp
 0000A743  CA0400            retf 0x4
+
 0000A746  55                push bp
 0000A747  8BEC              mov bp,sp
 0000A749  B83000            mov ax,0x30
-0000A74C  9A1C3E821F        call 0x1f82:0x3e1c
+0000A74C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A751  56                push si
 0000A752  833E0A0F00        cmp word [0xf0a],byte +0x0
 0000A757  7403              jz 0xa75c
@@ -16304,7 +16073,6 @@
 0000A77A  3956FA            cmp [bp-0x6],dx
 0000A77D  7507              jnz 0xa786
 0000A77F  7305              jnc 0xa786
-0000A781  90                nop
 0000A782  0E                push cs
 0000A783  E8B05B            call 0x336
 0000A786  837EFA00          cmp word [bp-0x6],byte +0x0
@@ -16398,7 +16166,6 @@
 0000A899  BA0000            mov dx,0x0
 0000A89C  52                push dx
 0000A89D  50                push ax
-0000A89E  90                nop
 0000A89F  0E                push cs
 0000A8A0  E87A1C            call 0xc51d
 0000A8A3  B80200            mov ax,0x2
@@ -16416,7 +16183,6 @@
 0000A8C3  8A46D8            mov al,[bp-0x28]
 0000A8C6  2AE4              sub ah,ah
 0000A8C8  50                push ax
-0000A8C9  90                nop
 0000A8CA  0E                push cs
 0000A8CB  E87C5A            call 0x34a
 0000A8CE  E956FF            jmp 0xa827
@@ -16500,10 +16266,11 @@
 0000A9AD  8BE5              mov sp,bp
 0000A9AF  5D                pop bp
 0000A9B0  CA0200            retf 0x2
+
 0000A9B3  55                push bp
 0000A9B4  8BEC              mov bp,sp
 0000A9B6  B81800            mov ax,0x18
-0000A9B9  9A1C3E821F        call 0x1f82:0x3e1c
+0000A9B9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000A9BE  56                push si
 0000A9BF  837E0800          cmp word [bp+0x8],byte +0x0
 0000A9C3  750E              jnz 0xa9d3
@@ -16843,10 +16610,11 @@
 0000AD6C  8BE5              mov sp,bp
 0000AD6E  5D                pop bp
 0000AD6F  CA0800            retf 0x8
+
 0000AD72  55                push bp
 0000AD73  8BEC              mov bp,sp
 0000AD75  33C0              xor ax,ax
-0000AD77  9A1C3E821F        call 0x1f82:0x3e1c
+0000AD77  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AD7C  FF760A            push word [bp+0xa]
 0000AD7F  FF7608            push word [bp+0x8]
 0000AD82  E84317            call 0xc4c8
@@ -16870,10 +16638,11 @@
 0000ADBB  E8410B            call 0xb8ff
 0000ADBE  5D                pop bp
 0000ADBF  C20C00            ret 0xc
+
 0000ADC2  55                push bp
 0000ADC3  8BEC              mov bp,sp
 0000ADC5  B82800            mov ax,0x28
-0000ADC8  9A1C3E821F        call 0x1f82:0x3e1c
+0000ADC8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000ADCD  FF365663          push word [0x6356]
 0000ADD1  FF365463          push word [0x6354]
 0000ADD5  EB3D              jmp short 0xae14
@@ -16910,10 +16679,11 @@
 0000AE2D  8BE5              mov sp,bp
 0000AE2F  5D                pop bp
 0000AE30  CB                retf
+
 0000AE31  55                push bp
 0000AE32  8BEC              mov bp,sp
 0000AE34  33C0              xor ax,ax
-0000AE36  9A1C3E821F        call 0x1f82:0x3e1c
+0000AE36  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AE3B  8B4606            mov ax,[bp+0x6]
 0000AE3E  03460C            add ax,[bp+0xc]
 0000AE41  8B560E            mov dx,[bp+0xe]
@@ -16944,8 +16714,9 @@
 0000AE88  C706C0800000      mov word [0x80c0],0x0
 0000AE8E  5D                pop bp
 0000AE8F  CA0A00            retf 0xa
+
 0000AE92  33C0              xor ax,ax
-0000AE94  9A1C3E821F        call 0x1f82:0x3e1c
+0000AE94  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AE99  2BC0              sub ax,ax
 0000AE9B  50                push ax
 0000AE9C  50                push ax
@@ -16956,10 +16727,11 @@
 0000AEA3  E82A14            call 0xc2d0
 0000AEA6  C706C0800000      mov word [0x80c0],0x0
 0000AEAC  CB                retf
+
 0000AEAD  55                push bp
 0000AEAE  8BEC              mov bp,sp
 0000AEB0  B80400            mov ax,0x4
-0000AEB3  9A1C3E821F        call 0x1f82:0x3e1c
+0000AEB3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AEB8  FF7608            push word [bp+0x8]
 0000AEBB  FF7606            push word [bp+0x6]
 0000AEBE  E83916            call 0xc4fa
@@ -16991,10 +16763,11 @@
 0000AF08  8BE5              mov sp,bp
 0000AF0A  5D                pop bp
 0000AF0B  CA0400            retf 0x4
+
 0000AF0E  55                push bp
 0000AF0F  8BEC              mov bp,sp
 0000AF11  B81000            mov ax,0x10
-0000AF14  9A1C3E821F        call 0x1f82:0x3e1c
+0000AF14  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AF19  C706C0800000      mov word [0x80c0],0x0
 0000AF1F  FF7608            push word [bp+0x8]
 0000AF22  FF7606            push word [bp+0x6]
@@ -17051,10 +16824,11 @@
 0000AFB1  8BE5              mov sp,bp
 0000AFB3  5D                pop bp
 0000AFB4  CA0400            retf 0x4
+
 0000AFB7  55                push bp
 0000AFB8  8BEC              mov bp,sp
 0000AFBA  B80800            mov ax,0x8
-0000AFBD  9A1C3E821F        call 0x1f82:0x3e1c
+0000AFBD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000AFC2  A14063            mov ax,[0x6340]
 0000AFC5  8B164263          mov dx,[0x6342]
 0000AFC9  8946FC            mov [bp-0x4],ax
@@ -17080,38 +16854,42 @@
 0000B00B  8BE5              mov sp,bp
 0000B00D  5D                pop bp
 0000B00E  CB                retf
+
 0000B00F  55                push bp
 0000B010  8BEC              mov bp,sp
 0000B012  33C0              xor ax,ax
-0000B014  9A1C3E821F        call 0x1f82:0x3e1c
+0000B014  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B019  C706C0800000      mov word [0x80c0],0x0
 0000B01F  C45E06            les bx,[bp+0x6]
 0000B022  268A4710          mov al,[es:bx+0x10]
 0000B026  2AE4              sub ah,ah
 0000B028  5D                pop bp
 0000B029  CA0400            retf 0x4
+
 0000B02C  55                push bp
 0000B02D  8BEC              mov bp,sp
 0000B02F  33C0              xor ax,ax
-0000B031  9A1C3E821F        call 0x1f82:0x3e1c
+0000B031  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B036  C706C0800000      mov word [0x80c0],0x0
 0000B03C  C45E06            les bx,[bp+0x6]
 0000B03F  268B4704          mov ax,[es:bx+0x4]
 0000B043  5D                pop bp
 0000B044  CA0400            retf 0x4
+
 0000B047  55                push bp
 0000B048  8BEC              mov bp,sp
 0000B04A  33C0              xor ax,ax
-0000B04C  9A1C3E821F        call 0x1f82:0x3e1c
+0000B04C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B051  C45E06            les bx,[bp+0x6]
 0000B054  26804F1080        or byte [es:bx+0x10],0x80
 0000B059  C706C0800000      mov word [0x80c0],0x0
 0000B05F  5D                pop bp
 0000B060  CA0400            retf 0x4
+
 0000B063  55                push bp
 0000B064  8BEC              mov bp,sp
 0000B066  33C0              xor ax,ax
-0000B068  9A1C3E821F        call 0x1f82:0x3e1c
+0000B068  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B06D  C45E06            les bx,[bp+0x6]
 0000B070  268067107F        and byte [es:bx+0x10],0x7f
 0000B075  C706C0800000      mov word [0x80c0],0x0
@@ -17121,7 +16899,7 @@
 0000B07F  55                push bp
 0000B080  8BEC              mov bp,sp
 0000B082  33C0              xor ax,ax
-0000B084  9A1C3E821F        call 0x1f82:0x3e1c
+0000B084  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B089  813E060F3C63      cmp word [0xf06],0x633c
 0000B08F  7515              jnz 0xb0a6
 0000B091  813E080FFE30      cmp word [0xf08],0x30fe
@@ -17131,7 +16909,6 @@
 0000B09D  50                push ax
 0000B09E  2BC0              sub ax,ax
 0000B0A0  50                push ax
-0000B0A1  90                nop
 0000B0A2  0E                push cs
 0000B0A3  E8A452            call 0x34a
 0000B0A6  C41E060F          les bx,[0xf06]
@@ -17148,15 +16925,16 @@
 0000B0CC  CA0400            retf 0x4
 
 0000B0CF  33C0              xor ax,ax
-0000B0D1  9A1C3E821F        call 0x1f82:0x3e1c
+0000B0D1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B0D6  813E060F1463      cmp word [0xf06],0x6314
 0000B0DC  7508              jnz 0xb0e6
 0000B0DE  813E080FFE30      cmp word [0xf08],0x30fe
 0000B0E4  7405              jz 0xb0eb
 0000B0E6  832E060F04        sub word [0xf06],byte +0x4
 0000B0EB  CB                retf
+
 0000B0EC  33C0              xor ax,ax
-0000B0EE  9A1C3E821F        call 0x1f82:0x3e1c
+0000B0EE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B0F3  813E060F1463      cmp word [0xf06],0x6314
 0000B0F9  7508              jnz 0xb103
 0000B0FB  813E080FFE30      cmp word [0xf08],0x30fe
@@ -17170,10 +16948,11 @@
 0000B117  9A564F821F        call 0x1f82:0x4f56
 0000B11C  83C406            add sp,byte +0x6
 0000B11F  CB                retf
+
 0000B120  55                push bp
 0000B121  8BEC              mov bp,sp
 0000B123  B81000            mov ax,0x10
-0000B126  9A1C3E821F        call 0x1f82:0x3e1c
+0000B126  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B12B  2BC0              sub ax,ax
 0000B12D  8946FE            mov [bp-0x2],ax
 0000B130  8946FC            mov [bp-0x4],ax
@@ -17251,7 +17030,7 @@
 0000B209  55                push bp
 0000B20A  8BEC              mov bp,sp
 0000B20C  B80C00            mov ax,0xc
-0000B20F  9A1C3E821F        call 0x1f82:0x3e1c
+0000B20F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B214  E8FE05            call 0xb815
 0000B217  8946FC            mov [bp-0x4],ax
 0000B21A  8956FE            mov [bp-0x2],dx
@@ -17308,7 +17087,7 @@
 0000B2AF  55                push bp
 0000B2B0  8BEC              mov bp,sp
 0000B2B2  B80E00            mov ax,0xe
-0000B2B5  9A1C3E821F        call 0x1f82:0x3e1c
+0000B2B5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B2BA  C706C0800000      mov word [0x80c0],0x0
 0000B2C0  F64606F0          test byte [bp+0x6],0xf0
 0000B2C4  7507              jnz 0xb2cd
@@ -17356,10 +17135,11 @@
 0000B345  8BE5              mov sp,bp
 0000B347  5D                pop bp
 0000B348  CA0200            retf 0x2
+
 0000B34B  55                push bp
 0000B34C  8BEC              mov bp,sp
 0000B34E  B80400            mov ax,0x4
-0000B351  9A1C3E821F        call 0x1f82:0x3e1c
+0000B351  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B356  FF7608            push word [bp+0x8]
 0000B359  FF7606            push word [bp+0x6]
 0000B35C  E89B11            call 0xc4fa
@@ -17386,10 +17166,11 @@
 0000B3A2  8BE5              mov sp,bp
 0000B3A4  5D                pop bp
 0000B3A5  CA0400            retf 0x4
+
 0000B3A8  55                push bp
 0000B3A9  8BEC              mov bp,sp
 0000B3AB  B80800            mov ax,0x8
-0000B3AE  9A1C3E821F        call 0x1f82:0x3e1c
+0000B3AE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B3B3  A14063            mov ax,[0x6340]
 0000B3B6  8B164263          mov dx,[0x6342]
 0000B3BA  8946FC            mov [bp-0x4],ax
@@ -17419,10 +17200,11 @@
 0000B40A  8BE5              mov sp,bp
 0000B40C  5D                pop bp
 0000B40D  CB                retf
+
 0000B40E  55                push bp
 0000B40F  8BEC              mov bp,sp
 0000B411  B80800            mov ax,0x8
-0000B414  9A1C3E821F        call 0x1f82:0x3e1c
+0000B414  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B419  FF7608            push word [bp+0x8]
 0000B41C  FF7606            push word [bp+0x6]
 0000B41F  E8D810            call 0xc4fa
@@ -17478,10 +17260,11 @@
 0000B4BA  8BE5              mov sp,bp
 0000B4BC  5D                pop bp
 0000B4BD  CA0A00            retf 0xa
+
 0000B4C0  55                push bp
 0000B4C1  8BEC              mov bp,sp
 0000B4C3  B80800            mov ax,0x8
-0000B4C6  9A1C3E821F        call 0x1f82:0x3e1c
+0000B4C6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B4CB  FF7608            push word [bp+0x8]
 0000B4CE  FF7606            push word [bp+0x6]
 0000B4D1  E82610            call 0xc4fa
@@ -17528,10 +17311,11 @@
 0000B54B  8BE5              mov sp,bp
 0000B54D  5D                pop bp
 0000B54E  CA0400            retf 0x4
+
 0000B551  55                push bp
 0000B552  8BEC              mov bp,sp
 0000B554  B81800            mov ax,0x18
-0000B557  9A1C3E821F        call 0x1f82:0x3e1c
+0000B557  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B55C  C45E06            les bx,[bp+0x6]
 0000B55F  8B460A            mov ax,[bp+0xa]
 0000B562  2BD2              sub dx,dx
@@ -17725,10 +17509,11 @@
 0000B798  8BE5              mov sp,bp
 0000B79A  5D                pop bp
 0000B79B  CA0600            retf 0x6
+
 0000B79E  55                push bp
 0000B79F  8BEC              mov bp,sp
 0000B7A1  33C0              xor ax,ax
-0000B7A3  9A1C3E821F        call 0x1f82:0x3e1c
+0000B7A3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B7A8  C45E06            les bx,[bp+0x6]
 0000B7AB  268A4710          mov al,[es:bx+0x10]
 0000B7AF  24FC              and al,0xfc
@@ -17739,34 +17524,39 @@
 0000B7BD  C706C0800000      mov word [0x80c0],0x0
 0000B7C3  5D                pop bp
 0000B7C4  CA0600            retf 0x6
+
 0000B7C7  33C0              xor ax,ax
-0000B7C9  9A1C3E821F        call 0x1f82:0x3e1c
+0000B7C9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B7CE  C706C0800000      mov word [0x80c0],0x0
 0000B7D4  A14063            mov ax,[0x6340]
 0000B7D7  8B164263          mov dx,[0x6342]
 0000B7DB  CB                retf
+
 0000B7DC  33C0              xor ax,ax
-0000B7DE  9A1C3E821F        call 0x1f82:0x3e1c
+0000B7DE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B7E3  FF364663          push word [0x6346]
 0000B7E7  FF364463          push word [0x6344]
 0000B7EB  E8DA0C            call 0xc4c8
 0000B7EE  CB                retf
+
 0000B7EF  33C0              xor ax,ax
-0000B7F1  9A1C3E821F        call 0x1f82:0x3e1c
+0000B7F1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B7F6  FF363E63          push word [0x633e]
 0000B7FA  FF363C63          push word [0x633c]
 0000B7FE  E8C70C            call 0xc4c8
 0000B801  CB                retf
+
 0000B802  33C0              xor ax,ax
-0000B804  9A1C3E821F        call 0x1f82:0x3e1c
+0000B804  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B809  FF364A63          push word [0x634a]
 0000B80D  FF364863          push word [0x6348]
 0000B811  E8B40C            call 0xc4c8
 0000B814  CB                retf
+
 0000B815  55                push bp
 0000B816  8BEC              mov bp,sp
 0000B818  B81400            mov ax,0x14
-0000B81B  9A1C3E821F        call 0x1f82:0x3e1c
+0000B81B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B820  A14463            mov ax,[0x6344]
 0000B823  0B064663          or ax,[0x6346]
 0000B827  7428              jz 0xb851
@@ -17845,10 +17635,11 @@
 0000B8FB  8BE5              mov sp,bp
 0000B8FD  5D                pop bp
 0000B8FE  C3                ret
+
 0000B8FF  55                push bp
 0000B900  8BEC              mov bp,sp
 0000B902  33C0              xor ax,ax
-0000B904  9A1C3E821F        call 0x1f82:0x3e1c
+0000B904  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B909  FF7606            push word [bp+0x6]
 0000B90C  FF7604            push word [bp+0x4]
 0000B90F  E8CE0B            call 0xc4e0
@@ -17866,10 +17657,11 @@
 0000B931  E80400            call 0xb938
 0000B934  5D                pop bp
 0000B935  C20400            ret 0x4
+
 0000B938  55                push bp
 0000B939  8BEC              mov bp,sp
 0000B93B  B81000            mov ax,0x10
-0000B93E  9A1C3E821F        call 0x1f82:0x3e1c
+0000B93E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000B943  57                push di
 0000B944  56                push si
 0000B945  FF7606            push word [bp+0x6]
@@ -17998,10 +17790,11 @@
 0000BABC  8BE5              mov sp,bp
 0000BABE  5D                pop bp
 0000BABF  C20400            ret 0x4
+
 0000BAC2  55                push bp
 0000BAC3  8BEC              mov bp,sp
 0000BAC5  B80400            mov ax,0x4
-0000BAC8  9A1C3E821F        call 0x1f82:0x3e1c
+0000BAC8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BACD  FF7606            push word [bp+0x6]
 0000BAD0  FF7604            push word [bp+0x4]
 0000BAD3  E80A0A            call 0xc4e0
@@ -18039,10 +17832,11 @@
 0000BB3A  8BE5              mov sp,bp
 0000BB3C  5D                pop bp
 0000BB3D  C20400            ret 0x4
+
 0000BB40  55                push bp
 0000BB41  8BEC              mov bp,sp
 0000BB43  B80400            mov ax,0x4
-0000BB46  9A1C3E821F        call 0x1f82:0x3e1c
+0000BB46  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BB4B  FF7606            push word [bp+0x6]
 0000BB4E  FF7604            push word [bp+0x4]
 0000BB51  E88C09            call 0xc4e0
@@ -18064,10 +17858,11 @@
 0000BB85  8BE5              mov sp,bp
 0000BB87  5D                pop bp
 0000BB88  C20400            ret 0x4
+
 0000BB8B  55                push bp
 0000BB8C  8BEC              mov bp,sp
 0000BB8E  B80400            mov ax,0x4
-0000BB91  9A1C3E821F        call 0x1f82:0x3e1c
+0000BB91  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BB96  57                push di
 0000BB97  56                push si
 0000BB98  FF7606            push word [bp+0x6]
@@ -18151,10 +17946,11 @@
 0000BC7D  8BE5              mov sp,bp
 0000BC7F  5D                pop bp
 0000BC80  C20400            ret 0x4
+
 0000BC83  55                push bp
 0000BC84  8BEC              mov bp,sp
 0000BC86  B80400            mov ax,0x4
-0000BC89  9A1C3E821F        call 0x1f82:0x3e1c
+0000BC89  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BC8E  57                push di
 0000BC8F  56                push si
 0000BC90  FF7606            push word [bp+0x6]
@@ -18218,10 +18014,11 @@
 0000BD3C  8BE5              mov sp,bp
 0000BD3E  5D                pop bp
 0000BD3F  C20400            ret 0x4
+
 0000BD42  55                push bp
 0000BD43  8BEC              mov bp,sp
 0000BD45  B80400            mov ax,0x4
-0000BD48  9A1C3E821F        call 0x1f82:0x3e1c
+0000BD48  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BD4D  A14863            mov ax,[0x6348]
 0000BD50  8B164A63          mov dx,[0x634a]
 0000BD54  EB15              jmp short 0xbd6b
@@ -18248,10 +18045,11 @@
 0000BD8C  8BE5              mov sp,bp
 0000BD8E  5D                pop bp
 0000BD8F  C20400            ret 0x4
+
 0000BD92  55                push bp
 0000BD93  8BEC              mov bp,sp
 0000BD95  B80400            mov ax,0x4
-0000BD98  9A1C3E821F        call 0x1f82:0x3e1c
+0000BD98  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BD9D  A13C63            mov ax,[0x633c]
 0000BDA0  8B163E63          mov dx,[0x633e]
 0000BDA4  EB15              jmp short 0xbdbb
@@ -18278,10 +18076,11 @@
 0000BDDC  8BE5              mov sp,bp
 0000BDDE  5D                pop bp
 0000BDDF  C20400            ret 0x4
+
 0000BDE2  55                push bp
 0000BDE3  8BEC              mov bp,sp
 0000BDE5  33C0              xor ax,ax
-0000BDE7  9A1C3E821F        call 0x1f82:0x3e1c
+0000BDE7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BDEC  FF7606            push word [bp+0x6]
 0000BDEF  FF7604            push word [bp+0x4]
 0000BDF2  E896FD            call 0xbb8b
@@ -18290,10 +18089,11 @@
 0000BDFB  E8C4FC            call 0xbac2
 0000BDFE  5D                pop bp
 0000BDFF  C20400            ret 0x4
+
 0000BE02  55                push bp
 0000BE03  8BEC              mov bp,sp
 0000BE05  33C0              xor ax,ax
-0000BE07  9A1C3E821F        call 0x1f82:0x3e1c
+0000BE07  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BE0C  F6460470          test byte [bp+0x4],0x70
 0000BE10  7408              jz 0xbe1a
 0000BE12  FF7606            push word [bp+0x6]
@@ -18303,10 +18103,11 @@
 0000BE1D  E84002            call 0xc060
 0000BE20  5D                pop bp
 0000BE21  C20400            ret 0x4
+
 0000BE24  55                push bp
 0000BE25  8BEC              mov bp,sp
 0000BE27  B80600            mov ax,0x6
-0000BE2A  9A1C3E821F        call 0x1f82:0x3e1c
+0000BE2A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BE2F  FF7604            push word [bp+0x4]
 0000BE32  E83800            call 0xbe6d
 0000BE35  8946FC            mov [bp-0x4],ax
@@ -18331,10 +18132,11 @@
 0000BE67  8BE5              mov sp,bp
 0000BE69  5D                pop bp
 0000BE6A  C20200            ret 0x2
+
 0000BE6D  55                push bp
 0000BE6E  8BEC              mov bp,sp
 0000BE70  B80C00            mov ax,0xc
-0000BE73  9A1C3E821F        call 0x1f82:0x3e1c
+0000BE73  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BE78  A14C63            mov ax,[0x634c]
 0000BE7B  8B164E63          mov dx,[0x634e]
 0000BE7F  8946FC            mov [bp-0x4],ax
@@ -18398,10 +18200,11 @@
 0000BF22  8BE5              mov sp,bp
 0000BF24  5D                pop bp
 0000BF25  C20200            ret 0x2
+
 0000BF28  55                push bp
 0000BF29  8BEC              mov bp,sp
 0000BF2B  B81800            mov ax,0x18
-0000BF2E  9A1C3E821F        call 0x1f82:0x3e1c
+0000BF2E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000BF33  A14C63            mov ax,[0x634c]
 0000BF36  8B164E63          mov dx,[0x634e]
 0000BF3A  8946FC            mov [bp-0x4],ax
@@ -18510,10 +18313,11 @@
 0000C05A  8BE5              mov sp,bp
 0000C05C  5D                pop bp
 0000C05D  C20400            ret 0x4
+
 0000C060  55                push bp
 0000C061  8BEC              mov bp,sp
 0000C063  B80600            mov ax,0x6
-0000C066  9A1C3E821F        call 0x1f82:0x3e1c
+0000C066  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C06B  FF7604            push word [bp+0x4]
 0000C06E  E83800            call 0xc0a9
 0000C071  8946FC            mov [bp-0x4],ax
@@ -18538,10 +18342,11 @@
 0000C0A3  8BE5              mov sp,bp
 0000C0A5  5D                pop bp
 0000C0A6  C20200            ret 0x2
+
 0000C0A9  55                push bp
 0000C0AA  8BEC              mov bp,sp
 0000C0AC  B80C00            mov ax,0xc
-0000C0AF  9A1C3E821F        call 0x1f82:0x3e1c
+0000C0AF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C0B4  A11063            mov ax,[0x6310]
 0000C0B7  8B161263          mov dx,[0x6312]
 0000C0BB  8946FC            mov [bp-0x4],ax
@@ -18613,10 +18418,11 @@
 0000C16D  8BE5              mov sp,bp
 0000C16F  5D                pop bp
 0000C170  C20200            ret 0x2
+
 0000C173  55                push bp
 0000C174  8BEC              mov bp,sp
 0000C176  B81800            mov ax,0x18
-0000C179  9A1C3E821F        call 0x1f82:0x3e1c
+0000C179  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C17E  A11063            mov ax,[0x6310]
 0000C181  8B161263          mov dx,[0x6312]
 0000C185  8946FC            mov [bp-0x4],ax
@@ -18740,10 +18546,11 @@
 0000C2CA  8BE5              mov sp,bp
 0000C2CC  5D                pop bp
 0000C2CD  C20400            ret 0x4
+
 0000C2D0  55                push bp
 0000C2D1  8BEC              mov bp,sp
 0000C2D3  B81C00            mov ax,0x1c
-0000C2D6  9A1C3E821F        call 0x1f82:0x3e1c
+0000C2D6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C2DB  8B460A            mov ax,[bp+0xa]
 0000C2DE  8B560C            mov dx,[bp+0xc]
 0000C2E1  394606            cmp [bp+0x6],ax
@@ -18872,10 +18679,11 @@
 0000C44A  8BE5              mov sp,bp
 0000C44C  5D                pop bp
 0000C44D  C20A00            ret 0xa
+
 0000C450  55                push bp
 0000C451  8BEC              mov bp,sp
 0000C453  B80400            mov ax,0x4
-0000C456  9A1C3E821F        call 0x1f82:0x3e1c
+0000C456  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C45B  FF7606            push word [bp+0x6]
 0000C45E  FF7604            push word [bp+0x4]
 0000C461  E87C00            call 0xc4e0
@@ -18915,7 +18723,7 @@
 0000C4C1  8BE5              mov sp,bp
 0000C4C3  5D                pop bp
 0000C4C4  C20400            ret 0x4
-0000C4C7  90                nop
+
 0000C4C8  55                push bp
 0000C4C9  8BEC              mov bp,sp
 0000C4CB  8B5606            mov dx,[bp+0x6]
@@ -18927,6 +18735,7 @@
 0000C4D9  250F00            and ax,0xf
 0000C4DC  5D                pop bp
 0000C4DD  C20400            ret 0x4
+
 0000C4E0  55                push bp
 0000C4E1  8BEC              mov bp,sp
 0000C4E3  8B5606            mov dx,[bp+0x6]
@@ -18935,10 +18744,12 @@
 0000C4EC  7304              jnc 0xc4f2
 0000C4EE  5D                pop bp
 0000C4EF  C20400            ret 0x4
+
 0000C4F2  2D1000            sub ax,0x10
 0000C4F5  42                inc dx
 0000C4F6  5D                pop bp
 0000C4F7  C20400            ret 0x4
+
 0000C4FA  55                push bp
 0000C4FB  8BEC              mov bp,sp
 0000C4FD  8B5606            mov dx,[bp+0x6]
@@ -18951,9 +18762,11 @@
 0000C50F  7204              jc 0xc515
 0000C511  5D                pop bp
 0000C512  C20400            ret 0x4
+
 0000C515  81C20010          add dx,0x1000
 0000C519  5D                pop bp
 0000C51A  C20400            ret 0x4
+
 0000C51D  55                push bp
 0000C51E  8BEC              mov bp,sp
 0000C520  FF7608            push word [bp+0x8]
@@ -18963,7 +18776,6 @@
 0000C529  8B4602            mov ax,[bp+0x2]
 0000C52C  2B4606            sub ax,[bp+0x6]
 0000C52F  50                push ax
-0000C530  90                nop
 0000C531  0E                push cs
 0000C532  E87EE4            call 0xa9b3
 0000C535  8BE5              mov sp,bp
@@ -18973,7 +18785,7 @@
 0000C53C  55                push bp
 0000C53D  8BEC              mov bp,sp
 0000C53F  B80800            mov ax,0x8
-0000C542  9A1C3E821F        call 0x1f82:0x3e1c
+0000C542  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C547  B85A12            mov ax,0x125a
 0000C54A  8946F8            mov [bp-0x8],ax
 0000C54D  8C5EFA            mov [bp-0x6],ds
@@ -18984,14 +18796,12 @@
 0000C55B  C45EF8            les bx,[bp-0x8]
 0000C55E  26FF7702          push word [es:bx+0x2]
 0000C562  26FF37            push word [es:bx]
-0000C565  90                nop
 0000C566  0E                push cs
 0000C567  E82518            call 0xdd8f
 0000C56A  52                push dx
 0000C56B  50                push ax
 0000C56C  C45EF8            les bx,[bp-0x8]
 0000C56F  26FF7704          push word [es:bx+0x4]
-0000C573  90                nop
 0000C574  0E                push cs
 0000C575  E84D10            call 0xd5c5
 0000C578  8346F806          add word [bp-0x8],byte +0x6
@@ -18999,7 +18809,6 @@
 0000C57F  8B56FE            mov dx,[bp-0x2]
 0000C582  3946F8            cmp [bp-0x8],ax
 0000C585  72D4              jc 0xc55b
-0000C587  90                nop
 0000C588  0E                push cs
 0000C589  E81E0D            call 0xd2aa
 0000C58C  A3AC77            mov [0x77ac],ax
@@ -19011,23 +18820,22 @@
 0000C59A  99                cwd
 0000C59B  52                push dx
 0000C59C  50                push ax
-0000C59D  90                nop
 0000C59E  0E                push cs
 0000C59F  E811E4            call 0xa9b3
 0000C5A2  B83CC5            mov ax,0xc53c
 0000C5A5  BA0000            mov dx,0x0
 0000C5A8  52                push dx
 0000C5A9  50                push ax
-0000C5AA  90                nop
 0000C5AB  0E                push cs
 0000C5AC  E86EFF            call 0xc51d
 0000C5AF  8BE5              mov sp,bp
 0000C5B1  5D                pop bp
 0000C5B2  CB                retf
+
 0000C5B3  55                push bp
 0000C5B4  8BEC              mov bp,sp
 0000C5B6  B80200            mov ax,0x2
-0000C5B9  9A1C3E821F        call 0x1f82:0x3e1c
+0000C5B9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C5BE  8A4606            mov al,[bp+0x6]
 0000C5C1  2AE4              sub ah,ah
 0000C5C3  8946FE            mov [bp-0x2],ax
@@ -19066,11 +18874,9 @@
 0000C622  03C0              add ax,ax
 0000C624  93                xchg ax,bx
 0000C625  2EFFA786C6        jmp [cs:bx-0x397a]
-0000C62A  90                nop
 0000C62B  0E                push cs
 0000C62C  E85AB9            call 0x7f89
 0000C62F  E95B02            jmp 0xc88d
-0000C632  90                nop
 0000C633  0E                push cs
 0000C634  E852B8            call 0x7e89
 0000C637  E95302            jmp 0xc88d
@@ -19082,15 +18888,12 @@
 0000C644  50                push ax
 0000C645  B80300            mov ax,0x3
 0000C648  50                push ax
-0000C649  90                nop
 0000C64A  0E                push cs
 0000C64B  E88EC7            call 0x8ddc
 0000C64E  E93C02            jmp 0xc88d
-0000C651  90                nop
 0000C652  0E                push cs
 0000C653  E83537            call 0xfd8b
 0000C656  E93402            jmp 0xc88d
-0000C659  90                nop
 0000C65A  0E                push cs
 0000C65B  E837DA            call 0xa095
 0000C65E  E92C02            jmp 0xc88d
@@ -19100,22 +18903,14 @@
 0000C66E  3D0100            cmp ax,0x1
 0000C671  7403              jz 0xc676
 0000C673  E91702            jmp 0xc88d
-0000C676  90                nop
 0000C677  0E                push cs
 0000C678  E892B9            call 0x800d
 0000C67B  E90F02            jmp 0xc88d
-0000C67E  90                nop
 0000C67F  0E                push cs
 0000C680  E861BA            call 0x80e4
 0000C683  E90702            jmp 0xc88d
 0000C686  2AC6              sub al,dh
-0000C688  8D                db 0x8d
-0000C689  C832C68D          enter 0xc632,0x8d
-0000C68D  C83AC68D          enter 0xc63a,0x8d
-0000C691  C851C659          enter 0xc651,0x59
-0000C695  C6                db 0xc6
-0000C696  61                popa
-0000C697  C6                db 0xc6
+0000C688 ; data
 0000C698  69C67EC6          imul ax,si,word 0xc67e
 0000C69C  E9EE01            jmp 0xc88d
 0000C69F  8B46FE            mov ax,[bp-0x2]
@@ -19165,7 +18960,6 @@
 0000C723  E96701            jmp 0xc88d
 0000C726  2BC0              sub ax,ax
 0000C728  50                push ax
-0000C729  90                nop
 0000C72A  0E                push cs
 0000C72B  E8649E            call 0x6592
 0000C72E  E95C01            jmp 0xc88d
@@ -19178,7 +18972,6 @@
 0000C745  50                push ax
 0000C746  B80703            mov ax,0x307
 0000C749  50                push ax
-0000C74A  90                nop
 0000C74B  0E                push cs
 0000C74C  E82408            call 0xcf73
 0000C74F  E93B01            jmp 0xc88d
@@ -19263,7 +19056,6 @@
 0000C83E  742E              jz 0xc86e
 0000C840  3DFF00            cmp ax,0xff
 0000C843  7513              jnz 0xc858
-0000C845  90                nop
 0000C846  0E                push cs
 0000C847  E85027            call 0xef9a
 0000C84A  8946FE            mov [bp-0x2],ax
@@ -19272,15 +19064,12 @@
 0000C851  833ED68000        cmp word [0x80d6],byte +0x0
 0000C856  7435              jz 0xc88d
 0000C858  50                push ax
-0000C859  90                nop
 0000C85A  0E                push cs
 0000C85B  E8692B            call 0xf3c7
 0000C85E  EB2D              jmp short 0xc88d
-0000C860  90                nop
 0000C861  0E                push cs
 0000C862  E8682C            call 0xf4cd
 0000C865  EB26              jmp short 0xc88d
-0000C867  90                nop
 0000C868  0E                push cs
 0000C869  E8012D            call 0xf56d
 0000C86C  EB1F              jmp short 0xc88d
@@ -19299,54 +19088,49 @@
 0000C88D  8BE5              mov sp,bp
 0000C88F  5D                pop bp
 0000C890  CA0400            retf 0x4
+
 0000C893  33C0              xor ax,ax
-0000C895  9A1C3E821F        call 0x1f82:0x3e1c
+0000C895  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C89A  B8FB00            mov ax,0xfb
 0000C89D  50                push ax
-0000C89E  90                nop
 0000C89F  0E                push cs
 0000C8A0  E8EE09            call 0xd291
 0000C8A3  B8FC00            mov ax,0xfc
 0000C8A6  50                push ax
-0000C8A7  90                nop
 0000C8A8  0E                push cs
 0000C8A9  E8E509            call 0xd291
 0000C8AC  B8FE00            mov ax,0xfe
 0000C8AF  50                push ax
-0000C8B0  90                nop
 0000C8B1  0E                push cs
 0000C8B2  E8DC09            call 0xd291
 0000C8B5  B80103            mov ax,0x301
 0000C8B8  50                push ax
-0000C8B9  90                nop
 0000C8BA  0E                push cs
 0000C8BB  E8D309            call 0xd291
 0000C8BE  CB                retf
+
 0000C8BF  33C0              xor ax,ax
-0000C8C1  9A1C3E821F        call 0x1f82:0x3e1c
+0000C8C1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C8C6  B8FD00            mov ax,0xfd
 0000C8C9  50                push ax
-0000C8CA  90                nop
 0000C8CB  0E                push cs
 0000C8CC  E8C209            call 0xd291
 0000C8CF  CB                retf
+
 0000C8D0  33C0              xor ax,ax
-0000C8D2  9A1C3E821F        call 0x1f82:0x3e1c
+0000C8D2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C8D7  B8FF64            mov ax,0x64ff
 0000C8DA  50                push ax
-0000C8DB  90                nop
 0000C8DC  0E                push cs
 0000C8DD  E8B109            call 0xd291
 0000C8E0  8B1EBA77          mov bx,[0x77ba]
 0000C8E4  FF7704            push word [bx+0x4]
 0000C8E7  B8FF64            mov ax,0x64ff
 0000C8EA  50                push ax
-0000C8EB  90                nop
 0000C8EC  0E                push cs
 0000C8ED  E88306            call 0xcf73
 0000C8F0  B80303            mov ax,0x303
 0000C8F3  50                push ax
-0000C8F4  90                nop
 0000C8F5  0E                push cs
 0000C8F6  E89809            call 0xd291
 0000C8F9  8B1EBA77          mov bx,[0x77ba]
@@ -19359,70 +19143,64 @@
 0000C90D  7509              jnz 0xc918
 0000C90F  B80203            mov ax,0x302
 0000C912  50                push ax
-0000C913  90                nop
 0000C914  0E                push cs
 0000C915  E87909            call 0xd291
 0000C918  C3                ret
+
 0000C919  33C0              xor ax,ax
-0000C91B  9A1C3E821F        call 0x1f82:0x3e1c
+0000C91B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C920  B8FB00            mov ax,0xfb
 0000C923  50                push ax
-0000C924  90                nop
 0000C925  0E                push cs
 0000C926  E8F507            call 0xd11e
 0000C929  B8FC00            mov ax,0xfc
 0000C92C  50                push ax
-0000C92D  90                nop
 0000C92E  0E                push cs
 0000C92F  E8EC07            call 0xd11e
 0000C932  B8FE00            mov ax,0xfe
 0000C935  50                push ax
-0000C936  90                nop
 0000C937  0E                push cs
 0000C938  E8E307            call 0xd11e
 0000C93B  B80103            mov ax,0x301
 0000C93E  50                push ax
-0000C93F  90                nop
 0000C940  0E                push cs
 0000C941  E8DA07            call 0xd11e
 0000C944  CB                retf
+
 0000C945  33C0              xor ax,ax
-0000C947  9A1C3E821F        call 0x1f82:0x3e1c
+0000C947  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C94C  B8FD00            mov ax,0xfd
 0000C94F  50                push ax
-0000C950  90                nop
 0000C951  0E                push cs
 0000C952  E8C907            call 0xd11e
 0000C955  CB                retf
+
 0000C956  33C0              xor ax,ax
-0000C958  9A1C3E821F        call 0x1f82:0x3e1c
+0000C958  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C95D  2BC0              sub ax,ax
 0000C95F  50                push ax
 0000C960  B8FF64            mov ax,0x64ff
 0000C963  50                push ax
-0000C964  90                nop
 0000C965  0E                push cs
 0000C966  E80A06            call 0xcf73
 0000C969  B8FF64            mov ax,0x64ff
 0000C96C  50                push ax
-0000C96D  90                nop
 0000C96E  0E                push cs
 0000C96F  E8AC07            call 0xd11e
 0000C972  B80303            mov ax,0x303
 0000C975  50                push ax
-0000C976  90                nop
 0000C977  0E                push cs
 0000C978  E8A307            call 0xd11e
 0000C97B  B80203            mov ax,0x302
 0000C97E  50                push ax
-0000C97F  90                nop
 0000C980  0E                push cs
 0000C981  E89A07            call 0xd11e
 0000C984  C3                ret
+
 0000C985  55                push bp
 0000C986  8BEC              mov bp,sp
 0000C988  33C0              xor ax,ax
-0000C98A  9A1C3E821F        call 0x1f82:0x3e1c
+0000C98A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C98F  FF7606            push word [bp+0x6]
 0000C992  0E                push cs
 0000C993  E81200            call 0xc9a8
@@ -19434,10 +19212,11 @@
 0000C9A1  E8C603            call 0xcd6a
 0000C9A4  5D                pop bp
 0000C9A5  CA0200            retf 0x2
+
 0000C9A8  55                push bp
 0000C9A9  8BEC              mov bp,sp
 0000C9AB  33C0              xor ax,ax
-0000C9AD  9A1C3E821F        call 0x1f82:0x3e1c
+0000C9AD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000C9B2  837E0600          cmp word [bp+0x6],byte +0x0
 0000C9B6  744B              jz 0xca03
 0000C9B8  833EBA7700        cmp word [0x77ba],byte +0x0
@@ -19460,7 +19239,6 @@
 0000C9E9  F7F9              idiv cx
 0000C9EB  80C404            add ah,0x4
 0000C9EE  50                push ax
-0000C9EF  90                nop
 0000C9F0  0E                push cs
 0000C9F1  E8AC16            call 0xe0a0
 0000C9F4  E83F00            call 0xca36
@@ -19481,7 +19259,6 @@
 0000CA1B  F7F9              idiv cx
 0000CA1D  80C404            add ah,0x4
 0000CA20  50                push ax
-0000CA21  90                nop
 0000CA22  0E                push cs
 0000CA23  E87A16            call 0xe0a0
 0000CA26  E82DFF            call 0xc956
@@ -19491,10 +19268,11 @@
 0000CA2F  E8AB01            call 0xcbdd
 0000CA32  5D                pop bp
 0000CA33  CA0200            retf 0x2
+
 0000CA36  55                push bp
 0000CA37  8BEC              mov bp,sp
 0000CA39  B80A00            mov ax,0xa
-0000CA3C  9A1C3E821F        call 0x1f82:0x3e1c
+0000CA3C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CA41  57                push di
 0000CA42  8B1EBA77          mov bx,[0x77ba]
 0000CA46  8B4716            mov ax,[bx+0x16]
@@ -19517,7 +19295,6 @@
 0000CA77  50                push ax
 0000CA78  B86400            mov ax,0x64
 0000CA7B  50                push ax
-0000CA7C  90                nop
 0000CA7D  0E                push cs
 0000CA7E  E89C0B            call 0xd61d
 0000CA81  C47EF8            les di,[bp-0x8]
@@ -19588,7 +19365,6 @@
 0000CB43  50                push ax
 0000CB44  B86400            mov ax,0x64
 0000CB47  50                push ax
-0000CB48  90                nop
 0000CB49  0E                push cs
 0000CB4A  E8D00A            call 0xd61d
 0000CB4D  C47EF8            les di,[bp-0x8]
@@ -19612,7 +19388,6 @@
 0000CB8A  50                push ax
 0000CB8B  B86E00            mov ax,0x6e
 0000CB8E  50                push ax
-0000CB8F  90                nop
 0000CB90  0E                push cs
 0000CB91  E8890A            call 0xd61d
 0000CB94  C47EF8            les di,[bp-0x8]
@@ -19626,7 +19401,6 @@
 0000CBB3  7FCC              jg 0xcb81
 0000CBB5  B8FF6E            mov ax,0x6eff
 0000CBB8  50                push ax
-0000CBB9  90                nop
 0000CBBA  0E                push cs
 0000CBBB  E8D803            call 0xcf96
 0000CBBE  2BC0              sub ax,ax
@@ -19634,7 +19408,6 @@
 0000CBC1  50                push ax
 0000CBC2  B86400            mov ax,0x64
 0000CBC5  50                push ax
-0000CBC6  90                nop
 0000CBC7  0E                push cs
 0000CBC8  E85A03            call 0xcf25
 0000CBCB  2BC0              sub ax,ax
@@ -19642,17 +19415,17 @@
 0000CBCE  50                push ax
 0000CBCF  B86E00            mov ax,0x6e
 0000CBD2  50                push ax
-0000CBD3  90                nop
 0000CBD4  0E                push cs
 0000CBD5  E84D03            call 0xcf25
 0000CBD8  5F                pop di
 0000CBD9  8BE5              mov sp,bp
 0000CBDB  5D                pop bp
 0000CBDC  C3                ret
+
 0000CBDD  55                push bp
 0000CBDE  8BEC              mov bp,sp
 0000CBE0  B80200            mov ax,0x2
-0000CBE3  9A1C3E821F        call 0x1f82:0x3e1c
+0000CBE3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CBE8  B8A112            mov ax,0x12a1
 0000CBEB  1E                push ds
 0000CBEC  50                push ax
@@ -19660,7 +19433,6 @@
 0000CBF0  50                push ax
 0000CBF1  B86E00            mov ax,0x6e
 0000CBF4  50                push ax
-0000CBF5  90                nop
 0000CBF6  0E                push cs
 0000CBF7  E8230A            call 0xd61d
 0000CBFA  8B1EBA77          mov bx,[0x77ba]
@@ -19676,7 +19448,6 @@
 0000CC17  8B46FE            mov ax,[bp-0x2]
 0000CC1A  80C464            add ah,0x64
 0000CC1D  50                push ax
-0000CC1E  90                nop
 0000CC1F  0E                push cs
 0000CC20  E87303            call 0xcf96
 0000CC23  FF46FE            inc word [bp-0x2]
@@ -19698,7 +19469,6 @@
 0000CC50  8B46FE            mov ax,[bp-0x2]
 0000CC53  80C464            add ah,0x64
 0000CC56  50                push ax
-0000CC57  90                nop
 0000CC58  0E                push cs
 0000CC59  E83A03            call 0xcf96
 0000CC5C  FF46FE            inc word [bp-0x2]
@@ -19712,7 +19482,6 @@
 0000CC75  8B46FE            mov ax,[bp-0x2]
 0000CC78  80C46E            add ah,0x6e
 0000CC7B  50                push ax
-0000CC7C  90                nop
 0000CC7D  0E                push cs
 0000CC7E  E81503            call 0xcf96
 0000CC81  FF46FE            inc word [bp-0x2]
@@ -19726,7 +19495,6 @@
 0000CC96  50                push ax
 0000CC97  B86400            mov ax,0x64
 0000CC9A  50                push ax
-0000CC9B  90                nop
 0000CC9C  0E                push cs
 0000CC9D  E88502            call 0xcf25
 0000CCA0  2BC0              sub ax,ax
@@ -19734,16 +19502,16 @@
 0000CCA3  50                push ax
 0000CCA4  B86E00            mov ax,0x6e
 0000CCA7  50                push ax
-0000CCA8  90                nop
 0000CCA9  0E                push cs
 0000CCAA  E87802            call 0xcf25
 0000CCAD  8BE5              mov sp,bp
 0000CCAF  5D                pop bp
 0000CCB0  C3                ret
+
 0000CCB1  55                push bp
 0000CCB2  8BEC              mov bp,sp
 0000CCB4  33C0              xor ax,ax
-0000CCB6  9A1C3E821F        call 0x1f82:0x3e1c
+0000CCB6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CCBB  8B1EBA77          mov bx,[0x77ba]
 0000CCBF  837F06FF          cmp word [bx+0x6],byte -0x1
 0000CCC3  7434              jz 0xccf9
@@ -19755,7 +19523,6 @@
 0000CCD2  F7F9              idiv cx
 0000CCD4  80C464            add ah,0x64
 0000CCD7  50                push ax
-0000CCD8  90                nop
 0000CCD9  0E                push cs
 0000CCDA  E89602            call 0xcf73
 0000CCDD  FF7604            push word [bp+0x4]
@@ -19767,15 +19534,15 @@
 0000CCEE  F7F9              idiv cx
 0000CCF0  80C66E            add dh,0x6e
 0000CCF3  52                push dx
-0000CCF4  90                nop
 0000CCF5  0E                push cs
 0000CCF6  E87A02            call 0xcf73
 0000CCF9  5D                pop bp
 0000CCFA  C20200            ret 0x2
+
 0000CCFD  55                push bp
 0000CCFE  8BEC              mov bp,sp
 0000CD00  B80600            mov ax,0x6
-0000CD03  9A1C3E821F        call 0x1f82:0x3e1c
+0000CD03  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CD08  8B1EC0CF          mov bx,[0xcfc0]
 0000CD0C  D1E3              shl bx,1
 0000CD0E  D1E3              shl bx,1
@@ -19785,7 +19552,6 @@
 0000CD1B  8956FC            mov [bp-0x4],dx
 0000CD1E  52                push dx
 0000CD1F  50                push ax
-0000CD20  90                nop
 0000CD21  0E                push cs
 0000CD22  E822E3            call 0xb047
 0000CD25  C45EFA            les bx,[bp-0x6]
@@ -19805,21 +19571,20 @@
 0000CD4D  FF7606            push word [bp+0x6]
 0000CD50  B8FE05            mov ax,0x5fe
 0000CD53  50                push ax
-0000CD54  90                nop
 0000CD55  0E                push cs
 0000CD56  E81A02            call 0xcf73
 0000CD59  FF76FC            push word [bp-0x4]
 0000CD5C  FF76FA            push word [bp-0x6]
-0000CD5F  90                nop
 0000CD60  0E                push cs
 0000CD61  E8FFE2            call 0xb063
 0000CD64  8BE5              mov sp,bp
 0000CD66  5D                pop bp
 0000CD67  CA0200            retf 0x2
+
 0000CD6A  55                push bp
 0000CD6B  8BEC              mov bp,sp
 0000CD6D  B80600            mov ax,0x6
-0000CD70  9A1C3E821F        call 0x1f82:0x3e1c
+0000CD70  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CD75  8B1EC0CF          mov bx,[0xcfc0]
 0000CD79  D1E3              shl bx,1
 0000CD7B  D1E3              shl bx,1
@@ -19829,7 +19594,6 @@
 0000CD88  8956FC            mov [bp-0x4],dx
 0000CD8B  52                push dx
 0000CD8C  50                push ax
-0000CD8D  90                nop
 0000CD8E  0E                push cs
 0000CD8F  E8B5E2            call 0xb047
 0000CD92  C45EFA            les bx,[bp-0x6]
@@ -19849,21 +19613,20 @@
 0000CDBA  FF7606            push word [bp+0x6]
 0000CDBD  B8FE06            mov ax,0x6fe
 0000CDC0  50                push ax
-0000CDC1  90                nop
 0000CDC2  0E                push cs
 0000CDC3  E8AD01            call 0xcf73
 0000CDC6  FF76FC            push word [bp-0x4]
 0000CDC9  FF76FA            push word [bp-0x6]
-0000CDCC  90                nop
 0000CDCD  0E                push cs
 0000CDCE  E892E2            call 0xb063
 0000CDD1  8BE5              mov sp,bp
 0000CDD3  5D                pop bp
 0000CDD4  CA0200            retf 0x2
+
 0000CDD7  55                push bp
 0000CDD8  8BEC              mov bp,sp
 0000CDDA  33C0              xor ax,ax
-0000CDDC  9A1C3E821F        call 0x1f82:0x3e1c
+0000CDDC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CDE1  8B5E06            mov bx,[bp+0x6]
 0000CDE4  891E60D9          mov [0xd960],bx
 0000CDE8  D1E3              shl bx,1
@@ -19871,20 +19634,17 @@
 0000CDEB  FFB74C12          push word [bx+0x124c]
 0000CDEF  B8FA00            mov ax,0xfa
 0000CDF2  50                push ax
-0000CDF3  90                nop
 0000CDF4  0E                push cs
 0000CDF5  E8F012            call 0xe0e8
 0000CDF8  837E0600          cmp word [bp+0x6],byte +0x0
 0000CDFC  750B              jnz 0xce09
 0000CDFE  B8FA00            mov ax,0xfa
 0000CE01  50                push ax
-0000CE02  90                nop
 0000CE03  0E                push cs
 0000CE04  E81703            call 0xd11e
 0000CE07  EB09              jmp short 0xce12
 0000CE09  B8FA00            mov ax,0xfa
 0000CE0C  50                push ax
-0000CE0D  90                nop
 0000CE0E  0E                push cs
 0000CE0F  E87F04            call 0xd291
 0000CE12  2BC0              sub ax,ax
@@ -19892,13 +19652,13 @@
 0000CE15  50                push ax
 0000CE16  B80300            mov ax,0x3
 0000CE19  50                push ax
-0000CE1A  90                nop
 0000CE1B  0E                push cs
 0000CE1C  E80601            call 0xcf25
 0000CE1F  5D                pop bp
 0000CE20  CA0200            retf 0x2
+
 0000CE23  33C0              xor ax,ax
-0000CE25  9A1C3E821F        call 0x1f82:0x3e1c
+0000CE25  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CE2A  833EB6CF00        cmp word [0xcfb6],byte +0x0
 0000CE2F  7440              jz 0xce71
 0000CE31  C706B6CF0000      mov word [0xcfb6],0x0
@@ -19920,8 +19680,9 @@
 0000CE65  C706B880F61F      mov word [0x80b8],0x1ff6
 0000CE6B  C706BA800000      mov word [0x80ba],0x0
 0000CE71  CB                retf
+
 0000CE72  33C0              xor ax,ax
-0000CE74  9A1C3E821F        call 0x1f82:0x3e1c
+0000CE74  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CE79  833EB6CF00        cmp word [0xcfb6],byte +0x0
 0000CE7E  7535              jnz 0xceb5
 0000CE80  C706B6CF0100      mov word [0xcfb6],0x1
@@ -19934,19 +19695,18 @@
 0000CE93  A1AC77            mov ax,[0x77ac]
 0000CE96  0106061B          add [0x1b06],ax
 0000CE9A  832E0A1B1F        sub word [0x1b0a],byte +0x1f
-0000CE9F  90                nop
 0000CEA0  0E                push cs
 0000CEA1  E89302            call 0xd137
-0000CEA4  90                nop
 0000CEA5  0E                push cs
 0000CEA6  E84267            call 0x35eb
 0000CEA9  C706B880FF1F      mov word [0x80b8],0x1fff
 0000CEAF  C706BA800000      mov word [0x80ba],0x0
 0000CEB5  CB                retf
+
 0000CEB6  55                push bp
 0000CEB7  8BEC              mov bp,sp
 0000CEB9  33C0              xor ax,ax
-0000CEBB  9A1C3E821F        call 0x1f82:0x3e1c
+0000CEBB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CEC0  833EB81200        cmp word [0x12b8],byte +0x0
 0000CEC5  7540              jnz 0xcf07
 0000CEC7  C706B8120100      mov word [0x12b8],0x1
@@ -19973,11 +19733,13 @@
 0000CF07  C706C0800000      mov word [0x80c0],0x0
 0000CF0D  5D                pop bp
 0000CF0E  CA0200            retf 0x2
+
 0000CF11  33C0              xor ax,ax
-0000CF13  9A1C3E821F        call 0x1f82:0x3e1c
+0000CF13  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CF18  C706B8120000      mov word [0x12b8],0x0
 0000CF1E  C706C0800000      mov word [0x80c0],0x0
 0000CF24  CB                retf
+
 0000CF25  55                push bp
 0000CF26  8BEC              mov bp,sp
 0000CF28  B80400            mov ax,0x4
@@ -19990,7 +19752,6 @@
 0000CF3E  7427              jz 0xcf67
 0000CF40  FF76FE            push word [bp-0x2]
 0000CF43  50                push ax
-0000CF44  90                nop
 0000CF45  0E                push cs
 0000CF46  E8FEE0            call 0xb047
 0000CF49  FF760A            push word [bp+0xa]
@@ -20001,17 +19762,17 @@
 0000CF59  E84E18            call 0xe7aa
 0000CF5C  FF76FE            push word [bp-0x2]
 0000CF5F  FF76FC            push word [bp-0x4]
-0000CF62  90                nop
 0000CF63  0E                push cs
 0000CF64  E8FCE0            call 0xb063
 0000CF67  C706C0800000      mov word [0x80c0],0x0
 0000CF6D  8BE5              mov sp,bp
 0000CF6F  5D                pop bp
 0000CF70  CA0600            retf 0x6
+
 0000CF73  55                push bp
 0000CF74  8BEC              mov bp,sp
 0000CF76  33C0              xor ax,ax
-0000CF78  9A1C3E821F        call 0x1f82:0x3e1c
+0000CF78  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CF7D  837E0800          cmp word [bp+0x8],byte +0x0
 0000CF81  7405              jz 0xcf88
 0000CF83  B81200            mov ax,0x12
@@ -20023,16 +19784,16 @@
 0000CF8F  E80E11            call 0xe0a0
 0000CF92  5D                pop bp
 0000CF93  CA0400            retf 0x4
+
 0000CF96  55                push bp
 0000CF97  8BEC              mov bp,sp
 0000CF99  B82800            mov ax,0x28
-0000CF9C  9A1C3E821F        call 0x1f82:0x3e1c
+0000CF9C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000CFA1  A15A63            mov ax,[0x635a]
 0000CFA4  8B165C63          mov dx,[0x635c]
 0000CFA8  E92801            jmp 0xd0d3
 0000CFAB  FF76EE            push word [bp-0x12]
 0000CFAE  FF76EC            push word [bp-0x14]
-0000CFB1  90                nop
 0000CFB2  0E                push cs
 0000CFB3  E891E0            call 0xb047
 0000CFB6  C45EEC            les bx,[bp-0x14]
@@ -20043,22 +19804,18 @@
 0000CFC6  2689570E          mov [es:bx+0xe],dx
 0000CFCA  FF76EE            push word [bp-0x12]
 0000CFCD  FF76EC            push word [bp-0x14]
-0000CFD0  90                nop
 0000CFD1  0E                push cs
 0000CFD2  E88EE0            call 0xb063
 0000CFD5  FF76F2            push word [bp-0xe]
 0000CFD8  FF76F0            push word [bp-0x10]
-0000CFDB  90                nop
 0000CFDC  0E                push cs
 0000CFDD  E8CDDE            call 0xaead
 0000CFE0  FF76E2            push word [bp-0x1e]
 0000CFE3  FF76E0            push word [bp-0x20]
-0000CFE6  90                nop
 0000CFE7  0E                push cs
 0000CFE8  E878E0            call 0xb063
 0000CFEB  FF76DE            push word [bp-0x22]
 0000CFEE  FF76DC            push word [bp-0x24]
-0000CFF1  90                nop
 0000CFF2  0E                push cs
 0000CFF3  E86DE0            call 0xb063
 0000CFF6  E91901            jmp 0xd112
@@ -20068,7 +19825,6 @@
 0000D002  8956EE            mov [bp-0x12],dx
 0000D005  52                push dx
 0000D006  50                push ax
-0000D007  90                nop
 0000D008  0E                push cs
 0000D009  E857E0            call 0xb063
 0000D00C  8B46F4            mov ax,[bp-0xc]
@@ -20079,7 +19835,6 @@
 0000D01A  744E              jz 0xd06a
 0000D01C  52                push dx
 0000D01D  FF76F0            push word [bp-0x10]
-0000D020  90                nop
 0000D021  0E                push cs
 0000D022  E822E0            call 0xb047
 0000D025  C45EF0            les bx,[bp-0x10]
@@ -20106,7 +19861,6 @@
 0000D067  E96BFF            jmp 0xcfd5
 0000D06A  FF76E2            push word [bp-0x1e]
 0000D06D  FF76E0            push word [bp-0x20]
-0000D070  90                nop
 0000D071  0E                push cs
 0000D072  E8EEDF            call 0xb063
 0000D075  8B46E8            mov ax,[bp-0x18]
@@ -20117,7 +19871,6 @@
 0000D083  743D              jz 0xd0c2
 0000D085  52                push dx
 0000D086  FF76E0            push word [bp-0x20]
-0000D089  90                nop
 0000D08A  0E                push cs
 0000D08B  E8B9DF            call 0xb047
 0000D08E  C45EE0            les bx,[bp-0x20]
@@ -20138,7 +19891,6 @@
 0000D0BF  E950FF            jmp 0xd012
 0000D0C2  FF76DE            push word [bp-0x22]
 0000D0C5  FF76DC            push word [bp-0x24]
-0000D0C8  90                nop
 0000D0C9  0E                push cs
 0000D0CA  E896DF            call 0xb063
 0000D0CD  8B46E4            mov ax,[bp-0x1c]
@@ -20149,7 +19901,6 @@
 0000D0DB  7435              jz 0xd112
 0000D0DD  52                push dx
 0000D0DE  FF76DC            push word [bp-0x24]
-0000D0E1  90                nop
 0000D0E2  0E                push cs
 0000D0E3  E861DF            call 0xb047
 0000D0E6  C45EDC            les bx,[bp-0x24]
@@ -20169,10 +19920,11 @@
 0000D118  8BE5              mov sp,bp
 0000D11A  5D                pop bp
 0000D11B  CA0200            retf 0x2
+
 0000D11E  55                push bp
 0000D11F  8BEC              mov bp,sp
 0000D121  33C0              xor ax,ax
-0000D123  9A1C3E821F        call 0x1f82:0x3e1c
+0000D123  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D128  B88000            mov ax,0x80
 0000D12B  50                push ax
 0000D12C  FF7606            push word [bp+0x6]
@@ -20180,13 +19932,13 @@
 0000D130  E80F0F            call 0xe042
 0000D133  5D                pop bp
 0000D134  CA0200            retf 0x2
+
 0000D137  55                push bp
 0000D138  8BEC              mov bp,sp
 0000D13A  B82400            mov ax,0x24
-0000D13D  9A1C3E821F        call 0x1f82:0x3e1c
+0000D13D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D142  FF366063          push word [0x6360]
 0000D146  FF365E63          push word [0x635e]
-0000D14A  90                nop
 0000D14B  0E                push cs
 0000D14C  E8F8DE            call 0xb047
 0000D14F  C41E5E63          les bx,[0x635e]
@@ -20239,7 +19991,6 @@
 0000D1D3  E99700            jmp 0xd26d
 0000D1D6  FF76DE            push word [bp-0x22]
 0000D1D9  FF76DC            push word [bp-0x24]
-0000D1DC  90                nop
 0000D1DD  0E                push cs
 0000D1DE  E866DE            call 0xb047
 0000D1E1  C45EDC            les bx,[bp-0x24]
@@ -20286,7 +20037,6 @@
 0000D257  9A7806F50F        call 0xff5:0x678
 0000D25C  FF76DE            push word [bp-0x22]
 0000D25F  FF76DC            push word [bp-0x24]
-0000D262  90                nop
 0000D263  0E                push cs
 0000D264  E8FCDD            call 0xb063
 0000D267  8B46E0            mov ax,[bp-0x20]
@@ -20298,17 +20048,17 @@
 0000D277  E95CFF            jmp 0xd1d6
 0000D27A  FF366063          push word [0x6360]
 0000D27E  FF365E63          push word [0x635e]
-0000D282  90                nop
 0000D283  0E                push cs
 0000D284  E8DCDD            call 0xb063
 0000D287  C706C0800000      mov word [0x80c0],0x0
 0000D28D  8BE5              mov sp,bp
 0000D28F  5D                pop bp
 0000D290  CB                retf
+
 0000D291  55                push bp
 0000D292  8BEC              mov bp,sp
 0000D294  33C0              xor ax,ax
-0000D296  9A1C3E821F        call 0x1f82:0x3e1c
+0000D296  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D29B  B87FFF            mov ax,0xff7f
 0000D29E  50                push ax
 0000D29F  FF7606            push word [bp+0x6]
@@ -20316,13 +20066,13 @@
 0000D2A3  E89C0D            call 0xe042
 0000D2A6  5D                pop bp
 0000D2A7  CA0200            retf 0x2
+
 0000D2AA  55                push bp
 0000D2AB  8BEC              mov bp,sp
 0000D2AD  B81A00            mov ax,0x1a
-0000D2B0  9A1C3E821F        call 0x1f82:0x3e1c
+0000D2B0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D2B5  FF366063          push word [0x6360]
 0000D2B9  FF365E63          push word [0x635e]
-0000D2BD  90                nop
 0000D2BE  0E                push cs
 0000D2BF  E885DD            call 0xb047
 0000D2C2  C41E5E63          les bx,[0x635e]
@@ -20351,7 +20101,6 @@
 0000D305  EB66              jmp short 0xd36d
 0000D307  FF76EA            push word [bp-0x16]
 0000D30A  FF76E8            push word [bp-0x18]
-0000D30D  90                nop
 0000D30E  0E                push cs
 0000D30F  E835DD            call 0xb047
 0000D312  C45EE8            les bx,[bp-0x18]
@@ -20384,7 +20133,6 @@
 0000D358  26894707          mov [es:bx+0x7],ax
 0000D35C  FF76EA            push word [bp-0x16]
 0000D35F  FF76E8            push word [bp-0x18]
-0000D362  90                nop
 0000D363  0E                push cs
 0000D364  E8FCDC            call 0xb063
 0000D367  8B46EC            mov ax,[bp-0x14]
@@ -20395,7 +20143,6 @@
 0000D375  7590              jnz 0xd307
 0000D377  FF366063          push word [0x6360]
 0000D37B  FF365E63          push word [0x635e]
-0000D37F  90                nop
 0000D380  0E                push cs
 0000D381  E8DFDC            call 0xb063
 0000D384  C706C0800000      mov word [0x80c0],0x0
@@ -20403,8 +20150,9 @@
 0000D38D  8BE5              mov sp,bp
 0000D38F  5D                pop bp
 0000D390  CB                retf
+
 0000D391  33C0              xor ax,ax
-0000D393  9A1C3E821F        call 0x1f82:0x3e1c
+0000D393  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D398  C706C0800000      mov word [0x80c0],0x0
 0000D39E  A15E63            mov ax,[0x635e]
 0000D3A1  8B166063          mov dx,[0x6360]
@@ -20412,7 +20160,7 @@
 0000D3A6  55                push bp
 0000D3A7  8BEC              mov bp,sp
 0000D3A9  B80600            mov ax,0x6
-0000D3AC  9A1C3E821F        call 0x1f82:0x3e1c
+0000D3AC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D3B1  FF7606            push word [bp+0x6]
 0000D3B4  E86C10            call 0xe423
 0000D3B7  8946FC            mov [bp-0x4],ax
@@ -20424,7 +20172,6 @@
 0000D3C9  EB2E              jmp short 0xd3f9
 0000D3CB  FF76FE            push word [bp-0x2]
 0000D3CE  FF76FC            push word [bp-0x4]
-0000D3D1  90                nop
 0000D3D2  0E                push cs
 0000D3D3  E871DC            call 0xb047
 0000D3D6  C45EFC            les bx,[bp-0x4]
@@ -20434,7 +20181,6 @@
 0000D3E2  8946FA            mov [bp-0x6],ax
 0000D3E5  FF76FE            push word [bp-0x2]
 0000D3E8  FF76FC            push word [bp-0x4]
-0000D3EB  90                nop
 0000D3EC  0E                push cs
 0000D3ED  E873DC            call 0xb063
 0000D3F0  C706C0800000      mov word [0x80c0],0x0
@@ -20442,16 +20188,18 @@
 0000D3F9  8BE5              mov sp,bp
 0000D3FB  5D                pop bp
 0000D3FC  CA0200            retf 0x2
+
 0000D3FF  33C0              xor ax,ax
-0000D401  9A1C3E821F        call 0x1f82:0x3e1c
+0000D401  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D406  C706C0800000      mov word [0x80c0],0x0
 0000D40C  A16863            mov ax,[0x6368]
 0000D40F  8B166A63          mov dx,[0x636a]
 0000D413  CB                retf
+
 0000D414  55                push bp
 0000D415  8BEC              mov bp,sp
 0000D417  B83200            mov ax,0x32
-0000D41A  9A1C3E821F        call 0x1f82:0x3e1c
+0000D41A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D41F  FF7606            push word [bp+0x6]
 0000D422  E8260F            call 0xe34b
 0000D425  8946CE            mov [bp-0x32],ax
@@ -20461,7 +20209,6 @@
 0000D42F  E98701            jmp 0xd5b9
 0000D432  FF76D0            push word [bp-0x30]
 0000D435  50                push ax
-0000D436  90                nop
 0000D437  0E                push cs
 0000D438  E80CDC            call 0xb047
 0000D43B  C45ECE            les bx,[bp-0x32]
@@ -20471,7 +20218,6 @@
 0000D448  8956E2            mov [bp-0x1e],dx
 0000D44B  FF366063          push word [0x6360]
 0000D44F  FF365E63          push word [0x635e]
-0000D453  90                nop
 0000D454  0E                push cs
 0000D455  E8EFDB            call 0xb047
 0000D458  C41E5E63          les bx,[0x635e]
@@ -20504,7 +20250,6 @@
 0000D4A9  0146FA            add [bp-0x6],ax
 0000D4AC  FF76DE            push word [bp-0x22]
 0000D4AF  FF76DC            push word [bp-0x24]
-0000D4B2  90                nop
 0000D4B3  0E                push cs
 0000D4B4  E8ACDB            call 0xb063
 0000D4B7  8B46E4            mov ax,[bp-0x1c]
@@ -20515,7 +20260,6 @@
 0000D4C5  743A              jz 0xd501
 0000D4C7  52                push dx
 0000D4C8  FF76DC            push word [bp-0x24]
-0000D4CB  90                nop
 0000D4CC  0E                push cs
 0000D4CD  E877DB            call 0xb047
 0000D4D0  C45EDC            les bx,[bp-0x24]
@@ -20595,30 +20339,27 @@
 0000D59C  26806706BF        and byte [es:bx+0x6],0xbf
 0000D5A1  FF366063          push word [0x6360]
 0000D5A5  FF365E63          push word [0x635e]
-0000D5A9  90                nop
 0000D5AA  0E                push cs
 0000D5AB  E8B5DA            call 0xb063
 0000D5AE  FF76D0            push word [bp-0x30]
 0000D5B1  FF76CE            push word [bp-0x32]
-0000D5B4  90                nop
 0000D5B5  0E                push cs
 0000D5B6  E8AADA            call 0xb063
 0000D5B9  C706C0800000      mov word [0x80c0],0x0
 0000D5BF  8BE5              mov sp,bp
 0000D5C1  5D                pop bp
 0000D5C2  CA0400            retf 0x4
+
 0000D5C5  55                push bp
 0000D5C6  8BEC              mov bp,sp
 0000D5C8  33C0              xor ax,ax
-0000D5CA  9A1C3E821F        call 0x1f82:0x3e1c
+0000D5CA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D5CF  FF760A            push word [bp+0xa]
 0000D5D2  FF7608            push word [bp+0x8]
-0000D5D5  90                nop
 0000D5D6  0E                push cs
 0000D5D7  E86DDA            call 0xb047
 0000D5DA  FF366063          push word [0x6360]
 0000D5DE  FF365E63          push word [0x635e]
-0000D5E2  90                nop
 0000D5E3  0E                push cs
 0000D5E4  E860DA            call 0xb047
 0000D5E7  FF760A            push word [bp+0xa]
@@ -20629,25 +20370,23 @@
 0000D5F8  E8540B            call 0xe14f
 0000D5FB  FF760A            push word [bp+0xa]
 0000D5FE  FF7608            push word [bp+0x8]
-0000D601  90                nop
 0000D602  0E                push cs
 0000D603  E85DDA            call 0xb063
 0000D606  FF366063          push word [0x6360]
 0000D60A  FF365E63          push word [0x635e]
-0000D60E  90                nop
 0000D60F  0E                push cs
 0000D610  E850DA            call 0xb063
 0000D613  C706C0800000      mov word [0x80c0],0x0
 0000D619  5D                pop bp
 0000D61A  CA0600            retf 0x6
+
 0000D61D  55                push bp
 0000D61E  8BEC              mov bp,sp
 0000D620  B81A00            mov ax,0x1a
-0000D623  9A1C3E821F        call 0x1f82:0x3e1c
+0000D623  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D628  8D46EA            lea ax,[bp-0x16]
 0000D62B  16                push ss
 0000D62C  50                push ax
-0000D62D  90                nop
 0000D62E  0E                push cs
 0000D62F  E84DDA            call 0xb07f
 0000D632  52                push dx
@@ -20662,7 +20401,6 @@
 0000D647  FF366663          push word [0x6366]
 0000D64B  2BC0              sub ax,ax
 0000D64D  50                push ax
-0000D64E  90                nop
 0000D64F  0E                push cs
 0000D650  E8B6DB            call 0xb209
 0000D653  8946FC            mov [bp-0x4],ax
@@ -20673,17 +20411,14 @@
 0000D662  8956E8            mov [bp-0x18],dx
 0000D665  0BD0              or dx,ax
 0000D667  7505              jnz 0xd66e
-0000D669  90                nop
 0000D66A  0E                push cs
 0000D66B  E87EDA            call 0xb0ec
 0000D66E  FF76E8            push word [bp-0x18]
 0000D671  FF76E6            push word [bp-0x1a]
-0000D674  90                nop
 0000D675  0E                push cs
 0000D676  E8CED9            call 0xb047
 0000D679  FF76FE            push word [bp-0x2]
 0000D67C  FF76FC            push word [bp-0x4]
-0000D67F  90                nop
 0000D680  0E                push cs
 0000D681  E8C3D9            call 0xb047
 0000D684  FF760C            push word [bp+0xc]
@@ -20700,25 +20435,23 @@
 0000D6A6  E8A40B            call 0xe24d
 0000D6A9  FF76FE            push word [bp-0x2]
 0000D6AC  FF76FC            push word [bp-0x4]
-0000D6AF  90                nop
 0000D6B0  0E                push cs
 0000D6B1  E8AFD9            call 0xb063
 0000D6B4  FF76E8            push word [bp-0x18]
 0000D6B7  FF76E6            push word [bp-0x1a]
-0000D6BA  90                nop
 0000D6BB  0E                push cs
 0000D6BC  E8A4D9            call 0xb063
-0000D6BF  90                nop
 0000D6C0  0E                push cs
 0000D6C1  E80BDA            call 0xb0cf
 0000D6C4  C706C0800000      mov word [0x80c0],0x0
 0000D6CA  8BE5              mov sp,bp
 0000D6CC  5D                pop bp
 0000D6CD  CA0800            retf 0x8
+
 0000D6D0  55                push bp
 0000D6D1  8BEC              mov bp,sp
 0000D6D3  B81E00            mov ax,0x1e
-0000D6D6  9A1C3E821F        call 0x1f82:0x3e1c
+0000D6D6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D6DB  8B4606            mov ax,[bp+0x6]
 0000D6DE  0B4608            or ax,[bp+0x8]
 0000D6E1  750D              jnz 0xd6f0
@@ -20739,7 +20472,6 @@
 0000D70D  E92F01            jmp 0xd83f
 0000D710  52                push dx
 0000D711  FF7606            push word [bp+0x6]
-0000D714  90                nop
 0000D715  0E                push cs
 0000D716  E82ED9            call 0xb047
 0000D719  C45E06            les bx,[bp+0x6]
@@ -20753,7 +20485,6 @@
 0000D734  E9B700            jmp 0xd7ee
 0000D737  FF76F2            push word [bp-0xe]
 0000D73A  FF76F0            push word [bp-0x10]
-0000D73D  90                nop
 0000D73E  0E                push cs
 0000D73F  E821D9            call 0xb063
 0000D742  8B46F4            mov ax,[bp-0xc]
@@ -20765,7 +20496,6 @@
 0000D752  E98800            jmp 0xd7dd
 0000D755  52                push dx
 0000D756  FF76F0            push word [bp-0x10]
-0000D759  90                nop
 0000D75A  0E                push cs
 0000D75B  E8E9D8            call 0xb047
 0000D75E  C45EF0            les bx,[bp-0x10]
@@ -20800,23 +20530,19 @@
 0000D7B7  E85AFC            call 0xd414
 0000D7BA  FF76F2            push word [bp-0xe]
 0000D7BD  FF76F0            push word [bp-0x10]
-0000D7C0  90                nop
 0000D7C1  0E                push cs
 0000D7C2  E89ED8            call 0xb063
 0000D7C5  FF76E8            push word [bp-0x18]
 0000D7C8  FF76E6            push word [bp-0x1a]
-0000D7CB  90                nop
 0000D7CC  0E                push cs
 0000D7CD  E893D8            call 0xb063
 0000D7D0  FF7608            push word [bp+0x8]
 0000D7D3  FF7606            push word [bp+0x6]
-0000D7D6  90                nop
 0000D7D7  0E                push cs
 0000D7D8  E888D8            call 0xb063
 0000D7DB  EB6F              jmp short 0xd84c
 0000D7DD  FF76E8            push word [bp-0x18]
 0000D7E0  FF76E6            push word [bp-0x1a]
-0000D7E3  90                nop
 0000D7E4  0E                push cs
 0000D7E5  E87BD8            call 0xb063
 0000D7E8  8B46EA            mov ax,[bp-0x16]
@@ -20827,7 +20553,6 @@
 0000D7F6  743C              jz 0xd834
 0000D7F8  52                push dx
 0000D7F9  FF76E6            push word [bp-0x1a]
-0000D7FC  90                nop
 0000D7FD  0E                push cs
 0000D7FE  E846D8            call 0xb047
 0000D801  C45EE6            les bx,[bp-0x1a]
@@ -20847,7 +20572,6 @@
 0000D831  E914FF            jmp 0xd748
 0000D834  FF7608            push word [bp+0x8]
 0000D837  FF7606            push word [bp+0x6]
-0000D83A  90                nop
 0000D83B  0E                push cs
 0000D83C  E824D8            call 0xb063
 0000D83F  C45E0A            les bx,[bp+0xa]
@@ -20858,10 +20582,11 @@
 0000D852  8BE5              mov sp,bp
 0000D854  5D                pop bp
 0000D855  CA0800            retf 0x8
+
 0000D858  55                push bp
 0000D859  8BEC              mov bp,sp
 0000D85B  33C0              xor ax,ax
-0000D85D  9A1C3E821F        call 0x1f82:0x3e1c
+0000D85D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D862  8B4606            mov ax,[bp+0x6]
 0000D865  8B5608            mov dx,[bp+0x8]
 0000D868  A36263            mov [0x6362],ax
@@ -20869,10 +20594,11 @@
 0000D86F  C706C0800000      mov word [0x80c0],0x0
 0000D875  5D                pop bp
 0000D876  CA0400            retf 0x4
+
 0000D879  55                push bp
 0000D87A  8BEC              mov bp,sp
 0000D87C  B85A00            mov ax,0x5a
-0000D87F  9A1C3E821F        call 0x1f82:0x3e1c
+0000D87F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000D884  C45E0A            les bx,[bp+0xa]
 0000D887  26F6470E01        test byte [es:bx+0xe],0x1
 0000D88C  7404              jz 0xd892
@@ -20897,7 +20623,6 @@
 0000D8C2  89166063          mov [0x6360],dx
 0000D8C6  52                push dx
 0000D8C7  50                push ax
-0000D8C8  90                nop
 0000D8C9  0E                push cs
 0000D8CA  E87AD7            call 0xb047
 0000D8CD  C45E06            les bx,[bp+0x6]
@@ -21025,7 +20750,6 @@
 0000DA1B  8946FA            mov [bp-0x6],ax
 0000DA1E  FF76D4            push word [bp-0x2c]
 0000DA21  FF76D2            push word [bp-0x2e]
-0000DA24  90                nop
 0000DA25  0E                push cs
 0000DA26  E83AD6            call 0xb063
 0000DA29  8B46DA            mov ax,[bp-0x26]
@@ -21036,7 +20760,6 @@
 0000DA37  7467              jz 0xdaa0
 0000DA39  52                push dx
 0000DA3A  FF76D2            push word [bp-0x2e]
-0000DA3D  90                nop
 0000DA3E  0E                push cs
 0000DA3F  E805D6            call 0xb047
 0000DA42  C45ED2            les bx,[bp-0x2e]
@@ -21080,7 +20803,6 @@
 0000DAB0  9A7806F50F        call 0xff5:0x678
 0000DAB5  FF76AC            push word [bp-0x54]
 0000DAB8  FF76AA            push word [bp-0x56]
-0000DABB  90                nop
 0000DABC  0E                push cs
 0000DABD  E887D5            call 0xb047
 0000DAC0  C45EAA            les bx,[bp-0x56]
@@ -21128,7 +20850,6 @@
 0000DB34  E8160E            call 0xe94d
 0000DB37  FF76AC            push word [bp-0x54]
 0000DB3A  FF76AA            push word [bp-0x56]
-0000DB3D  90                nop
 0000DB3E  0E                push cs
 0000DB3F  E821D5            call 0xb063
 0000DB42  E93501            jmp 0xdc7a
@@ -21164,7 +20885,6 @@
 0000DB90  8946B2            mov [bp-0x4e],ax
 0000DB93  FF76AC            push word [bp-0x54]
 0000DB96  FF76AA            push word [bp-0x56]
-0000DB99  90                nop
 0000DB9A  0E                push cs
 0000DB9B  E8A9D4            call 0xb047
 0000DB9E  C45EAA            les bx,[bp-0x56]
@@ -21186,7 +20906,6 @@
 0000DBCD  8946B2            mov [bp-0x4e],ax
 0000DBD0  FF76F0            push word [bp-0x10]
 0000DBD3  FF76EE            push word [bp-0x12]
-0000DBD6  90                nop
 0000DBD7  0E                push cs
 0000DBD8  E888D4            call 0xb063
 0000DBDB  8B46F4            mov ax,[bp-0xc]
@@ -21197,7 +20916,6 @@
 0000DBE9  746C              jz 0xdc57
 0000DBEB  52                push dx
 0000DBEC  FF76EE            push word [bp-0x12]
-0000DBEF  90                nop
 0000DBF0  0E                push cs
 0000DBF1  E853D4            call 0xb047
 0000DBF4  C45EEE            les bx,[bp-0x12]
@@ -21234,7 +20952,6 @@
 0000DC54  E966FF            jmp 0xdbbd
 0000DC57  FF76AC            push word [bp-0x54]
 0000DC5A  FF76AA            push word [bp-0x56]
-0000DC5D  90                nop
 0000DC5E  0E                push cs
 0000DC5F  E801D4            call 0xb063
 0000DC62  8B46C8            mov ax,[bp-0x38]
@@ -21271,7 +20988,6 @@
 0000DCB9  E98800            jmp 0xdd44
 0000DCBC  C746F20000        mov word [bp-0xe],0x0
 0000DCC1  EB14              jmp short 0xdcd7
-0000DCC3  90                nop
 0000DCC4  0E                push cs
 0000DCC5  E8081F            call 0xfbd0
 0000DCC8  3B56A8            cmp dx,[bp-0x58]
@@ -21287,7 +21003,6 @@
 0000DCE2  16                push ss
 0000DCE3  50                push ax
 0000DCE4  9A7806F50F        call 0xff5:0x678
-0000DCE9  90                nop
 0000DCEA  0E                push cs
 0000DCEB  E8E21E            call 0xfbd0
 0000DCEE  050300            add ax,0x3
@@ -21297,12 +21012,10 @@
 0000DCFA  EBC7              jmp short 0xdcc3
 0000DCFC  FF76AC            push word [bp-0x54]
 0000DCFF  FF76AA            push word [bp-0x56]
-0000DD02  90                nop
 0000DD03  0E                push cs
 0000DD04  E840D3            call 0xb047
 0000DD07  FF76CA            push word [bp-0x36]
 0000DD0A  FF76C8            push word [bp-0x38]
-0000DD0D  90                nop
 0000DD0E  0E                push cs
 0000DD0F  E835D3            call 0xb047
 0000DD12  C45EAA            les bx,[bp-0x56]
@@ -21318,7 +21031,6 @@
 0000DD32  26804F0640        or byte [es:bx+0x6],0x40
 0000DD37  FF76CA            push word [bp-0x36]
 0000DD3A  FF76C8            push word [bp-0x38]
-0000DD3D  90                nop
 0000DD3E  0E                push cs
 0000DD3F  E821D3            call 0xb063
 0000DD42  EB1D              jmp short 0xdd61
@@ -21328,14 +21040,12 @@
 0000DD49  9A7806F50F        call 0xff5:0x678
 0000DD4E  FF76AC            push word [bp-0x54]
 0000DD51  FF76AA            push word [bp-0x56]
-0000DD54  90                nop
 0000DD55  0E                push cs
 0000DD56  E8EED2            call 0xb047
 0000DD59  C45ED6            les bx,[bp-0x2a]
 0000DD5C  26806706BF        and byte [es:bx+0x6],0xbf
 0000DD61  FF76AC            push word [bp-0x54]
 0000DD64  FF76AA            push word [bp-0x56]
-0000DD67  90                nop
 0000DD68  0E                push cs
 0000DD69  E8F7D2            call 0xb063
 0000DD6C  FF46DE            inc word [bp-0x22]
@@ -21345,21 +21055,20 @@
 0000DD74  FF1E6263          call far [0x6362]
 0000DD78  FF7608            push word [bp+0x8]
 0000DD7B  FF7606            push word [bp+0x6]
-0000DD7E  90                nop
 0000DD7F  0E                push cs
 0000DD80  E8E0D2            call 0xb063
 0000DD83  C706C0800000      mov word [0x80c0],0x0
 0000DD89  8BE5              mov sp,bp
 0000DD8B  5D                pop bp
 0000DD8C  CA0800            retf 0x8
+
 0000DD8F  55                push bp
 0000DD90  8BEC              mov bp,sp
 0000DD92  B83200            mov ax,0x32
-0000DD95  9A1C3E821F        call 0x1f82:0x3e1c
+0000DD95  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000DD9A  8D46E6            lea ax,[bp-0x1a]
 0000DD9D  16                push ss
 0000DD9E  50                push ax
-0000DD9F  90                nop
 0000DDA0  0E                push cs
 0000DDA1  E8DBD2            call 0xb07f
 0000DDA4  52                push dx
@@ -21377,14 +21086,12 @@
 0000DDC1  FF366663          push word [0x6366]
 0000DDC5  2BC0              sub ax,ax
 0000DDC7  50                push ax
-0000DDC8  90                nop
 0000DDC9  0E                push cs
 0000DDCA  E83CD4            call 0xb209
 0000DDCD  8946E0            mov [bp-0x20],ax
 0000DDD0  8956E2            mov [bp-0x1e],dx
 0000DDD3  52                push dx
 0000DDD4  50                push ax
-0000DDD5  90                nop
 0000DDD6  0E                push cs
 0000DDD7  E86DD2            call 0xb047
 0000DDDA  C45EE0            les bx,[bp-0x20]
@@ -21413,7 +21120,6 @@
 0000DE27  8D46CE            lea ax,[bp-0x32]
 0000DE2A  16                push ss
 0000DE2B  50                push ax
-0000DE2C  90                nop
 0000DE2D  0E                push cs
 0000DE2E  E84ED2            call 0xb07f
 0000DE31  52                push dx
@@ -21428,14 +21134,12 @@
 0000DE45  FF366663          push word [0x6366]
 0000DE49  2BC0              sub ax,ax
 0000DE4B  50                push ax
-0000DE4C  90                nop
 0000DE4D  0E                push cs
 0000DE4E  E8B8D3            call 0xb209
 0000DE51  8946F8            mov [bp-0x8],ax
 0000DE54  8956FA            mov [bp-0x6],dx
 0000DE57  52                push dx
 0000DE58  50                push ax
-0000DE59  90                nop
 0000DE5A  0E                push cs
 0000DE5B  E8E9D1            call 0xb047
 0000DE5E  FF7608            push word [bp+0x8]
@@ -21455,22 +21159,18 @@
 0000DE87  E8C303            call 0xe24d
 0000DE8A  FF76FA            push word [bp-0x6]
 0000DE8D  FF76F8            push word [bp-0x8]
-0000DE90  90                nop
 0000DE91  0E                push cs
 0000DE92  E8CED1            call 0xb063
 0000DE95  C45E06            les bx,[bp+0x6]
 0000DE98  8A46E4            mov al,[bp-0x1c]
 0000DE9B  263807            cmp [es:bx],al
 0000DE9E  74A1              jz 0xde41
-0000DEA0  90                nop
 0000DEA1  0E                push cs
 0000DEA2  E82AD2            call 0xb0cf
 0000DEA5  FF76E2            push word [bp-0x1e]
 0000DEA8  FF76E0            push word [bp-0x20]
-0000DEAB  90                nop
 0000DEAC  0E                push cs
 0000DEAD  E8B3D1            call 0xb063
-0000DEB0  90                nop
 0000DEB1  0E                push cs
 0000DEB2  E81AD2            call 0xb0cf
 0000DEB5  C706C0800000      mov word [0x80c0],0x0
@@ -21479,14 +21179,14 @@
 0000DEC1  8BE5              mov sp,bp
 0000DEC3  5D                pop bp
 0000DEC4  CA0400            retf 0x4
+
 0000DEC7  55                push bp
 0000DEC8  8BEC              mov bp,sp
 0000DECA  B81A00            mov ax,0x1a
-0000DECD  9A1C3E821F        call 0x1f82:0x3e1c
+0000DECD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000DED2  8D46EA            lea ax,[bp-0x16]
 0000DED5  16                push ss
 0000DED6  50                push ax
-0000DED7  90                nop
 0000DED8  0E                push cs
 0000DED9  E8A3D1            call 0xb07f
 0000DEDC  52                push dx
@@ -21504,14 +21204,12 @@
 0000DEF9  FF366663          push word [0x6366]
 0000DEFD  2BC0              sub ax,ax
 0000DEFF  50                push ax
-0000DF00  90                nop
 0000DF01  0E                push cs
 0000DF02  E804D3            call 0xb209
 0000DF05  8946E6            mov [bp-0x1a],ax
 0000DF08  8956E8            mov [bp-0x18],dx
 0000DF0B  52                push dx
 0000DF0C  50                push ax
-0000DF0D  90                nop
 0000DF0E  0E                push cs
 0000DF0F  E835D1            call 0xb047
 0000DF12  C45EE6            les bx,[bp-0x1a]
@@ -21553,10 +21251,8 @@
 0000DF90  89165C63          mov [0x635c],dx
 0000DF94  52                push dx
 0000DF95  50                push ax
-0000DF96  90                nop
 0000DF97  0E                push cs
 0000DF98  E8C8D0            call 0xb063
-0000DF9B  90                nop
 0000DF9C  0E                push cs
 0000DF9D  E82FD1            call 0xb0cf
 0000DFA0  C706C0800000      mov word [0x80c0],0x0
@@ -21565,10 +21261,11 @@
 0000DFAC  8BE5              mov sp,bp
 0000DFAE  5D                pop bp
 0000DFAF  CA0400            retf 0x4
+
 0000DFB2  55                push bp
 0000DFB3  8BEC              mov bp,sp
 0000DFB5  33C0              xor ax,ax
-0000DFB7  9A1C3E821F        call 0x1f82:0x3e1c
+0000DFB7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000DFBC  8B4606            mov ax,[bp+0x6]
 0000DFBF  0B4608            or ax,[bp+0x8]
 0000DFC2  7509              jnz 0xdfcd
@@ -21582,10 +21279,11 @@
 0000DFDA  C706C0800000      mov word [0x80c0],0x0
 0000DFE0  5D                pop bp
 0000DFE1  CA0400            retf 0x4
+
 0000DFE4  55                push bp
 0000DFE5  8BEC              mov bp,sp
 0000DFE7  B80400            mov ax,0x4
-0000DFEA  9A1C3E821F        call 0x1f82:0x3e1c
+0000DFEA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000DFEF  FF7606            push word [bp+0x6]
 0000DFF2  E85603            call 0xe34b
 0000DFF5  8946FC            mov [bp-0x4],ax
@@ -21594,7 +21292,6 @@
 0000DFFD  7437              jz 0xe036
 0000DFFF  FF76FE            push word [bp-0x2]
 0000E002  50                push ax
-0000E003  90                nop
 0000E004  0E                push cs
 0000E005  E83FD0            call 0xb047
 0000E008  F746080080        test word [bp+0x8],0x8000
@@ -21610,17 +21307,17 @@
 0000E027  26084706          or [es:bx+0x6],al
 0000E02B  FF76FE            push word [bp-0x2]
 0000E02E  FF76FC            push word [bp-0x4]
-0000E031  90                nop
 0000E032  0E                push cs
 0000E033  E82DD0            call 0xb063
 0000E036  C706C0800000      mov word [0x80c0],0x0
 0000E03C  8BE5              mov sp,bp
 0000E03E  5D                pop bp
 0000E03F  CA0400            retf 0x4
+
 0000E042  55                push bp
 0000E043  8BEC              mov bp,sp
 0000E045  B80400            mov ax,0x4
-0000E048  9A1C3E821F        call 0x1f82:0x3e1c
+0000E048  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E04D  FF7606            push word [bp+0x6]
 0000E050  E8D003            call 0xe423
 0000E053  8946FC            mov [bp-0x4],ax
@@ -21629,7 +21326,6 @@
 0000E05B  7437              jz 0xe094
 0000E05D  FF76FE            push word [bp-0x2]
 0000E060  50                push ax
-0000E061  90                nop
 0000E062  0E                push cs
 0000E063  E8E1CF            call 0xb047
 0000E066  F746080080        test word [bp+0x8],0x8000
@@ -21645,17 +21341,17 @@
 0000E085  26084704          or [es:bx+0x4],al
 0000E089  FF76FE            push word [bp-0x2]
 0000E08C  FF76FC            push word [bp-0x4]
-0000E08F  90                nop
 0000E090  0E                push cs
 0000E091  E8CFCF            call 0xb063
 0000E094  C706C0800000      mov word [0x80c0],0x0
 0000E09A  8BE5              mov sp,bp
 0000E09C  5D                pop bp
 0000E09D  CA0400            retf 0x4
+
 0000E0A0  55                push bp
 0000E0A1  8BEC              mov bp,sp
 0000E0A3  B80400            mov ax,0x4
-0000E0A6  9A1C3E821F        call 0x1f82:0x3e1c
+0000E0A6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E0AB  FF7606            push word [bp+0x6]
 0000E0AE  E87203            call 0xe423
 0000E0B1  8946FC            mov [bp-0x4],ax
@@ -21664,7 +21360,6 @@
 0000E0B9  7421              jz 0xe0dc
 0000E0BB  FF76FE            push word [bp-0x2]
 0000E0BE  50                push ax
-0000E0BF  90                nop
 0000E0C0  0E                push cs
 0000E0C1  E883CF            call 0xb047
 0000E0C4  C45EFC            les bx,[bp-0x4]
@@ -21673,17 +21368,17 @@
 0000E0CD  26884707          mov [es:bx+0x7],al
 0000E0D1  FF76FE            push word [bp-0x2]
 0000E0D4  FF76FC            push word [bp-0x4]
-0000E0D7  90                nop
 0000E0D8  0E                push cs
 0000E0D9  E887CF            call 0xb063
 0000E0DC  C706C0800000      mov word [0x80c0],0x0
 0000E0E2  8BE5              mov sp,bp
 0000E0E4  5D                pop bp
 0000E0E5  CA0400            retf 0x4
+
 0000E0E8  55                push bp
 0000E0E9  8BEC              mov bp,sp
 0000E0EB  B80400            mov ax,0x4
-0000E0EE  9A1C3E821F        call 0x1f82:0x3e1c
+0000E0EE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E0F3  57                push di
 0000E0F4  FF7606            push word [bp+0x6]
 0000E0F7  E82903            call 0xe423
@@ -21693,7 +21388,6 @@
 0000E102  743E              jz 0xe142
 0000E104  FF76FE            push word [bp-0x2]
 0000E107  50                push ax
-0000E108  90                nop
 0000E109  0E                push cs
 0000E10A  E83ACF            call 0xb047
 0000E10D  C45E08            les bx,[bp+0x8]
@@ -21709,7 +21403,6 @@
 0000E133  2689570A          mov [es:bx+0xa],dx
 0000E137  FF76FE            push word [bp-0x2]
 0000E13A  FF76FC            push word [bp-0x4]
-0000E13D  90                nop
 0000E13E  0E                push cs
 0000E13F  E821CF            call 0xb063
 0000E142  C706C0800000      mov word [0x80c0],0x0
@@ -21717,10 +21410,11 @@
 0000E149  8BE5              mov sp,bp
 0000E14B  5D                pop bp
 0000E14C  CA0600            retf 0x6
+
 0000E14F  55                push bp
 0000E150  8BEC              mov bp,sp
 0000E152  B81400            mov ax,0x14
-0000E155  9A1C3E821F        call 0x1f82:0x3e1c
+0000E155  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E15A  C45E06            les bx,[bp+0x6]
 0000E15D  268B07            mov ax,[es:bx]
 0000E160  268B5702          mov dx,[es:bx+0x2]
@@ -21755,7 +21449,6 @@
 0000E1C2  EB76              jmp short 0xe23a
 0000E1C4  FF76FA            push word [bp-0x6]
 0000E1C7  FF76F8            push word [bp-0x8]
-0000E1CA  90                nop
 0000E1CB  0E                push cs
 0000E1CC  E878CE            call 0xb047
 0000E1CF  C45EF8            les bx,[bp-0x8]
@@ -21789,7 +21482,6 @@
 0000E226  8946FC            mov [bp-0x4],ax
 0000E229  FF76FA            push word [bp-0x6]
 0000E22C  FF76F8            push word [bp-0x8]
-0000E22F  90                nop
 0000E230  0E                push cs
 0000E231  E82FCE            call 0xb063
 0000E234  8B46FC            mov ax,[bp-0x4]
@@ -21802,10 +21494,11 @@
 0000E247  8BE5              mov sp,bp
 0000E249  5D                pop bp
 0000E24A  C20A00            ret 0xa
+
 0000E24D  55                push bp
 0000E24E  8BEC              mov bp,sp
 0000E250  B81400            mov ax,0x14
-0000E253  9A1C3E821F        call 0x1f82:0x3e1c
+0000E253  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E258  C45E06            les bx,[bp+0x6]
 0000E25B  268B07            mov ax,[es:bx]
 0000E25E  268B5702          mov dx,[es:bx+0x2]
@@ -21840,7 +21533,6 @@
 0000E2C0  EB76              jmp short 0xe338
 0000E2C2  FF76FA            push word [bp-0x6]
 0000E2C5  FF76F8            push word [bp-0x8]
-0000E2C8  90                nop
 0000E2C9  0E                push cs
 0000E2CA  E87ACD            call 0xb047
 0000E2CD  C45EF8            les bx,[bp-0x8]
@@ -21874,7 +21566,6 @@
 0000E324  8946FC            mov [bp-0x4],ax
 0000E327  FF76FA            push word [bp-0x6]
 0000E32A  FF76F8            push word [bp-0x8]
-0000E32D  90                nop
 0000E32E  0E                push cs
 0000E32F  E831CD            call 0xb063
 0000E332  8B46FC            mov ax,[bp-0x4]
@@ -21887,16 +21578,16 @@
 0000E345  8BE5              mov sp,bp
 0000E347  5D                pop bp
 0000E348  C20A00            ret 0xa
+
 0000E34B  55                push bp
 0000E34C  8BEC              mov bp,sp
 0000E34E  B81800            mov ax,0x18
-0000E351  9A1C3E821F        call 0x1f82:0x3e1c
+0000E351  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E356  A15A63            mov ax,[0x635a]
 0000E359  8B165C63          mov dx,[0x635c]
 0000E35D  EB7C              jmp short 0xe3db
 0000E35F  FF76EE            push word [bp-0x12]
 0000E362  FF76EC            push word [bp-0x14]
-0000E365  90                nop
 0000E366  0E                push cs
 0000E367  E8F9CC            call 0xb063
 0000E36A  8B46F4            mov ax,[bp-0xc]
@@ -21907,7 +21598,6 @@
 0000E378  7450              jz 0xe3ca
 0000E37A  52                push dx
 0000E37B  FF76EC            push word [bp-0x14]
-0000E37E  90                nop
 0000E37F  0E                push cs
 0000E380  E8C4CC            call 0xb047
 0000E383  C45EEC            les bx,[bp-0x14]
@@ -21925,12 +21615,10 @@
 0000E3AA  75B3              jnz 0xe35f
 0000E3AC  FF76EE            push word [bp-0x12]
 0000E3AF  FF76EC            push word [bp-0x14]
-0000E3B2  90                nop
 0000E3B3  0E                push cs
 0000E3B4  E8ACCC            call 0xb063
 0000E3B7  FF76EA            push word [bp-0x16]
 0000E3BA  FF76E8            push word [bp-0x18]
-0000E3BD  90                nop
 0000E3BE  0E                push cs
 0000E3BF  E8A1CC            call 0xb063
 0000E3C2  8B46EC            mov ax,[bp-0x14]
@@ -21938,7 +21626,6 @@
 0000E3C8  EB53              jmp short 0xe41d
 0000E3CA  FF76EA            push word [bp-0x16]
 0000E3CD  FF76E8            push word [bp-0x18]
-0000E3D0  90                nop
 0000E3D1  0E                push cs
 0000E3D2  E88ECC            call 0xb063
 0000E3D5  8B46F0            mov ax,[bp-0x10]
@@ -21949,7 +21636,6 @@
 0000E3E3  7435              jz 0xe41a
 0000E3E5  52                push dx
 0000E3E6  FF76E8            push word [bp-0x18]
-0000E3E9  90                nop
 0000E3EA  0E                push cs
 0000E3EB  E859CC            call 0xb047
 0000E3EE  C45EE8            les bx,[bp-0x18]
@@ -21970,16 +21656,16 @@
 0000E41D  8BE5              mov sp,bp
 0000E41F  5D                pop bp
 0000E420  C20200            ret 0x2
+
 0000E423  55                push bp
 0000E424  8BEC              mov bp,sp
 0000E426  B82400            mov ax,0x24
-0000E429  9A1C3E821F        call 0x1f82:0x3e1c
+0000E429  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E42E  A15A63            mov ax,[0x635a]
 0000E431  8B165C63          mov dx,[0x635c]
 0000E435  E9D800            jmp 0xe510
 0000E438  FF76F2            push word [bp-0xe]
 0000E43B  FF76F0            push word [bp-0x10]
-0000E43E  90                nop
 0000E43F  0E                push cs
 0000E440  E820CC            call 0xb063
 0000E443  8B46F4            mov ax,[bp-0xc]
@@ -21990,7 +21676,6 @@
 0000E451  745C              jz 0xe4af
 0000E453  52                push dx
 0000E454  FF76F0            push word [bp-0x10]
-0000E457  90                nop
 0000E458  0E                push cs
 0000E459  E8EBCB            call 0xb047
 0000E45C  C45EF0            les bx,[bp-0x10]
@@ -22008,17 +21693,14 @@
 0000E483  75B3              jnz 0xe438
 0000E485  FF76F2            push word [bp-0xe]
 0000E488  FF76F0            push word [bp-0x10]
-0000E48B  90                nop
 0000E48C  0E                push cs
 0000E48D  E8D3CB            call 0xb063
 0000E490  FF76E6            push word [bp-0x1a]
 0000E493  FF76E4            push word [bp-0x1c]
-0000E496  90                nop
 0000E497  0E                push cs
 0000E498  E8C8CB            call 0xb063
 0000E49B  FF76E2            push word [bp-0x1e]
 0000E49E  FF76E0            push word [bp-0x20]
-0000E4A1  90                nop
 0000E4A2  0E                push cs
 0000E4A3  E8BDCB            call 0xb063
 0000E4A6  8B46F0            mov ax,[bp-0x10]
@@ -22026,7 +21708,6 @@
 0000E4AC  E9A300            jmp 0xe552
 0000E4AF  FF76E6            push word [bp-0x1a]
 0000E4B2  FF76E4            push word [bp-0x1c]
-0000E4B5  90                nop
 0000E4B6  0E                push cs
 0000E4B7  E8A9CB            call 0xb063
 0000E4BA  8B46EC            mov ax,[bp-0x14]
@@ -22037,7 +21718,6 @@
 0000E4C8  7435              jz 0xe4ff
 0000E4CA  52                push dx
 0000E4CB  FF76E4            push word [bp-0x1c]
-0000E4CE  90                nop
 0000E4CF  0E                push cs
 0000E4D0  E874CB            call 0xb047
 0000E4D3  C45EE4            les bx,[bp-0x1c]
@@ -22055,7 +21735,6 @@
 0000E4FC  E94AFF            jmp 0xe449
 0000E4FF  FF76E2            push word [bp-0x1e]
 0000E502  FF76E0            push word [bp-0x20]
-0000E505  90                nop
 0000E506  0E                push cs
 0000E507  E859CB            call 0xb063
 0000E50A  8B46E8            mov ax,[bp-0x18]
@@ -22066,7 +21745,6 @@
 0000E518  7435              jz 0xe54f
 0000E51A  52                push dx
 0000E51B  FF76E0            push word [bp-0x20]
-0000E51E  90                nop
 0000E51F  0E                push cs
 0000E520  E824CB            call 0xb047
 0000E523  C45EE0            les bx,[bp-0x20]
@@ -22087,10 +21765,11 @@
 0000E552  8BE5              mov sp,bp
 0000E554  5D                pop bp
 0000E555  C20200            ret 0x2
+
 0000E558  55                push bp
 0000E559  8BEC              mov bp,sp
 0000E55B  33C0              xor ax,ax
-0000E55D  9A1C3E821F        call 0x1f82:0x3e1c
+0000E55D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E562  C45E04            les bx,[bp+0x4]
 0000E565  8B4608            mov ax,[bp+0x8]
 0000E568  8B560A            mov dx,[bp+0xa]
@@ -22170,10 +21849,11 @@
 0000E63A  40                inc ax
 0000E63B  5D                pop bp
 0000E63C  C20800            ret 0x8
+
 0000E63F  55                push bp
 0000E640  8BEC              mov bp,sp
 0000E642  33C0              xor ax,ax
-0000E644  9A1C3E821F        call 0x1f82:0x3e1c
+0000E644  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E649  C45E04            les bx,[bp+0x4]
 0000E64C  8B4608            mov ax,[bp+0x8]
 0000E64F  8B560A            mov dx,[bp+0xa]
@@ -22293,10 +21973,11 @@
 0000E7A5  40                inc ax
 0000E7A6  5D                pop bp
 0000E7A7  C20800            ret 0x8
+
 0000E7AA  55                push bp
 0000E7AB  8BEC              mov bp,sp
 0000E7AD  B81800            mov ax,0x18
-0000E7B0  9A1C3E821F        call 0x1f82:0x3e1c
+0000E7B0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E7B5  8D46F0            lea ax,[bp-0x10]
 0000E7B8  16                push ss
 0000E7B9  50                push ax
@@ -22319,7 +22000,6 @@
 0000E7F4  EB68              jmp short 0xe85e
 0000E7F6  FF76FA            push word [bp-0x6]
 0000E7F9  FF76F8            push word [bp-0x8]
-0000E7FC  90                nop
 0000E7FD  0E                push cs
 0000E7FE  E846C8            call 0xb047
 0000E801  C45EF8            les bx,[bp-0x8]
@@ -22348,7 +22028,6 @@
 0000E848  C746EE0100        mov word [bp-0x12],0x1
 0000E84D  FF76FA            push word [bp-0x6]
 0000E850  FF76F8            push word [bp-0x8]
-0000E853  90                nop
 0000E854  0E                push cs
 0000E855  E80BC8            call 0xb063
 0000E858  8B46FC            mov ax,[bp-0x4]
@@ -22399,10 +22078,11 @@
 0000E8D7  8BE5              mov sp,bp
 0000E8D9  5D                pop bp
 0000E8DA  C20800            ret 0x8
+
 0000E8DD  55                push bp
 0000E8DE  8BEC              mov bp,sp
 0000E8E0  B80E00            mov ax,0xe
-0000E8E3  9A1C3E821F        call 0x1f82:0x3e1c
+0000E8E3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E8E8  C746F60000        mov word [bp-0xa],0x0
 0000E8ED  C45E04            les bx,[bp+0x4]
 0000E8F0  268B470D          mov ax,[es:bx+0xd]
@@ -22410,7 +22090,6 @@
 0000E8F8  EB40              jmp short 0xe93a
 0000E8FA  FF76FA            push word [bp-0x6]
 0000E8FD  FF76F8            push word [bp-0x8]
-0000E900  90                nop
 0000E901  0E                push cs
 0000E902  E842C7            call 0xb047
 0000E905  C45EF8            les bx,[bp-0x8]
@@ -22426,7 +22105,6 @@
 0000E926  FF46F6            inc word [bp-0xa]
 0000E929  FF76FA            push word [bp-0x6]
 0000E92C  FF76F8            push word [bp-0x8]
-0000E92F  90                nop
 0000E930  0E                push cs
 0000E931  E82FC7            call 0xb063
 0000E934  8B46FC            mov ax,[bp-0x4]
@@ -22439,10 +22117,11 @@
 0000E947  8BE5              mov sp,bp
 0000E949  5D                pop bp
 0000E94A  C20400            ret 0x4
+
 0000E94D  55                push bp
 0000E94E  8BEC              mov bp,sp
 0000E950  B82000            mov ax,0x20
-0000E953  9A1C3E821F        call 0x1f82:0x3e1c
+0000E953  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000E958  9A6D72F50F        call 0xff5:0x726d
 0000E95D  FF760E            push word [bp+0xe]
 0000E960  FF760C            push word [bp+0xc]
@@ -22559,7 +22238,6 @@
 0000EA8C  0146E4            add [bp-0x1c],ax
 0000EA8F  FF76FA            push word [bp-0x6]
 0000EA92  FF76F8            push word [bp-0x8]
-0000EA95  90                nop
 0000EA96  0E                push cs
 0000EA97  E8C9C5            call 0xb063
 0000EA9A  8B46FC            mov ax,[bp-0x4]
@@ -22570,7 +22248,6 @@
 0000EAA8  7459              jz 0xeb03
 0000EAAA  52                push dx
 0000EAAB  FF76F8            push word [bp-0x8]
-0000EAAE  90                nop
 0000EAAF  0E                push cs
 0000EAB0  E894C5            call 0xb047
 0000EAB3  C45EF8            les bx,[bp-0x8]
@@ -22603,10 +22280,11 @@
 0000EB08  8BE5              mov sp,bp
 0000EB0A  5D                pop bp
 0000EB0B  C20C00            ret 0xc
+
 0000EB0E  55                push bp
 0000EB0F  8BEC              mov bp,sp
 0000EB11  B80200            mov ax,0x2
-0000EB14  9A1C3E821F        call 0x1f82:0x3e1c
+0000EB14  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EB19  57                push di
 0000EB1A  2BC9              sub cx,cx
 0000EB1C  C47E04            les di,[bp+0x4]
@@ -22625,16 +22303,18 @@
 0000EB3B  8BE5              mov sp,bp
 0000EB3D  5D                pop bp
 0000EB3E  C20400            ret 0x4
+
 0000EB41  55                push bp
 0000EB42  8BEC              mov bp,sp
 0000EB44  33C0              xor ax,ax
-0000EB46  9A1C3E821F        call 0x1f82:0x3e1c
+0000EB46  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EB4B  5D                pop bp
 0000EB4C  CA0400            retf 0x4
+
 0000EB4F  55                push bp
 0000EB50  8BEC              mov bp,sp
 0000EB52  B80400            mov ax,0x4
-0000EB55  9A1C3E821F        call 0x1f82:0x3e1c
+0000EB55  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EB5A  8D46FC            lea ax,[bp-0x4]
 0000EB5D  16                push ss
 0000EB5E  50                push ax
@@ -22664,10 +22344,11 @@
 0000EBAF  8BE5              mov sp,bp
 0000EBB1  5D                pop bp
 0000EBB2  C20800            ret 0x8
+
 0000EBB5  55                push bp
 0000EBB6  8BEC              mov bp,sp
 0000EBB8  33C0              xor ax,ax
-0000EBBA  9A1C3E821F        call 0x1f82:0x3e1c
+0000EBBA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EBBF  2BC0              sub ax,ax
 0000EBC1  50                push ax
 0000EBC2  9A8E0BF50F        call 0xff5:0xb8e
@@ -22684,10 +22365,11 @@
 0000EBE8  9A8F09F50F        call 0xff5:0x98f
 0000EBED  5D                pop bp
 0000EBEE  C20800            ret 0x8
+
 0000EBF1  55                push bp
 0000EBF2  8BEC              mov bp,sp
 0000EBF4  B80400            mov ax,0x4
-0000EBF7  9A1C3E821F        call 0x1f82:0x3e1c
+0000EBF7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EBFC  8D46FC            lea ax,[bp-0x4]
 0000EBFF  16                push ss
 0000EC00  50                push ax
@@ -22719,10 +22401,11 @@
 0000EC54  8BE5              mov sp,bp
 0000EC56  5D                pop bp
 0000EC57  C20A00            ret 0xa
+
 0000EC5A  55                push bp
 0000EC5B  8BEC              mov bp,sp
 0000EC5D  B80200            mov ax,0x2
-0000EC60  9A1C3E821F        call 0x1f82:0x3e1c
+0000EC60  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EC65  57                push di
 0000EC66  56                push si
 0000EC67  8B4604            mov ax,[bp+0x4]
@@ -22758,10 +22441,11 @@
 0000ECAF  8BE5              mov sp,bp
 0000ECB1  5D                pop bp
 0000ECB2  C20A00            ret 0xa
+
 0000ECB5  55                push bp
 0000ECB6  8BEC              mov bp,sp
 0000ECB8  B81E00            mov ax,0x1e
-0000ECBB  9A1C3E821F        call 0x1f82:0x3e1c
+0000ECBB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000ECC0  57                push di
 0000ECC1  56                push si
 0000ECC2  8B4608            mov ax,[bp+0x8]
@@ -22991,7 +22675,7 @@
 0000EF1F  8BE5              mov sp,bp
 0000EF21  5D                pop bp
 0000EF22  CA0E00            retf 0xe
-0000EF25  90                nop
+
 0000EF26  55                push bp
 0000EF27  8BEC              mov bp,sp
 0000EF29  83EC0A            sub sp,byte +0xa
@@ -23011,7 +22695,6 @@
 0000EF4A  3B7EF6            cmp di,[bp-0xa]
 0000EF4D  7203              jc 0xef52
 0000EF4F  EB32              jmp short 0xef83
-0000EF51  90                nop
 0000EF52  AC                lodsb
 0000EF53  8AC8              mov cl,al
 0000EF55  83E13F            and cx,byte +0x3f
@@ -23049,15 +22732,14 @@
 0000EF92  8BE5              mov sp,bp
 0000EF94  5D                pop bp
 0000EF95  CA0E00            retf 0xe
-0000EF98  90                nop
+
 
 0000EF99  55    	    push bp
 0000EF9C  8BEC              mov bp,sp
 0000EF9D  B8AC00            mov ax,0xac
-0000EFA0  9A1C3E821F        call 0x1f82:0x3e1c
+0000EFA0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000EFA5  57                push di
 0000EFA6  56                push si
-0000EFA7  90                nop
 0000EFA8  0E                push cs
 0000EFA9  E846A7            call 0x96f2
 0000EFAC  E8C100            call 0xf070
@@ -23084,7 +22766,6 @@
 0000EFD9  8D8658FF          lea ax,[bp-0xa8]
 0000EFDD  16                push ss
 0000EFDE  50                push ax
-0000EFDF  90                nop
 0000EFE0  0E                push cs
 0000EFE1  E86A8C            call 0x7c4e
 0000EFE4  0BC0              or ax,ax
@@ -23106,7 +22787,6 @@
 0000F00D  F2A4              repne movsb
 0000F00F  B80600            mov ax,0x6
 0000F012  50                push ax
-0000F013  90                nop
 0000F014  0E                push cs
 0000F015  E89DA7            call 0x97b5
 0000F018  C78654FFECC3      mov word [bp-0xac],0xc3ec
@@ -23140,10 +22820,11 @@
 0000F06C  8BE5              mov sp,bp
 0000F06E  5D                pop bp
 0000F06F  CB                retf
+
 0000F070  55                push bp
 0000F071  8BEC              mov bp,sp
 0000F073  B80200            mov ax,0x2
-0000F076  9A1C3E821F        call 0x1f82:0x3e1c
+0000F076  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F07B  B9ECC3            mov cx,0xc3ec
 0000F07E  8BD9              mov bx,cx
 0000F080  83BF970000        cmp word [bx+0x97],byte +0x0
@@ -23162,10 +22843,11 @@
 0000F0A2  8BE5              mov sp,bp
 0000F0A4  5D                pop bp
 0000F0A5  C3                ret
+
 0000F0A6  55                push bp
 0000F0A7  8BEC              mov bp,sp
 0000F0A9  33C0              xor ax,ax
-0000F0AB  9A1C3E821F        call 0x1f82:0x3e1c
+0000F0AB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F0B0  8B5E06            mov bx,[bp+0x6]
 0000F0B3  83BF970000        cmp word [bx+0x97],byte +0x0
 0000F0B8  740B              jz 0xf0c5
@@ -23176,17 +22858,17 @@
 0000F0C2  E83F00            call 0xf104
 0000F0C5  5D                pop bp
 0000F0C6  CA0200            retf 0x2
+
 0000F0C9  55                push bp
 0000F0CA  8BEC              mov bp,sp
 0000F0CC  33C0              xor ax,ax
-0000F0CE  9A1C3E821F        call 0x1f82:0x3e1c
+0000F0CE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F0D3  C45E04            les bx,[bp+0x4]
 0000F0D6  268B879300        mov ax,[es:bx+0x93]
 0000F0DB  260B879500        or ax,[es:bx+0x95]
 0000F0E0  741E              jz 0xf100
 0000F0E2  26FFB79500        push word [es:bx+0x95]
 0000F0E7  26FFB79300        push word [es:bx+0x93]
-0000F0EC  90                nop
 0000F0ED  0E                push cs
 0000F0EE  E8BCBD            call 0xaead
 0000F0F1  C45E04            les bx,[bp+0x4]
@@ -23195,10 +22877,11 @@
 0000F0FB  2689879300        mov [es:bx+0x93],ax
 0000F100  5D                pop bp
 0000F101  C20400            ret 0x4
+
 0000F104  55                push bp
 0000F105  8BEC              mov bp,sp
 0000F107  33C0              xor ax,ax
-0000F109  9A1C3E821F        call 0x1f82:0x3e1c
+0000F109  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F10E  56                push si
 0000F10F  8B5E04            mov bx,[bp+0x4]
 0000F112  8BC3              mov ax,bx
@@ -23228,7 +22911,6 @@
 0000F15F  F7F9              idiv cx
 0000F161  80C406            add ah,0x6
 0000F164  50                push ax
-0000F165  90                nop
 0000F166  0E                push cs
 0000F167  E82CDE            call 0xcf96
 0000F16A  2BC0              sub ax,ax
@@ -23236,7 +22918,6 @@
 0000F16D  50                push ax
 0000F16E  B80600            mov ax,0x6
 0000F171  50                push ax
-0000F172  90                nop
 0000F173  0E                push cs
 0000F174  E8AEDD            call 0xcf25
 0000F177  8B5E04            mov bx,[bp+0x4]
@@ -23248,10 +22929,11 @@
 0000F18D  5E                pop si
 0000F18E  5D                pop bp
 0000F18F  C20200            ret 0x2
+
 0000F192  55                push bp
 0000F193  8BEC              mov bp,sp
 0000F195  B81C00            mov ax,0x1c
-0000F198  9A1C3E821F        call 0x1f82:0x3e1c
+0000F198  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F19D  57                push di
 0000F19E  56                push si
 0000F19F  C746E40000        mov word [bp-0x1c],0x0
@@ -23276,7 +22958,6 @@
 0000F1D1  8956E8            mov [bp-0x18],dx
 0000F1D4  52                push dx
 0000F1D5  50                push ax
-0000F1D6  90                nop
 0000F1D7  0E                push cs
 0000F1D8  E86CBE            call 0xb047
 0000F1DB  C45EE6            les bx,[bp-0x1a]
@@ -23291,7 +22972,6 @@
 0000F1F5  8946EE            mov [bp-0x12],ax
 0000F1F8  FF76E8            push word [bp-0x18]
 0000F1FB  FF76E6            push word [bp-0x1a]
-0000F1FE  90                nop
 0000F1FF  0E                push cs
 0000F200  E860BE            call 0xb063
 0000F203  837EEE00          cmp word [bp-0x12],byte +0x0
@@ -23319,7 +22999,6 @@
 0000F246  8956E8            mov [bp-0x18],dx
 0000F249  52                push dx
 0000F24A  50                push ax
-0000F24B  90                nop
 0000F24C  0E                push cs
 0000F24D  E8F7BD            call 0xb047
 0000F250  C45EE6            les bx,[bp-0x1a]
@@ -23334,7 +23013,6 @@
 0000F26A  8946EE            mov [bp-0x12],ax
 0000F26D  FF76E8            push word [bp-0x18]
 0000F270  FF76E6            push word [bp-0x1a]
-0000F273  90                nop
 0000F274  0E                push cs
 0000F275  E8EBBD            call 0xb063
 0000F278  837EEE00          cmp word [bp-0x12],byte +0x0
@@ -23396,10 +23074,11 @@
 0000F314  8BE5              mov sp,bp
 0000F316  5D                pop bp
 0000F317  CA0200            retf 0x2
+
 0000F31A  55                push bp
 0000F31B  8BEC              mov bp,sp
 0000F31D  33C0              xor ax,ax
-0000F31F  9A1C3E821F        call 0x1f82:0x3e1c
+0000F31F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F324  56                push si
 0000F325  1E                push ds
 0000F326  FF7606            push word [bp+0x6]
@@ -23448,7 +23127,6 @@
 0000F3A2  50                push ax
 0000F3A3  B80600            mov ax,0x6
 0000F3A6  50                push ax
-0000F3A7  90                nop
 0000F3A8  0E                push cs
 0000F3A9  E871E2            call 0xd61d
 0000F3AC  2BC0              sub ax,ax
@@ -23456,7 +23134,6 @@
 0000F3AF  50                push ax
 0000F3B0  B80600            mov ax,0x6
 0000F3B3  50                push ax
-0000F3B4  90                nop
 0000F3B5  0E                push cs
 0000F3B6  E86CDB            call 0xcf25
 0000F3B9  8B5E06            mov bx,[bp+0x6]
@@ -23464,10 +23141,11 @@
 0000F3C2  5E                pop si
 0000F3C3  5D                pop bp
 0000F3C4  CA0200            retf 0x2
+
 0000F3C7  55                push bp
 0000F3C8  8BEC              mov bp,sp
 0000F3CA  B80600            mov ax,0x6
-0000F3CD  9A1C3E821F        call 0x1f82:0x3e1c
+0000F3CD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F3D2  8B1EC0CF          mov bx,[0xcfc0]
 0000F3D6  D1E3              shl bx,1
 0000F3D8  D1E3              shl bx,1
@@ -23477,7 +23155,6 @@
 0000F3E5  8956FC            mov [bp-0x4],dx
 0000F3E8  52                push dx
 0000F3E9  50                push ax
-0000F3EA  90                nop
 0000F3EB  0E                push cs
 0000F3EC  E858BC            call 0xb047
 0000F3EF  C45EFA            les bx,[bp-0x6]
@@ -23491,7 +23168,6 @@
 0000F408  8946FE            mov [bp-0x2],ax
 0000F40B  FF76FC            push word [bp-0x4]
 0000F40E  FF76FA            push word [bp-0x6]
-0000F411  90                nop
 0000F412  0E                push cs
 0000F413  E84DBC            call 0xb063
 0000F416  8B46FE            mov ax,[bp-0x2]
@@ -23519,18 +23195,17 @@
 0000F458  8BE5              mov sp,bp
 0000F45A  5D                pop bp
 0000F45B  CA0200            retf 0x2
+
 0000F45E  55                push bp
 0000F45F  8BEC              mov bp,sp
 0000F461  33C0              xor ax,ax
-0000F463  9A1C3E821F        call 0x1f82:0x3e1c
+0000F463  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F468  B80100            mov ax,0x1
 0000F46B  50                push ax
-0000F46C  90                nop
 0000F46D  0E                push cs
 0000F46E  E866D9            call 0xcdd7
 0000F471  2BC0              sub ax,ax
 0000F473  50                push ax
-0000F474  90                nop
 0000F475  0E                push cs
 0000F476  E8F1D8            call 0xcd6a
 0000F479  FF36C480          push word [0x80c4]
@@ -23554,15 +23229,15 @@
 0000F4BB  9A72B0F50F        call 0xff5:0xb072
 0000F4C0  B80100            mov ax,0x1
 0000F4C3  50                push ax
-0000F4C4  90                nop
 0000F4C5  0E                push cs
 0000F4C6  E8A1D8            call 0xcd6a
 0000F4C9  5D                pop bp
 0000F4CA  C20200            ret 0x2
+
 0000F4CD  55                push bp
 0000F4CE  8BEC              mov bp,sp
 0000F4D0  B80400            mov ax,0x4
-0000F4D3  9A1C3E821F        call 0x1f82:0x3e1c
+0000F4D3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F4D8  8B1EC0CF          mov bx,[0xcfc0]
 0000F4DC  D1E3              shl bx,1
 0000F4DE  D1E3              shl bx,1
@@ -23596,7 +23271,6 @@
 0000F52F  26384703          cmp [es:bx+0x3],al
 0000F533  74D1              jz 0xf506
 0000F535  FF76FE            push word [bp-0x2]
-0000F538  90                nop
 0000F539  0E                push cs
 0000F53A  E8484C            call 0x4185
 0000F53D  EB2A              jmp short 0xf569
@@ -23618,10 +23292,11 @@
 0000F569  8BE5              mov sp,bp
 0000F56B  5D                pop bp
 0000F56C  CB                retf
+
 0000F56D  55                push bp
 0000F56E  8BEC              mov bp,sp
 0000F570  B80600            mov ax,0x6
-0000F573  9A1C3E821F        call 0x1f82:0x3e1c
+0000F573  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F578  A1C0CF            mov ax,[0xcfc0]
 0000F57B  48                dec ax
 0000F57C  8946FE            mov [bp-0x2],ax
@@ -23643,7 +23318,6 @@
 0000F5AB  3946FC            cmp [bp-0x4],ax
 0000F5AE  740A              jz 0xf5ba
 0000F5B0  FF76FE            push word [bp-0x2]
-0000F5B3  90                nop
 0000F5B4  0E                push cs
 0000F5B5  E8CD4B            call 0x4185
 0000F5B8  EB58              jmp short 0xf612
@@ -23681,10 +23355,11 @@
 0000F612  8BE5              mov sp,bp
 0000F614  5D                pop bp
 0000F615  CB                retf
+
 0000F616  55                push bp
 0000F617  8BEC              mov bp,sp
 0000F619  B81600            mov ax,0x16
-0000F61C  9A1C3E821F        call 0x1f82:0x3e1c
+0000F61C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F621  8B5E06            mov bx,[bp+0x6]
 0000F624  83BF970000        cmp word [bx+0x97],byte +0x0
 0000F629  7503              jnz 0xf62e
@@ -23692,7 +23367,6 @@
 0000F62E  8D46EE            lea ax,[bp-0x12]
 0000F631  16                push ss
 0000F632  50                push ax
-0000F633  90                nop
 0000F634  0E                push cs
 0000F635  E847BA            call 0xb07f
 0000F638  52                push dx
@@ -23708,7 +23382,6 @@
 0000F64F  50                push ax
 0000F650  B88000            mov ax,0x80
 0000F653  50                push ax
-0000F654  90                nop
 0000F655  0E                push cs
 0000F656  E8B0BB            call 0xb209
 0000F659  8B1EE412          mov bx,[0x12e4]
@@ -23718,7 +23391,6 @@
 0000F665  89977063          mov [bx+0x6370],dx
 0000F669  8946EA            mov [bp-0x16],ax
 0000F66C  8956EC            mov [bp-0x14],dx
-0000F66F  90                nop
 0000F670  0E                push cs
 0000F671  E85BBA            call 0xb0cf
 0000F674  EB09              jmp short 0xf67f
@@ -23738,7 +23410,6 @@
 0000F69A  83C40A            add sp,byte +0xa
 0000F69D  FF76EC            push word [bp-0x14]
 0000F6A0  FF76EA            push word [bp-0x16]
-0000F6A3  90                nop
 0000F6A4  0E                push cs
 0000F6A5  E8BBB9            call 0xb063
 0000F6A8  FF7606            push word [bp+0x6]
@@ -23746,15 +23417,15 @@
 0000F6AE  8BE5              mov sp,bp
 0000F6B0  5D                pop bp
 0000F6B1  CA0200            retf 0x2
+
 0000F6B4  55                push bp
 0000F6B5  8BEC              mov bp,sp
 0000F6B7  B80A00            mov ax,0xa
-0000F6BA  9A1C3E821F        call 0x1f82:0x3e1c
+0000F6BA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F6BF  C746FA0000        mov word [bp-0x6],0x0
 0000F6C4  EB0E              jmp short 0xf6d4
 0000F6C6  FF76F8            push word [bp-0x8]
 0000F6C9  FF76F6            push word [bp-0xa]
-0000F6CC  90                nop
 0000F6CD  0E                push cs
 0000F6CE  E892B9            call 0xb063
 0000F6D1  FF46FA            inc word [bp-0x6]
@@ -23772,7 +23443,6 @@
 0000F6F3  74DC              jz 0xf6d1
 0000F6F5  FF76F8            push word [bp-0x8]
 0000F6F8  50                push ax
-0000F6F9  90                nop
 0000F6FA  0E                push cs
 0000F6FB  E849B9            call 0xb047
 0000F6FE  C45EF6            les bx,[bp-0xa]
@@ -23801,7 +23471,6 @@
 0000F73A  E8DDFB            call 0xf31a
 0000F73D  FF76F8            push word [bp-0x8]
 0000F740  FF76F6            push word [bp-0xa]
-0000F743  90                nop
 0000F744  0E                push cs
 0000F745  E865B7            call 0xaead
 0000F748  8B5EFA            mov bx,[bp-0x6]
@@ -23815,10 +23484,11 @@
 0000F75E  8BE5              mov sp,bp
 0000F760  5D                pop bp
 0000F761  CA0200            retf 0x2
+
 0000F764  55                push bp
 0000F765  8BEC              mov bp,sp
 0000F767  B80600            mov ax,0x6
-0000F76A  9A1C3E821F        call 0x1f82:0x3e1c
+0000F76A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F76F  C746FE0000        mov word [bp-0x2],0x0
 0000F774  EB3D              jmp short 0xf7b3
 0000F776  8B5EFE            mov bx,[bp-0x2]
@@ -23832,7 +23502,6 @@
 0000F78D  7421              jz 0xf7b0
 0000F78F  FF76FC            push word [bp-0x4]
 0000F792  50                push ax
-0000F793  90                nop
 0000F794  0E                push cs
 0000F795  E8AFB8            call 0xb047
 0000F798  C45EFA            les bx,[bp-0x6]
@@ -23841,7 +23510,6 @@
 0000F7A2  E824F9            call 0xf0c9
 0000F7A5  FF76FC            push word [bp-0x4]
 0000F7A8  FF76FA            push word [bp-0x6]
-0000F7AB  90                nop
 0000F7AC  0E                push cs
 0000F7AD  E8FDB6            call 0xaead
 0000F7B0  FF46FE            inc word [bp-0x2]
@@ -23852,14 +23520,16 @@
 0000F7C1  8BE5              mov sp,bp
 0000F7C3  5D                pop bp
 0000F7C4  CB                retf
+
 0000F7C5  33C0              xor ax,ax
-0000F7C7  9A1C3E821F        call 0x1f82:0x3e1c
+0000F7C7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F7CC  C706E8550200      mov word [0x55e8],0x2
 0000F7D2  CB                retf
+
 0000F7D3  55                push bp
 0000F7D4  8BEC              mov bp,sp
 0000F7D6  B81E00            mov ax,0x1e
-0000F7D9  9A1C3E821F        call 0x1f82:0x3e1c
+0000F7D9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F7DE  C70668D90100      mov word [0xd968],0x1
 0000F7E4  B80080            mov ax,0x8000
 0000F7E7  50                push ax
@@ -23893,7 +23563,6 @@
 0000F83E  8D46E6            lea ax,[bp-0x1a]
 0000F841  16                push ss
 0000F842  50                push ax
-0000F843  90                nop
 0000F844  0E                push cs
 0000F845  E837B8            call 0xb07f
 0000F848  52                push dx
@@ -23917,14 +23586,12 @@
 0000F877  C45E08            les bx,[bp+0x8]
 0000F87A  268907            mov [es:bx],ax
 0000F87D  26895702          mov [es:bx+0x2],dx
-0000F881  90                nop
 0000F882  0E                push cs
 0000F883  E849B8            call 0xb0cf
 0000F886  EB10              jmp short 0xf898
 0000F888  FF76FA            push word [bp-0x6]
 0000F88B  9AFE3F821F        call 0x1f82:0x3ffe
 0000F890  83C402            add sp,byte +0x2
-0000F893  90                nop
 0000F894  0E                push cs
 0000F895  E854B8            call 0xb0ec
 0000F898  C45E08            les bx,[bp+0x8]
@@ -23949,7 +23616,6 @@
 0000F8D0  C45E08            les bx,[bp+0x8]
 0000F8D3  26FF7702          push word [es:bx+0x2]
 0000F8D7  26FF37            push word [es:bx]
-0000F8DA  90                nop
 0000F8DB  0E                push cs
 0000F8DC  E8CEB5            call 0xaead
 0000F8DF  C45E08            les bx,[bp+0x8]
@@ -23964,10 +23630,11 @@
 0000F8FC  8BE5              mov sp,bp
 0000F8FE  5D                pop bp
 0000F8FF  C20C00            ret 0xc
+
 0000F902  55                push bp
 0000F903  8BEC              mov bp,sp
 0000F905  B81200            mov ax,0x12
-0000F908  9A1C3E821F        call 0x1f82:0x3e1c
+0000F908  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F90D  8B460C            mov ax,[bp+0xc]
 0000F910  0B460E            or ax,[bp+0xe]
 0000F913  740C              jz 0xf921
@@ -23980,7 +23647,6 @@
 0000F927  7414              jz 0xf93d
 0000F929  FF760E            push word [bp+0xe]
 0000F92C  FF760C            push word [bp+0xc]
-0000F92F  90                nop
 0000F930  0E                push cs
 0000F931  E88CBB            call 0xb4c0
 0000F934  833EC08000        cmp word [0x80c0],byte +0x0
@@ -23989,7 +23655,6 @@
 0000F93D  8D46EE            lea ax,[bp-0x12]
 0000F940  16                push ss
 0000F941  50                push ax
-0000F942  90                nop
 0000F943  0E                push cs
 0000F944  E838B7            call 0xb07f
 0000F947  52                push dx
@@ -24007,24 +23672,20 @@
 0000F962  8B4606            mov ax,[bp+0x6]
 0000F965  0C40              or al,0x40
 0000F967  50                push ax
-0000F968  90                nop
 0000F969  0E                push cs
 0000F96A  E89CB8            call 0xb209
 0000F96D  89460C            mov [bp+0xc],ax
 0000F970  89560E            mov [bp+0xe],dx
-0000F973  90                nop
 0000F974  0E                push cs
 0000F975  E857B7            call 0xb0cf
 0000F978  EB19              jmp short 0xf993
 0000F97A  0E                push cs
 0000F97B  E847FE            call 0xf7c5
-0000F97E  90                nop
 0000F97F  0E                push cs
 0000F980  E85502            call 0xfbd8
 0000F983  837E0400          cmp word [bp+0x4],byte +0x0
 0000F987  7405              jz 0xf98e
 0000F989  9A1253F50F        call 0xff5:0x5312
-0000F98E  90                nop
 0000F98F  0E                push cs
 0000F990  E859B7            call 0xb0ec
 0000F993  8B460C            mov ax,[bp+0xc]
@@ -24032,10 +23693,11 @@
 0000F999  8BE5              mov sp,bp
 0000F99B  5D                pop bp
 0000F99C  C20C00            ret 0xc
+
 0000F99F  55                push bp
 0000F9A0  8BEC              mov bp,sp
 0000F9A2  33C0              xor ax,ax
-0000F9A4  9A1C3E821F        call 0x1f82:0x3e1c
+0000F9A4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F9A9  1E                push ds
 0000F9AA  FF7606            push word [bp+0x6]
 0000F9AD  8B4606            mov ax,[bp+0x6]
@@ -24054,10 +23716,11 @@
 0000F9C7  B8FFFF            mov ax,0xffff
 0000F9CA  5D                pop bp
 0000F9CB  CA0200            retf 0x2
+
 0000F9CE  55                push bp
 0000F9CF  8BEC              mov bp,sp
 0000F9D1  B81600            mov ax,0x16
-0000F9D4  9A1C3E821F        call 0x1f82:0x3e1c
+0000F9D4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000F9D9  8B5E06            mov bx,[bp+0x6]
 0000F9DC  8B879300          mov ax,[bx+0x93]
 0000F9E0  0B879500          or ax,[bx+0x95]
@@ -24065,7 +23728,6 @@
 0000F9E6  8D46EE            lea ax,[bp-0x12]
 0000F9E9  16                push ss
 0000F9EA  50                push ax
-0000F9EB  90                nop
 0000F9EC  0E                push cs
 0000F9ED  E88FB6            call 0xb07f
 0000F9F0  52                push dx
@@ -24086,13 +23748,11 @@
 0000FA0E  E8C2FD            call 0xf7d3
 0000FA11  0BC0              or ax,ax
 0000FA13  7510              jnz 0xfa25
-0000FA15  90                nop
 0000FA16  0E                push cs
 0000FA17  E8B5B6            call 0xb0cf
 0000FA1A  C706E6550000      mov word [0x55e6],0x0
 0000FA20  B80100            mov ax,0x1
 0000FA23  EB2E              jmp short 0xfa53
-0000FA25  90                nop
 0000FA26  0E                push cs
 0000FA27  E8A5B6            call 0xb0cf
 0000FA2A  8B5E06            mov bx,[bp+0x6]
@@ -24113,18 +23773,21 @@
 0000FA53  8BE5              mov sp,bp
 0000FA55  5D                pop bp
 0000FA56  CA0200            retf 0x2
+
 0000FA59  33C0              xor ax,ax
-0000FA5B  9A1C3E821F        call 0x1f82:0x3e1c
+0000FA5B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FA60  C7066C630100      mov word [0x636c],0x1
 0000FA66  CB                retf
+
 0000FA67  33C0              xor ax,ax
-0000FA69  9A1C3E821F        call 0x1f82:0x3e1c
+0000FA69  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FA6E  833E9ECF00        cmp word [0xcf9e],byte +0x0
 0000FA73  7506              jnz 0xfa7b
 0000FA75  C7066C630000      mov word [0x636c],0x0
 0000FA7B  CB                retf
+
 0000FA7C  33C0              xor ax,ax
-0000FA7E  9A1C3E821F        call 0x1f82:0x3e1c
+0000FA7E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FA83  833E9ECF00        cmp word [0xcf9e],byte +0x0
 0000FA88  7518              jnz 0xfaa2
 0000FA8A  833E6C6300        cmp word [0x636c],byte +0x0
@@ -24135,10 +23798,11 @@
 0000FA9A  7406              jz 0xfaa2
 0000FA9C  C706E8550100      mov word [0x55e8],0x1
 0000FAA2  CB                retf
+
 0000FAA3  55                push bp
 0000FAA4  8BEC              mov bp,sp
 0000FAA6  B83800            mov ax,0x38
-0000FAA9  9A1C3E821F        call 0x1f82:0x3e1c
+0000FAA9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FAAE  57                push di
 0000FAAF  56                push si
 0000FAB0  8D46D4            lea ax,[bp-0x2c]
@@ -24249,7 +23913,6 @@
 0000FBC1  99                cwd
 0000FBC2  52                push dx
 0000FBC3  50                push ax
-0000FBC4  90                nop
 0000FBC5  0E                push cs
 0000FBC6  E8EAAD            call 0xa9b3
 0000FBC9  5E                pop si
@@ -24257,10 +23920,11 @@
 0000FBCB  8BE5              mov sp,bp
 0000FBCD  5D                pop bp
 0000FBCE  CB                retf
-0000FBCF  90                nop
+
 0000FBD0  A1EE55            mov ax,[0x55ee]
 0000FBD3  8B16F055          mov dx,[0x55f0]
 0000FBD7  CB                retf
+
 0000FBD8  A1EE55            mov ax,[0x55ee]
 0000FBDB  3B06EE55          cmp ax,[0x55ee]
 0000FBDF  74FA              jz 0xfbdb
@@ -24318,10 +23982,11 @@
 0000FCD2  8BE5              mov sp,bp
 0000FCD4  5D                pop bp
 0000FCD5  C3                ret
+
 0000FCD6  55                push bp
 0000FCD7  8BEC              mov bp,sp
 0000FCD9  B83000            mov ax,0x30
-0000FCDC  9A1C3E821F        call 0x1f82:0x3e1c
+0000FCDC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FCE1  C706A6630000      mov word [0x63a6],0x0
 0000FCE7  8D46D4            lea ax,[bp-0x2c]
 0000FCEA  16                push ss
@@ -24378,19 +24043,20 @@
 0000FD75  BA0000            mov dx,0x0
 0000FD78  52                push dx
 0000FD79  50                push ax
-0000FD7A  90                nop
 0000FD7B  0E                push cs
 0000FD7C  E89EC7            call 0xc51d
 0000FD7F  8BE5              mov sp,bp
 0000FD81  5D                pop bp
 0000FD82  CB                retf
+
 0000FD83  33C0              xor ax,ax
-0000FD85  9A1C3E821F        call 0x1f82:0x3e1c
+0000FD85  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FD8A  CB                retf
+
 0000FD8B  55                push bp
 0000FD8C  8BEC              mov bp,sp
 0000FD8E  B84600            mov ax,0x46
-0000FD91  9A1C3E821F        call 0x1f82:0x3e1c
+0000FD91  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FD96  57                push di
 0000FD97  56                push si
 0000FD98  833EA66300        cmp word [0x63a6],byte +0x0
@@ -24400,7 +24066,6 @@
 0000FDA7  8D46C2            lea ax,[bp-0x3e]
 0000FDAA  16                push ss
 0000FDAB  50                push ax
-0000FDAC  90                nop
 0000FDAD  0E                push cs
 0000FDAE  E8CEB2            call 0xb07f
 0000FDB1  52                push dx
@@ -24417,17 +24082,14 @@
 0000FDCB  50                push ax
 0000FDCC  2BC0              sub ax,ax
 0000FDCE  50                push ax
-0000FDCF  90                nop
 0000FDD0  0E                push cs
 0000FDD1  E835B4            call 0xb209
 0000FDD4  A39E63            mov [0x639e],ax
 0000FDD7  8916A063          mov [0x63a0],dx
-0000FDDB  90                nop
 0000FDDC  0E                push cs
 0000FDDD  E8EFB2            call 0xb0cf
 0000FDE0  FF36A063          push word [0x63a0]
 0000FDE4  FF369E63          push word [0x639e]
-0000FDE8  90                nop
 0000FDE9  0E                push cs
 0000FDEA  E85AB2            call 0xb047
 0000FDED  C41E9E63          les bx,[0x639e]
@@ -24543,12 +24205,10 @@
 0000FF2E  9A325DF50F        call 0xff5:0x5d32
 0000FF33  FF36A063          push word [0x63a0]
 0000FF37  FF369E63          push word [0x639e]
-0000FF3B  90                nop
 0000FF3C  0E                push cs
 0000FF3D  E823B1            call 0xb063
 0000FF40  FF36A063          push word [0x63a0]
 0000FF44  FF369E63          push word [0x639e]
-0000FF48  90                nop
 0000FF49  0E                push cs
 0000FF4A  E860AF            call 0xaead
 0000FF4D  5E                pop si
@@ -24556,11 +24216,11 @@
 0000FF4F  8BE5              mov sp,bp
 0000FF51  5D                pop bp
 0000FF52  CB                retf
-0000FF53  90                nop
+
 0000FF54  55                push bp
 0000FF55  8BEC              mov bp,sp
 0000FF57  B81C00            mov ax,0x1c
-0000FF5A  9A1C3E821F        call 0x1f82:0x3e1c
+0000FF5A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0000FF5F  A0ACCF            mov al,[0xcfac]
 0000FF62  B104              mov cl,0x4
 0000FF64  D2E0              shl al,cl
@@ -24648,28 +24308,27 @@
 0001004D  8BE5              mov sp,bp
 0001004F  5D                pop bp
 00010050  CA0C00            retf 0xc
+
 00010053  55                push bp
 00010054  8BEC              mov bp,sp
 00010056  33C0              xor ax,ax
-00010058  9A1C3E821F        call 0x1f82:0x3e1c
-0001005D  90                nop
+00010058  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001005E  0E                push cs
 0001005F  E85B71            call 0x71bd
 00010062  FF7606            push word [bp+0x6]
 00010065  FF1EAE77          call far [0x77ae]
-00010069  90                nop
 0001006A  0E                push cs
 0001006B  E8AD70            call 0x711b
 0001006E  5D                pop bp
 0001006F  CA0200            retf 0x2
+
 00010072  55                push bp
 00010073  8BEC              mov bp,sp
 00010075  B80C00            mov ax,0xc
-00010078  9A1C3E821F        call 0x1f82:0x3e1c
+00010078  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001007D  8D46F4            lea ax,[bp-0xc]
 00010080  16                push ss
 00010081  50                push ax
-00010082  90                nop
 00010083  0E                push cs
 00010084  E8806D            call 0x6e07
 00010087  8B46F6            mov ax,[bp-0xa]
@@ -24685,26 +24344,26 @@
 000100A2  268B07            mov ax,[es:bx]
 000100A5  051000            add ax,0x10
 000100A8  8946FC            mov [bp-0x4],ax
-000100AB  90                nop
 000100AC  0E                push cs
 000100AD  E80D71            call 0x71bd
 000100B0  FF06AE64          inc word [0x64ae]
 000100B4  8BE5              mov sp,bp
 000100B6  5D                pop bp
 000100B7  CA0400            retf 0x4
+
 000100BA  33C0              xor ax,ax
-000100BC  9A1C3E821F        call 0x1f82:0x3e1c
+000100BC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000100C1  833EAE6400        cmp word [0x64ae],byte +0x0
 000100C6  7409              jz 0xd1
-000100C8  90                nop
 000100C9  0E                push cs
 000100CA  E84E70            call 0x711b
 000100CD  FF0EAE64          dec word [0x64ae]
 000100D1  CB                retf
+
 000100D2  55                push bp
 000100D3  8BEC              mov bp,sp
 000100D5  33C0              xor ax,ax
-000100D7  9A1C3E821F        call 0x1f82:0x3e1c
+000100D7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000100DC  57                push di
 000100DD  C45E06            les bx,[bp+0x6]
 000100E0  2BC0              sub ax,ax
@@ -24727,7 +24386,7 @@
 00010114  55                push bp
 00010115  8BEC              mov bp,sp
 00010117  33C0              xor ax,ax
-00010119  9A1C3E821F        call 0x1f82:0x3e1c
+00010119  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001011E  57                push di
 0001011F  C47E06            les di,[bp+0x6]
 ; CX is set to the position of a null byte inside string at ES:DI minus one.
@@ -24741,7 +24400,7 @@
 00010137  55                push bp
 00010138  8BEC              mov bp,sp
 0001013A  33C0              xor ax,ax
-0001013C  9A1C3E821F        call 0x1f82:0x3e1c
+0001013C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010141  8D4606            lea ax,[bp+0x6]
 00010144  16                push ss
 00010145  50                push ax
@@ -24755,7 +24414,7 @@
 00010152  55                push bp
 00010153  8BEC              mov bp,sp
 00010155  33C0              xor ax,ax
-00010157  9A1C3E821F        call 0x1f82:0x3e1c
+00010157  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001015C  57                push di
 0001015D  FF7608            push word [bp+0x8]
 00010160  FF7606            push word [bp+0x6]
@@ -24771,7 +24430,7 @@
 0001017A  55                push bp
 0001017B  8BEC              mov bp,sp
 0001017D  B80800            mov ax,0x8
-00010180  9A1C3E821F        call 0x1f82:0x3e1c
+00010180  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010185  837E0600          cmp word [bp+0x6],byte +0x0
 00010189  743D              jz 0x1c8
 0001018B  A1B8A3            mov ax,[0xa3b8]
@@ -24804,7 +24463,7 @@
 000101CE  55                push bp
 000101CF  8BEC              mov bp,sp
 000101D1  B81400            mov ax,0x14
-000101D4  9A1C3E821F        call 0x1f82:0x3e1c
+000101D4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000101D9  C45E06            les bx,[bp+0x6]
 000101DC  268B4706          mov ax,[es:bx+0x6]
 000101E0  262B4702          sub ax,[es:bx+0x2]
@@ -24890,10 +24549,11 @@
 000102B7  8BE5              mov sp,bp
 000102B9  5D                pop bp
 000102BA  CA0400            retf 0x4
+
 000102BD  55                push bp
 000102BE  8BEC              mov bp,sp
 000102C0  B80200            mov ax,0x2
-000102C3  9A1C3E821F        call 0x1f82:0x3e1c
+000102C3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000102C8  C45E0A            les bx,[bp+0xa]
 000102CB  268B07            mov ax,[es:bx]
 000102CE  C45E06            les bx,[bp+0x6]
@@ -24927,10 +24587,11 @@
 00010321  8BE5              mov sp,bp
 00010323  5D                pop bp
 00010324  C20A00            ret 0xa
+
 00010327  55                push bp
 00010328  8BEC              mov bp,sp
 0001032A  33C0              xor ax,ax
-0001032C  9A1C3E821F        call 0x1f82:0x3e1c
+0001032C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010331  FF7608            push word [bp+0x8]
 00010334  FF7606            push word [bp+0x6]
 00010337  FF1EC2A3          call far [0xa3c2]
@@ -24938,10 +24599,11 @@
 0001033E  FF1EBC80          call far [0x80bc]
 00010342  5D                pop bp
 00010343  C20600            ret 0x6
+
 00010346  55                push bp
 00010347  8BEC              mov bp,sp
 00010349  B80800            mov ax,0x8
-0001034C  9A1C3E821F        call 0x1f82:0x3e1c
+0001034C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010351  FF760C            push word [bp+0xc]
 00010354  FF760A            push word [bp+0xa]
 00010357  8D46F8            lea ax,[bp-0x8]
@@ -24990,10 +24652,11 @@
 000103CC  8BE5              mov sp,bp
 000103CE  5D                pop bp
 000103CF  C20A00            ret 0xa
+
 000103D2  55                push bp
 000103D3  8BEC              mov bp,sp
 000103D5  33C0              xor ax,ax
-000103D7  9A1C3E821F        call 0x1f82:0x3e1c
+000103D7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000103DC  FF7608            push word [bp+0x8]
 000103DF  FF7606            push word [bp+0x6]
 000103E2  FF1EC2A3          call far [0xa3c2]
@@ -25001,10 +24664,11 @@
 000103E9  FF1EA877          call far [0x77a8]
 000103ED  5D                pop bp
 000103EE  C20600            ret 0x6
+
 000103F1  55                push bp
 000103F2  8BEC              mov bp,sp
 000103F4  B80200            mov ax,0x2
-000103F7  9A1C3E821F        call 0x1f82:0x3e1c
+000103F7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000103FC  FF7608            push word [bp+0x8]
 000103FF  FF7606            push word [bp+0x6]
 00010402  0E                push cs
@@ -25045,10 +24709,11 @@
 0001045A  8BE5              mov sp,bp
 0001045C  5D                pop bp
 0001045D  CA0400            retf 0x4
+
 00010460  55                push bp
 00010461  8BEC              mov bp,sp
 00010463  33C0              xor ax,ax
-00010465  9A1C3E821F        call 0x1f82:0x3e1c
+00010465  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001046A  57                push di
 0001046B  56                push si
 0001046C  B92000            mov cx,0x20
@@ -25062,10 +24727,11 @@
 0001047E  5F                pop di
 0001047F  5D                pop bp
 00010480  CA0400            retf 0x4
+
 00010483  55                push bp
 00010484  8BEC              mov bp,sp
 00010486  33C0              xor ax,ax
-00010488  9A1C3E821F        call 0x1f82:0x3e1c
+00010488  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001048D  57                push di
 0001048E  56                push si
 0001048F  C45E06            les bx,[bp+0x6]
@@ -25079,10 +24745,11 @@
 0001049C  5F                pop di
 0001049D  5D                pop bp
 0001049E  CA0400            retf 0x4
+
 000104A1  55                push bp
 000104A2  8BEC              mov bp,sp
 000104A4  33C0              xor ax,ax
-000104A6  9A1C3E821F        call 0x1f82:0x3e1c
+000104A6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000104AB  C45E06            les bx,[bp+0x6]
 000104AE  A1BAA3            mov ax,[0xa3ba]
 000104B1  268907            mov [es:bx],ax
@@ -25091,15 +24758,17 @@
 000104BA  26894702          mov [es:bx+0x2],ax
 000104BE  5D                pop bp
 000104BF  CA0400            retf 0x4
+
 000104C2  33C0              xor ax,ax
-000104C4  9A1C3E821F        call 0x1f82:0x3e1c
+000104C4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000104C9  A0B2CF            mov al,[0xcfb2]
 000104CC  2AE4              sub ah,ah
 000104CE  CB                retf
+
 000104CF  55                push bp
 000104D0  8BEC              mov bp,sp
 000104D2  33C0              xor ax,ax
-000104D4  9A1C3E821F        call 0x1f82:0x3e1c
+000104D4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000104D9  C45E06            les bx,[bp+0x6]
 000104DC  A0D080            mov al,[0x80d0]
 000104DF  2AE4              sub ah,ah
@@ -25109,17 +24778,17 @@
 000104EA  26894702          mov [es:bx+0x2],ax
 000104EE  5D                pop bp
 000104EF  CA0400            retf 0x4
+
 000104F2  33C0              xor ax,ax
-000104F4  9A1C3E821F        call 0x1f82:0x3e1c
+000104F4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000104F9  A16013            mov ax,[0x1360]
 000104FC  8B166213          mov dx,[0x1362]
 00010500  CB                retf
+
 00010501  33C0              xor ax,ax
-00010503  9A1C3E821F        call 0x1f82:0x3e1c
-00010508  90                nop
+00010503  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010509  0E                push cs
 0001050A  E87D6B            call 0x708a
-0001050D  90                nop
 0001050E  0E                push cs
 0001050F  E8096C            call 0x711b
 00010512  CB                retf
@@ -25127,7 +24796,7 @@
 00010513  55                push bp
 00010514  8BEC              mov bp,sp
 00010516  33C0              xor ax,ax
-00010518  9A1C3E821F        call 0x1f82:0x3e1c
+00010518  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001051D  C45E0A            les bx,[bp+0xa]	; b = b + a
 00010520  8B4608            mov ax,[bp+0x8]	;
 00010523  26014702          add [es:bx+0x2],ax	;
@@ -25146,7 +24815,7 @@
 00010548  55                push bp
 00010549  8BEC              mov bp,sp
 0001054B  B80A00            mov ax,0xa
-0001054E  9A1C3E821F        call 0x1f82:0x3e1c
+0001054E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010553  A064D9            mov al,[0xd964]
 00010556  8846F6            mov [bp-0xa],al
 00010559  A0B2CF            mov al,[0xcfb2]
@@ -25185,10 +24854,11 @@
 000105C2  8BE5              mov sp,bp
 000105C4  5D                pop bp
 000105C5  CA0400            retf 0x4
+
 000105C8  55                push bp
 000105C9  8BEC              mov bp,sp
 000105CB  33C0              xor ax,ax
-000105CD  9A1C3E821F        call 0x1f82:0x3e1c
+000105CD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000105D2  FF7608            push word [bp+0x8]
 000105D5  FF7606            push word [bp+0x6]
 000105D8  B88F09            mov ax,0x98f
@@ -25198,10 +24868,11 @@
 000105E0  E82300            call 0x606
 000105E3  5D                pop bp
 000105E4  CA0400            retf 0x4
+
 000105E7  55                push bp
 000105E8  8BEC              mov bp,sp
 000105EA  33C0              xor ax,ax
-000105EC  9A1C3E821F        call 0x1f82:0x3e1c
+000105EC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000105F1  FF7608            push word [bp+0x8]
 000105F4  FF7606            push word [bp+0x6]
 000105F7  B8D309            mov ax,0x9d3
@@ -25211,10 +24882,11 @@
 000105FF  E80400            call 0x606
 00010602  5D                pop bp
 00010603  CA0400            retf 0x4
+
 00010606  55                push bp
 00010607  8BEC              mov bp,sp
 00010609  B80600            mov ax,0x6
-0001060C  9A1C3E821F        call 0x1f82:0x3e1c
+0001060C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010611  A064D9            mov al,[0xd964]
 00010614  8846FA            mov [bp-0x6],al
 00010617  A0B2CF            mov al,[0xcfb2]
@@ -25238,10 +24910,11 @@
 00010655  8BE5              mov sp,bp
 00010657  5D                pop bp
 00010658  C20800            ret 0x8
+
 0001065B  55                push bp
 0001065C  8BEC              mov bp,sp
 0001065E  B81000            mov ax,0x10
-00010661  9A1C3E821F        call 0x1f82:0x3e1c
+00010661  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010666  8B4608            mov ax,[bp+0x8]
 00010669  0306B8A3          add ax,[0xa3b8]
 0001066D  8946F2            mov [bp-0xe],ax
@@ -25322,7 +24995,7 @@
 00010735  55                push bp
 00010736  8BEC              mov bp,sp
 00010738  33C0              xor ax,ax
-0001073A  9A1C3E821F        call 0x1f82:0x3e1c
+0001073A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001073F  8B4608            mov ax,[bp+0x8]
 00010742  2B06B8A3          sub ax,[0xa3b8]
 00010746  50                push ax
@@ -25333,10 +25006,11 @@
 00010750  E808FF            call 0x65b
 00010753  5D                pop bp
 00010754  CA0400            retf 0x4
+
 00010757  55                push bp
 00010758  8BEC              mov bp,sp
 0001075A  B81400            mov ax,0x14
-0001075D  9A1C3E821F        call 0x1f82:0x3e1c
+0001075D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010762  C45E06            les bx,[bp+0x6]
 00010765  268B4706          mov ax,[es:bx+0x6]
 00010769  262B4702          sub ax,[es:bx+0x2]
@@ -25438,7 +25112,7 @@
 00010870  55                push bp
 00010871  8BEC              mov bp,sp
 00010873  33C0              xor ax,ax
-00010875  9A1C3E821F        call 0x1f82:0x3e1c
+00010875  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001087A  8B4608            mov ax,[bp+0x8]
 0001087D  0306B8A3          add ax,[0xa3b8]
 00010881  50                push ax
@@ -25452,7 +25126,7 @@
 00010892  55                push bp
 00010893  8BEC              mov bp,sp
 00010895  33C0              xor ax,ax
-00010897  9A1C3E821F        call 0x1f82:0x3e1c
+00010897  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001089C  FF7608            push word [bp+0x8]
 0001089F  FF7606            push word [bp+0x6]
 000108A2  FF1EC2A3          call far [0xa3c2]
@@ -25462,7 +25136,7 @@
 000108AA  55                push bp
 000108AB  8BEC              mov bp,sp
 000108AD  33C0              xor ax,ax
-000108AF  9A1C3E821F        call 0x1f82:0x3e1c
+000108AF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000108B4  C45E0A            les bx,[bp+0xa]
 000108B7  8B4608            mov ax,[bp+0x8]
 000108BA  26014702          add [es:bx+0x2],ax
@@ -25477,10 +25151,11 @@
 000108D7  26014704          add [es:bx+0x4],ax
 000108DB  5D                pop bp
 000108DC  CA0800            retf 0x8
+
 000108DF  55                push bp
 000108E0  8BEC              mov bp,sp
 000108E2  33C0              xor ax,ax
-000108E4  9A1C3E821F        call 0x1f82:0x3e1c
+000108E4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000108E9  FF7608            push word [bp+0x8]
 000108EC  FF7606            push word [bp+0x6]
 000108EF  B8AA09            mov ax,0x9aa
@@ -25492,7 +25167,7 @@
 000108FA  55                push bp
 000108FB  8BEC              mov bp,sp
 000108FD  33C0              xor ax,ax
-000108FF  9A1C3E821F        call 0x1f82:0x3e1c
+000108FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010904  EB0F              jmp short 0x915
 00010906  FF760A            push word [bp+0xa]
 00010909  FF7608            push word [bp+0x8]
@@ -25505,10 +25180,11 @@
 0001091D  75E7              jnz 0x906
 0001091F  5D                pop bp
 00010920  C20800            ret 0x8
+
 00010923  55                push bp
 00010924  8BEC              mov bp,sp
 00010926  33C0              xor ax,ax
-00010928  9A1C3E821F        call 0x1f82:0x3e1c
+00010928  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001092D  FF7608            push word [bp+0x8]
 00010930  FF7606            push word [bp+0x6]
 00010933  B8EE09            mov ax,0x9ee
@@ -25516,10 +25192,11 @@
 00010937  E86800            call 0x9a2
 0001093A  5D                pop bp
 0001093B  CA0400            retf 0x4
+
 0001093E  55                push bp
 0001093F  8BEC              mov bp,sp
 00010941  B80A00            mov ax,0xa
-00010944  9A1C3E821F        call 0x1f82:0x3e1c
+00010944  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010949  8B460A            mov ax,[bp+0xa]
 0001094C  8946FA            mov [bp-0x6],ax
 0001094F  8B4608            mov ax,[bp+0x8]
@@ -25554,11 +25231,12 @@
 00010999  E85EFF            call 0x8fa
 0001099C  8BE5              mov sp,bp
 0001099E  5D                pop bp
-0001099F  C20800            ret 0x8
+0001099F  C20800            ret
+ 0x8
 000109A2  55                push bp
 000109A3  8BEC              mov bp,sp
 000109A5  B80400            mov ax,0x4
-000109A8  9A1C3E821F        call 0x1f82:0x3e1c
+000109A8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000109AD  C45E06            les bx,[bp+0x6]
 000109B0  268B4706          mov ax,[es:bx+0x6]
 000109B4  262B4702          sub ax,[es:bx+0x2]
@@ -25603,10 +25281,11 @@
 00010A15  8BE5              mov sp,bp
 00010A17  5D                pop bp
 00010A18  C20600            ret 0x6
+
 00010A1B  55                push bp
 00010A1C  8BEC              mov bp,sp
 00010A1E  33C0              xor ax,ax
-00010A20  9A1C3E821F        call 0x1f82:0x3e1c
+00010A20  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010A25  56                push si
 00010A26  C45E06            les bx,[bp+0x6]
 00010A29  268B07            mov ax,[es:bx]
@@ -25637,21 +25316,24 @@
 00010A74  5E                pop si
 00010A75  5D                pop bp
 00010A76  CA0800            retf 0x8
+
 00010A79  33C0              xor ax,ax
-00010A7B  9A1C3E821F        call 0x1f82:0x3e1c
+00010A7B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010A80  B85813            mov ax,0x1358
 00010A83  1E                push ds
 00010A84  50                push ax
 00010A85  0E                push cs
 00010A86  E87E00            call 0xb07
 00010A89  CB                retf
+
 00010A8A  33C0              xor ax,ax
-00010A8C  9A1C3E821F        call 0x1f82:0x3e1c
+00010A8C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010A91  CB                retf
+
 00010A92  55                push bp
 00010A93  8BEC              mov bp,sp
 00010A95  33C0              xor ax,ax
-00010A97  9A1C3E821F        call 0x1f82:0x3e1c
+00010A97  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010A9C  57                push di
 00010A9D  56                push si
 00010A9E  8B4606            mov ax,[bp+0x6]
@@ -25675,33 +25357,37 @@
 00010AC1  5F                pop di
 00010AC2  5D                pop bp
 00010AC3  CA0400            retf 0x4
+
 00010AC6  55                push bp
 00010AC7  8BEC              mov bp,sp
 00010AC9  33C0              xor ax,ax
-00010ACB  9A1C3E821F        call 0x1f82:0x3e1c
+00010ACB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010AD0  8A4606            mov al,[bp+0x6]
 00010AD3  A2ACCF            mov [0xcfac],al
 00010AD6  FF1E80CF          call far [0xcf80]
 00010ADA  5D                pop bp
 00010ADB  CA0200            retf 0x2
+
 00010ADE  55                push bp
 00010ADF  8BEC              mov bp,sp
 00010AE1  33C0              xor ax,ax
-00010AE3  9A1C3E821F        call 0x1f82:0x3e1c
+00010AE3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010AE8  8A4606            mov al,[bp+0x6]
 00010AEB  A264D9            mov [0xd964],al
 00010AEE  FF1E80CF          call far [0xcf80]
 00010AF2  5D                pop bp
 00010AF3  CA0200            retf 0x2
+
 00010AF6  33C0              xor ax,ax
-00010AF8  9A1C3E821F        call 0x1f82:0x3e1c
+00010AF8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010AFD  C606F5CB01        mov byte [0xcbf5],0x1
 00010B02  FF1E80CF          call far [0xcf80]
 00010B06  CB                retf
+
 00010B07  55                push bp
 00010B08  8BEC              mov bp,sp
 00010B0A  33C0              xor ax,ax
-00010B0C  9A1C3E821F        call 0x1f82:0x3e1c
+00010B0C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010B11  8B4606            mov ax,[bp+0x6]
 00010B14  8B5608            mov dx,[bp+0x8]
 00010B17  A36013            mov [0x1360],ax
@@ -25723,20 +25409,22 @@
 00010B53  FF1E80CF          call far [0xcf80]
 00010B57  5D                pop bp
 00010B58  CA0400            retf 0x4
+
 00010B5B  55                push bp
 00010B5C  8BEC              mov bp,sp
 00010B5E  33C0              xor ax,ax
-00010B60  9A1C3E821F        call 0x1f82:0x3e1c
+00010B60  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010B65  8A4606            mov al,[bp+0x6]
 00010B68  A28677            mov [0x7786],al
 00010B6B  C6065ED900        mov byte [0xd95e],0x0
 00010B70  FF1E80CF          call far [0xcf80]
 00010B74  5D                pop bp
 00010B75  CA0200            retf 0x2
+
 00010B78  55                push bp
 00010B79  8BEC              mov bp,sp
 00010B7B  33C0              xor ax,ax
-00010B7D  9A1C3E821F        call 0x1f82:0x3e1c
+00010B7D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010B82  8A4606            mov al,[bp+0x6]
 00010B85  A2B2CF            mov [0xcfb2],al
 00010B88  C606F5CB00        mov byte [0xcbf5],0x0
@@ -25747,22 +25435,23 @@
 00010B95  55                push bp
 00010B96  8BEC              mov bp,sp
 00010B98  33C0              xor ax,ax
-00010B9A  9A1C3E821F        call 0x1f82:0x3e1c
+00010B9A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010B9F  8A4606            mov al,[bp+0x6]
 00010BA2  A2C8CF            mov [0xcfc8],al
 00010BA5  FF1E80CF          call far [0xcf80]
 00010BA9  5D                pop bp
 00010BAA  CA0200            retf 0x2
+
 00010BAD  33C0              xor ax,ax
-00010BAF  9A1C3E821F        call 0x1f82:0x3e1c
-00010BB4  90                nop
+00010BAF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010BB5  0E                push cs
 00010BB6  E8E064            call 0x7099
 00010BB9  CB                retf
+
 00010BBA  55                push bp
 00010BBB  8BEC              mov bp,sp
 00010BBD  B80A00            mov ax,0xa
-00010BC0  9A1C3E821F        call 0x1f82:0x3e1c
+00010BC0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010BC5  8B4608            mov ax,[bp+0x8]
 00010BC8  8946FA            mov [bp-0x6],ax
 00010BCB  8B4606            mov ax,[bp+0x6]
@@ -25783,7 +25472,6 @@
 00010BF2  8D46F8            lea ax,[bp-0x8]
 00010BF5  16                push ss
 00010BF6  50                push ax
-00010BF7  90                nop
 00010BF8  0E                push cs
 00010BF9  E87A02            call 0xe76
 00010BFC  0BC0              or ax,ax
@@ -25818,10 +25506,11 @@
 00010C3F  8BE5              mov sp,bp
 00010C41  5D                pop bp
 00010C42  CA0800            retf 0x8
+
 00010C45  55                push bp
 00010C46  8BEC              mov bp,sp
 00010C48  B82800            mov ax,0x28
-00010C4B  9A1C3E821F        call 0x1f82:0x3e1c
+00010C4B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010C50  57                push di
 00010C51  56                push si
 00010C52  C746E20000        mov word [bp-0x1e],0x0
@@ -25889,7 +25578,6 @@
 00010D01  9A2857821F        call 0x1f82:0x5728
 00010D06  8946D8            mov [bp-0x28],ax
 00010D09  8956DA            mov [bp-0x26],dx
-00010D0C  90                nop
 00010D0D  0E                push cs
 00010D0E  E8AC64            call 0x71bd
 00010D11  EB69              jmp short 0xd7c
@@ -26006,7 +25694,6 @@
 00010E2A  1156EE            adc [bp-0x12],dx
 00010E2D  837EE000          cmp word [bp-0x20],byte +0x0
 00010E31  7D99              jnl 0xdcc
-00010E33  90                nop
 00010E34  0E                push cs
 00010E35  E8E362            call 0x711b
 00010E38  5E                pop si
@@ -26018,7 +25705,7 @@
 00010E40  55                push bp
 00010E41  8BEC              mov bp,sp
 00010E43  33C0              xor ax,ax
-00010E45  9A1C3E821F        call 0x1f82:0x3e1c
+00010E45  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010E4A  FF760A            push word [bp+0xa]
 00010E4D  FF7606            push word [bp+0x6]
 00010E50  FF1EC2A3          call far [0xa3c2]
@@ -26094,6 +25781,7 @@
 00010EF2  5E                pop si
 00010EF3  5D                pop bp
 00010EF4  CA0800            retf 0x8
+
 00010EF7  2BC0              sub ax,ax
 00010EF9  C57606            lds si,[bp+0x6]
 00010EFC  8904              mov [si],ax
@@ -26147,6 +25835,7 @@
 00010F6A  5E                pop si
 00010F6B  5D                pop bp
 00010F6C  CA0800            retf 0x8
+
 00010F6F  C5760E            lds si,[bp+0xe]
 00010F72  8B04              mov ax,[si]
 00010F74  8B5C04            mov bx,[si+0x4]
@@ -26177,7 +25866,7 @@
 00010FB5  55                push bp
 00010FB6  8BEC              mov bp,sp
 00010FB9  B82600            mov ax,0x26
-00010FBC  9A1C3E821F        call 0x1f82:0x3e1c
+00010FBC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00010FC1  B86865            mov ax,0x6568
 00010FC4  1E                push ds
 00010FC5  50                push ax
@@ -26192,7 +25881,6 @@
 00010FDF  B80865            mov ax,0x6508
 00010FE2  1E                push ds
 00010FE3  50                push ax
-00010FE4  90                nop
 00010FE5  0E                push cs
 00010FE6  E89AF4            call 0x483
 00010FE9  A10865            mov ax,[0x6508]
@@ -26262,10 +25950,11 @@
 000110AA  8BE5              mov sp,bp
 000110AC  5D                pop bp
 000110AD  CB                retf
+
 000110AE  55                push bp
 000110AF  8BEC              mov bp,sp
 000110B1  B80400            mov ax,0x4
-000110B4  9A1C3E821F        call 0x1f82:0x3e1c
+000110B4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000110B9  837E0400          cmp word [bp+0x4],byte +0x0
 000110BD  7434              jz 0x10f3
 000110BF  B8F413            mov ax,0x13f4
@@ -26288,10 +25977,11 @@
 000110F3  8BE5              mov sp,bp
 000110F5  5D                pop bp
 000110F6  C20200            ret 0x2
+
 000110F9  55                push bp
 000110FA  8BEC              mov bp,sp
 000110FC  B84200            mov ax,0x42
-000110FF  9A1C3E821F        call 0x1f82:0x3e1c
+000110FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011104  57                push di
 00011105  56                push si
 00011106  C45E06            les bx,[bp+0x6]
@@ -26306,7 +25996,6 @@
 0001111F  83C404            add sp,byte +0x4
 00011122  0BC0              or ax,ax
 00011124  7408              jz 0x112e
-00011126  90                nop
 00011127  0E                push cs
 00011128  E84B41            call 0x5276
 0001112B  E9C504            jmp 0x15f3
@@ -26354,7 +26043,6 @@
 00011196  50                push ax
 00011197  FF7614            push word [bp+0x14]
 0001119A  FF7612            push word [bp+0x12]
-0001119D  90                nop
 0001119E  0E                push cs
 0001119F  E808F7            call 0x8aa
 000111A2  B88C15            mov ax,0x158c
@@ -26372,7 +26060,6 @@
 000111BE  8B4612            mov ax,[bp+0x12]
 000111C1  F7D8              neg ax
 000111C3  50                push ax
-000111C4  90                nop
 000111C5  0E                push cs
 000111C6  E8E1F6            call 0x8aa
 000111C9  B8AB16            mov ax,0x16ab
@@ -26392,7 +26079,6 @@
 000111EE  83C404            add sp,byte +0x4
 000111F1  0BC0              or ax,ax
 000111F3  7408              jz 0x11fd
-000111F5  90                nop
 000111F6  0E                push cs
 000111F7  E87C40            call 0x5276
 000111FA  E9D903            jmp 0x15d6
@@ -26692,7 +26378,6 @@
 0001152E  8EC2              mov es,dx
 00011530  26C60700          mov byte [es:bx],0x0
 00011534  E9AEFE            jmp 0x13e5
-00011537  90                nop
 00011538  0E                push cs
 00011539  E8BF58            call 0x6dfb
 0001153C  8BF0              mov si,ax
@@ -26761,19 +26446,21 @@
 000115F5  8BE5              mov sp,bp
 000115F7  5D                pop bp
 000115F8  CA1000            retf 0x10
+
 000115FB  55                push bp
 000115FC  8BEC              mov bp,sp
 000115FE  33C0              xor ax,ax
-00011600  9A1C3E821F        call 0x1f82:0x3e1c
+00011600  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011605  FF366065          push word [0x6560]
 00011609  FF365E65          push word [0x655e]
 0001160D  9A6B4B0000        call 0x0:0x4b6b
 00011612  5D                pop bp
 00011613  CA0400            retf 0x4
+
 00011616  55                push bp
 00011617  8BEC              mov bp,sp
 00011619  B84A00            mov ax,0x4a
-0001161C  9A1C3E821F        call 0x1f82:0x3e1c
+0001161C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011621  57                push di
 00011622  56                push si
 00011623  C45E06            les bx,[bp+0x6]
@@ -26788,7 +26475,6 @@
 0001163C  83C404            add sp,byte +0x4
 0001163F  0BC0              or ax,ax
 00011641  7408              jz 0x164b
-00011643  90                nop
 00011644  0E                push cs
 00011645  E82E3C            call 0x5276
 00011648  E9CE06            jmp 0x1d19
@@ -26806,7 +26492,6 @@
 0001166D  50                push ax
 0001166E  FF7612            push word [bp+0x12]
 00011671  FF7610            push word [bp+0x10]
-00011674  90                nop
 00011675  0E                push cs
 00011676  E8581B            call 0x31d1
 00011679  8B1EB865          mov bx,[0x65b8]
@@ -26925,7 +26610,6 @@
 000117AA  50                push ax
 000117AB  FF761A            push word [bp+0x1a]
 000117AE  FF7618            push word [bp+0x18]
-000117B1  90                nop
 000117B2  0E                push cs
 000117B3  E8F4F0            call 0x8aa
 000117B6  B8D616            mov ax,0x16d6
@@ -26943,7 +26627,6 @@
 000117D2  8B4618            mov ax,[bp+0x18]
 000117D5  F7D8              neg ax
 000117D7  50                push ax
-000117D8  90                nop
 000117D9  0E                push cs
 000117DA  E8CDF0            call 0x8aa
 000117DD  B83D1E            mov ax,0x1e3d
@@ -26964,7 +26647,6 @@
 00011807  83C404            add sp,byte +0x4
 0001180A  0BC0              or ax,ax
 0001180C  7408              jz 0x1816
-0001180E  90                nop
 0001180F  0E                push cs
 00011810  E8633A            call 0x5276
 00011813  E9E104            jmp 0x1cf7
@@ -27149,7 +26831,6 @@
 000119FF  50                push ax
 00011A00  FF761A            push word [bp+0x1a]
 00011A03  FF7618            push word [bp+0x18]
-00011A06  90                nop
 00011A07  0E                push cs
 00011A08  E89FEE            call 0x8aa
 00011A0B  B88417            mov ax,0x1784
@@ -27170,7 +26851,6 @@
 00011A2C  8B4618            mov ax,[bp+0x18]
 00011A2F  F7D8              neg ax
 00011A31  50                push ax
-00011A32  90                nop
 00011A33  0E                push cs
 00011A34  E873EE            call 0x8aa
 00011A37  837EE802          cmp word [bp-0x18],byte +0x2
@@ -27373,7 +27053,6 @@
 00011C50  8EC2              mov es,dx
 00011C52  26C60700          mov byte [es:bx],0x0
 00011C56  EB88              jmp short 0x1be0
-00011C58  90                nop
 00011C59  0E                push cs
 00011C5A  E89E51            call 0x6dfb
 00011C5D  8BF0              mov si,ax
@@ -27425,20 +27104,22 @@
 00011D1B  8BE5              mov sp,bp
 00011D1D  5D                pop bp
 00011D1E  CA1600            retf 0x16
+
 00011D21  55                push bp
 00011D22  8BEC              mov bp,sp
 00011D24  33C0              xor ax,ax
-00011D26  9A1C3E821F        call 0x1f82:0x3e1c
+00011D26  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011D2B  8B4606            mov ax,[bp+0x6]
 00011D2E  8B5608            mov dx,[bp+0x8]
 00011D31  A31089            mov [0x8910],ax
 00011D34  89161289          mov [0x8912],dx
 00011D38  5D                pop bp
 00011D39  CA0400            retf 0x4
+
 00011D3C  55                push bp
 00011D3D  8BEC              mov bp,sp
 00011D3F  B80400            mov ax,0x4
-00011D42  9A1C3E821F        call 0x1f82:0x3e1c
+00011D42  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011D47  833EB46502        cmp word [0x65b4],byte +0x2
 00011D4C  753B              jnz 0x1d89
 00011D4E  FF366465          push word [0x6564]
@@ -27467,10 +27148,11 @@
 00011D89  8BE5              mov sp,bp
 00011D8B  5D                pop bp
 00011D8C  C3                ret
+
 00011D8D  55                push bp
 00011D8E  8BEC              mov bp,sp
 00011D90  33C0              xor ax,ax
-00011D92  9A1C3E821F        call 0x1f82:0x3e1c
+00011D92  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011D97  FF366465          push word [0x6564]
 00011D9B  FF366265          push word [0x6562]
 00011D9F  9A6B4B0000        call 0x0:0x4b6b
@@ -27480,7 +27162,7 @@
 00011DA8  55                push bp
 00011DA9  8BEC              mov bp,sp
 00011DAB  B80200            mov ax,0x2
-00011DAE  9A1C3E821F        call 0x1f82:0x3e1c
+00011DAE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011DB3  C70668D90100      mov word [0xd968],0x1
 00011DB9  C7067ECF0000      mov word [0xcf7e],0x0
 00011DBF  8B4608            mov ax,[bp+0x8]
@@ -27538,10 +27220,11 @@
 00011E55  8BE5              mov sp,bp
 00011E57  5D                pop bp
 00011E58  C20600            ret 0x6
+
 00011E5B  55                push bp
 00011E5C  8BEC              mov bp,sp
 00011E5E  33C0              xor ax,ax
-00011E60  9A1C3E821F        call 0x1f82:0x3e1c
+00011E60  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011E65  A15665            mov ax,[0x6556]
 00011E68  0B065865          or ax,[0x6558]
 00011E6C  7415              jz 0x1e83
@@ -27557,10 +27240,11 @@
 00011E8E  C706C0800000      mov word [0x80c0],0x0
 00011E94  5D                pop bp
 00011E95  C20400            ret 0x4
+
 00011E98  55                push bp
 00011E99  8BEC              mov bp,sp
 00011E9B  B80400            mov ax,0x4
-00011E9E  9A1C3E821F        call 0x1f82:0x3e1c
+00011E9E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011EA3  FF7606            push word [bp+0x6]
 00011EA6  FF7604            push word [bp+0x4]
 00011EA9  B80A00            mov ax,0xa
@@ -27637,10 +27321,11 @@
 00011F71  8BE5              mov sp,bp
 00011F73  5D                pop bp
 00011F74  C20400            ret 0x4
+
 00011F77  55                push bp
 00011F78  8BEC              mov bp,sp
 00011F7A  B81800            mov ax,0x18
-00011F7D  9A1C3E821F        call 0x1f82:0x3e1c
+00011F7D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00011F82  57                push di
 00011F83  56                push si
 00011F84  C45E0C            les bx,[bp+0xc]
@@ -27694,7 +27379,6 @@
 0001200C  50                push ax
 0001200D  FF76E8            push word [bp-0x18]
 00012010  FF76EA            push word [bp-0x16]
-00012013  90                nop
 00012014  0E                push cs
 00012015  E892E8            call 0x8aa
 00012018  C45EFC            les bx,[bp-0x4]
@@ -27713,7 +27397,6 @@
 00012040  E93501            jmp 0x2178
 00012043  2BC0              sub ax,ax
 00012045  50                push ax
-00012046  90                nop
 00012047  0E                push cs
 00012048  E893EA            call 0xade
 0001204B  C606C68002        mov byte [0x80c6],0x2
@@ -27723,7 +27406,6 @@
 0001205B  050800            add ax,0x8
 0001205E  52                push dx
 0001205F  50                push ax
-00012060  90                nop
 00012061  0E                push cs
 00012062  E89913            call 0x33fe
 00012065  C45EFC            les bx,[bp-0x4]
@@ -27758,7 +27440,6 @@
 000120B5  8D46EC            lea ax,[bp-0x14]
 000120B8  16                push ss
 000120B9  50                push ax
-000120BA  90                nop
 000120BB  0E                push cs
 000120BC  E809E5            call 0x5c8
 000120BF  A1BA65            mov ax,[0x65ba]
@@ -27777,20 +27458,17 @@
 000120E7  050400            add ax,0x4
 000120EA  50                push ax
 000120EB  FF76F6            push word [bp-0xa]
-000120EE  90                nop
 000120EF  0E                push cs
 000120F0  E89FE7            call 0x892
 000120F3  8D46EC            lea ax,[bp-0x14]
 000120F6  16                push ss
 000120F7  50                push ax
-000120F8  90                nop
 000120F9  0E                push cs
 000120FA  E8D712            call 0x33d4
 000120FD  8B46EE            mov ax,[bp-0x12]
 00012100  050400            add ax,0x4
 00012103  50                push ax
 00012104  FF76F6            push word [bp-0xa]
-00012107  90                nop
 00012108  0E                push cs
 00012109  E886E7            call 0x892
 0001210C  FF76F4            push word [bp-0xc]
@@ -27810,14 +27488,12 @@
 00012137  8D46EC            lea ax,[bp-0x14]
 0001213A  16                push ss
 0001213B  50                push ax
-0001213C  90                nop
 0001213D  0E                push cs
 0001213E  E8E612            call 0x3427
 00012141  E97BFF            jmp 0x20bf
 00012144  8D46EC            lea ax,[bp-0x14]
 00012147  16                push ss
 00012148  50                push ax
-00012149  90                nop
 0001214A  0E                push cs
 0001214B  E88612            call 0x33d4
 0001214E  A1BA65            mov ax,[0x65ba]
@@ -27865,7 +27541,6 @@
 000121C7  8D46EC            lea ax,[bp-0x14]
 000121CA  16                push ss
 000121CB  50                push ax
-000121CC  90                nop
 000121CD  0E                push cs
 000121CE  E80312            call 0x33d4
 000121D1  8B46EE            mov ax,[bp-0x12]
@@ -27874,7 +27549,6 @@
 000121D8  8B46EC            mov ax,[bp-0x14]
 000121DB  03060865          add ax,[0x6508]
 000121DF  50                push ax
-000121E0  90                nop
 000121E1  0E                push cs
 000121E2  E8ADE6            call 0x892
 000121E5  FF76F4            push word [bp-0xc]
@@ -27888,7 +27562,6 @@
 000121FD  8D46EC            lea ax,[bp-0x14]
 00012200  16                push ss
 00012201  50                push ax
-00012202  90                nop
 00012203  0E                push cs
 00012204  E82012            call 0x3427
 00012207  EB16              jmp short 0x221f
@@ -27899,7 +27572,6 @@
 00012215  8D46EC            lea ax,[bp-0x14]
 00012218  16                push ss
 00012219  50                push ax
-0001221A  90                nop
 0001221B  0E                push cs
 0001221C  E8A9E3            call 0x5c8
 0001221F  8B46FC            mov ax,[bp-0x4]
@@ -27913,7 +27585,6 @@
 00012230  8B46EA            mov ax,[bp-0x16]
 00012233  F7D8              neg ax
 00012235  50                push ax
-00012236  90                nop
 00012237  0E                push cs
 00012238  E86FE6            call 0x8aa
 0001223B  2BC0              sub ax,ax
@@ -27931,7 +27602,6 @@
 00012257  050800            add ax,0x8
 0001225A  52                push dx
 0001225B  50                push ax
-0001225C  90                nop
 0001225D  0E                push cs
 0001225E  E8BAE7            call 0xa1b
 00012261  0BC0              or ax,ax
@@ -27963,10 +27633,11 @@
 000122AA  8BE5              mov sp,bp
 000122AC  5D                pop bp
 000122AD  CB                retf
+
 000122AE  55                push bp
 000122AF  8BEC              mov bp,sp
 000122B1  B81C00            mov ax,0x1c
-000122B4  9A1C3E821F        call 0x1f82:0x3e1c
+000122B4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000122B9  57                push di
 000122BA  56                push si
 000122BB  B80F00            mov ax,0xf
@@ -28051,7 +27722,6 @@
 ; CX is set to the position of a null byte inside string at ES:DI.
 0001238A  49                dec cx
 0001238B  51                push cx
-0001238C  90                nop
 0001238D  0E                push cs
 0001238E  E8E9DD            call 0x17a
 00012391  5E                pop si
@@ -28059,10 +27729,11 @@
 00012393  8BE5              mov sp,bp
 00012395  5D                pop bp
 00012396  C20200            ret 0x2
+
 00012399  55                push bp
 0001239A  8BEC              mov bp,sp
 0001239C  B80200            mov ax,0x2
-0001239F  9A1C3E821F        call 0x1f82:0x3e1c
+0001239F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000123A4  8B4606            mov ax,[bp+0x6]
 000123A7  2D0100            sub ax,0x1
 000123AA  3D0700            cmp ax,0x7
@@ -28139,10 +27810,11 @@
 00012478  258B46            and ax,0x468b
 0001247B  FE8BE55D          dec byte [bp+di+0x5de5]
 0001247F  CB                retf
+
 00012480  55                push bp
 00012481  8BEC              mov bp,sp
 00012483  B80C00            mov ax,0xc
-00012486  9A1C3E821F        call 0x1f82:0x3e1c
+00012486  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001248B  FF7608            push word [bp+0x8]
 0001248E  FF7606            push word [bp+0x6]
 00012491  8D46F4            lea ax,[bp-0xc]
@@ -28173,7 +27845,6 @@
 000124D5  50                push ax
 000124D6  FF76F4            push word [bp-0xc]
 000124D9  FF76F6            push word [bp-0xa]
-000124DC  90                nop
 000124DD  0E                push cs
 000124DE  E8C9E3            call 0x8aa
 000124E1  8B46FC            mov ax,[bp-0x4]
@@ -28181,7 +27852,6 @@
 000124E7  050800            add ax,0x8
 000124EA  52                push dx
 000124EB  50                push ax
-000124EC  90                nop
 000124ED  0E                push cs
 000124EE  E8E30E            call 0x33d4
 000124F1  C606C68002        mov byte [0x80c6],0x2
@@ -28191,7 +27861,6 @@
 00012501  050800            add ax,0x8
 00012504  52                push dx
 00012505  50                push ax
-00012506  90                nop
 00012507  0E                push cs
 00012508  E8F30E            call 0x33fe
 0001250B  8B46FC            mov ax,[bp-0x4]
@@ -28205,7 +27874,6 @@
 0001251C  8B46F6            mov ax,[bp-0xa]
 0001251F  F7D8              neg ax
 00012521  50                push ax
-00012522  90                nop
 00012523  0E                push cs
 00012524  E883E3            call 0x8aa
 00012527  FF76FA            push word [bp-0x6]
@@ -28214,10 +27882,11 @@
 00012532  8BE5              mov sp,bp
 00012534  5D                pop bp
 00012535  CB                retf
+
 00012536  55                push bp
 00012537  8BEC              mov bp,sp
 00012539  B80E00            mov ax,0xe
-0001253C  9A1C3E821F        call 0x1f82:0x3e1c
+0001253C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012541  57                push di
 00012542  C45E0C            les bx,[bp+0xc]
 00012545  268B07            mov ax,[es:bx]
@@ -28299,7 +27968,6 @@
 00012612  50                push ax
 00012613  FF76F2            push word [bp-0xe]
 00012616  FF76F4            push word [bp-0xc]
-00012619  90                nop
 0001261A  0E                push cs
 0001261B  E88CE2            call 0x8aa
 0001261E  833EB46501        cmp word [0x65b4],byte +0x1
@@ -28313,7 +27981,6 @@
 00012633  C706B4650000      mov word [0x65b4],0x0
 00012639  2BC0              sub ax,ax
 0001263B  50                push ax
-0001263C  90                nop
 0001263D  0E                push cs
 0001263E  E89DE4            call 0xade
 00012641  8B4608            mov ax,[bp+0x8]
@@ -28324,7 +27991,6 @@
 0001264F  050800            add ax,0x8
 00012652  52                push dx
 00012653  50                push ax
-00012654  90                nop
 00012655  0E                push cs
 00012656  E87B0D            call 0x33d4
 00012659  C45EFC            les bx,[bp-0x4]
@@ -28350,7 +28016,6 @@
 00012694  050800            add ax,0x8
 00012697  52                push dx
 00012698  50                push ax
-00012699  90                nop
 0001269A  0E                push cs
 0001269B  E8360D            call 0x33d4
 0001269E  C45EFC            les bx,[bp-0x4]
@@ -28364,7 +28029,6 @@
 000126B7  B80865            mov ax,0x6508
 000126BA  1E                push ds
 000126BB  50                push ax
-000126BC  90                nop
 000126BD  0E                push cs
 000126BE  E8C2DD            call 0x483
 000126C1  8B46F6            mov ax,[bp-0xa]
@@ -28373,7 +28037,6 @@
 000126C8  8946FA            mov [bp-0x6],ax
 000126CB  2BC0              sub ax,ax
 000126CD  50                push ax
-000126CE  90                nop
 000126CF  0E                push cs
 000126D0  E8A5E4            call 0xb78
 000126D3  C45EFC            les bx,[bp-0x4]
@@ -28391,7 +28054,6 @@
 000126F4  8B46F8            mov ax,[bp-0x8]
 000126F7  2B46F6            sub ax,[bp-0xa]
 000126FA  50                push ax
-000126FB  90                nop
 000126FC  0E                push cs
 000126FD  E8370E            call 0x3537
 00012700  8B46F8            mov ax,[bp-0x8]
@@ -28407,7 +28069,6 @@
 0001271E  050800            add ax,0x8
 00012721  52                push dx
 00012722  50                push ax
-00012723  90                nop
 00012724  0E                push cs
 00012725  E8FF0C            call 0x3427
 00012728  EB15              jmp short 0x273f
@@ -28430,7 +28091,6 @@
 00012750  8B46F4            mov ax,[bp-0xc]
 00012753  F7D8              neg ax
 00012755  50                push ax
-00012756  90                nop
 00012757  0E                push cs
 00012758  E84FE1            call 0x8aa
 0001275B  E964FE            jmp 0x25c2
@@ -28438,25 +28098,26 @@
 0001275F  8BE5              mov sp,bp
 00012761  5D                pop bp
 00012762  CB                retf
+
 00012763  55                push bp
 00012764  8BEC              mov bp,sp
 00012766  33C0              xor ax,ax
-00012768  9A1C3E821F        call 0x1f82:0x3e1c
+00012768  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001276D  C45E04            les bx,[bp+0x4]
 00012770  26836F0602        sub word [es:bx+0x6],byte +0x2
 00012775  FF7606            push word [bp+0x6]
 00012778  FF7604            push word [bp+0x4]
-0001277B  90                nop
 0001277C  0E                push cs
 0001277D  E848DE            call 0x5c8
 00012780  C45E04            les bx,[bp+0x4]
 00012783  2683470602        add word [es:bx+0x6],byte +0x2
 00012788  5D                pop bp
 00012789  C20400            ret 0x4
+
 0001278C  55                push bp
 0001278D  8BEC              mov bp,sp
 0001278F  B80400            mov ax,0x4
-00012792  9A1C3E821F        call 0x1f82:0x3e1c
+00012792  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012797  56                push si
 00012798  FF366C65          push word [0x656c]
 0001279C  FF36B065          push word [0x65b0]
@@ -28567,10 +28228,11 @@
 000128DC  8BE5              mov sp,bp
 000128DE  5D                pop bp
 000128DF  CB                retf
+
 000128E0  55                push bp
 000128E1  8BEC              mov bp,sp
 000128E3  33C0              xor ax,ax
-000128E5  9A1C3E821F        call 0x1f82:0x3e1c
+000128E5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000128EA  C45E06            les bx,[bp+0x6]
 000128ED  26F60740          test byte [es:bx],0x40
 000128F1  7410              jz 0x2903
@@ -28583,10 +28245,11 @@
 00012903  B80100            mov ax,0x1
 00012906  5D                pop bp
 00012907  CA0400            retf 0x4
+
 0001290A  55                push bp
 0001290B  8BEC              mov bp,sp
 0001290D  33C0              xor ax,ax
-0001290F  9A1C3E821F        call 0x1f82:0x3e1c
+0001290F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012914  57                push di
 00012915  56                push si
 00012916  BF6E65            mov di,0x656e
@@ -28610,10 +28273,11 @@
 0001293E  5F                pop di
 0001293F  5D                pop bp
 00012940  CA0400            retf 0x4
+
 00012943  55                push bp
 00012944  8BEC              mov bp,sp
 00012946  B80400            mov ax,0x4
-00012949  9A1C3E821F        call 0x1f82:0x3e1c
+00012949  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001294E  57                push di
 0001294F  56                push si
 00012950  BE6E65            mov si,0x656e
@@ -28651,10 +28315,11 @@
 000129A3  8BE5              mov sp,bp
 000129A5  5D                pop bp
 000129A6  CA0400            retf 0x4
+
 000129A9  55                push bp
 000129AA  8BEC              mov bp,sp
 000129AC  B83600            mov ax,0x36
-000129AF  9A1C3E821F        call 0x1f82:0x3e1c
+000129AF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000129B4  57                push di
 000129B5  56                push si
 000129B6  C706AE650000      mov word [0x65ae],0x0
@@ -28841,10 +28506,11 @@
 00012BDA  8BE5              mov sp,bp
 00012BDC  5D                pop bp
 00012BDD  C20A00            ret 0xa
+
 00012BE0  55                push bp
 00012BE1  8BEC              mov bp,sp
 00012BE3  B80A00            mov ax,0xa
-00012BE6  9A1C3E821F        call 0x1f82:0x3e1c
+00012BE6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012BEB  57                push di
 00012BEC  56                push si
 00012BED  C45E06            les bx,[bp+0x6]
@@ -28885,10 +28551,11 @@
 00012C44  8BE5              mov sp,bp
 00012C46  5D                pop bp
 00012C47  CB                retf
+
 00012C48  55                push bp
 00012C49  8BEC              mov bp,sp
 00012C4B  B80A00            mov ax,0xa
-00012C4E  9A1C3E821F        call 0x1f82:0x3e1c
+00012C4E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012C53  57                push di
 00012C54  56                push si
 00012C55  C45E06            les bx,[bp+0x6]
@@ -28927,10 +28594,11 @@
 00012CA8  8BE5              mov sp,bp
 00012CAA  5D                pop bp
 00012CAB  CB                retf
+
 00012CAC  55                push bp
 00012CAD  8BEC              mov bp,sp
 00012CAF  B85200            mov ax,0x52
-00012CB2  9A1C3E821F        call 0x1f82:0x3e1c
+00012CB2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012CB7  57                push di
 00012CB8  56                push si
 00012CB9  8D76C0            lea si,[bp-0x40]
@@ -29032,10 +28700,11 @@
 00012DB0  8BE5              mov sp,bp
 00012DB2  5D                pop bp
 00012DB3  C20C00            ret 0xc
+
 00012DB6  55                push bp
 00012DB7  8BEC              mov bp,sp
 00012DB9  B84C00            mov ax,0x4c
-00012DBC  9A1C3E821F        call 0x1f82:0x3e1c
+00012DBC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012DC1  57                push di
 00012DC2  56                push si
 00012DC3  8D76C0            lea si,[bp-0x40]
@@ -29114,10 +28783,11 @@
 00012E6F  8BE5              mov sp,bp
 00012E71  5D                pop bp
 00012E72  C20800            ret 0x8
+
 00012E75  55                push bp
 00012E76  8BEC              mov bp,sp
 00012E78  B82800            mov ax,0x28
-00012E7B  9A1C3E821F        call 0x1f82:0x3e1c
+00012E7B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012E80  57                push di
 00012E81  56                push si
 00012E82  C70668D90100      mov word [0xd968],0x1
@@ -29179,10 +28849,11 @@
 00012F13  8BE5              mov sp,bp
 00012F15  5D                pop bp
 00012F16  CA0400            retf 0x4
+
 00012F19  55                push bp
 00012F1A  8BEC              mov bp,sp
 00012F1C  B84C00            mov ax,0x4c
-00012F1F  9A1C3E821F        call 0x1f82:0x3e1c
+00012F1F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012F24  57                push di
 00012F25  56                push si
 00012F26  8D76C0            lea si,[bp-0x40]
@@ -29261,10 +28932,11 @@
 00012FCE  8BE5              mov sp,bp
 00012FD0  5D                pop bp
 00012FD1  C20800            ret 0x8
+
 00012FD4  55                push bp
 00012FD5  8BEC              mov bp,sp
 00012FD7  B80A00            mov ax,0xa
-00012FDA  9A1C3E821F        call 0x1f82:0x3e1c
+00012FDA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00012FDF  57                push di
 00012FE0  56                push si
 00012FE1  BFC064            mov di,0x64c0
@@ -29292,7 +28964,6 @@
 00013022  B8C064            mov ax,0x64c0
 00013025  1E                push ds
 00013026  50                push ax
-00013027  90                nop
 00013028  0E                push cs
 00013029  E8E8D0            call 0x114
 0001302C  3DFA00            cmp ax,0xfa
@@ -29301,7 +28972,6 @@
 00013034  B8D217            mov ax,0x17d2
 00013037  1E                push ds
 00013038  50                push ax
-00013039  90                nop
 0001303A  0E                push cs
 0001303B  E8D6D0            call 0x114
 0001303E  2DFA00            sub ax,0xfa
@@ -29314,7 +28984,6 @@
 00013051  FF46FC            inc word [bp-0x4]
 00013054  FF76FE            push word [bp-0x2]
 00013057  FF76FC            push word [bp-0x4]
-0001305A  90                nop
 0001305B  0E                push cs
 0001305C  E8B5D0            call 0x114
 0001305F  3B46FA            cmp ax,[bp-0x6]
@@ -29372,10 +29041,11 @@
 000130E2  8BE5              mov sp,bp
 000130E4  5D                pop bp
 000130E5  C3                ret
+
 000130E6  55                push bp
 000130E7  8BEC              mov bp,sp
 000130E9  B80200            mov ax,0x2
-000130EC  9A1C3E821F        call 0x1f82:0x3e1c
+000130EC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000130F1  C45E0A            les bx,[bp+0xa]
 000130F4  268B07            mov ax,[es:bx]
 000130F7  8946FE            mov [bp-0x2],ax
@@ -29389,10 +29059,11 @@
 0001310F  8BE5              mov sp,bp
 00013111  5D                pop bp
 00013112  CA0800            retf 0x8
+
 00013115  55                push bp
 00013116  8BEC              mov bp,sp
 00013118  33C0              xor ax,ax
-0001311A  9A1C3E821F        call 0x1f82:0x3e1c
+0001311A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001311F  C45E06            les bx,[bp+0x6]
 00013122  268A07            mov al,[es:bx]
 00013125  98                cbw
@@ -29418,10 +29089,11 @@
 00013158  83C404            add sp,byte +0x4
 0001315B  5D                pop bp
 0001315C  CA0400            retf 0x4
+
 0001315F  55                push bp
 00013160  8BEC              mov bp,sp
 00013162  B80800            mov ax,0x8
-00013165  9A1C3E821F        call 0x1f82:0x3e1c
+00013165  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001316A  B85C00            mov ax,0x5c
 0001316D  50                push ax
 0001316E  FF760C            push word [bp+0xc]
@@ -29462,7 +29134,7 @@
 000131D1  55                push bp
 000131D2  8BEC              mov bp,sp
 000131D4  B80800            mov ax,0x8
-000131D7  9A1C3E821F        call 0x1f82:0x3e1c
+000131D7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000131DC  B82F00            mov ax,0x2f
 000131DF  50                push ax
 000131E0  FF7608            push word [bp+0x8]
@@ -29515,54 +29187,48 @@
 00013269  CA0800            retf 0x8
 
 0001326C  33C0              xor ax,ax
-0001326E  9A1C3E821F        call 0x1f82:0x3e1c
+0001326E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013273  C706BE650000      mov word [0x65be],0x0
 00013279  C706BC650000      mov word [0x65bc],0x0
-0001327F  90                nop
 00013280  0E                push cs
 00013281  E87DD2            call 0x501
 00013284  CB                retf
 
 00013285  33C0              xor ax,ax
-00013287  9A1C3E821F        call 0x1f82:0x3e1c
+00013287  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001328C  C706BC650000      mov word [0x65bc],0x0
 00013292  833EBE6500        cmp word [0x65be],byte +0x0
 00013297  7C05              jl 0x329e
-00013299  90                nop
 0001329A  0E                push cs
 0001329B  E863D2            call 0x501
 0001329E  CB                retf
 
 0001329F  33C0              xor ax,ax
-000132A1  9A1C3E821F        call 0x1f82:0x3e1c
+000132A1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000132A6  C706BC650100      mov word [0x65bc],0x1
-000132AC  90                nop
 000132AD  0E                push cs
 000132AE  E8FCD8            call 0xbad
 000132B1  CB                retf
 
 000132B2  33C0              xor ax,ax
-000132B4  9A1C3E821F        call 0x1f82:0x3e1c
+000132B4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000132B9  FF06BE65          inc word [0x65be]
 000132BD  7513              jnz 0x32d2
 000132BF  833EBC6500        cmp word [0x65bc],byte +0x0
 000132C4  7507              jnz 0x32cd
-000132C6  90                nop
 000132C7  0E                push cs
 000132C8  E836D2            call 0x501
 000132CB  EB05              jmp short 0x32d2
-000132CD  90                nop
 000132CE  0E                push cs
 000132CF  E8493E            call 0x711b
 000132D2  CB                retf
 
 000132D3  33C0              xor ax,ax
-000132D5  9A1C3E821F        call 0x1f82:0x3e1c
+000132D5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000132DA  A1BE65            mov ax,[0x65be]
 000132DD  FF0EBE65          dec word [0x65be]
 000132E1  0BC0              or ax,ax
 000132E3  7505              jnz 0x32ea
-000132E5  90                nop
 000132E6  0E                push cs
 000132E7  E8D33E            call 0x71bd
 000132EA  CB                retf
@@ -29570,7 +29236,7 @@
 000132EB  55                push bp
 000132EC  8BEC              mov bp,sp
 000132EE  33C0              xor ax,ax
-000132F0  9A1C3E821F        call 0x1f82:0x3e1c
+000132F0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000132F5  56                push si
 000132F6  A1D617            mov ax,[0x17d6]
 000132F9  394606            cmp [bp+0x6],ax
@@ -29605,7 +29271,7 @@
 00013345  55                push bp
 00013346  8BEC              mov bp,sp
 00013348  B80800            mov ax,0x8
-0001334B  9A1C3E821F        call 0x1f82:0x3e1c
+0001334B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013350  FF760C            push word [bp+0xc]
 00013353  9AB646821F        call 0x1f82:0x46b6
 00013358  83C402            add sp,byte +0x2
@@ -29655,70 +29321,64 @@
 000133CE  8BE5              mov sp,bp
 000133D0  5D                pop bp
 000133D1  CA0800            retf 0x8
+
 000133D4  55                push bp
 000133D5  8BEC              mov bp,sp
 000133D7  33C0              xor ax,ax
-000133D9  9A1C3E821F        call 0x1f82:0x3e1c
+000133D9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000133DE  2BC0              sub ax,ax
 000133E0  50                push ax
-000133E1  90                nop
 000133E2  0E                push cs
 000133E3  E8F8D6            call 0xade
 000133E6  B80F00            mov ax,0xf
 000133E9  50                push ax
-000133EA  90                nop
 000133EB  0E                push cs
 000133EC  E889D7            call 0xb78
 000133EF  FF7608            push word [bp+0x8]
 000133F2  FF7606            push word [bp+0x6]
-000133F5  90                nop
 000133F6  0E                push cs
 000133F7  E8E5D4            call 0x8df
 000133FA  5D                pop bp
 000133FB  CA0400            retf 0x4
+
 000133FE  55                push bp
 000133FF  8BEC              mov bp,sp
 00013401  33C0              xor ax,ax
-00013403  9A1C3E821F        call 0x1f82:0x3e1c
+00013403  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013408  2BC0              sub ax,ax
 0001340A  50                push ax
-0001340B  90                nop
 0001340C  0E                push cs
 0001340D  E8CED6            call 0xade
 00013410  2BC0              sub ax,ax
 00013412  50                push ax
-00013413  90                nop
 00013414  0E                push cs
 00013415  E860D7            call 0xb78
 00013418  FF7608            push word [bp+0x8]
 0001341B  FF7606            push word [bp+0x6]
-0001341E  90                nop
 0001341F  0E                push cs
 00013420  E8ABCD            call 0x1ce
 00013423  5D                pop bp
 00013424  CA0400            retf 0x4
+
 00013427  55                push bp
 00013428  8BEC              mov bp,sp
 0001342A  33C0              xor ax,ax
-0001342C  9A1C3E821F        call 0x1f82:0x3e1c
+0001342C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013431  B80300            mov ax,0x3
 00013434  50                push ax
-00013435  90                nop
 00013436  0E                push cs
 00013437  E8A4D6            call 0xade
-0001343A  90                nop
 0001343B  0E                push cs
 0001343C  E8B7D6            call 0xaf6
 0001343F  FF7608            push word [bp+0x8]
 00013442  FF7606            push word [bp+0x6]
-00013445  90                nop
 00013446  0E                push cs
 00013447  E895D4            call 0x8df
 0001344A  5D                pop bp
 0001344B  CA0400            retf 0x4
 
 0001344E  33C0              xor ax,ax
-00013450  9A1C3E821F        call 0x1f82:0x3e1c
+00013450  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013455  0E                push cs
 00013456  E846FE            call 0x329f
 00013459  0E                push cs
@@ -29726,7 +29386,7 @@
 0001345D  CB                retf
 
 0001345E  33C0              xor ax,ax
-00013460  9A1C3E821F        call 0x1f82:0x3e1c
+00013460  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013465  0E                push cs
 00013466  E81CFE            call 0x3285
 00013469  0E                push cs
@@ -29734,7 +29394,7 @@
 0001346D  CB                retf
 
 0001346E  33C0              xor ax,ax
-00013470  9A1C3E821F        call 0x1f82:0x3e1c
+00013470  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013475  0E                push cs
 00013476  E8E5FF            call 0x345e
 00013479  0E                push cs
@@ -29742,7 +29402,7 @@
 0001347D  CB                retf
 
 0001347E  33C0              xor ax,ax
-00013480  9A1C3E821F        call 0x1f82:0x3e1c
+00013480  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013485  0E                push cs
 00013486  E84AFE            call 0x32d3
 00013489  0E                push cs
@@ -29750,7 +29410,7 @@
 0001348D  CB                retf
 
 0001348E  33C0              xor ax,ax
-00013490  9A1C3E821F        call 0x1f82:0x3e1c
+00013490  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013495  0E                push cs
 00013496  E83AFE            call 0x32d3
 00013499  0E                push cs
@@ -29758,7 +29418,7 @@
 0001349D  CB                retf
 
 0001349E  33C0              xor ax,ax
-000134A0  9A1C3E821F        call 0x1f82:0x3e1c
+000134A0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000134A5  0E                push cs
 000134A6  E809FE            call 0x32b2
 000134A9  0E                push cs
@@ -29766,7 +29426,7 @@
 000134AD  CB                retf
 
 000134AE  33C0              xor ax,ax
-000134B0  9A1C3E821F        call 0x1f82:0x3e1c
+000134B0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000134B5  0E                push cs
 000134B6  E81AFE            call 0x32d3
 000134B9  0E                push cs
@@ -29774,15 +29434,13 @@
 000134BD  CB                retf
 
 000134BE  33C0              xor ax,ax
-000134C0  9A1C3E821F        call 0x1f82:0x3e1c
+000134C0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000134C5  2BC0              sub ax,ax
 000134C7  50                push ax
-000134C8  90                nop
 000134C9  0E                push cs
 000134CA  E8F9D5            call 0xac6
 000134CD  B80400            mov ax,0x4
 000134D0  50                push ax
-000134D1  90                nop
 000134D2  0E                push cs
 000134D3  E8BFD6            call 0xb95
 000134D6  CB                retf
@@ -29790,15 +29448,13 @@
 000134D7  55                push bp
 000134D8  8BEC              mov bp,sp
 000134DA  33C0              xor ax,ax
-000134DC  9A1C3E821F        call 0x1f82:0x3e1c
+000134DC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000134E1  FF760C            push word [bp+0xc]
 000134E4  FF760A            push word [bp+0xa]
-000134E7  90                nop
 000134E8  0E                push cs
 000134E9  E8A6D3            call 0x892
 000134EC  FF7608            push word [bp+0x8]
 000134EF  FF7606            push word [bp+0x6]
-000134F2  90                nop
 000134F3  0E                push cs
 000134F4  E83ED2            call 0x735
 000134F7  5D                pop bp
@@ -29807,7 +29463,7 @@
 000134FB  55                push bp
 000134FC  8BEC              mov bp,sp
 000134FE  33C0              xor ax,ax
-00013500  9A1C3E821F        call 0x1f82:0x3e1c
+00013500  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013505  FF760A            push word [bp+0xa]
 00013508  FF7606            push word [bp+0x6]
 0001350B  FF7608            push word [bp+0x8]
@@ -29820,7 +29476,7 @@
 00013519  55                push bp
 0001351A  8BEC              mov bp,sp
 0001351C  33C0              xor ax,ax
-0001351E  9A1C3E821F        call 0x1f82:0x3e1c
+0001351E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013523  FF760A            push word [bp+0xa]
 00013526  FF7608            push word [bp+0x8]
 00013529  FF760A            push word [bp+0xa]
@@ -29833,16 +29489,14 @@
 00013537  55                push bp
 00013538  8BEC              mov bp,sp
 0001353A  33C0              xor ax,ax
-0001353C  9A1C3E821F        call 0x1f82:0x3e1c
+0001353C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013541  FF760E            push word [bp+0xe]
 00013544  FF760C            push word [bp+0xc]
-00013547  90                nop
 00013548  0E                push cs
 00013549  E846D3            call 0x892
 0001354C  FF760A            push word [bp+0xa]
 0001354F  FF7608            push word [bp+0x8]
 00013552  FF7606            push word [bp+0x6]
-00013555  90                nop
 00013556  0E                push cs
 00013557  E820CC            call 0x17a
 0001355A  5D                pop bp
@@ -29851,7 +29505,7 @@
 0001355E  55                push bp
 0001355F  8BEC              mov bp,sp
 00013561  B80200            mov ax,0x2
-00013564  9A1C3E821F        call 0x1f82:0x3e1c
+00013564  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013569  C746FE007D        mov word [bp-0x2],0x7d00
 0001356E  B84000            mov ax,0x40
 00013571  BAB12C            mov dx,0x2cb1
@@ -29877,7 +29531,6 @@
 000135A4  BAB12C            mov dx,0x2cb1
 000135A7  52                push dx
 000135A8  50                push ax
-000135A9  90                nop
 000135AA  0E                push cs
 000135AB  E8E4D4            call 0xa92
 000135AE  B84000            mov ax,0x40
@@ -29901,7 +29554,7 @@
 000135D4  55                push bp
 000135D5  8BEC              mov bp,sp
 000135D7  B80200            mov ax,0x2
-000135DA  9A1C3E821F        call 0x1f82:0x3e1c
+000135DA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000135DF  C746FE007D        mov word [bp-0x2],0x7d00
 000135E4  B84000            mov ax,0x40
 000135E7  BA4F2F            mov dx,0x2f4f
@@ -29927,7 +29580,6 @@
 0001361A  BA4F2F            mov dx,0x2f4f
 0001361D  52                push dx
 0001361E  50                push ax
-0001361F  90                nop
 00013620  0E                push cs
 00013621  E86ED4            call 0xa92
 00013624  8BE5              mov sp,bp
@@ -29935,23 +29587,19 @@
 00013627  CA0400            retf 0x4
 
 0001362A  33C0              xor ax,ax
-0001362C  9A1C3E821F        call 0x1f82:0x3e1c
-00013631  90                nop
+0001362C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013632  0E                push cs
 00013633  E84FFC            call 0x3285
 00013636  FF36F41A          push word [0x1af4]
 0001363A  FF36F21A          push word [0x1af2]
 0001363E  9AF0A60000        call 0x0:0xa6f0
-00013643  90                nop
 00013644  0E                push cs
 00013645  E88BFC            call 0x32d3
 00013648  B8061B            mov ax,0x1b06
 0001364B  1E                push ds
 0001364C  50                push ax
-0001364D  90                nop
 0001364E  0E                push cs
 0001364F  E87C67            call 0x9dce
-00013652  90                nop
 00013653  0E                push cs
 00013654  E85BFC            call 0x32b2
 00013657  B80500            mov ax,0x5
@@ -29973,7 +29621,6 @@
 0001367E  B80100            mov ax,0x1
 00013681  50                push ax
 00013682  9A67010000        call 0x0:0x167
-00013687  90                nop
 00013688  0E                push cs
 00013689  E8FE39            call 0x708a
 0001368C  EBA8              jmp short 0x3636
@@ -29991,50 +29638,51 @@
 000136A2  CB                retf
 
 000136A3  33C0              xor ax,ax
-000136A5  9A1C3E821F        call 0x1f82:0x3e1c
+000136A5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000136AA  B81474            mov ax,0x7414
 000136AD  50                push ax
 000136AE  B86637            mov ax,0x3766
 000136B1  50                push ax
 000136B2  E83600            call 0x36eb
 000136B5  C3                ret
+
 000136B6  33C0              xor ax,ax
-000136B8  9A1C3E821F        call 0x1f82:0x3e1c
+000136B8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000136BD  9ABF960000        call 0x0:0x96bf
 000136C2  2BC0              sub ax,ax
 000136C4  C3                ret
+
 000136C5  33C0              xor ax,ax
-000136C7  9A1C3E821F        call 0x1f82:0x3e1c
+000136C7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000136CC  B8FECB            mov ax,0xcbfe
 000136CF  50                push ax
 000136D0  B88837            mov ax,0x3788
 000136D3  50                push ax
 000136D4  E81400            call 0x36eb
 000136D7  C3                ret
+
 000136D8  33C0              xor ax,ax
-000136DA  9A1C3E821F        call 0x1f82:0x3e1c
+000136DA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000136DF  2BC0              sub ax,ax
 000136E1  50                push ax
 000136E2  9A67010000        call 0x0:0x167
 000136E7  B80100            mov ax,0x1
 000136EA  C3                ret
+
 000136EB  55                push bp
 000136EC  8BEC              mov bp,sp
 000136EE  B81600            mov ax,0x16
-000136F1  9A1C3E821F        call 0x1f82:0x3e1c
+000136F1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000136F6  56                push si
 000136F7  FF36F41A          push word [0x1af4]
 000136FB  FF36F21A          push word [0x1af2]
-000136FF  90                nop
 00013700  0E                push cs
 00013701  E8D0FE            call 0x35d4
-00013704  90                nop
 00013705  0E                push cs
 00013706  E8CAFB            call 0x32d3
 00013709  B8061B            mov ax,0x1b06
 0001370C  1E                push ds
 0001370D  50                push ax
-0001370E  90                nop
 0001370F  0E                push cs
 00013710  E8BB66            call 0x9dce
 00013713  B80600            mov ax,0x6
@@ -30044,7 +29692,6 @@
 0001371B  1E                push ds
 0001371C  FF7606            push word [bp+0x6]
 0001371F  E83D03            call 0x3a5f
-00013722  90                nop
 00013723  0E                push cs
 00013724  E88BFB            call 0x32b2
 00013727  8D46EC            lea ax,[bp-0x14]
@@ -30130,7 +29777,6 @@
 000137ED  FF5604            call [bp+0x4]
 000137F0  0BC0              or ax,ax
 000137F2  7591              jnz 0x3785
-000137F4  90                nop
 000137F5  0E                push cs
 000137F6  E89138            call 0x708a
 000137F9  9ACFB00000        call 0x0:0xb0cf
@@ -30139,11 +29785,11 @@
 00013802  8BE5              mov sp,bp
 00013804  5D                pop bp
 00013805  C20400            ret 0x4
+
 00013808  55                push bp
 00013809  8BEC              mov bp,sp
 0001380B  B80200            mov ax,0x2
-0001380E  9A1C3E821F        call 0x1f82:0x3e1c
-00013813  90                nop
+0001380E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013814  0E                push cs
 00013815  E887FA            call 0x329f
 00013818  FF7606            push word [bp+0x6]
@@ -30153,7 +29799,6 @@
 00013821  9A81910000        call 0x0:0x9181
 00013826  0BC0              or ax,ax
 00013828  740A              jz 0x3834
-0001382A  90                nop
 0001382B  0E                push cs
 0001382C  E856FA            call 0x3285
 0001382F  B8FFFF            mov ax,0xffff
@@ -30178,17 +29823,17 @@
 0001385D  8946FE            mov [bp-0x2],ax
 00013860  EB05              jmp short 0x3867
 00013862  C746FEFFFF        mov word [bp-0x2],0xffff
-00013867  90                nop
 00013868  0E                push cs
 00013869  E819FA            call 0x3285
 0001386C  8B46FE            mov ax,[bp-0x2]
 0001386F  8BE5              mov sp,bp
 00013871  5D                pop bp
 00013872  C20400            ret 0x4
+
 00013875  55                push bp
 00013876  8BEC              mov bp,sp
 00013878  B81800            mov ax,0x18
-0001387B  9A1C3E821F        call 0x1f82:0x3e1c
+0001387B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013880  8B5E04            mov bx,[bp+0x4]
 00013883  8B4702            mov ax,[bx+0x2]
 00013886  034706            add ax,[bx+0x6]
@@ -30245,12 +29890,10 @@
 000138FD  50                push ax
 000138FE  2BC0              sub ax,ax
 00013900  50                push ax
-00013901  90                nop
 00013902  0E                push cs
 00013903  E86734            call 0x6d6d
 00013906  8B4606            mov ax,[bp+0x6]
 00013909  8946FA            mov [bp-0x6],ax
-0001390C  90                nop
 0001390D  0E                push cs
 0001390E  E87937            call 0x708a
 00013911  B8FFFF            mov ax,0xffff
@@ -30258,7 +29901,6 @@
 00013915  B8A480            mov ax,0x80a4
 00013918  1E                push ds
 00013919  50                push ax
-0001391A  90                nop
 0001391B  0E                push cs
 0001391C  E85C35            call 0x6e7b
 0001391F  C746F80000        mov word [bp-0x8],0x0
@@ -30276,7 +29918,6 @@
 0001393D  034604            add ax,[bp+0x4]
 00013940  1E                push ds
 00013941  50                push ax
-00013942  90                nop
 00013943  0E                push cs
 00013944  E8D4D0            call 0xa1b
 00013947  0BC0              or ax,ax
@@ -30330,7 +29971,6 @@
 000139C6  034604            add ax,[bp+0x4]
 000139C9  1E                push ds
 000139CA  50                push ax
-000139CB  90                nop
 000139CC  0E                push cs
 000139CD  E8F8CB            call 0x5c8
 000139D0  EB1D              jmp short 0x39ef
@@ -30344,7 +29984,6 @@
 000139E5  034604            add ax,[bp+0x4]
 000139E8  1E                push ds
 000139E9  50                push ax
-000139EA  90                nop
 000139EB  0E                push cs
 000139EC  E859CB            call 0x548
 000139EF  837EF801          cmp word [bp-0x8],byte +0x1
@@ -30358,7 +29997,6 @@
 00013A04  034604            add ax,[bp+0x4]
 00013A07  1E                push ds
 00013A08  50                push ax
-00013A09  90                nop
 00013A0A  0E                push cs
 00013A0B  E8BACB            call 0x5c8
 00013A0E  EB1D              jmp short 0x3a2d
@@ -30372,7 +30010,6 @@
 00013A23  034604            add ax,[bp+0x4]
 00013A26  1E                push ds
 00013A27  50                push ax
-00013A28  90                nop
 00013A29  0E                push cs
 00013A2A  E81BCB            call 0x548
 00013A2D  8B46F8            mov ax,[bp-0x8]
@@ -30393,13 +30030,13 @@
 00013A59  8BE5              mov sp,bp
 00013A5B  5D                pop bp
 00013A5C  C20400            ret 0x4
+
 00013A5F  55                push bp
 00013A60  8BEC              mov bp,sp
 00013A62  B82200            mov ax,0x22
-00013A65  9A1C3E821F        call 0x1f82:0x3e1c
+00013A65  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013A6A  57                push di
 00013A6B  56                push si
-00013A6C  90                nop
 00013A6D  0E                push cs
 00013A6E  E84DFA            call 0x34be
 00013A71  C746FA0000        mov word [bp-0x6],0x0
@@ -30421,7 +30058,6 @@
 00013A9B  8BD8              mov bx,ax
 00013A9D  FF7702            push word [bx+0x2]
 00013AA0  FF37              push word [bx]
-00013AA2  90                nop
 00013AA3  0E                push cs
 00013AA4  E8EBCD            call 0x892
 00013AA7  EB17              jmp short 0x3ac0
@@ -30438,7 +30074,6 @@
 00013AC5  8D46F2            lea ax,[bp-0xe]
 00013AC8  16                push ss
 00013AC9  50                push ax
-00013ACA  90                nop
 00013ACB  0E                push cs
 00013ACC  E803C6            call 0xd2
 00013ACF  8B5EDE            mov bx,[bp-0x22]
@@ -30462,13 +30097,11 @@
 00013AFA  8946E0            mov [bp-0x20],ax
 00013AFD  FF76E2            push word [bp-0x1e]
 00013B00  50                push ax
-00013B01  90                nop
 00013B02  0E                push cs
 00013B03  E86ACD            call 0x870
 00013B06  8D46E4            lea ax,[bp-0x1c]
 00013B09  16                push ss
 00013B0A  50                push ax
-00013B0B  90                nop
 00013B0C  0E                push cs
 00013B0D  E842C6            call 0x152
 00013B10  FF46FA            inc word [bp-0x6]
@@ -30491,7 +30124,6 @@
 00013B3C  8CC2              mov dx,es
 00013B3E  52                push dx
 00013B3F  50                push ax
-00013B40  90                nop
 00013B41  0E                push cs
 00013B42  E88CF6            call 0x31d1
 00013B45  B82E00            mov ax,0x2e
@@ -30514,10 +30146,11 @@
 00013B6F  8BE5              mov sp,bp
 00013B71  5D                pop bp
 00013B72  C20800            ret 0x8
+
 00013B75  55                push bp
 00013B76  8BEC              mov bp,sp
 00013B78  B8AC00            mov ax,0xac
-00013B7B  9A1C3E821F        call 0x1f82:0x3e1c
+00013B7B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013B80  57                push di
 00013B81  56                push si
 00013B82  B80300            mov ax,0x3
@@ -30536,16 +30169,13 @@
 00013B9D  16                push ss
 00013B9E  50                push ax
 00013B9F  9A9B7C0000        call 0x0:0x7c9b
-00013BA4  90                nop
 00013BA5  0E                push cs
 00013BA6  E82AF7            call 0x32d3
 00013BA9  B8061B            mov ax,0x1b06
 00013BAC  1E                push ds
 00013BAD  50                push ax
-00013BAE  90                nop
 00013BAF  0E                push cs
 00013BB0  E81B62            call 0x9dce
-00013BB3  90                nop
 00013BB4  0E                push cs
 00013BB5  E8FAF6            call 0x32b2
 00013BB8  83BE58FF00        cmp word [bp-0xa8],byte +0x0
@@ -30582,10 +30212,11 @@
 00013C0C  8BE5              mov sp,bp
 00013C0E  5D                pop bp
 00013C0F  C20600            ret 0x6
+
 00013C12  55                push bp
 00013C13  8BEC              mov bp,sp
 00013C15  33C0              xor ax,ax
-00013C17  9A1C3E821F        call 0x1f82:0x3e1c
+00013C17  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013C1C  FF7608            push word [bp+0x8]
 00013C1F  FF7606            push word [bp+0x6]
 00013C22  9A4B1D0000        call 0x0:0x1d4b
@@ -30599,7 +30230,7 @@
 00013C3C  55                push bp
 00013C3D  8BEC              mov bp,sp
 00013C3F  B81A00            mov ax,0x1a
-00013C42  9A1C3E821F        call 0x1f82:0x3e1c
+00013C42  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013C47  8D46E6            lea ax,[bp-0x1a]
 00013C4A  16                push ss
 00013C4B  50                push ax
@@ -30664,11 +30295,10 @@
 00013CFB  55                push bp
 00013CFC  8BEC              mov bp,sp
 00013CFE  33C0              xor ax,ax
-00013D00  9A1C3E821F        call 0x1f82:0x3e1c
+00013D00  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013D05  FF760A            push word [bp+0xa]
 00013D08  FF7608            push word [bp+0x8]
 00013D0B  FF7606            push word [bp+0x6]
-00013D0E  90                nop
 00013D0F  0E                push cs
 00013D10  E86831            call 0x6e7b
 00013D13  C45E06            les bx,[bp+0x6]
@@ -30736,7 +30366,6 @@
 00013DCF  8EC2              mov es,dx
 00013DD1  26FF7702          push word [es:bx+0x2]
 00013DD5  26FF37            push word [es:bx]
-00013DD8  90                nop
 00013DD9  0E                push cs
 00013DDA  E83ECC            call 0xa1b
 00013DDD  0BC0              or ax,ax
@@ -30770,7 +30399,7 @@
 00013E31  55                push bp
 00013E32  8BEC              mov bp,sp
 00013E34  33C0              xor ax,ax
-00013E36  9A1C3E821F        call 0x1f82:0x3e1c
+00013E36  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013E3B  56                push si
 00013E3C  837E0A00          cmp word [bp+0xa],byte +0x0
 00013E40  7416              jz 0x3e58
@@ -30794,9 +30423,9 @@
 00013E73  5E                pop si
 00013E74  5D                pop bp
 00013E75  CA0600            retf 0x6
+
 00013E78  33C0              xor ax,ax
-00013E7A  9A1C3E821F        call 0x1f82:0x3e1c
-00013E7F  90                nop
+00013E7A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013E80  0E                push cs
 00013E81  E8F5CB            call 0xa79
 00013E84  2BC0              sub ax,ax
@@ -30810,7 +30439,6 @@
 00013E95  50                push ax
 00013E96  B8C800            mov ax,0xc8
 00013E99  50                push ax
-00013E9A  90                nop
 00013E9B  0E                push cs
 00013E9C  E8A32C            call 0x6b42
 00013E9F  813EC080FF06      cmp word [0x80c0],0x6ff
@@ -30851,7 +30479,6 @@
 00013F02  B80D00            mov ax,0xd
 00013F05  50                push ax
 00013F06  9AF7020000        call 0x0:0x2f7
-00013F0B  90                nop
 00013F0C  0E                push cs
 00013F0D  E8A6D0            call 0xfb6
 00013F10  B80E00            mov ax,0xe
@@ -30865,7 +30492,7 @@
 00013F23  55                push bp
 00013F24  8BEC              mov bp,sp
 00013F26  B81E00            mov ax,0x1e
-00013F29  9A1C3E821F        call 0x1f82:0x3e1c
+00013F29  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00013F2E  57                push di
 00013F2F  9AE2FB0000        call 0x0:0xfbe2	; Call PIT configuration procedure.
 00013F34  B811FC            mov ax,0xfc11
@@ -30876,7 +30503,6 @@
 00013F41  83C404            add sp,byte +0x4
 00013F44  FF7608            push word [bp+0x8]
 00013F47  FF7606            push word [bp+0x6]
-00013F4A  90                nop
 00013F4B  0E                push cs
 00013F4C  E8E403            call 0x4333
 00013F4F  B85A41            mov ax,0x415a
@@ -30930,7 +30556,6 @@
 00013FCA  8956E4            mov [bp-0x1c],dx
 00013FCD  0E                push cs
 00013FCE  E8A7FE            call 0x3e78
-00013FD1  90                nop
 00013FD2  0E                push cs
 00013FD3  E8E000            call 0x40b6
 00013FD6  9A3CC50000        call 0x0:0xc53c
@@ -30942,31 +30567,26 @@
 00013FEC  8CC2              mov dx,es
 00013FEE  52                push dx
 00013FEF  FF36F21A          push word [0x1af2]
-00013FF3  90                nop
 00013FF4  0E                push cs
 00013FF5  E89ACA            call 0xa92
 00013FF8  B8061B            mov ax,0x1b06
 00013FFB  1E                push ds
 00013FFC  50                push ax
-00013FFD  90                nop
 00013FFE  0E                push cs
 00013FFF  E8CC5D            call 0x9dce
 00014002  FF36F41A          push word [0x1af4]
 00014006  FF36F21A          push word [0x1af2]
-0001400A  90                nop
 0001400B  0E                push cs
 0001400C  E84FF5            call 0x355e
 0001400F  B8061B            mov ax,0x1b06
 00014012  1E                push ds
 00014013  50                push ax
-00014014  90                nop
 00014015  0E                push cs
 00014016  E8B55D            call 0x9dce
 00014019  9AD0FB0000        call 0x0:0xfbd0
 0001401E  8946FC            mov [bp-0x4],ax
 00014021  8956FE            mov [bp-0x2],dx
 00014024  9AD6FC0000        call 0x0:0xfcd6
-00014029  90                nop
 0001402A  0E                push cs
 0001402B  E871F2            call 0x329f
 0001402E  9A24350000        call 0x0:0x3524
@@ -30996,10 +30616,8 @@
 00014086  77E8              ja 0x4070
 00014088  3BC8              cmp cx,ax
 0001408A  77E4              ja 0x4070
-0001408C  90                nop
 0001408D  0E                push cs
 0001408E  E8DBF1            call 0x326c
-00014091  90                nop
 00014092  0E                push cs
 00014093  E809F2            call 0x329f
 00014096  B8283F            mov ax,0x3f28
@@ -31013,14 +30631,14 @@
 000140A7  CA0400            retf 0x4
 
 000140AA  33C0              xor ax,ax
-000140AC  9A1C3E821F        call 0x1f82:0x3e1c
+000140AC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000140B1  FF1EC880          call far [0x80c8]
 000140B5  CB                retf
 
 000140B6  55                push bp
 000140B7  8BEC              mov bp,sp
 000140B9  B81400            mov ax,0x14
-000140BC  9A1C3E821F        call 0x1f82:0x3e1c
+000140BC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000140C1  B8407E            mov ax,0x7e40
 000140C4  50                push ax
 000140C5  A0A8CF            mov al,[0xcfa8]
@@ -31143,7 +30761,6 @@
 00014227  72E1              jc 0x420a
 00014229  C746FEDA80        mov word [bp-0x2],0x80da
 0001422E  FF76FE            push word [bp-0x2]
-00014231  90                nop
 00014232  0E                push cs
 00014233  E80903            call 0x453f
 00014236  8346FE1E          add word [bp-0x2],byte +0x1e
@@ -31189,7 +30806,6 @@
 000142CB  B8061B            mov ax,0x1b06
 000142CE  1E                push ds
 000142CF  50                push ax
-000142D0  90                nop
 000142D1  0E                push cs
 000142D2  E867F9            call 0x3c3c
 000142D5  A3A4CF            mov [0xcfa4],ax
@@ -31208,9 +30824,9 @@
 0001430D  8BE5              mov sp,bp
 0001430F  5D                pop bp
 00014310  CB                retf
-00014311  90                nop
+
 00014312  33C0              xor ax,ax
-00014314  9A1C3E821F        call 0x1f82:0x3e1c
+00014314  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014319  B8AC1B            mov ax,0x1bac
 0001431C  1E                push ds
 0001431D  50                push ax
@@ -31221,10 +30837,11 @@
 0001432A  9A7E3D821F        call 0x1f82:0x3d7e
 0001432F  83C402            add sp,byte +0x2
 00014332  CB                retf
+
 00014333  55                push bp
 00014334  8BEC              mov bp,sp
 00014336  B82400            mov ax,0x24
-00014339  9A1C3E821F        call 0x1f82:0x3e1c
+00014339  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001433E  C746F80000        mov word [bp-0x8],0x0
 00014343  8B4606            mov ax,[bp+0x6]
 00014346  0B4608            or ax,[bp+0x8]
@@ -31360,21 +30977,17 @@
 000144AE  EB02              jmp short 0x44b2
 000144B0  2BC0              sub ax,ax
 000144B2  A34ED9            mov [0xd94e],ax
-000144B5  90                nop
 000144B6  0E                push cs
 000144B7  E820AC            call 0xf0da
 000144BA  EB05              jmp short 0x44c1
-000144BC  90                nop
 000144BD  0E                push cs
 000144BE  E8BCAE            call 0xf37d
 000144C1  F646F802          test byte [bp-0x8],0x2
 000144C5  740D              jz 0x44d4
 000144C7  C7064ED90100      mov word [0xd94e],0x1
-000144CD  90                nop
 000144CE  0E                push cs
 000144CF  E822A1            call 0xe5f4
 000144D2  EB05              jmp short 0x44d9
-000144D4  90                nop
 000144D5  0E                push cs
 000144D6  E89EA4            call 0xe977
 000144D9  F646F804          test byte [bp-0x8],0x4
@@ -31395,10 +31008,11 @@
 0001450A  8BE5              mov sp,bp
 0001450C  5D                pop bp
 0001450D  CA0400            retf 0x4
+
 00014510  55                push bp
 00014511  8BEC              mov bp,sp
 00014513  B80200            mov ax,0x2
-00014516  9A1C3E821F        call 0x1f82:0x3e1c
+00014516  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001451B  B9DA80            mov cx,0x80da
 0001451E  8BD9              mov bx,cx
 00014520  837F1600          cmp word [bx+0x16],byte +0x0
@@ -31414,10 +31028,11 @@
 0001453B  8BE5              mov sp,bp
 0001453D  5D                pop bp
 0001453E  CB                retf
+
 0001453F  55                push bp
 00014540  8BEC              mov bp,sp
 00014542  33C0              xor ax,ax
-00014544  9A1C3E821F        call 0x1f82:0x3e1c
+00014544  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014549  8B5E06            mov bx,[bp+0x6]
 0001454C  C747160000        mov word [bx+0x16],0x0
 00014551  8B5E06            mov bx,[bp+0x6]
@@ -31426,10 +31041,11 @@
 0001455C  C747080400        mov word [bx+0x8],0x4
 00014561  5D                pop bp
 00014562  CA0200            retf 0x2
+
 00014565  55                push bp
 00014566  8BEC              mov bp,sp
 00014568  B80400            mov ax,0x4
-0001456B  9A1C3E821F        call 0x1f82:0x3e1c
+0001456B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014570  56                push si
 00014571  0E                push cs
 00014572  E89BFF            call 0x4510
@@ -31464,10 +31080,11 @@
 000145C4  8BE5              mov sp,bp
 000145C6  5D                pop bp
 000145C7  CA0200            retf 0x2
+
 000145CA  55                push bp
 000145CB  8BEC              mov bp,sp
 000145CD  B80600            mov ax,0x6
-000145D0  9A1C3E821F        call 0x1f82:0x3e1c
+000145D0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000145D5  56                push si
 000145D6  0E                push cs
 000145D7  E836FF            call 0x4510
@@ -31505,10 +31122,11 @@
 00014631  8BE5              mov sp,bp
 00014633  5D                pop bp
 00014634  C20200            ret 0x2
+
 00014637  55                push bp
 00014638  8BEC              mov bp,sp
 0001463A  B80200            mov ax,0x2
-0001463D  9A1C3E821F        call 0x1f82:0x3e1c
+0001463D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014642  56                push si
 00014643  B8E701            mov ax,0x1e7
 00014646  F76E06            imul word [bp+0x6]
@@ -31530,17 +31148,17 @@
 00014670  8BE5              mov sp,bp
 00014672  5D                pop bp
 00014673  CA0200            retf 0x2
+
 00014676  55                push bp
 00014677  8BEC              mov bp,sp
 00014679  B80600            mov ax,0x6
-0001467C  9A1C3E821F        call 0x1f82:0x3e1c
+0001467C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014681  56                push si
 00014682  2BC0              sub ax,ax
 00014684  50                push ax
 00014685  9AA8C90000        call 0x0:0xc9a8
 0001468A  FF7606            push word [bp+0x6]
 0001468D  FF36C0CF          push word [0xcfc0]
-00014691  90                nop
 00014692  0E                push cs
 00014693  E8925F            call 0xa628
 00014696  0BC0              or ax,ax
@@ -31549,7 +31167,6 @@
 0001469D  A3BA77            mov [0x77ba],ax
 000146A0  C746FC0000        mov word [bp-0x4],0x0
 000146A5  E9FB00            jmp 0x47a3
-000146A8  90                nop
 000146A9  0E                push cs
 000146AA  E8F631            call 0x78a3
 000146AD  0BC0              or ax,ax
@@ -31588,13 +31205,10 @@
 00014707  EB78              jmp short 0x4781
 00014709  833EA1A400        cmp word [0xa4a1],byte +0x0
 0001470E  750F              jnz 0x471f
-00014710  90                nop
 00014711  0E                push cs
 00014712  E88AEB            call 0x329f
-00014715  90                nop
 00014716  0E                push cs
 00014717  E8F945            call 0x8d13
-0001471A  90                nop
 0001471B  0E                push cs
 0001471C  E866EB            call 0x3285
 0001471F  8B5E06            mov bx,[bp+0x6]
@@ -31634,14 +31248,12 @@
 00014782  2BC0              sub ax,ax
 00014784  50                push ax
 00014785  E86D01            call 0x48f5
-00014788  90                nop
 00014789  0E                push cs
 0001478A  E8805D            call 0xa50d
 0001478D  833EB8CF00        cmp word [0xcfb8],byte +0x0
 00014792  7503              jnz 0x4797
 00014794  E909FF            jmp 0x46a0
 00014797  EB05              jmp short 0x479e
-00014799  90                nop
 0001479A  0E                push cs
 0001479B  E8750A            call 0x5213
 0001479E  C746FCFFFF        mov word [bp-0x4],0xffff
@@ -31653,10 +31265,11 @@
 000147B0  8BE5              mov sp,bp
 000147B2  5D                pop bp
 000147B3  CA0200            retf 0x2
+
 000147B6  55                push bp
 000147B7  8BEC              mov bp,sp
 000147B9  33C0              xor ax,ax
-000147BB  9A1C3E821F        call 0x1f82:0x3e1c
+000147BB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000147C0  56                push si
 000147C1  8B1EBA77          mov bx,[0x77ba]
 000147C5  8B5F16            mov bx,[bx+0x16]
@@ -31674,10 +31287,11 @@
 000147E2  5E                pop si
 000147E3  5D                pop bp
 000147E4  CA0200            retf 0x2
+
 000147E7  55                push bp
 000147E8  8BEC              mov bp,sp
 000147EA  33C0              xor ax,ax
-000147EC  9A1C3E821F        call 0x1f82:0x3e1c
+000147EC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000147F1  56                push si
 000147F2  8B1EBA77          mov bx,[0x77ba]
 000147F6  8B5F16            mov bx,[bx+0x16]
@@ -31693,10 +31307,11 @@
 0001480F  5E                pop si
 00014810  5D                pop bp
 00014811  CA0200            retf 0x2
+
 00014814  55                push bp
 00014815  8BEC              mov bp,sp
 00014817  33C0              xor ax,ax
-00014819  9A1C3E821F        call 0x1f82:0x3e1c
+00014819  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001481E  8B1EBA77          mov bx,[0x77ba]
 00014822  8B4604            mov ax,[bp+0x4]
 00014825  394706            cmp [bx+0x6],ax
@@ -31710,7 +31325,6 @@
 0001483C  E82000            call 0x485f
 0001483F  50                push ax
 00014840  E8B200            call 0x48f5
-00014843  90                nop
 00014844  0E                push cs
 00014845  E8C55C            call 0xa50d
 00014848  B80100            mov ax,0x1
@@ -31721,10 +31335,11 @@
 00014857  C7070100          mov word [bx],0x1
 0001485B  5D                pop bp
 0001485C  C20200            ret 0x2
+
 0001485F  55                push bp
 00014860  8BEC              mov bp,sp
 00014862  B81000            mov ax,0x10
-00014865  9A1C3E821F        call 0x1f82:0x3e1c
+00014865  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001486A  56                push si
 0001486B  8B1EBA77          mov bx,[0x77ba]
 0001486F  8B470C            mov ax,[bx+0xc]
@@ -31776,10 +31391,11 @@
 000148EF  8BE5              mov sp,bp
 000148F1  5D                pop bp
 000148F2  C20200            ret 0x2
+
 000148F5  55                push bp
 000148F6  8BEC              mov bp,sp
 000148F8  B80200            mov ax,0x2
-000148FB  9A1C3E821F        call 0x1f82:0x3e1c
+000148FB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014900  56                push si
 00014901  8B5E08            mov bx,[bp+0x8]
 00014904  8B4716            mov ax,[bx+0x16]
@@ -31824,24 +31440,22 @@
 00014976  03470E            add ax,[bx+0xe]
 00014979  894712            mov [bx+0x12],ax
 0001497C  FF7608            push word [bp+0x8]
-0001497F  90                nop
 00014980  0E                push cs
 00014981  E88330            call 0x7a07
 00014984  5E                pop si
 00014985  8BE5              mov sp,bp
 00014987  5D                pop bp
 00014988  C20600            ret 0x6
+
 0001498B  33C0              xor ax,ax
-0001498D  9A1C3E821F        call 0x1f82:0x3e1c
+0001498D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014992  2BC0              sub ax,ax
 00014994  50                push ax
 00014995  9AA8C90000        call 0x0:0xc9a8
-0001499A  90                nop
 0001499B  0E                push cs
 0001499C  E86E5B            call 0xa50d
 0001499F  FF36BA77          push word [0x77ba]
 000149A3  FF36C0CF          push word [0xcfc0]
-000149A7  90                nop
 000149A8  0E                push cs
 000149A9  E87C5C            call 0xa628
 000149AC  0BC0              or ax,ax
@@ -31853,10 +31467,11 @@
 000149C2  50                push ax
 000149C3  9AA8C90000        call 0x0:0xc9a8
 000149C8  C3                ret
+
 000149C9  55                push bp
 000149CA  8BEC              mov bp,sp
 000149CC  B80600            mov ax,0x6
-000149CF  9A1C3E821F        call 0x1f82:0x3e1c
+000149CF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000149D4  C746FA0000        mov word [bp-0x6],0x0
 000149D9  C746FEFFFF        mov word [bp-0x2],0xffff
 000149DE  C746FCDA80        mov word [bp-0x4],0x80da
@@ -31869,7 +31484,6 @@
 000149F4  050E00            add ax,0xe
 000149F7  1E                push ds
 000149F8  50                push ax
-000149F9  90                nop
 000149FA  0E                push cs
 000149FB  E81DC0            call 0xa1b
 000149FE  0BC0              or ax,ax
@@ -31895,10 +31509,11 @@
 00014A36  8BE5              mov sp,bp
 00014A38  5D                pop bp
 00014A39  CA0400            retf 0x4
+
 00014A3C  55                push bp
 00014A3D  8BEC              mov bp,sp
 00014A3F  B80A00            mov ax,0xa
-00014A42  9A1C3E821F        call 0x1f82:0x3e1c
+00014A42  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014A47  57                push di
 00014A48  56                push si
 00014A49  8B5E04            mov bx,[bp+0x4]
@@ -31911,7 +31526,6 @@
 00014A5F  8946FC            mov [bp-0x4],ax
 00014A62  FF76FE            push word [bp-0x2]
 00014A65  FF770C            push word [bx+0xc]
-00014A68  90                nop
 00014A69  0E                push cs
 00014A6A  E87C2E            call 0x78e9
 00014A6D  0BC0              or ax,ax
@@ -31945,7 +31559,6 @@
 00014ABB  FF76FE            push word [bp-0x2]
 00014ABE  8B5E04            mov bx,[bp+0x4]
 00014AC1  FF770C            push word [bx+0xc]
-00014AC4  90                nop
 00014AC5  0E                push cs
 00014AC6  E88E2E            call 0x7957
 00014AC9  F646FC01          test byte [bp-0x4],0x1
@@ -31968,10 +31581,11 @@
 00014AEE  8BE5              mov sp,bp
 00014AF0  5D                pop bp
 00014AF1  C20600            ret 0x6
+
 00014AF4  55                push bp
 00014AF5  8BEC              mov bp,sp
 00014AF7  33C0              xor ax,ax
-00014AF9  9A1C3E821F        call 0x1f82:0x3e1c
+00014AF9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014AFE  8B4606            mov ax,[bp+0x6]
 00014B01  050E00            add ax,0xe
 00014B04  1E                push ds
@@ -31987,7 +31601,6 @@
 00014B1C  2B470E            sub ax,[bx+0xe]
 00014B1F  053C00            add ax,0x3c
 00014B22  50                push ax
-00014B23  90                nop
 00014B24  0E                push cs
 00014B25  E882BD            call 0x8aa
 00014B28  8B5E06            mov bx,[bp+0x6]
@@ -31995,11 +31608,11 @@
 00014B30  E858FE            call 0x498b
 00014B33  5D                pop bp
 00014B34  CA0200            retf 0x2
-00014B37  90                nop
+
 00014B38  55                push bp
 00014B39  8BEC              mov bp,sp
 00014B3B  B80200            mov ax,0x2
-00014B3E  9A1C3E821F        call 0x1f82:0x3e1c
+00014B3E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014B43  8B4606            mov ax,[bp+0x6]
 00014B46  2D0100            sub ax,0x1
 00014B49  3D0700            cmp ax,0x7
@@ -32063,15 +31676,15 @@
 00014BE7  8BE5              mov sp,bp
 00014BE9  5D                pop bp
 00014BEA  CB                retf
+
 00014BEB  55                push bp
 00014BEC  8BEC              mov bp,sp
 00014BEE  B82000            mov ax,0x20
-00014BF1  9A1C3E821F        call 0x1f82:0x3e1c
+00014BF1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014BF6  56                push si
 00014BF7  8D46EC            lea ax,[bp-0x14]
 00014BFA  16                push ss
 00014BFB  50                push ax
-00014BFC  90                nop
 00014BFD  0E                push cs
 00014BFE  E8CEB8            call 0x4cf
 00014C01  C606C68002        mov byte [0x80c6],0x2
@@ -32111,7 +31724,6 @@
 00014C6C  EB03              jmp short 0x4c71
 00014C6E  B80F00            mov ax,0xf
 00014C71  50                push ax
-00014C72  90                nop
 00014C73  0E                push cs
 00014C74  E801BF            call 0xb78
 00014C77  817E0ABA02        cmp word [bp+0xa],0x2ba
@@ -32119,7 +31731,6 @@
 00014C7E  8D46E2            lea ax,[bp-0x1e]
 00014C81  16                push ss
 00014C82  50                push ax
-00014C83  90                nop
 00014C84  0E                push cs
 00014C85  E857BC            call 0x8df
 00014C88  FF7608            push word [bp+0x8]
@@ -32132,7 +31743,6 @@
 00014C9D  8D46E2            lea ax,[bp-0x1e]
 00014CA0  16                push ss
 00014CA1  50                push ax
-00014CA2  90                nop
 00014CA3  0E                push cs
 00014CA4  E857E7            call 0x33fe
 00014CA7  E9D400            jmp 0x4d7e
@@ -32164,7 +31774,6 @@
 00014CFB  8D46F0            lea ax,[bp-0x10]
 00014CFE  16                push ss
 00014CFF  50                push ax
-00014D00  90                nop
 00014D01  0E                push cs
 00014D02  E8DABB            call 0x8df
 00014D05  8B46FA            mov ax,[bp-0x6]
@@ -32175,7 +31784,6 @@
 00014D12  8D46F0            lea ax,[bp-0x10]
 00014D15  16                push ss
 00014D16  50                push ax
-00014D17  90                nop
 00014D18  0E                push cs
 00014D19  E8C3BB            call 0x8df
 00014D1C  FF7608            push word [bp+0x8]
@@ -32186,7 +31794,6 @@
 00014D2C  7550              jnz 0x4d7e
 00014D2E  2BC0              sub ax,ax
 00014D30  50                push ax
-00014D31  90                nop
 00014D32  0E                push cs
 00014D33  E842BE            call 0xb78
 00014D36  8B46E8            mov ax,[bp-0x18]
@@ -32197,7 +31804,6 @@
 00014D3F  48                dec ax
 00014D40  48                dec ax
 00014D41  50                push ax
-00014D42  90                nop
 00014D43  0E                push cs
 00014D44  E84BBB            call 0x892
 00014D47  8B46E8            mov ax,[bp-0x18]
@@ -32205,19 +31811,16 @@
 00014D4B  48                dec ax
 00014D4C  50                push ax
 00014D4D  FF76E2            push word [bp-0x1e]
-00014D50  90                nop
 00014D51  0E                push cs
 00014D52  E8E0B9            call 0x735
 00014D55  FF76E4            push word [bp-0x1c]
 00014D58  FF76E2            push word [bp-0x1e]
-00014D5B  90                nop
 00014D5C  0E                push cs
 00014D5D  E8D5B9            call 0x735
 00014D60  FF76E4            push word [bp-0x1c]
 00014D63  8B46E6            mov ax,[bp-0x1a]
 00014D66  48                dec ax
 00014D67  50                push ax
-00014D68  90                nop
 00014D69  0E                push cs
 00014D6A  E8C8B9            call 0x735
 00014D6D  8B46FA            mov ax,[bp-0x6]
@@ -32226,7 +31829,6 @@
 00014D74  8B46E6            mov ax,[bp-0x1a]
 00014D77  48                dec ax
 00014D78  50                push ax
-00014D79  90                nop
 00014D7A  0E                push cs
 00014D7B  E8B7B9            call 0x735
 00014D7E  8A46EE            mov al,[bp-0x12]
@@ -32237,10 +31839,11 @@
 00014D8B  8BE5              mov sp,bp
 00014D8D  5D                pop bp
 00014D8E  CB                retf
+
 00014D8F  55                push bp
 00014D90  8BEC              mov bp,sp
 00014D92  B80800            mov ax,0x8
-00014D95  9A1C3E821F        call 0x1f82:0x3e1c
+00014D95  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014D9A  FF7608            push word [bp+0x8]
 00014D9D  FF7606            push word [bp+0x6]
 00014DA0  FF760A            push word [bp+0xa]
@@ -32248,19 +31851,16 @@
 00014DA6  16                push ss
 00014DA7  50                push ax
 00014DA8  9A81540000        call 0x0:0x5481
-00014DAD  90                nop
 00014DAE  0E                push cs
 00014DAF  E844BD            call 0xaf6
 00014DB2  8D46F8            lea ax,[bp-0x8]
 00014DB5  16                push ss
 00014DB6  50                push ax
-00014DB7  90                nop
 00014DB8  0E                push cs
 00014DB9  E823BB            call 0x8df
 00014DBC  8D46F8            lea ax,[bp-0x8]
 00014DBF  16                push ss
 00014DC0  50                push ax
-00014DC1  90                nop
 00014DC2  0E                push cs
 00014DC3  E838E6            call 0x33fe
 00014DC6  8D46F8            lea ax,[bp-0x8]
@@ -32269,7 +31869,6 @@
 00014DCB  B80100            mov ax,0x1
 00014DCE  50                push ax
 00014DCF  50                push ax
-00014DD0  90                nop
 00014DD1  0E                push cs
 00014DD2  E83EB7            call 0x513
 00014DD5  2BC0              sub ax,ax
@@ -32297,22 +31896,21 @@
 00014E09  8D46F8            lea ax,[bp-0x8]
 00014E0C  16                push ss
 00014E0D  50                push ax
-00014E0E  90                nop
 00014E0F  0E                push cs
 00014E10  E8C1E5            call 0x33d4
 00014E13  8D46F8            lea ax,[bp-0x8]
 00014E16  16                push ss
 00014E17  50                push ax
-00014E18  90                nop
 00014E19  0E                push cs
 00014E1A  E8E1E5            call 0x33fe
 00014E1D  8BE5              mov sp,bp
 00014E1F  5D                pop bp
 00014E20  CB                retf
+
 00014E21  55                push bp
 00014E22  8BEC              mov bp,sp
 00014E24  B80400            mov ax,0x4
-00014E27  9A1C3E821F        call 0x1f82:0x3e1c
+00014E27  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014E2C  B87218            mov ax,0x1872
 00014E2F  BAFE30            mov dx,0x30fe
 00014E32  52                push dx
@@ -32347,10 +31945,11 @@
 00014E76  8BE5              mov sp,bp
 00014E78  5D                pop bp
 00014E79  CB                retf
+
 00014E7A  55                push bp
 00014E7B  8BEC              mov bp,sp
 00014E7D  B80600            mov ax,0x6
-00014E80  9A1C3E821F        call 0x1f82:0x3e1c
+00014E80  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014E85  57                push di
 00014E86  56                push si
 00014E87  833EBEA300        cmp word [0xa3be],byte +0x0
@@ -32417,8 +32016,9 @@
 00014F30  8BE5              mov sp,bp
 00014F32  5D                pop bp
 00014F33  CA0400            retf 0x4
+
 00014F36  33C0              xor ax,ax
-00014F38  9A1C3E821F        call 0x1f82:0x3e1c
+00014F38  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014F3D  B86C1F            mov ax,0x1f6c
 00014F40  1E                push ds
 00014F41  50                push ax
@@ -32427,8 +32027,9 @@
 00014F45  50                push ax
 00014F46  9A375C0000        call 0x0:0x5c37
 00014F4B  CB                retf
+
 00014F4C  33C0              xor ax,ax
-00014F4E  9A1C3E821F        call 0x1f82:0x3e1c
+00014F4E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014F53  B8A61F            mov ax,0x1fa6
 00014F56  1E                push ds
 00014F57  50                push ax
@@ -32437,8 +32038,9 @@
 00014F5B  50                push ax
 00014F5C  9A375C0000        call 0x0:0x5c37
 00014F61  CB                retf
+
 00014F62  33C0              xor ax,ax
-00014F64  9A1C3E821F        call 0x1f82:0x3e1c
+00014F64  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014F69  B8E01F            mov ax,0x1fe0
 00014F6C  1E                push ds
 00014F6D  50                push ax
@@ -32447,8 +32049,9 @@
 00014F71  50                push ax
 00014F72  9A375C0000        call 0x0:0x5c37
 00014F77  CB                retf
+
 00014F78  33C0              xor ax,ax
-00014F7A  9A1C3E821F        call 0x1f82:0x3e1c
+00014F7A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014F7F  B81A20            mov ax,0x201a
 00014F82  1E                push ds
 00014F83  50                push ax
@@ -32457,10 +32060,11 @@
 00014F87  50                push ax
 00014F88  9A375C0000        call 0x0:0x5c37
 00014F8D  CB                retf
+
 00014F8E  55                push bp
 00014F8F  8BEC              mov bp,sp
 00014F91  B80C00            mov ax,0xc
-00014F94  9A1C3E821F        call 0x1f82:0x3e1c
+00014F94  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00014F99  57                push di
 00014F9A  8B1EBA77          mov bx,[0x77ba]
 00014F9E  8B4708            mov ax,[bx+0x8]
@@ -32576,7 +32180,6 @@
 000150DD  8B1EBA77          mov bx,[0x77ba]
 000150E1  8B46FE            mov ax,[bp-0x2]
 000150E4  894708            mov [bx+0x8],ax
-000150E7  90                nop
 000150E8  0E                push cs
 000150E9  E82154            call 0xa50d
 000150EC  B80100            mov ax,0x1
@@ -32586,10 +32189,11 @@
 000150F6  8BE5              mov sp,bp
 000150F8  5D                pop bp
 000150F9  CB                retf
+
 000150FA  55                push bp
 000150FB  8BEC              mov bp,sp
 000150FD  33C0              xor ax,ax
-000150FF  9A1C3E821F        call 0x1f82:0x3e1c
+000150FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015104  FF7608            push word [bp+0x8]
 00015107  FF7606            push word [bp+0x6]
 0001510A  2BC0              sub ax,ax
@@ -32609,10 +32213,11 @@
 00015120  9A485B0000        call 0x0:0x5b48
 00015125  5D                pop bp
 00015126  CA0400            retf 0x4
+
 00015129  55                push bp
 0001512A  8BEC              mov bp,sp
 0001512C  B80200            mov ax,0x2
-0001512F  9A1C3E821F        call 0x1f82:0x3e1c
+0001512F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015134  B82A25            mov ax,0x252a
 00015137  1E                push ds
 00015138  50                push ax
@@ -32624,10 +32229,11 @@
 00015145  8BE5              mov sp,bp
 00015147  5D                pop bp
 00015148  CB                retf
+
 00015149  55                push bp
 0001514A  8BEC              mov bp,sp
 0001514C  B80C00            mov ax,0xc
-0001514F  9A1C3E821F        call 0x1f82:0x3e1c
+0001514F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015154  57                push di
 00015155  56                push si
 00015156  8D76F6            lea si,[bp-0xa]
@@ -32668,10 +32274,11 @@
 0001519E  8BE5              mov sp,bp
 000151A0  5D                pop bp
 000151A1  CA0400            retf 0x4
+
 000151A4  55                push bp
 000151A5  8BEC              mov bp,sp
 000151A7  33C0              xor ax,ax
-000151A9  9A1C3E821F        call 0x1f82:0x3e1c
+000151A9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000151AE  8B4606            mov ax,[bp+0x6]
 000151B1  8B5608            mov dx,[bp+0x8]
 000151B4  A3C227            mov [0x27c2],ax
@@ -32692,9 +32299,9 @@
 000151DC  C706B8CF0100      mov word [0xcfb8],0x1
 000151E2  5D                pop bp
 000151E3  C20600            ret 0x6
+
 000151E6  33C0              xor ax,ax
-000151E8  9A1C3E821F        call 0x1f82:0x3e1c
-000151ED  90                nop
+000151E8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000151EE  0E                push cs
 000151EF  E893E0            call 0x3285
 000151F2  B8F426            mov ax,0x26f4
@@ -32704,8 +32311,9 @@
 000151FA  50                push ax
 000151FB  E8A6FF            call 0x51a4
 000151FE  CB                retf
+
 000151FF  33C0              xor ax,ax
-00015201  9A1C3E821F        call 0x1f82:0x3e1c
+00015201  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015206  B80C27            mov ax,0x270c
 00015209  1E                push ds
 0001520A  50                push ax
@@ -32713,8 +32321,9 @@
 0001520E  50                push ax
 0001520F  E892FF            call 0x51a4
 00015212  CB                retf
+
 00015213  33C0              xor ax,ax
-00015215  9A1C3E821F        call 0x1f82:0x3e1c
+00015215  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001521A  B82427            mov ax,0x2724
 0001521D  1E                push ds
 0001521E  50                push ax
@@ -32722,8 +32331,9 @@
 00015222  50                push ax
 00015223  E87EFF            call 0x51a4
 00015226  CB                retf
+
 00015227  33C0              xor ax,ax
-00015229  9A1C3E821F        call 0x1f82:0x3e1c
+00015229  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001522E  B83C27            mov ax,0x273c
 00015231  1E                push ds
 00015232  50                push ax
@@ -32731,8 +32341,9 @@
 00015235  50                push ax
 00015236  E86BFF            call 0x51a4
 00015239  CB                retf
+
 0001523A  33C0              xor ax,ax
-0001523C  9A1C3E821F        call 0x1f82:0x3e1c
+0001523C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015241  B85427            mov ax,0x2754
 00015244  1E                push ds
 00015245  50                push ax
@@ -32740,8 +32351,9 @@
 00015249  50                push ax
 0001524A  E857FF            call 0x51a4
 0001524D  CB                retf
+
 0001524E  33C0              xor ax,ax
-00015250  9A1C3E821F        call 0x1f82:0x3e1c
+00015250  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015255  B86C27            mov ax,0x276c
 00015258  1E                push ds
 00015259  50                push ax
@@ -32749,8 +32361,9 @@
 0001525D  50                push ax
 0001525E  E843FF            call 0x51a4
 00015261  CB                retf
+
 00015262  33C0              xor ax,ax
-00015264  9A1C3E821F        call 0x1f82:0x3e1c
+00015264  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015269  B88427            mov ax,0x2784
 0001526C  1E                push ds
 0001526D  50                push ax
@@ -32758,8 +32371,9 @@
 00015271  50                push ax
 00015272  E82FFF            call 0x51a4
 00015275  CB                retf
+
 00015276  33C0              xor ax,ax
-00015278  9A1C3E821F        call 0x1f82:0x3e1c
+00015278  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001527D  B89C27            mov ax,0x279c
 00015280  1E                push ds
 00015281  50                push ax
@@ -32767,10 +32381,11 @@
 00015285  50                push ax
 00015286  E81BFF            call 0x51a4
 00015289  CB                retf
+
 0001528A  55                push bp
 0001528B  8BEC              mov bp,sp
 0001528D  B81600            mov ax,0x16
-00015290  9A1C3E821F        call 0x1f82:0x3e1c
+00015290  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015295  57                push di
 00015296  56                push si
 00015297  B80A00            mov ax,0xa
@@ -32822,8 +32437,9 @@
 000152FB  8BE5              mov sp,bp
 000152FD  5D                pop bp
 000152FE  CA0200            retf 0x2
+
 00015301  33C0              xor ax,ax
-00015303  9A1C3E821F        call 0x1f82:0x3e1c
+00015303  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015308  B86228            mov ax,0x2862
 0001530B  1E                push ds
 0001530C  50                push ax
@@ -32832,10 +32448,11 @@
 00015310  50                push ax
 00015311  9A375C0000        call 0x0:0x5c37
 00015316  CB                retf
+
 00015317  55                push bp
 00015318  8BEC              mov bp,sp
 0001531A  B8E400            mov ax,0xe4
-0001531D  9A1C3E821F        call 0x1f82:0x3e1c
+0001531D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015322  57                push di
 00015323  56                push si
 00015324  B85C00            mov ax,0x5c
@@ -33003,10 +32620,11 @@
 000154C4  8BE5              mov sp,bp
 000154C6  5D                pop bp
 000154C7  CA0800            retf 0x8
+
 000154CA  55                push bp
 000154CB  8BEC              mov bp,sp
 000154CD  B80C00            mov ax,0xc
-000154D0  9A1C3E821F        call 0x1f82:0x3e1c
+000154D0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000154D5  C706C8650400      mov word [0x65c8],0x4
 000154DB  C706CC654000      mov word [0x65cc],0x40
 000154E1  C706C4650A00      mov word [0x65c4],0xa
@@ -33024,7 +32642,6 @@
 0001550A  C45EF4            les bx,[bp-0xc]
 0001550D  26FF7702          push word [es:bx+0x2]
 00015511  26FF37            push word [es:bx]
-00015514  90                nop
 00015515  0E                push cs
 00015516  E84952            call 0xa762
 00015519  8BD8              mov bx,ax
@@ -33065,16 +32682,16 @@
 00015578  837EFC01          cmp word [bp-0x4],byte +0x1
 0001557C  7509              jnz 0x5587
 0001557E  FF36CA65          push word [0x65ca]
-00015582  90                nop
 00015583  0E                push cs
 00015584  E85B50            call 0xa5e2
 00015587  8BE5              mov sp,bp
 00015589  5D                pop bp
 0001558A  CB                retf
+
 0001558B  55                push bp
 0001558C  8BEC              mov bp,sp
 0001558E  B80400            mov ax,0x4
-00015591  9A1C3E821F        call 0x1f82:0x3e1c
+00015591  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015596  8B4606            mov ax,[bp+0x6]
 00015599  8B5608            mov dx,[bp+0x8]
 0001559C  A3F225            mov [0x25f2],ax
@@ -33090,10 +32707,11 @@
 000155B4  8BE5              mov sp,bp
 000155B6  5D                pop bp
 000155B7  CA0400            retf 0x4
+
 000155BA  55                push bp
 000155BB  8BEC              mov bp,sp
 000155BD  B80200            mov ax,0x2
-000155C0  9A1C3E821F        call 0x1f82:0x3e1c
+000155C0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000155C5  B86826            mov ax,0x2668
 000155C8  1E                push ds
 000155C9  50                push ax
@@ -33105,10 +32723,11 @@
 000155D6  8BE5              mov sp,bp
 000155D8  5D                pop bp
 000155D9  CB                retf
+
 000155DA  55                push bp
 000155DB  8BEC              mov bp,sp
 000155DD  B80200            mov ax,0x2
-000155E0  9A1C3E821F        call 0x1f82:0x3e1c
+000155E0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000155E5  B8BA26            mov ax,0x26ba
 000155E8  1E                push ds
 000155E9  50                push ax
@@ -33125,10 +32744,11 @@
 00015602  8BE5              mov sp,bp
 00015604  5D                pop bp
 00015605  CB                retf
+
 00015606  55                push bp
 00015607  8BEC              mov bp,sp
 00015609  33C0              xor ax,ax
-0001560B  9A1C3E821F        call 0x1f82:0x3e1c
+0001560B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015610  57                push di
 00015611  837E083D          cmp word [bp+0x8],byte +0x3d
 00015615  7C07              jl 0x561e
@@ -33179,8 +32799,9 @@
 000156A1  5F                pop di
 000156A2  5D                pop bp
 000156A3  C3                ret
+
 000156A4  33C0              xor ax,ax
-000156A6  9A1C3E821F        call 0x1f82:0x3e1c
+000156A6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000156AB  9AA8B30000        call 0x0:0xb3a8
 000156B0  8AC4              mov al,ah
 000156B2  8AE2              mov ah,dl
@@ -33189,16 +32810,16 @@
 000156B8  A3D065            mov [0x65d0],ax
 000156BB  8916D265          mov [0x65d2],dx
 000156BF  CB                retf
+
 000156C0  55                push bp
 000156C1  8BEC              mov bp,sp
 000156C3  B80800            mov ax,0x8
-000156C6  9A1C3E821F        call 0x1f82:0x3e1c
+000156C6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000156CB  57                push di
 000156CC  56                push si
 000156CD  9AB7AF0000        call 0x0:0xafb7
 000156D2  8BF0              mov si,ax
 000156D4  8BFA              mov di,dx
-000156D6  90                nop
 000156D7  0E                push cs
 000156D8  E8D421            call 0x78af
 000156DB  3BD7              cmp dx,di
@@ -33208,7 +32829,6 @@
 000156E3  7607              jna 0x56ec
 000156E5  9AB7AF0000        call 0x0:0xafb7
 000156EA  EB05              jmp short 0x56f1
-000156EC  90                nop
 000156ED  0E                push cs
 000156EE  E8BE21            call 0x78af
 000156F1  8946FC            mov [bp-0x4],ax
@@ -33295,16 +32915,16 @@
 000157BE  8BE5              mov sp,bp
 000157C0  5D                pop bp
 000157C1  CB                retf
+
 000157C2  55                push bp
 000157C3  8BEC              mov bp,sp
 000157C5  B81000            mov ax,0x10
-000157C8  9A1C3E821F        call 0x1f82:0x3e1c
+000157C8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000157CD  8D46F0            lea ax,[bp-0x10]
 000157D0  16                push ss
 000157D1  50                push ax
 000157D2  FF7608            push word [bp+0x8]
 000157D5  FF7606            push word [bp+0x6]
-000157D8  90                nop
 000157D9  0E                push cs
 000157DA  E8F4D9            call 0x31d1
 000157DD  8D46F0            lea ax,[bp-0x10]
@@ -33338,8 +32958,9 @@
 00015818  8BE5              mov sp,bp
 0001581A  5D                pop bp
 0001581B  CA0400            retf 0x4
+
 0001581E  33C0              xor ax,ax
-00015820  9A1C3E821F        call 0x1f82:0x3e1c
+00015820  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015825  B8DE2E            mov ax,0x2ede
 00015828  1E                push ds
 00015829  50                push ax
@@ -33348,10 +32969,11 @@
 0001582D  50                push ax
 0001582E  9A485B0000        call 0x0:0x5b48
 00015833  CB                retf
+
 00015834  55                push bp
 00015835  8BEC              mov bp,sp
 00015837  B80A00            mov ax,0xa
-0001583A  9A1C3E821F        call 0x1f82:0x3e1c
+0001583A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001583F  56                push si
 00015840  C706C8650400      mov word [0x65c8],0x4
 00015846  C706CC651B00      mov word [0x65cc],0x1b
@@ -33404,10 +33026,11 @@
 000158C9  8BE5              mov sp,bp
 000158CB  5D                pop bp
 000158CC  CB                retf
+
 000158CD  55                push bp
 000158CE  8BEC              mov bp,sp
 000158D0  33C0              xor ax,ax
-000158D2  9A1C3E821F        call 0x1f82:0x3e1c
+000158D2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000158D7  57                push di
 000158D8  56                push si
 000158D9  837E0818          cmp word [bp+0x8],byte +0x18
@@ -33473,10 +33096,11 @@
 0001598B  5F                pop di
 0001598C  5D                pop bp
 0001598D  C3                ret
+
 0001598E  55                push bp
 0001598F  8BEC              mov bp,sp
 00015991  B80800            mov ax,0x8
-00015994  9A1C3E821F        call 0x1f82:0x3e1c
+00015994  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015999  C746FE0000        mov word [bp-0x2],0x0
 0001599E  833E683601        cmp word [0x3668],byte +0x1
 000159A3  7505              jnz 0x59aa
@@ -33570,8 +33194,9 @@
 00015A9A  8BE5              mov sp,bp
 00015A9C  5D                pop bp
 00015A9D  CA0800            retf 0x8
+
 00015AA0  33C0              xor ax,ax
-00015AA2  9A1C3E821F        call 0x1f82:0x3e1c
+00015AA2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015AA7  B81432            mov ax,0x3214
 00015AAA  1E                push ds
 00015AAB  50                push ax
@@ -33579,16 +33204,18 @@
 00015AB1  A36266            mov [0x6662],ax
 00015AB4  89166466          mov [0x6664],dx
 00015AB8  CB                retf
+
 00015AB9  33C0              xor ax,ax
-00015ABB  9A1C3E821F        call 0x1f82:0x3e1c
+00015ABB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015AC0  FF366466          push word [0x6664]
 00015AC4  FF366266          push word [0x6662]
 00015AC8  9A8E4A0000        call 0x0:0x4a8e
 00015ACD  CB                retf
+
 00015ACE  55                push bp
 00015ACF  8BEC              mov bp,sp
 00015AD1  B80E00            mov ax,0xe
-00015AD4  9A1C3E821F        call 0x1f82:0x3e1c
+00015AD4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015AD9  A176D9            mov ax,[0xd976]
 00015ADC  A30233            mov [0x3302],ax
 00015ADF  8946F2            mov [bp-0xe],ax
@@ -33681,8 +33308,9 @@
 00015BCF  8BE5              mov sp,bp
 00015BD1  5D                pop bp
 00015BD2  CB                retf
+
 00015BD3  33C0              xor ax,ax
-00015BD5  9A1C3E821F        call 0x1f82:0x3e1c
+00015BD5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015BDA  B8A033            mov ax,0x33a0
 00015BDD  1E                push ds
 00015BDE  50                push ax
@@ -33691,10 +33319,11 @@
 00015BE2  50                push ax
 00015BE3  9A375C0000        call 0x0:0x5c37
 00015BE8  CB                retf
+
 00015BE9  55                push bp
 00015BEA  8BEC              mov bp,sp
 00015BEC  B80200            mov ax,0x2
-00015BEF  9A1C3E821F        call 0x1f82:0x3e1c
+00015BEF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015BF4  837E0600          cmp word [bp+0x6],byte +0x0
 00015BF8  7405              jz 0x5bff
 00015BFA  B84434            mov ax,0x3444
@@ -33710,10 +33339,11 @@
 00015C10  8BE5              mov sp,bp
 00015C12  5D                pop bp
 00015C13  CA0200            retf 0x2
+
 00015C16  55                push bp
 00015C17  8BEC              mov bp,sp
 00015C19  B80200            mov ax,0x2
-00015C1C  9A1C3E821F        call 0x1f82:0x3e1c
+00015C1C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C21  B8AE34            mov ax,0x34ae
 00015C24  1E                push ds
 00015C25  50                push ax
@@ -33725,10 +33355,11 @@
 00015C32  8BE5              mov sp,bp
 00015C34  5D                pop bp
 00015C35  CB                retf
+\
 00015C36  55                push bp
 00015C37  8BEC              mov bp,sp
 00015C39  B80200            mov ax,0x2
-00015C3C  9A1C3E821F        call 0x1f82:0x3e1c
+00015C3C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C41  B81835            mov ax,0x3518
 00015C44  1E                push ds
 00015C45  50                push ax
@@ -33740,8 +33371,9 @@
 00015C52  8BE5              mov sp,bp
 00015C54  5D                pop bp
 00015C55  CB                retf
+
 00015C56  33C0              xor ax,ax
-00015C58  9A1C3E821F        call 0x1f82:0x3e1c
+00015C58  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C5D  B85235            mov ax,0x3552
 00015C60  1E                push ds
 00015C61  50                push ax
@@ -33750,8 +33382,9 @@
 00015C65  50                push ax
 00015C66  9A375C0000        call 0x0:0x5c37
 00015C6B  CB                retf
+
 00015C6C  33C0              xor ax,ax
-00015C6E  9A1C3E821F        call 0x1f82:0x3e1c
+00015C6E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C73  B88C35            mov ax,0x358c
 00015C76  1E                push ds
 00015C77  50                push ax
@@ -33760,8 +33393,9 @@
 00015C7B  50                push ax
 00015C7C  9A375C0000        call 0x0:0x5c37
 00015C81  CB                retf
+
 00015C82  33C0              xor ax,ax
-00015C84  9A1C3E821F        call 0x1f82:0x3e1c
+00015C84  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C89  B8C635            mov ax,0x35c6
 00015C8C  1E                push ds
 00015C8D  50                push ax
@@ -33770,8 +33404,9 @@
 00015C91  50                push ax
 00015C92  9A375C0000        call 0x0:0x5c37
 00015C97  CB                retf
+
 00015C98  33C0              xor ax,ax
-00015C9A  9A1C3E821F        call 0x1f82:0x3e1c
+00015C9A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015C9F  B80036            mov ax,0x3600
 00015CA2  1E                push ds
 00015CA3  50                push ax
@@ -33780,8 +33415,9 @@
 00015CA7  50                push ax
 00015CA8  9A375C0000        call 0x0:0x5c37
 00015CAD  CB                retf
+
 00015CAE  33C0              xor ax,ax
-00015CB0  9A1C3E821F        call 0x1f82:0x3e1c
+00015CB0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015CB5  B83A36            mov ax,0x363a
 00015CB8  1E                push ds
 00015CB9  50                push ax
@@ -33790,10 +33426,11 @@
 00015CBD  50                push ax
 00015CBE  9A375C0000        call 0x0:0x5c37
 00015CC3  CB                retf
+
 00015CC4  55                push bp
 00015CC5  8BEC              mov bp,sp
 00015CC7  B80800            mov ax,0x8
-00015CCA  9A1C3E821F        call 0x1f82:0x3e1c
+00015CCA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015CCF  A1C0CF            mov ax,[0xcfc0]
 00015CD2  40                inc ax
 00015CD3  80CC80            or ah,0x80
@@ -33841,10 +33478,11 @@
 00015D52  8BE5              mov sp,bp
 00015D54  5D                pop bp
 00015D55  CB                retf
+
 00015D56  55                push bp
 00015D57  8BEC              mov bp,sp
 00015D59  B80600            mov ax,0x6
-00015D5C  9A1C3E821F        call 0x1f82:0x3e1c
+00015D5C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015D61  FF36CE65          push word [0x65ce]
 00015D65  FF36D465          push word [0x65d4]
 00015D69  FF36D665          push word [0x65d6]
@@ -33922,10 +33560,11 @@
 00015E3E  8BE5              mov sp,bp
 00015E40  5D                pop bp
 00015E41  CB                retf
+
 00015E42  55                push bp
 00015E43  8BEC              mov bp,sp
 00015E45  B82400            mov ax,0x24
-00015E48  9A1C3E821F        call 0x1f82:0x3e1c
+00015E48  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015E4D  C45E0C            les bx,[bp+0xc]
 00015E50  268B07            mov ax,[es:bx]
 00015E53  268B5702          mov dx,[es:bx+0x2]
@@ -33994,13 +33633,11 @@
 00015EF8  8B46DE            mov ax,[bp-0x22]
 00015EFB  48                dec ax
 00015EFC  50                push ax
-00015EFD  90                nop
 00015EFE  0E                push cs
 00015EFF  E8A8A9            call 0x8aa
 00015F02  8D46F8            lea ax,[bp-0x8]
 00015F05  16                push ss
 00015F06  50                push ax
-00015F07  90                nop
 00015F08  0E                push cs
 00015F09  E8BCA6            call 0x5c8
 00015F0C  2BC0              sub ax,ax
@@ -34020,7 +33657,6 @@
 00015F2E  8B46DE            mov ax,[bp-0x22]
 00015F31  48                dec ax
 00015F32  50                push ax
-00015F33  90                nop
 00015F34  0E                push cs
 00015F35  E872A9            call 0x8aa
 00015F38  8B46F4            mov ax,[bp-0xc]
@@ -34028,7 +33664,6 @@
 00015F3E  050800            add ax,0x8
 00015F41  52                push dx
 00015F42  50                push ax
-00015F43  90                nop
 00015F44  0E                push cs
 00015F45  E88CD4            call 0x33d4
 00015F48  837EF200          cmp word [bp-0xe],byte +0x0
@@ -34045,13 +33680,11 @@
 00015F64  FF76F2            push word [bp-0xe]
 00015F67  9A3E45821F        call 0x1f82:0x453e
 00015F6C  83C408            add sp,byte +0x8
-00015F6F  90                nop
 00015F70  0E                push cs
 00015F71  E84AD5            call 0x34be
 00015F74  8D46E0            lea ax,[bp-0x20]
 00015F77  16                push ss
 00015F78  50                push ax
-00015F79  90                nop
 00015F7A  0E                push cs
 00015F7B  E896A1            call 0x114
 00015F7E  C45EF4            les bx,[bp-0xc]
@@ -34063,13 +33696,11 @@
 00015F8A  268B4708          mov ax,[es:bx+0x8]
 00015F8E  40                inc ax
 00015F8F  50                push ax
-00015F90  90                nop
 00015F91  0E                push cs
 00015F92  E8FDA8            call 0x892
 00015F95  8D46E0            lea ax,[bp-0x20]
 00015F98  16                push ss
 00015F99  50                push ax
-00015F9A  90                nop
 00015F9B  0E                push cs
 00015F9C  E8B3A1            call 0x152
 00015F9F  8B46F4            mov ax,[bp-0xc]
@@ -34083,17 +33714,17 @@
 00015FB0  B80100            mov ax,0x1
 00015FB3  2B46DE            sub ax,[bp-0x22]
 00015FB6  50                push ax
-00015FB7  90                nop
 00015FB8  0E                push cs
 00015FB9  E8EEA8            call 0x8aa
 00015FBC  E94DFF            jmp 0x5f0c
 00015FBF  8BE5              mov sp,bp
 00015FC1  5D                pop bp
 00015FC2  CB                retf
+
 00015FC3  55                push bp
 00015FC4  8BEC              mov bp,sp
 00015FC6  B80C00            mov ax,0xc
-00015FC9  9A1C3E821F        call 0x1f82:0x3e1c
+00015FC9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00015FCE  FF7608            push word [bp+0x8]
 00015FD1  FF7606            push word [bp+0x6]
 00015FD4  8D46F4            lea ax,[bp-0xc]
@@ -34124,7 +33755,6 @@
 00016018  50                push ax
 00016019  FF76F4            push word [bp-0xc]
 0001601C  FF76F6            push word [bp-0xa]
-0001601F  90                nop
 00016020  0E                push cs
 00016021  E886A8            call 0x8aa
 00016024  8B46FC            mov ax,[bp-0x4]
@@ -34132,7 +33762,6 @@
 0001602A  050800            add ax,0x8
 0001602D  52                push dx
 0001602E  50                push ax
-0001602F  90                nop
 00016030  0E                push cs
 00016031  E8A0D3            call 0x33d4
 00016034  C606C68001        mov byte [0x80c6],0x1
@@ -34142,7 +33771,6 @@
 00016044  050800            add ax,0x8
 00016047  52                push dx
 00016048  50                push ax
-00016049  90                nop
 0001604A  0E                push cs
 0001604B  E8B0D3            call 0x33fe
 0001604E  8B46FC            mov ax,[bp-0x4]
@@ -34156,7 +33784,6 @@
 0001605F  8B46F6            mov ax,[bp-0xa]
 00016062  F7D8              neg ax
 00016064  50                push ax
-00016065  90                nop
 00016066  0E                push cs
 00016067  E840A8            call 0x8aa
 0001606A  FF76FA            push word [bp-0x6]
@@ -34165,9 +33792,9 @@
 00016075  8BE5              mov sp,bp
 00016077  5D                pop bp
 00016078  CB                retf
-00016079  90                nop
+
 0001607A  33C0              xor ax,ax
-0001607C  9A1C3E821F        call 0x1f82:0x3e1c
+0001607C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016081  A160D9            mov ax,[0xd960]
 00016084  3D0100            cmp ax,0x1
 00016087  7428              jz 0x60b1
@@ -34188,7 +33815,6 @@
 000160AE  E95201            jmp 0x6203
 000160B1  FF36B0CF          push word [0xcfb0]
 000160B5  FF36AECF          push word [0xcfae]
-000160B9  90                nop
 000160BA  0E                push cs
 000160BB  E8D449            call 0xaa92
 000160BE  FF36FCCB          push word [0xcbfc]
@@ -34200,7 +33826,6 @@
 000160D2  E92E01            jmp 0x6203
 000160D5  FF3676CF          push word [0xcf76]
 000160D9  FF3674CF          push word [0xcf74]
-000160DD  90                nop
 000160DE  0E                push cs
 000160DF  E8104A            call 0xaaf2
 000160E2  50                push ax
@@ -34215,7 +33840,6 @@
 00016103  E8FE00            call 0x6204
 00016106  FF36C480          push word [0x80c4]
 0001610A  FF36C280          push word [0x80c2]
-0001610E  90                nop
 0001610F  0E                push cs
 00016110  E8DF49            call 0xaaf2
 00016113  50                push ax
@@ -34243,7 +33867,6 @@
 00016155  B86A66            mov ax,0x666a
 00016158  1E                push ds
 00016159  50                push ax
-0001615A  90                nop
 0001615B  0E                push cs
 0001615C  E887CF            call 0x30e6
 0001615F  A16666            mov ax,[0x6666]
@@ -34278,7 +33901,6 @@
 000161BD  B86A66            mov ax,0x666a
 000161C0  1E                push ds
 000161C1  50                push ax
-000161C2  90                nop
 000161C3  0E                push cs
 000161C4  E81FCF            call 0x30e6
 000161C7  A16666            mov ax,[0x6666]
@@ -34301,14 +33923,14 @@
 000161FE  B80200            mov ax,0x2
 00016201  EB93              jmp short 0x6196
 00016203  CB                retf
+
 00016204  55                push bp
 00016205  8BEC              mov bp,sp
 00016207  33C0              xor ax,ax
-00016209  9A1C3E821F        call 0x1f82:0x3e1c
+00016209  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001620E  2BC0              sub ax,ax
 00016210  50                push ax
 00016211  9A85C90000        call 0x0:0xc985
-00016216  90                nop
 00016217  0E                push cs
 00016218  E8B8D0            call 0x32d3
 0001621B  8B1EC0CF          mov bx,[0xcfc0]
@@ -34320,19 +33942,15 @@
 0001622E  FF7604            push word [bp+0x4]
 00016231  2BC0              sub ax,ax
 00016233  50                push ax
-00016234  90                nop
 00016235  0E                push cs
 00016236  E82130            call 0x925a
-00016239  90                nop
 0001623A  0E                push cs
 0001623B  E874D0            call 0x32b2
 0001623E  C45E04            les bx,[bp+0x4]
 00016241  26FF7702          push word [es:bx+0x2]
 00016245  26FF37            push word [es:bx]
-00016248  90                nop
 00016249  0E                push cs
 0001624A  E8AC47            call 0xa9f9
-0001624D  90                nop
 0001624E  0E                push cs
 0001624F  E8C43D            call 0xa016
 00016252  B80100            mov ax,0x1
@@ -34340,8 +33958,9 @@
 00016256  9A85C90000        call 0x0:0xc985
 0001625B  5D                pop bp
 0001625C  C20400            ret 0x4
+
 0001625F  33C0              xor ax,ax
-00016261  9A1C3E821F        call 0x1f82:0x3e1c
+00016261  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016266  A1CE80            mov ax,[0x80ce]
 00016269  3906C0CF          cmp [0xcfc0],ax
 0001626D  750D              jnz 0x627c
@@ -34353,10 +33972,10 @@
 00016282  9A93C80000        call 0x0:0xc893
 00016287  9A8E400000        call 0x0:0x408e
 0001628C  CB                retf
+
 0001628D  33C0              xor ax,ax
-0001628F  9A1C3E821F        call 0x1f82:0x3e1c
+0001628F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016294  9AF2960000        call 0x0:0x96f2
-00016299  90                nop
 0001629A  0E                push cs
 0001629B  E801D0            call 0x329f
 0001629E  A1C0CF            mov ax,[0xcfc0]
@@ -34395,14 +34014,13 @@
 000162F9  B80200            mov ax,0x2
 000162FC  50                push ax
 000162FD  9AD7CD0000        call 0x0:0xcdd7
-00016302  90                nop
 00016303  0E                push cs
 00016304  E87ECF            call 0x3285
 00016307  CB                retf
+
 00016308  33C0              xor ax,ax
-0001630A  9A1C3E821F        call 0x1f82:0x3e1c
+0001630A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001630F  9AF2960000        call 0x0:0x96f2
-00016314  90                nop
 00016315  0E                push cs
 00016316  E886CF            call 0x329f
 00016319  A1C0CF            mov ax,[0xcfc0]
@@ -34423,16 +34041,15 @@
 00016344  2BC0              sub ax,ax
 00016346  50                push ax
 00016347  9AD7CD0000        call 0x0:0xcdd7
-0001634C  90                nop
 0001634D  0E                push cs
 0001634E  E834CF            call 0x3285
 00016351  CB                retf
+
 00016352  55                push bp
 00016353  8BEC              mov bp,sp
 00016355  B80600            mov ax,0x6
-00016358  9A1C3E821F        call 0x1f82:0x3e1c
+00016358  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001635D  9AF2960000        call 0x0:0x96f2
-00016362  90                nop
 00016363  0E                push cs
 00016364  E838CF            call 0x329f
 00016367  A1C0CF            mov ax,[0xcfc0]
@@ -34472,13 +34089,11 @@
 000163CB  7506              jnz 0x63d3
 000163CD  3997AEA4          cmp [bx-0x5b52],dx
 000163D1  74DC              jz 0x63af
-000163D3  90                nop
 000163D4  0E                push cs
 000163D5  E8ADCE            call 0x3285
 000163D8  B8D007            mov ax,0x7d0
 000163DB  2B46FA            sub ax,[bp-0x6]
 000163DE  50                push ax
-000163DF  90                nop
 000163E0  0E                push cs
 000163E1  E8A6EE            call 0x528a
 000163E4  3D0200            cmp ax,0x2
@@ -34519,10 +34134,11 @@
 0001645A  8BE5              mov sp,bp
 0001645C  5D                pop bp
 0001645D  CB                retf
+
 0001645E  55                push bp
 0001645F  8BEC              mov bp,sp
 00016461  B80400            mov ax,0x4
-00016464  9A1C3E821F        call 0x1f82:0x3e1c
+00016464  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016469  A1C0CF            mov ax,[0xcfc0]
 0001646C  3B06CE80          cmp ax,[0x80ce]
 00016470  7E03              jng 0x6475
@@ -34560,10 +34176,11 @@
 000164D3  8BE5              mov sp,bp
 000164D5  5D                pop bp
 000164D6  CB                retf
+
 000164D7  55                push bp
 000164D8  8BEC              mov bp,sp
 000164DA  B80400            mov ax,0x4
-000164DD  9A1C3E821F        call 0x1f82:0x3e1c
+000164DD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000164E2  A1C0CF            mov ax,[0xcfc0]
 000164E5  3B06CE80          cmp ax,[0x80ce]
 000164E9  7E03              jng 0x64ee
@@ -34593,8 +34210,9 @@
 0001652F  8BE5              mov sp,bp
 00016531  5D                pop bp
 00016532  CB                retf
+
 00016533  33C0              xor ax,ax
-00016535  9A1C3E821F        call 0x1f82:0x3e1c
+00016535  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001653A  56                push si
 0001653B  2BC0              sub ax,ax
 0001653D  50                push ax
@@ -34614,10 +34232,11 @@
 00016564  9AA8C90000        call 0x0:0xc9a8
 00016569  5E                pop si
 0001656A  CB                retf
+
 0001656B  55                push bp
 0001656C  8BEC              mov bp,sp
 0001656E  B80800            mov ax,0x8
-00016571  9A1C3E821F        call 0x1f82:0x3e1c
+00016571  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016576  B8CF07            mov ax,0x7cf
 00016579  2B4604            sub ax,[bp+0x4]
 0001657C  8946FC            mov [bp-0x4],ax
@@ -34667,15 +34286,15 @@
 000165ED  8BE5              mov sp,bp
 000165EF  5D                pop bp
 000165F0  C20400            ret 0x4
+
 000165F3  55                push bp
 000165F4  8BEC              mov bp,sp
 000165F6  B80200            mov ax,0x2
-000165F9  9A1C3E821F        call 0x1f82:0x3e1c
+000165F9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000165FE  8B4608            mov ax,[bp+0x8]
 00016601  8946FE            mov [bp-0x2],ax
 00016604  EB0B              jmp short 0x6611
 00016606  FF76FE            push word [bp-0x2]
-00016609  90                nop
 0001660A  0E                push cs
 0001660B  E80246            call 0xac10
 0001660E  FF46FE            inc word [bp-0x2]
@@ -34686,16 +34305,16 @@
 0001661E  8BE5              mov sp,bp
 00016620  5D                pop bp
 00016621  CA0400            retf 0x4
+
 00016624  55                push bp
 00016625  8BEC              mov bp,sp
 00016627  B82400            mov ax,0x24
-0001662A  9A1C3E821F        call 0x1f82:0x3e1c
+0001662A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001662F  56                push si
 00016630  B8FFFF            mov ax,0xffff
 00016633  50                push ax
 00016634  2BC0              sub ax,ax
 00016636  50                push ax
-00016637  90                nop
 00016638  0E                push cs
 00016639  E83107            call 0x6d6d
 0001663C  8B4606            mov ax,[bp+0x6]
@@ -34704,7 +34323,6 @@
 00016645  8946E6            mov [bp-0x1a],ax
 00016648  EB0B              jmp short 0x6655
 0001664A  FF76E6            push word [bp-0x1a]
-0001664D  90                nop
 0001664E  0E                push cs
 0001664F  E8BE45            call 0xac10
 00016652  FF46E6            inc word [bp-0x1a]
@@ -34767,7 +34385,6 @@
 000166EF  FF7606            push word [bp+0x6]
 000166F2  FF7604            push word [bp+0x4]
 000166F5  E873FE            call 0x656b
-000166F8  90                nop
 000166F9  0E                push cs
 000166FA  E8E9EA            call 0x51e6
 000166FD  B8FFFF            mov ax,0xffff
@@ -34779,7 +34396,6 @@
 0001670D  8B1654D9          mov dx,[0xd954]
 00016711  8987ACA4          mov [bx-0x5b54],ax
 00016715  8997AEA4          mov [bx-0x5b52],dx
-00016719  90                nop
 0001671A  0E                push cs
 0001671B  E88511            call 0x78a3
 0001671E  0BC0              or ax,ax
@@ -34791,7 +34407,6 @@
 0001672A  FF7606            push word [bp+0x6]
 0001672D  FF7604            push word [bp+0x4]
 00016730  E838FE            call 0x656b
-00016733  90                nop
 00016734  0E                push cs
 00016735  E84DCB            call 0x3285
 00016738  B80100            mov ax,0x1
@@ -34820,7 +34435,6 @@
 0001677E  C45EFC            les bx,[bp-0x4]
 00016781  26FF7702          push word [es:bx+0x2]
 00016785  26FF37            push word [es:bx]
-00016788  90                nop
 00016789  0E                push cs
 0001678A  E86543            call 0xaaf2
 0001678D  8946FA            mov [bp-0x6],ax
@@ -34871,16 +34485,16 @@
 00016812  8BE5              mov sp,bp
 00016814  5D                pop bp
 00016815  C20400            ret 0x4
+
 00016818  55                push bp
 00016819  8BEC              mov bp,sp
 0001681B  B82000            mov ax,0x20
-0001681E  9A1C3E821F        call 0x1f82:0x3e1c
+0001681E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016823  56                push si
 00016824  B8FFFF            mov ax,0xffff
 00016827  50                push ax
 00016828  2BC0              sub ax,ax
 0001682A  50                push ax
-0001682B  90                nop
 0001682C  0E                push cs
 0001682D  E83D05            call 0x6d6d
 00016830  0E                push cs
@@ -34928,7 +34542,6 @@
 000168A3  A3A8A4            mov [0xa4a8],ax
 000168A6  0E                push cs
 000168A7  E85701            call 0x6a01
-000168AA  90                nop
 000168AB  0E                push cs
 000168AC  E837E9            call 0x51e6
 000168AF  B8FFFF            mov ax,0xffff
@@ -34956,7 +34569,6 @@
 000168F1  8B1654D9          mov dx,[0xd954]
 000168F5  268900            mov [es:bx+si],ax
 000168F8  26895002          mov [es:bx+si+0x2],dx
-000168FC  90                nop
 000168FD  0E                push cs
 000168FE  E8A20F            call 0x78a3
 00016901  0BC0              or ax,ax
@@ -34969,7 +34581,6 @@
 00016910  A3A8A4            mov [0xa4a8],ax
 00016913  0E                push cs
 00016914  E8EA00            call 0x6a01
-00016917  90                nop
 00016918  0E                push cs
 00016919  E869C9            call 0x3285
 0001691C  B80100            mov ax,0x1
@@ -34997,7 +34608,6 @@
 0001695F  C45EE0            les bx,[bp-0x20]
 00016962  26FF7702          push word [es:bx+0x2]
 00016966  26FF37            push word [es:bx]
-00016969  90                nop
 0001696A  0E                push cs
 0001696B  E88441            call 0xaaf2
 0001696E  8946FA            mov [bp-0x6],ax
@@ -35050,10 +34660,11 @@
 000169FB  8BE5              mov sp,bp
 000169FD  5D                pop bp
 000169FE  C20400            ret 0x4
+
 00016A01  55                push bp
 00016A02  8BEC              mov bp,sp
 00016A04  B80200            mov ax,0x2
-00016A07  9A1C3E821F        call 0x1f82:0x3e1c
+00016A07  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016A0C  56                push si
 00016A0D  C746FE0000        mov word [bp-0x2],0x0
 00016A12  EB37              jmp short 0x6a4b
@@ -35095,26 +34706,24 @@
 00016A85  8BE5              mov sp,bp
 00016A87  5D                pop bp
 00016A88  CB                retf
+
 00016A89  33C0              xor ax,ax
-00016A8B  9A1C3E821F        call 0x1f82:0x3e1c
+00016A8B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016A90  2BC0              sub ax,ax
 00016A92  50                push ax
 00016A93  9A85C90000        call 0x0:0xc985
-00016A98  90                nop
 00016A99  0E                push cs
 00016A9A  E8ED37            call 0xa28a
-00016A9D  90                nop
 00016A9E  0E                push cs
 00016A9F  E8FDC7            call 0x329f
 00016AA2  FF36C480          push word [0x80c4]
 00016AA6  FF36C280          push word [0x80c2]
-00016AAA  90                nop
 00016AAB  0E                push cs
 00016AAC  E8E33F            call 0xaa92
 00016AAF  C3                ret
+
 00016AB0  33C0              xor ax,ax
-00016AB2  9A1C3E821F        call 0x1f82:0x3e1c
-00016AB7  90                nop
+00016AB2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016AB8  0E                push cs
 00016AB9  E817C8            call 0x32d3
 00016ABC  FF36B877          push word [0x77b8]
@@ -35126,24 +34735,22 @@
 00016AD0  FFB7ACA4          push word [bx-0x5b54]
 00016AD4  2BC0              sub ax,ax
 00016AD6  50                push ax
-00016AD7  90                nop
 00016AD8  0E                push cs
 00016AD9  E87E27            call 0x925a
-00016ADC  90                nop
 00016ADD  0E                push cs
 00016ADE  E87DC9            call 0x345e
 00016AE1  9A8E400000        call 0x0:0x408e
-00016AE6  90                nop
 00016AE7  0E                push cs
 00016AE8  E82B35            call 0xa016
 00016AEB  B80100            mov ax,0x1
 00016AEE  50                push ax
 00016AEF  9A85C90000        call 0x0:0xc985
 00016AF4  C3                ret
+
 00016AF5  55                push bp
 00016AF6  8BEC              mov bp,sp
 00016AF8  B80200            mov ax,0x2
-00016AFB  9A1C3E821F        call 0x1f82:0x3e1c
+00016AFB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016B00  A166D9            mov ax,[0xd966]
 00016B03  8946FE            mov [bp-0x2],ax
 00016B06  C70666D90000      mov word [0xd966],0x0
@@ -35154,7 +34761,6 @@
 00016B14  B8A480            mov ax,0x80a4
 00016B17  1E                push ds
 00016B18  50                push ax
-00016B19  90                nop
 00016B1A  0E                push cs
 00016B1B  E85D03            call 0x6e7b
 00016B1E  0BC0              or ax,ax
@@ -35167,18 +34773,17 @@
 00016B31  50                push ax
 00016B32  2BC0              sub ax,ax
 00016B34  50                push ax
-00016B35  90                nop
 00016B36  0E                push cs
 00016B37  E83302            call 0x6d6d
 00016B3A  8B46FE            mov ax,[bp-0x2]
 00016B3D  8BE5              mov sp,bp
 00016B3F  5D                pop bp
 00016B40  CB                retf
-00016B41  90                nop
+
 00016B42  55                push bp
 00016B43  8BEC              mov bp,sp
 00016B45  B81A00            mov ax,0x1a
-00016B48  9A1C3E821F        call 0x1f82:0x3e1c
+00016B48  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016B4D  57                push di
 00016B4E  833E6A3600        cmp word [0x366a],byte +0x0
 00016B53  7409              jz 0x6b5e
@@ -35269,12 +34874,10 @@
 00016C46  07                pop es
 00016C47  F2AB              repne stosw
 00016C49  C7067466FFFF      mov word [0x6674],0xffff
-00016C4F  90                nop
 00016C50  0E                push cs
 00016C51  E82A0A            call 0x767e
 00016C54  40                inc ax
 00016C55  75F8              jnz 0x6c4f
-00016C57  90                nop
 00016C58  0E                push cs
 00016C59  E8590A            call 0x76b5
 00016C5C  C7066A360100      mov word [0x366a],0x1
@@ -35288,31 +34891,31 @@
 00016C76  8BE5              mov sp,bp
 00016C78  5D                pop bp
 00016C79  CA0800            retf 0x8
+
 00016C7C  33C0              xor ax,ax
-00016C7E  9A1C3E821F        call 0x1f82:0x3e1c
+00016C7E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016C83  E8EC08            call 0x7572
-00016C86  90                nop
 00016C87  0E                push cs
 00016C88  E85B0A            call 0x76e6
 00016C8B  FF367266          push word [0x6672]
 00016C8F  FF367066          push word [0x6670]
 00016C93  9AADAE0000        call 0x0:0xaead
-00016C98  2BC0              sub ax,ax
-00016C9A  99                cwd
-00016C9B  A37A66            mov [0x667a],ax
-00016C9E  89167C66          mov [0x667c],dx
-00016CA2  A37E66            mov [0x667e],ax
-00016CA5  89168066          mov [0x6680],dx
-00016CA9  A37666            mov [0x6676],ax
-00016CAC  89167866          mov [0x6678],dx
-00016CB0  A36A36            mov [0x366a],ax
-00016CB3  A3C080            mov [0x80c0],ax
+00016C98  2BC0              sub ax,ax			; AX = 0.
+00016C9A  99                cwd				; Useless as AX will always be zero.
+00016C9B  A37A66            mov [0x667a],ax		; Offsets.
+00016C9E  89167C66          mov [0x667c],dx		;
+00016CA2  A37E66            mov [0x667e],ax		;
+00016CA5  89168066          mov [0x6680],dx		;
+00016CA9  A37666            mov [0x6676],ax		;
+00016CAC  89167866          mov [0x6678],dx		;
+00016CB0  A36A36            mov [0x366a],ax		;
+00016CB3  A3C080            mov [0x80c0],ax		;
 00016CB6  CB                retf
 
 00016CB7  55                push bp
 00016CB8  8BEC              mov bp,sp
 00016CBA  B80800            mov ax,0x8
-00016CBD  9A1C3E821F        call 0x1f82:0x3e1c
+00016CBD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016CC2  C746FE0300        mov word [bp-0x2],0x3
 00016CC7  8D46FE            lea ax,[bp-0x2]
 00016CCA  16                push ss
@@ -35333,12 +34936,12 @@
 00016CEA  8BE5              mov sp,bp
 00016CEC  5D                pop bp
 00016CED  CA0200            retf 0x2
+
 00016CF0  55                push bp
 00016CF1  8BEC              mov bp,sp
 00016CF3  B80400            mov ax,0x4
-00016CF6  9A1C3E821F        call 0x1f82:0x3e1c
+00016CF6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016CFB  E87408            call 0x7572
-00016CFE  90                nop
 00016CFF  0E                push cs
 00016D00  E86309            call 0x7666
 00016D03  A17666            mov ax,[0x6676]
@@ -35368,12 +34971,10 @@
 00016D46  99                cwd
 00016D47  F7F9              idiv cx
 00016D49  2689470C          mov [es:bx+0xc],ax
-00016D4D  90                nop
 00016D4E  0E                push cs
 00016D4F  E81209            call 0x7664
 00016D52  B80100            mov ax,0x1
 00016D55  EB10              jmp short 0x6d67
-00016D57  90                nop
 00016D58  0E                push cs
 00016D59  E80809            call 0x7664
 00016D5C  FF7608            push word [bp+0x8]
@@ -35383,13 +34984,13 @@
 00016D67  8BE5              mov sp,bp
 00016D69  5D                pop bp
 00016D6A  CA0600            retf 0x6
+
 00016D6D  55                push bp
 00016D6E  8BEC              mov bp,sp
 00016D70  B80A00            mov ax,0xa
-00016D73  9A1C3E821F        call 0x1f82:0x3e1c
+00016D73  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016D78  E8F707            call 0x7572
 00016D7B  C746FA0000        mov word [bp-0x6],0x0
-00016D80  90                nop
 00016D81  0E                push cs
 00016D82  E8E108            call 0x7666
 00016D85  A17666            mov ax,[0x6676]
@@ -35427,22 +35028,23 @@
 00016DE5  74A7              jz 0x6d8e
 00016DE7  268B07            mov ax,[es:bx]
 00016DEA  8946FA            mov [bp-0x6],ax
-00016DED  90                nop
 00016DEE  0E                push cs
 00016DEF  E87208            call 0x7664
 00016DF2  8B46FA            mov ax,[bp-0x6]
 00016DF5  8BE5              mov sp,bp
 00016DF7  5D                pop bp
 00016DF8  CA0400            retf 0x4
+
 00016DFB  33C0              xor ax,ax
-00016DFD  9A1C3E821F        call 0x1f82:0x3e1c
+00016DFD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016E02  B81E00            mov ax,0x1e
 00016E05  99                cwd
 00016E06  CB                retf
+
 00016E07  55                push bp
 00016E08  8BEC              mov bp,sp
 00016E0A  33C0              xor ax,ax
-00016E0C  9A1C3E821F        call 0x1f82:0x3e1c
+00016E0C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016E11  FF7608            push word [bp+0x8]
 00016E14  FF7606            push word [bp+0x6]
 00016E17  E81500            call 0x6e2f
@@ -35454,10 +35056,11 @@
 00016E27  26894702          mov [es:bx+0x2],ax
 00016E2B  5D                pop bp
 00016E2C  CA0400            retf 0x4
+
 00016E2F  55                push bp
 00016E30  8BEC              mov bp,sp
 00016E32  B80800            mov ax,0x8
-00016E35  9A1C3E821F        call 0x1f82:0x3e1c
+00016E35  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016E3A  C746FE0300        mov word [bp-0x2],0x3
 00016E3F  8D46FE            lea ax,[bp-0x2]
 00016E42  16                push ss
@@ -35484,12 +35087,12 @@
 00016E75  8BE5              mov sp,bp
 00016E77  5D                pop bp
 00016E78  C20400            ret 0x4
+
 00016E7B  55                push bp
 00016E7C  8BEC              mov bp,sp
 00016E7E  B80400            mov ax,0x4
-00016E81  9A1C3E821F        call 0x1f82:0x3e1c
+00016E81  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016E86  E8E906            call 0x7572
-00016E89  90                nop
 00016E8A  0E                push cs
 00016E8B  E8D807            call 0x7666
 00016E8E  A17666            mov ax,[0x6676]
@@ -35532,12 +35135,10 @@
 00016EFE  99                cwd
 00016EFF  F7F9              idiv cx
 00016F01  2689470C          mov [es:bx+0xc],ax
-00016F05  90                nop
 00016F06  0E                push cs
 00016F07  E85A07            call 0x7664
 00016F0A  B80100            mov ax,0x1
 00016F0D  EB10              jmp short 0x6f1f
-00016F0F  90                nop
 00016F10  0E                push cs
 00016F11  E85007            call 0x7664
 00016F14  FF7608            push word [bp+0x8]
@@ -35547,10 +35148,11 @@
 00016F1F  8BE5              mov sp,bp
 00016F21  5D                pop bp
 00016F22  CA0600            retf 0x6
+
 00016F25  55                push bp
 00016F26  8BEC              mov bp,sp
 00016F28  B80600            mov ax,0x6
-00016F2B  9A1C3E821F        call 0x1f82:0x3e1c
+00016F2B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016F30  E83F06            call 0x7572
 00016F33  B80300            mov ax,0x3
 00016F36  50                push ax
@@ -35560,7 +35162,6 @@
 00016F3D  7504              jnz 0x6f43
 00016F3F  2BC0              sub ax,ax
 00016F41  EB4D              jmp short 0x6f90
-00016F43  90                nop
 00016F44  0E                push cs
 00016F45  E81E07            call 0x7666
 00016F48  C746FA0100        mov word [bp-0x6],0x1
@@ -35572,7 +35173,6 @@
 00016F5A  D1E3              shl bx,1
 00016F5C  83BF6C6600        cmp word [bx+0x666c],byte +0x0
 00016F61  74EA              jz 0x6f4d
-00016F63  90                nop
 00016F64  0E                push cs
 00016F65  E8FC06            call 0x7664
 00016F68  EBD5              jmp short 0x6f3f
@@ -35586,17 +35186,17 @@
 00016F81  8956FE            mov [bp-0x2],dx
 00016F84  0BC2              or ax,dx
 00016F86  75EB              jnz 0x6f73
-00016F88  90                nop
 00016F89  0E                push cs
 00016F8A  E8D706            call 0x7664
 00016F8D  B80100            mov ax,0x1
 00016F90  8BE5              mov sp,bp
 00016F92  5D                pop bp
 00016F93  CB                retf
+
 00016F94  55                push bp
 00016F95  8BEC              mov bp,sp
 00016F97  B80800            mov ax,0x8
-00016F9A  9A1C3E821F        call 0x1f82:0x3e1c
+00016F9A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00016F9F  8B460C            mov ax,[bp+0xc]
 00016FA2  01460C            add [bp+0xc],ax
 00016FA5  8B460A            mov ax,[bp+0xa]
@@ -35657,17 +35257,19 @@
 00017029  8BE5              mov sp,bp
 0001702B  5D                pop bp
 0001702C  CA0800            retf 0x8
+
 0001702F  33C0              xor ax,ax
-00017031  9A1C3E821F        call 0x1f82:0x3e1c
+00017031  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017036  FF366E36          push word [0x366e]
 0001703A  FF367036          push word [0x3670]
 0001703E  0E                push cs
 0001703F  E80100            call 0x7043
 00017042  CB                retf
+
 00017043  55                push bp
 00017044  8BEC              mov bp,sp
 00017046  B80800            mov ax,0x8
-00017049  9A1C3E821F        call 0x1f82:0x3e1c
+00017049  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001704E  C746FE0400        mov word [bp-0x2],0x4
 00017053  8B4608            mov ax,[bp+0x8]
 00017056  D1E0              shl ax,1
@@ -35693,22 +35295,25 @@
 00017084  8BE5              mov sp,bp
 00017086  5D                pop bp
 00017087  CA0400            retf 0x4
+
 0001708A  33C0              xor ax,ax
-0001708C  9A1C3E821F        call 0x1f82:0x3e1c
+0001708C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017091  B87236            mov ax,0x3672
 00017094  50                push ax
 00017095  E81000            call 0x70a8
 00017098  CB                retf
+
 00017099  33C0              xor ax,ax
-0001709B  9A1C3E821F        call 0x1f82:0x3e1c
+0001709B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000170A0  B8B236            mov ax,0x36b2
 000170A3  50                push ax
 000170A4  E80100            call 0x70a8
 000170A7  CB                retf
+
 000170A8  55                push bp
 000170A9  8BEC              mov bp,sp
 000170AB  B81600            mov ax,0x16
-000170AE  9A1C3E821F        call 0x1f82:0x3e1c
+000170AE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000170B3  A16ED9            mov ax,[0xd96e]
 000170B6  0B0670D9          or ax,[0xd970]
 000170BA  7410              jz 0x70cc
@@ -35748,10 +35353,11 @@
 00017115  8BE5              mov sp,bp
 00017117  5D                pop bp
 00017118  C20200            ret 0x2
+
 0001711B  55                push bp
 0001711C  8BEC              mov bp,sp
 0001711E  B80800            mov ax,0x8
-00017121  9A1C3E821F        call 0x1f82:0x3e1c
+00017121  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017126  833E6C3600        cmp word [0x366c],byte +0x0
 0001712B  7D04              jnl 0x7131
 0001712D  FF066C36          inc word [0x366c]
@@ -35781,10 +35387,11 @@
 0001716E  8BE5              mov sp,bp
 00017170  5D                pop bp
 00017171  CB                retf
+
 00017172  55                push bp
 00017173  8BEC              mov bp,sp
 00017175  B80200            mov ax,0x2
-00017178  9A1C3E821F        call 0x1f82:0x3e1c
+00017178  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001717D  A16C36            mov ax,[0x366c]
 00017180  8946FE            mov [bp-0x2],ax
 00017183  EB04              jmp short 0x7189
@@ -35798,10 +35405,11 @@
 00017197  8BE5              mov sp,bp
 00017199  5D                pop bp
 0001719A  CB                retf
+
 0001719B  55                push bp
 0001719C  8BEC              mov bp,sp
 0001719E  33C0              xor ax,ax
-000171A0  9A1C3E821F        call 0x1f82:0x3e1c
+000171A0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000171A5  0E                push cs
 000171A6  E8F0FE            call 0x7099
 000171A9  EB04              jmp short 0x71af
@@ -35813,10 +35421,11 @@
 000171B7  75F2              jnz 0x71ab
 000171B9  5D                pop bp
 000171BA  CA0200            retf 0x2
+
 000171BD  55                push bp
 000171BE  8BEC              mov bp,sp
 000171C0  B80800            mov ax,0x8
-000171C3  9A1C3E821F        call 0x1f82:0x3e1c
+000171C3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000171C8  FF0E6C36          dec word [0x366c]
 000171CC  A16ED9            mov ax,[0xd96e]
 000171CF  0B0670D9          or ax,[0xd970]
@@ -35845,10 +35454,11 @@
 0001720F  8BE5              mov sp,bp
 00017211  5D                pop bp
 00017212  CB                retf
+
 00017213  55                push bp
 00017214  8BEC              mov bp,sp
 00017216  B80400            mov ax,0x4
-00017219  9A1C3E821F        call 0x1f82:0x3e1c
+00017219  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001721E  8D46FC            lea ax,[bp-0x4]
 00017221  16                push ss
 00017222  50                push ax
@@ -35859,16 +35469,16 @@
 0001722D  8B46FC            mov ax,[bp-0x4]
 00017230  05E803            add ax,0x3e8
 00017233  50                push ax
-00017234  90                nop
 00017235  0E                push cs
 00017236  E83A06            call 0x7873
 00017239  8BE5              mov sp,bp
 0001723B  5D                pop bp
 0001723C  C3                ret
+
 0001723D  55                push bp
 0001723E  8BEC              mov bp,sp
 00017240  33C0              xor ax,ax
-00017242  9A1C3E821F        call 0x1f82:0x3e1c
+00017242  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017247  C45E04            les bx,[bp+0x4]
 0001724A  268B07            mov ax,[es:bx]
 0001724D  C45E08            les bx,[bp+0x8]
@@ -35899,13 +35509,13 @@
 000172A5  2689470E          mov [es:bx+0xe],ax
 000172A9  5D                pop bp
 000172AA  C20800            ret 0x8
+
 000172AD  55                push bp
 000172AE  8BEC              mov bp,sp
 000172B0  33C0              xor ax,ax
-000172B2  9A1C3E821F        call 0x1f82:0x3e1c
+000172B2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000172B7  C45E04            les bx,[bp+0x4]
 000172BA  26C7070000        mov word [es:bx],0x0
-000172BF  90                nop
 000172C0  0E                push cs
 000172C1  E8E203            call 0x76a6
 000172C4  C45E04            les bx,[bp+0x4]
@@ -35927,6 +35537,7 @@
 000172F1  2689470E          mov [es:bx+0xe],ax
 000172F5  5D                pop bp
 000172F6  C20400            ret 0x4
+
 000172F9  55                push bp
 000172FA  8BEC              mov bp,sp
 000172FC  B80100            mov ax,0x1
@@ -36048,10 +35659,11 @@
 0001748D  26894710          mov [es:bx+0x10],ax
 00017491  5D                pop bp
 00017492  CA0400            retf 0x4
+
 00017495  55                push bp
 00017496  8BEC              mov bp,sp
 00017498  33C0              xor ax,ax
-0001749A  9A1C3E821F        call 0x1f82:0x3e1c
+0001749A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001749F  C45E04            les bx,[bp+0x4]
 000174A2  268B4714          mov ax,[es:bx+0x14]
 000174A6  260B4716          or ax,[es:bx+0x16]
@@ -36093,21 +35705,22 @@
 00017526  89167C66          mov [0x667c],dx
 0001752A  5D                pop bp
 0001752B  C20400            ret 0x4
+
 0001752E  33C0              xor ax,ax
-00017530  9A1C3E821F        call 0x1f82:0x3e1c
+00017530  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017535  56                push si
 00017536  E80B00            call 0x7544
 00017539  8BF0              mov si,ax
-0001753B  90                nop
 0001753C  0E                push cs
 0001753D  E84F01            call 0x768f
 00017540  0BC6              or ax,si
 00017542  5E                pop si
 00017543  C3                ret
+
 00017544  55                push bp
 00017545  8BEC              mov bp,sp
 00017547  B80800            mov ax,0x8
-0001754A  9A1C3E821F        call 0x1f82:0x3e1c
+0001754A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001754F  C746FE0300        mov word [bp-0x2],0x3
 00017554  8D46FE            lea ax,[bp-0x2]
 00017557  16                push ss
@@ -36126,10 +35739,11 @@
 0001756E  8BE5              mov sp,bp
 00017570  5D                pop bp
 00017571  C3                ret
+
 00017572  55                push bp
 00017573  8BEC              mov bp,sp
 00017575  B81200            mov ax,0x12
-00017578  9A1C3E821F        call 0x1f82:0x3e1c
+00017578  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001757D  EB39              jmp short 0x75b8
 0001757F  B108              mov cl,0x8
 00017581  D37EEE            sar word [bp-0x12],cl
@@ -36145,7 +35759,6 @@
 0001759C  D1E3              shl bx,1
 0001759E  8B877A37          mov ax,[bx+0x377a]
 000175A2  8946FE            mov [bp-0x2],ax
-000175A5  90                nop
 000175A6  0E                push cs
 000175A7  E8BC00            call 0x7666
 000175AA  8D46F0            lea ax,[bp-0x10]
@@ -36153,16 +35766,13 @@
 000175AE  50                push ax
 000175AF  0E                push cs
 000175B0  E846FD            call 0x72f9
-000175B3  90                nop
 000175B4  0E                push cs
 000175B5  E8AC00            call 0x7664
-000175B8  90                nop
 000175B9  0E                push cs
 000175BA  E8C100            call 0x767e
 000175BD  8946EE            mov [bp-0x12],ax
 000175C0  40                inc ax
 000175C1  7431              jz 0x75f4
-000175C3  90                nop
 000175C4  0E                push cs
 000175C5  E8DE00            call 0x76a6
 000175C8  8946F6            mov [bp-0xa],ax
@@ -36184,10 +35794,11 @@
 000175F4  8BE5              mov sp,bp
 000175F6  5D                pop bp
 000175F7  C3                ret
+
 000175F8  55                push bp
 000175F9  8BEC              mov bp,sp
 000175FB  B80E00            mov ax,0xe
-000175FE  9A1C3E821F        call 0x1f82:0x3e1c
+000175FE  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017603  C45E10            les bx,[bp+0x10]
 00017606  268B07            mov ax,[es:bx]
 00017609  8946F2            mov [bp-0xe],ax
@@ -36306,12 +35917,10 @@
 0001778A  D1E3              shl bx,1
 0001778C  8B878A55          mov ax,[bx+0x558a]
 00017790  EB18              jmp short 0x77aa
-00017792  90                nop
 00017793  81F93001          cmp cx,0x130
 00017797  7D06              jnl 0x779f
 00017799  B80000            mov ax,0x0
 0001779C  EB0C              jmp short 0x77aa
-0001779E  90                nop
 0001779F  BB3F01            mov bx,0x13f
 000177A2  2BD9              sub bx,cx
 000177A4  D1E3              shl bx,1
@@ -36329,11 +35938,9 @@
 000177CC  A9FEFF            test ax,0xfffe
 000177CF  7503              jnz 0x77d4
 000177D1  E99B00            jmp 0x786f
-000177D4  90                nop
 000177D5  0E                push cs
 000177D6  E8B6FE            call 0x768f
 000177D9  0906D855          or [0x55d8],ax
-000177DD  90                nop
 000177DE  0E                push cs
 000177DF  E8C4FE            call 0x76a6
 000177E2  A3D055            mov [0x55d0],ax
@@ -36354,7 +35961,6 @@
 0001780F  1E                push ds
 00017810  B8CA55            mov ax,0x55ca
 00017813  50                push ax
-00017814  90                nop
 00017815  0E                push cs
 00017816  E8E0FA            call 0x72f9
 00017819  A1DA55            mov ax,[0x55da]
@@ -36371,7 +35977,6 @@
 00017839  1E                push ds
 0001783A  B8CA55            mov ax,0x55ca
 0001783D  50                push ax
-0001783E  90                nop
 0001783F  0E                push cs
 00017840  E8B6FA            call 0x72f9
 00017843  EB2A              jmp short 0x786f
@@ -36389,7 +35994,6 @@
 00017865  1E                push ds
 00017866  B8CA55            mov ax,0x55ca
 00017869  50                push ax
-0001786A  90                nop
 0001786B  0E                push cs
 0001786C  E88AFA            call 0x72f9
 0001786F  07                pop es
@@ -36403,29 +36007,31 @@
 00017879  8B1ED855          mov bx,[0x55d8]
 0001787D  8B4E08            mov cx,[bp+0x8]
 00017880  8B5606            mov dx,[bp+0x6]
-00017883  90                nop
 00017884  0E                push cs
 00017885  E876FE            call 0x76fe
 00017888  8BE5              mov sp,bp
 0001788A  5D                pop bp
 0001788B  CA0400            retf 0x4
+
 0001788E  55                push bp
 0001788F  8BEC              mov bp,sp
 00017891  33C0              xor ax,ax
-00017893  9A1C3E821F        call 0x1f82:0x3e1c
+00017893  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017898  8B4606            mov ax,[bp+0x6]
 0001789B  290696CF          sub [0xcf96],ax
 0001789F  5D                pop bp
 000178A0  CA0200            retf 0x2
+
 000178A3  33C0              xor ax,ax
-000178A5  9A1C3E821F        call 0x1f82:0x3e1c
+000178A5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000178AA  0E                push cs
 000178AB  E80100            call 0x78af
 000178AE  CB                retf
+
 000178AF  55                push bp
 000178B0  8BEC              mov bp,sp
 000178B2  B80400            mov ax,0x4
-000178B5  9A1C3E821F        call 0x1f82:0x3e1c
+000178B5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000178BA  9AA8B30000        call 0x0:0xb3a8
 000178BF  8BC8              mov cx,ax
 000178C1  A196CF            mov ax,[0xcf96]
@@ -36447,10 +36053,11 @@
 000178E5  8BE5              mov sp,bp
 000178E7  5D                pop bp
 000178E8  CB                retf
+
 000178E9  55                push bp
 000178EA  8BEC              mov bp,sp
 000178EC  B81200            mov ax,0x12
-000178EF  9A1C3E821F        call 0x1f82:0x3e1c
+000178EF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000178F4  56                push si
 000178F5  837E06FF          cmp word [bp+0x6],byte -0x1
 000178F9  7449              jz 0x7944
@@ -36478,12 +36085,10 @@
 00017933  26FF7002          push word [es:bx+si+0x2]
 00017937  26FF30            push word [es:bx+si]
 0001793A  9A47B00000        call 0x0:0xb047
-0001793F  90                nop
 00017940  0E                push cs
 00017941  E841B9            call 0x3285
 00017944  2BC0              sub ax,ax
 00017946  EB08              jmp short 0x7950
-00017948  90                nop
 00017949  0E                push cs
 0001794A  E829D9            call 0x5276
 0001794D  B80102            mov ax,0x201
@@ -36491,10 +36096,11 @@
 00017951  8BE5              mov sp,bp
 00017953  5D                pop bp
 00017954  CA0400            retf 0x4
+
 00017957  55                push bp
 00017958  8BEC              mov bp,sp
 0001795A  33C0              xor ax,ax
-0001795C  9A1C3E821F        call 0x1f82:0x3e1c
+0001795C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017961  56                push si
 00017962  837E06FF          cmp word [bp+0x6],byte -0x1
 00017966  741A              jz 0x7982
@@ -36509,10 +36115,11 @@
 00017982  5E                pop si
 00017983  5D                pop bp
 00017984  CA0400            retf 0x4
+
 00017987  55                push bp
 00017988  8BEC              mov bp,sp
 0001798A  B81800            mov ax,0x18
-0001798D  9A1C3E821F        call 0x1f82:0x3e1c
+0001798D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017992  56                push si
 00017993  B80E00            mov ax,0xe
 00017996  F76E06            imul word [bp+0x6]
@@ -36529,7 +36136,6 @@
 000179B5  268B07            mov ax,[es:bx]
 000179B8  260B4702          or ax,[es:bx+0x2]
 000179BC  7542              jnz 0x7a00
-000179BE  90                nop
 000179BF  0E                push cs
 000179C0  E88BBA            call 0x344e
 000179C3  8D46E8            lea ax,[bp-0x18]
@@ -36549,7 +36155,6 @@
 000179E7  0E                push cs
 000179E8  E8B908            call 0x82a4
 000179EB  9ACFB00000        call 0x0:0xb0cf
-000179F0  90                nop
 000179F1  0E                push cs
 000179F2  E8DEB8            call 0x32d3
 000179F5  837EFA00          cmp word [bp-0x6],byte +0x0
@@ -36559,12 +36164,12 @@
 00017A01  8BE5              mov sp,bp
 00017A03  5D                pop bp
 00017A04  C20600            ret 0x6
+
 00017A07  55                push bp
 00017A08  8BEC              mov bp,sp
 00017A0A  B84C00            mov ax,0x4c
-00017A0D  9A1C3E821F        call 0x1f82:0x3e1c
+00017A0D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017A12  56                push si
-00017A13  90                nop
 00017A14  0E                push cs
 00017A15  E887B8            call 0x329f
 00017A18  8B5E06            mov bx,[bp+0x6]
@@ -36761,17 +36366,17 @@
 00017C4A  8B56FE            mov dx,[bp-0x2]
 00017C4D  3946DC            cmp [bp-0x24],ax
 00017C50  72D0              jc 0x7c22
-00017C52  90                nop
 00017C53  0E                push cs
 00017C54  E82EB6            call 0x3285
 00017C57  5E                pop si
 00017C58  8BE5              mov sp,bp
 00017C5A  5D                pop bp
 00017C5B  CA0200            retf 0x2
+
 00017C5E  55                push bp
 00017C5F  8BEC              mov bp,sp
 00017C61  B80600            mov ax,0x6
-00017C64  9A1C3E821F        call 0x1f82:0x3e1c
+00017C64  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017C69  8B5E04            mov bx,[bp+0x4]
 00017C6C  8B879300          mov ax,[bx+0x93]
 00017C70  8B979500          mov dx,[bx+0x95]
@@ -36783,14 +36388,12 @@
 00017C81  268B07            mov ax,[es:bx]
 00017C84  260B4702          or ax,[es:bx+0x2]
 00017C88  7519              jnz 0x7ca3
-00017C8A  90                nop
 00017C8B  0E                push cs
 00017C8C  E8BFB7            call 0x344e
 00017C8F  FF7604            push word [bp+0x4]
 00017C92  0E                push cs
 00017C93  E8120A            call 0x86a8
 00017C96  8946FA            mov [bp-0x6],ax
-00017C99  90                nop
 00017C9A  0E                push cs
 00017C9B  E835B6            call 0x32d3
 00017C9E  8B46FA            mov ax,[bp-0x6]
@@ -36799,10 +36402,11 @@
 00017CA5  8BE5              mov sp,bp
 00017CA7  5D                pop bp
 00017CA8  C20200            ret 0x2
+
 00017CAB  55                push bp
 00017CAC  8BEC              mov bp,sp
 00017CAE  B81A00            mov ax,0x1a
-00017CB1  9A1C3E821F        call 0x1f82:0x3e1c
+00017CB1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017CB6  C746FE0000        mov word [bp-0x2],0x0
 00017CBB  C746F80000        mov word [bp-0x8],0x0
 00017CC0  8B5E04            mov bx,[bp+0x4]
@@ -36816,7 +36420,6 @@
 00017CD8  268B07            mov ax,[es:bx]
 00017CDB  260B4702          or ax,[es:bx+0x2]
 00017CDF  753E              jnz 0x7d1f
-00017CE1  90                nop
 00017CE2  0E                push cs
 00017CE3  E868B7            call 0x344e
 00017CE6  8D46E6            lea ax,[bp-0x1a]
@@ -36836,7 +36439,6 @@
 00017D0E  EB0A              jmp short 0x7d1a
 00017D10  C746FE0100        mov word [bp-0x2],0x1
 00017D15  C746F80100        mov word [bp-0x8],0x1
-00017D1A  90                nop
 00017D1B  0E                push cs
 00017D1C  E8B4B5            call 0x32d3
 00017D1F  837EFE00          cmp word [bp-0x2],byte +0x0
@@ -36846,10 +36448,11 @@
 00017D2D  8BE5              mov sp,bp
 00017D2F  5D                pop bp
 00017D30  C20200            ret 0x2
+
 00017D33  55                push bp
 00017D34  8BEC              mov bp,sp
 00017D36  33C0              xor ax,ax
-00017D38  9A1C3E821F        call 0x1f82:0x3e1c
+00017D38  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017D3D  8B5E04            mov bx,[bp+0x4]
 00017D40  8B879300          mov ax,[bx+0x93]
 00017D44  0B879500          or ax,[bx+0x95]
@@ -36860,14 +36463,14 @@
 00017D55  9A9EB70000        call 0x0:0xb79e
 00017D5A  5D                pop bp
 00017D5B  C20400            ret 0x4
+
 00017D5E  55                push bp
 00017D5F  8BEC              mov bp,sp
 00017D61  B88E00            mov ax,0x8e
-00017D64  9A1C3E821F        call 0x1f82:0x3e1c
+00017D64  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00017D69  57                push di
 00017D6A  56                push si
 00017D6B  C746C20000        mov word [bp-0x3e],0x0
-00017D70  90                nop
 00017D71  0E                push cs
 00017D72  E82AB5            call 0x329f
 00017D75  8D46CE            lea ax,[bp-0x32]
@@ -36901,7 +36504,6 @@
 00017DC0  C45E86            les bx,[bp-0x7a]
 00017DC3  26FF7702          push word [es:bx+0x2]
 00017DC7  26FF37            push word [es:bx]
-00017DCA  90                nop
 00017DCB  0E                push cs
 00017DCC  E89329            call 0xa762
 00017DCF  8946F2            mov [bp-0xe],ax
@@ -37147,7 +36749,6 @@
 0001808B  837E0600          cmp word [bp+0x6],byte +0x0
 0001808F  7503              jnz 0x8094
 00018091  E9A1FD            jmp 0x7e35
-00018094  90                nop
 00018095  0E                push cs
 00018096  E85CEA            call 0x6af5
 00018099  0BC0              or ax,ax
@@ -37190,7 +36791,6 @@
 0001810E  E8E801            call 0x82f9
 00018111  837E0600          cmp word [bp+0x6],byte +0x0
 00018115  7413              jz 0x812a
-00018117  90                nop
 00018118  0E                push cs
 00018119  E8D9E9            call 0x6af5
 0001811C  0BC0              or ax,ax
@@ -37308,7 +36908,6 @@
 00018282  8146A2BB00        add word [bp-0x5e],0xbb
 00018287  817EA2F5CB        cmp word [bp-0x5e],0xcbf5
 0001828C  72E2              jc 0x8270
-0001828E  90                nop
 0001828F  0E                push cs
 00018290  E8F2AF            call 0x3285
 00018293  8B46C2            mov ax,[bp-0x3e]
@@ -37320,10 +36919,11 @@
 0001829E  8BE5              mov sp,bp
 000182A0  5D                pop bp
 000182A1  CA0400            retf 0x4
+
 000182A4  55                push bp
 000182A5  8BEC              mov bp,sp
 000182A7  33C0              xor ax,ax
-000182A9  9A1C3E821F        call 0x1f82:0x3e1c
+000182A9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000182AE  8B5E0A            mov bx,[bp+0xa]
 000182B1  8B4746            mov ax,[bx+0x46]
 000182B4  0BC0              or ax,ax
@@ -37354,10 +36954,11 @@
 000182F0  9A4A030000        call 0x0:0x34a
 000182F5  5D                pop bp
 000182F6  CA0600            retf 0x6
+
 000182F9  55                push bp
 000182FA  8BEC              mov bp,sp
 000182FC  B82400            mov ax,0x24
-000182FF  9A1C3E821F        call 0x1f82:0x3e1c
+000182FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018304  56                push si
 00018305  B80E00            mov ax,0xe
 00018308  F76E06            imul word [bp+0x6]
@@ -37395,7 +36996,6 @@
 0001836B  26FF7704          push word [es:bx+0x4]
 0001836F  2BC0              sub ax,ax
 00018371  50                push ax
-00018372  90                nop
 00018373  0E                push cs
 00018374  E8CEAF            call 0x3345
 00018377  3DFFFF            cmp ax,0xffff
@@ -37538,10 +37138,11 @@
 00018513  8BE5              mov sp,bp
 00018515  5D                pop bp
 00018516  C20600            ret 0x6
+
 00018519  55                push bp
 0001851A  8BEC              mov bp,sp
 0001851C  33C0              xor ax,ax
-0001851E  9A1C3E821F        call 0x1f82:0x3e1c
+0001851E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018523  C45E04            les bx,[bp+0x4]
 00018526  268B07            mov ax,[es:bx]
 00018529  260B4702          or ax,[es:bx+0x2]
@@ -37563,10 +37164,11 @@
 00018557  26804F0780        or byte [es:bx+0x7],0x80
 0001855C  5D                pop bp
 0001855D  C20400            ret 0x4
+
 00018560  55                push bp
 00018561  8BEC              mov bp,sp
 00018563  B80800            mov ax,0x8
-00018566  9A1C3E821F        call 0x1f82:0x3e1c
+00018566  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001856B  56                push si
 0001856C  B80E00            mov ax,0xe
 0001856F  F76E04            imul word [bp+0x4]
@@ -37647,16 +37249,16 @@
 00018638  8BE5              mov sp,bp
 0001863A  5D                pop bp
 0001863B  C20400            ret 0x4
+
 0001863E  55                push bp
 0001863F  8BEC              mov bp,sp
 00018641  B80600            mov ax,0x6
-00018644  9A1C3E821F        call 0x1f82:0x3e1c
+00018644  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018649  57                push di
 0001864A  56                push si
 0001864B  B8C6A3            mov ax,0xa3c6
 0001864E  1E                push ds
 0001864F  50                push ax
-00018650  90                nop
 00018651  0E                push cs
 00018652  E87D0B            call 0x91d2
 00018655  0CF0              or al,0xf0
@@ -37675,13 +37277,10 @@
 0001867B  8B46FE            mov ax,[bp-0x2]
 0001867E  F2AA              repne stosb
 00018680  8CC2              mov dx,es
-00018682  90                nop
 00018683  0E                push cs
 00018684  E8E7AD            call 0x346e
-00018687  90                nop
 00018688  0E                push cs
 00018689  E875CC            call 0x5301
-0001868C  90                nop
 0001868D  0E                push cs
 0001868E  E8FDAD            call 0x348e
 00018691  C45E06            les bx,[bp+0x6]
@@ -37693,10 +37292,11 @@
 000186A2  8BE5              mov sp,bp
 000186A4  5D                pop bp
 000186A5  CA0400            retf 0x4
+
 000186A8  55                push bp
 000186A9  8BEC              mov bp,sp
 000186AB  33C0              xor ax,ax
-000186AD  9A1C3E821F        call 0x1f82:0x3e1c
+000186AD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000186B2  FF7606            push word [bp+0x6]
 000186B5  FF36E61A          push word [0x1ae6]
 000186B9  FF36E41A          push word [0x1ae4]
@@ -37714,10 +37314,11 @@
 000186D9  2BC0              sub ax,ax
 000186DB  5D                pop bp
 000186DC  CA0200            retf 0x2
+
 000186DF  55                push bp
 000186E0  8BEC              mov bp,sp
 000186E2  B81600            mov ax,0x16
-000186E5  9A1C3E821F        call 0x1f82:0x3e1c
+000186E5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000186EA  8B5E0A            mov bx,[bp+0xa]
 000186ED  2BC0              sub ax,ax
 000186EF  89879500          mov [bx+0x95],ax
@@ -37793,10 +37394,11 @@
 000187C9  8BE5              mov sp,bp
 000187CB  5D                pop bp
 000187CC  CA0600            retf 0x6
+
 000187CF  55                push bp
 000187D0  8BEC              mov bp,sp
 000187D2  B82800            mov ax,0x28
-000187D5  9A1C3E821F        call 0x1f82:0x3e1c
+000187D5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000187DA  57                push di
 000187DB  56                push si
 000187DC  C746D8C6A3        mov word [bp-0x28],0xa3c6
@@ -37840,12 +37442,10 @@
 00018834  FF7606            push word [bp+0x6]
 00018837  B8007D            mov ax,0x7d00
 0001883A  50                push ax
-0001883B  90                nop
 0001883C  0E                push cs
 0001883D  E83405            call 0x8d74
 00018840  2BC0              sub ax,ax
 00018842  EB57              jmp short 0x889b
-00018844  90                nop
 00018845  0E                push cs
 00018846  E815AC            call 0x345e
 00018849  1E                push ds
@@ -37854,7 +37454,6 @@
 0001884F  50                push ax
 00018850  B80100            mov ax,0x1
 00018853  50                push ax
-00018854  90                nop
 00018855  0E                push cs
 00018856  E8BECA            call 0x5317
 00018859  3D0100            cmp ax,0x1
@@ -37863,19 +37462,15 @@
 00018861  EB02              jmp short 0x8865
 00018863  2BC0              sub ax,ax
 00018865  8946FA            mov [bp-0x6],ax
-00018868  90                nop
 00018869  0E                push cs
 0001886A  E811AC            call 0x347e
 0001886D  837EFA00          cmp word [bp-0x6],byte +0x0
 00018871  748D              jz 0x8800
 00018873  EB0F              jmp short 0x8884
-00018875  90                nop
 00018876  0E                push cs
 00018877  E8E4AB            call 0x345e
-0001887A  90                nop
 0001887B  0E                push cs
 0001887C  E8D7D3            call 0x5c56
-0001887F  90                nop
 00018880  0E                push cs
 00018881  E8FAAB            call 0x347e
 00018884  B9007D            mov cx,0x7d00
@@ -37890,10 +37485,11 @@
 0001889D  8BE5              mov sp,bp
 0001889F  5D                pop bp
 000188A0  CA0600            retf 0x6
+
 000188A3  55                push bp
 000188A4  8BEC              mov bp,sp
 000188A6  B80400            mov ax,0x4
-000188A9  9A1C3E821F        call 0x1f82:0x3e1c
+000188A9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000188AE  57                push di
 000188AF  C70668D90100      mov word [0xd968],0x1
 000188B5  B80400            mov ax,0x4
@@ -37959,13 +37555,13 @@
 00018960  8BE5              mov sp,bp
 00018962  5D                pop bp
 00018963  CA1400            retf 0x14
+
 00018966  55                push bp
 00018967  8BEC              mov bp,sp
 00018969  B80200            mov ax,0x2
-0001896C  9A1C3E821F        call 0x1f82:0x3e1c
+0001896C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018971  C70668D90100      mov word [0xd968],0x1
 00018977  EB1E              jmp short 0x8997
-00018979  90                nop
 0001897A  0E                push cs
 0001897B  E8F0AA            call 0x346e
 0001897E  8B4606            mov ax,[bp+0x6]
@@ -37976,10 +37572,8 @@
 00018988  50                push ax
 00018989  B80100            mov ax,0x1
 0001898C  50                push ax
-0001898D  90                nop
 0001898E  0E                push cs
 0001898F  E885C9            call 0x5317
-00018992  90                nop
 00018993  0E                push cs
 00018994  E8F7AA            call 0x348e
 00018997  B80080            mov ax,0x8000
@@ -37997,10 +37591,11 @@
 000189B8  8BE5              mov sp,bp
 000189BA  5D                pop bp
 000189BB  CA0200            retf 0x2
+
 000189BE  55                push bp
 000189BF  8BEC              mov bp,sp
 000189C1  33C0              xor ax,ax
-000189C3  9A1C3E821F        call 0x1f82:0x3e1c
+000189C3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000189C8  C45E08            les bx,[bp+0x8]
 000189CB  268B07            mov ax,[es:bx]
 000189CE  260B4702          or ax,[es:bx+0x2]
@@ -38031,10 +37626,11 @@
 00018A20  26895702          mov [es:bx+0x2],dx
 00018A24  5D                pop bp
 00018A25  C20800            ret 0x8
+
 00018A28  55                push bp
 00018A29  8BEC              mov bp,sp
 00018A2B  B8C800            mov ax,0xc8
-00018A2E  9A1C3E821F        call 0x1f82:0x3e1c
+00018A2E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018A33  B80300            mov ax,0x3
 00018A36  50                push ax
 00018A37  B83A1B            mov ax,0x1b3a
@@ -38052,7 +37648,6 @@
 00018A4B  9A4E7C0000        call 0x0:0x7c4e
 00018A50  0BC0              or ax,ax
 00018A52  7434              jz 0x8a88
-00018A54  90                nop
 00018A55  0E                push cs
 00018A56  E846A8            call 0x329f
 00018A59  8D866CFF          lea ax,[bp-0x94]
@@ -38065,10 +37660,8 @@
 00018A66  E82300            call 0x8a8c
 00018A69  0BC0              or ax,ax
 00018A6B  740C              jz 0x8a79
-00018A6D  90                nop
 00018A6E  0E                push cs
 00018A6F  E813A8            call 0x3285
-00018A72  90                nop
 00018A73  0E                push cs
 00018A74  E8EBC4            call 0x4f62
 00018A77  EB0F              jmp short 0x8a88
@@ -38077,16 +37670,16 @@
 00018A7E  50                push ax
 00018A7F  0E                push cs
 00018A80  E87D00            call 0x8b00
-00018A83  90                nop
 00018A84  0E                push cs
 00018A85  E8FDA7            call 0x3285
 00018A88  8BE5              mov sp,bp
 00018A8A  5D                pop bp
 00018A8B  CB                retf
+
 00018A8C  55                push bp
 00018A8D  8BEC              mov bp,sp
 00018A8F  B80400            mov ax,0x4
-00018A92  9A1C3E821F        call 0x1f82:0x3e1c
+00018A92  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018A97  FF760C            push word [bp+0xc]
 00018A9A  FF760A            push word [bp+0xa]
 00018A9D  8D46FE            lea ax,[bp-0x2]
@@ -38128,10 +37721,11 @@
 00018AFA  8BE5              mov sp,bp
 00018AFC  5D                pop bp
 00018AFD  CA0800            retf 0x8
+
 00018B00  55                push bp
 00018B01  8BEC              mov bp,sp
 00018B03  B82600            mov ax,0x26
-00018B06  9A1C3E821F        call 0x1f82:0x3e1c
+00018B06  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018B0B  56                push si
 00018B0C  FF7608            push word [bp+0x8]
 00018B0F  FF7606            push word [bp+0x6]
@@ -38226,7 +37820,6 @@
 00018BF9  837F4600          cmp word [bx+0x46],byte +0x0
 00018BFD  752A              jnz 0x8c29
 00018BFF  53                push bx
-00018C00  90                nop
 00018C01  0E                push cs
 00018C02  E861FD            call 0x8966
 00018C05  8946F2            mov [bp-0xe],ax
@@ -38240,7 +37833,6 @@
 00018C1B  03C8              add cx,ax
 00018C1D  56                push si
 00018C1E  51                push cx
-00018C1F  90                nop
 00018C20  0E                push cs
 00018C21  E81AFA            call 0x863e
 00018C24  C746DA0100        mov word [bp-0x26],0x1
@@ -38249,7 +37841,6 @@
 00018C2F  FF76F4            push word [bp-0xc]
 00018C32  FF76FC            push word [bp-0x4]
 00018C35  FF76F2            push word [bp-0xe]
-00018C38  90                nop
 00018C39  0E                push cs
 00018C3A  E867F6            call 0x82a4
 00018C3D  FF46FC            inc word [bp-0x4]
@@ -38296,18 +37887,15 @@
 00018CBE  3946FE            cmp [bp-0x2],ax
 00018CC1  7408              jz 0x8ccb
 00018CC3  FF76FA            push word [bp-0x6]
-00018CC6  90                nop
 00018CC7  0E                push cs
 00018CC8  E8DDF9            call 0x86a8
 00018CCB  8146FABB00        add word [bp-0x6],0xbb
 00018CD0  817EFA4BD9        cmp word [bp-0x6],0xd94b
 00018CD5  72A1              jc 0x8c78
-00018CD7  90                nop
 00018CD8  0E                push cs
 00018CD9  E8F7A5            call 0x32d3
 00018CDC  FF7608            push word [bp+0x8]
 00018CDF  FF7606            push word [bp+0x6]
-00018CE2  90                nop
 00018CE3  0E                push cs
 00018CE4  E8AB7D            call 0xa92
 00018CE7  FF3654D9          push word [0xd954]
@@ -38319,18 +37907,17 @@
 00018CFB  FFB7ACA4          push word [bx-0x5b54]
 00018CFF  2BC0              sub ax,ax
 00018D01  50                push ax
-00018D02  90                nop
 00018D03  0E                push cs
 00018D04  E85305            call 0x925a
-00018D07  90                nop
 00018D08  0E                push cs
 00018D09  E8A6A5            call 0x32b2
 00018D0C  5E                pop si
 00018D0D  8BE5              mov sp,bp
 00018D0F  5D                pop bp
 00018D10  CA0400            retf 0x4
+
 00018D13  33C0              xor ax,ax
-00018D15  9A1C3E821F        call 0x1f82:0x3e1c
+00018D15  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018D1A  B82000            mov ax,0x20
 00018D1D  50                push ax
 00018D1E  B8C6A3            mov ax,0xa3c6
@@ -38366,10 +37953,11 @@
 00018D6B  A3A3A4            mov [0xa4a3],ax
 00018D6E  9AD70F0000        call 0x0:0xfd7
 00018D73  CB                retf
+
 00018D74  55                push bp
 00018D75  8BEC              mov bp,sp
 00018D77  B80001            mov ax,0x100
-00018D7A  9A1C3E821F        call 0x1f82:0x3e1c
+00018D7A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018D7F  FF7612            push word [bp+0x12]
 00018D82  FF7610            push word [bp+0x10]
 00018D85  FF760E            push word [bp+0xe]
@@ -38397,10 +37985,11 @@
 00018DBD  8BE5              mov sp,bp
 00018DBF  5D                pop bp
 00018DC0  CA0E00            retf 0xe
+
 00018DC3  55                push bp
 00018DC4  8BEC              mov bp,sp
 00018DC6  33C0              xor ax,ax
-00018DC8  9A1C3E821F        call 0x1f82:0x3e1c
+00018DC8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018DCD  57                push di
 00018DCE  56                push si
 00018DCF  8B4606            mov ax,[bp+0x6]
@@ -38426,10 +38015,11 @@
 00018DF9  5F                pop di
 00018DFA  5D                pop bp
 00018DFB  CA0800            retf 0x8
+
 00018DFE  55                push bp
 00018DFF  8BEC              mov bp,sp
 00018E01  B81600            mov ax,0x16
-00018E04  9A1C3E821F        call 0x1f82:0x3e1c
+00018E04  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018E09  56                push si
 00018E0A  FF7610            push word [bp+0x10]
 00018E0D  FF760E            push word [bp+0xe]
@@ -38465,10 +38055,11 @@
 00018E5F  8BE5              mov sp,bp
 00018E61  5D                pop bp
 00018E62  CA0C00            retf 0xc
+
 00018E65  55                push bp
 00018E66  8BEC              mov bp,sp
 00018E68  B88E00            mov ax,0x8e
-00018E6B  9A1C3E821F        call 0x1f82:0x3e1c
+00018E6B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00018E70  56                push si
 00018E71  C45E08            les bx,[bp+0x8]
 00018E74  26C60700          mov byte [es:bx],0x0
@@ -38603,10 +38194,11 @@
 00019005  8BE5              mov sp,bp
 00019007  5D                pop bp
 00019008  CA0E00            retf 0xe
+
 0001900B  55                push bp
 0001900C  8BEC              mov bp,sp
 0001900E  B82400            mov ax,0x24
-00019011  9A1C3E821F        call 0x1f82:0x3e1c
+00019011  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019016  57                push di
 00019017  56                push si
 00019018  8B4604            mov ax,[bp+0x4]
@@ -38643,7 +38235,6 @@
 00019058  8D46DC            lea ax,[bp-0x24]
 0001905B  16                push ss
 0001905C  50                push ax
-0001905D  90                nop
 0001905E  0E                push cs
 0001905F  E841F8            call 0x88a3
 00019062  8946DE            mov [bp-0x22],ax
@@ -38663,10 +38254,11 @@
 00019081  8BE5              mov sp,bp
 00019083  5D                pop bp
 00019084  C20800            ret 0x8
+
 00019087  55                push bp
 00019088  8BEC              mov bp,sp
 0001908A  B80200            mov ax,0x2
-0001908D  9A1C3E821F        call 0x1f82:0x3e1c
+0001908D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019092  C70668D90100      mov word [0xd968],0x1
 00019098  B80080            mov ax,0x8000
 0001909B  50                push ax
@@ -38685,7 +38277,6 @@
 000190C2  FF7608            push word [bp+0x8]
 000190C5  2BC0              sub ax,ax
 000190C7  50                push ax
-000190C8  90                nop
 000190C9  0E                push cs
 000190CA  E878A2            call 0x3345
 000190CD  3DFFFF            cmp ax,0xffff
@@ -38714,10 +38305,11 @@
 00019117  8BE5              mov sp,bp
 00019119  5D                pop bp
 0001911A  C20C00            ret 0xc
+
 0001911D  55                push bp
 0001911E  8BEC              mov bp,sp
 00019120  B80400            mov ax,0x4
-00019123  9A1C3E821F        call 0x1f82:0x3e1c
+00019123  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019128  C70668D90100      mov word [0xd968],0x1
 0001912E  B80080            mov ax,0x8000
 00019131  50                push ax
@@ -38738,7 +38330,6 @@
 0001915A  50                push ax
 0001915B  2BC0              sub ax,ax
 0001915D  50                push ax
-0001915E  90                nop
 0001915F  0E                push cs
 00019160  E8E2A1            call 0x3345
 00019163  3DFFFF            cmp ax,0xffff
@@ -38779,10 +38370,11 @@
 000191CC  8BE5              mov sp,bp
 000191CE  5D                pop bp
 000191CF  C20800            ret 0x8
+
 000191D2  55                push bp
 000191D3  8BEC              mov bp,sp
 000191D5  B81400            mov ax,0x14
-000191D8  9A1C3E821F        call 0x1f82:0x3e1c
+000191D8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 000191DD  C746F6FFFF        mov word [bp-0xa],0xffff
 000191E2  C746FC0100        mov word [bp-0x4],0x1
 000191E7  8B4606            mov ax,[bp+0x6]
@@ -38828,10 +38420,11 @@
 00019254  8BE5              mov sp,bp
 00019256  5D                pop bp
 00019257  CA0400            retf 0x4
+
 0001925A  55                push bp
 0001925B  8BEC              mov bp,sp
 0001925D  B8DE00            mov ax,0xde
-00019260  9A1C3E821F        call 0x1f82:0x3e1c
+00019260  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019265  57                push di
 00019266  56                push si
 00019267  2BC0              sub ax,ax
@@ -38855,14 +38448,12 @@
 000192A5  899638FF          mov [bp-0xc8],dx
 000192A9  52                push dx
 000192AA  50                push ax
-000192AB  90                nop
 000192AC  0E                push cs
 000192AD  E8B214            call 0xa762
 000192B0  89862AFF          mov [bp-0xd6],ax
 000192B4  89962CFF          mov [bp-0xd4],dx
 000192B8  FF76F6            push word [bp-0xa]
 000192BB  FF76F4            push word [bp-0xc]
-000192BE  90                nop
 000192BF  0E                push cs
 000192C0  E89F14            call 0xa762
 000192C3  898664FF          mov [bp-0x9c],ax
@@ -38890,7 +38481,6 @@
 0001930C  26F66701          mul byte [es:bx+0x1]
 00019310  0511CF            add ax,0xcf11
 00019313  50                push ax
-00019314  90                nop
 00019315  0E                push cs
 00019316  E8D323            call 0xb6ec
 00019319  0BC0              or ax,ax
@@ -38914,7 +38504,6 @@
 0001934C  50                push ax
 0001934D  2BC0              sub ax,ax
 0001934F  50                push ax
-00019350  90                nop
 00019351  0E                push cs
 00019352  E809EA            call 0x7d5e
 00019355  837E0600          cmp word [bp+0x6],byte +0x0
@@ -39091,7 +38680,6 @@
 00019564  FFB630FF          push word [bp-0xd0]
 00019568  FFB662FF          push word [bp-0x9e]
 0001956C  FFB660FF          push word [bp-0xa0]
-00019570  90                nop
 00019571  0E                push cs
 00019572  E89479            call 0xf09
 00019575  C49E30FF          les bx,[bp-0xd0]
@@ -39340,7 +38928,6 @@
 000198A0  50                push ax
 000198A1  2BC0              sub ax,ax
 000198A3  50                push ax
-000198A4  90                nop
 000198A5  0E                push cs
 000198A6  E8B5E4            call 0x7d5e
 000198A9  C7864CFF0000      mov word [bp-0xb4],0x0
@@ -39376,7 +38963,6 @@
 00019910  89864AFF          mov [bp-0xb6],ax
 00019914  FFB652FF          push word [bp-0xae]
 00019918  50                push ax
-00019919  90                nop
 0001991A  0E                push cs
 0001991B  E8CBDF            call 0x78e9
 0001991E  0BC0              or ax,ax
@@ -39395,7 +38981,6 @@
 00019942  E80E06            call 0x9f53
 00019945  FFB652FF          push word [bp-0xae]
 00019949  FFB64AFF          push word [bp-0xb6]
-0001994D  90                nop
 0001994E  0E                push cs
 0001994F  E805E0            call 0x7957
 00019952  FFB632FF          push word [bp-0xce]
@@ -39437,7 +39022,6 @@
 000199D0  89864AFF          mov [bp-0xb6],ax
 000199D4  FFB652FF          push word [bp-0xae]
 000199D8  50                push ax
-000199D9  90                nop
 000199DA  0E                push cs
 000199DB  E80BDF            call 0x78e9
 000199DE  0BC0              or ax,ax
@@ -39460,7 +39044,6 @@
 00019A07  E89C04            call 0x9ea6
 00019A0A  FFB652FF          push word [bp-0xae]
 00019A0E  FFB64AFF          push word [bp-0xb6]
-00019A12  90                nop
 00019A13  0E                push cs
 00019A14  E840DF            call 0x7957
 00019A17  8346FC02          add word [bp-0x4],byte +0x2
@@ -39512,7 +39095,6 @@
 00019AAF  FFB660FF          push word [bp-0xa0]
 00019AB3  1E                push ds
 00019AB4  50                push ax
-00019AB5  90                nop
 00019AB6  0E                push cs
 00019AB7  E84F74            call 0xf09
 00019ABA  FF864CFF          inc word [bp-0xb4]
@@ -39551,7 +39133,6 @@
 00019B24  50                push ax
 00019B25  FFB648FF          push word [bp-0xb8]
 00019B29  FFB646FF          push word [bp-0xba]
-00019B2D  90                nop
 00019B2E  0E                push cs
 00019B2F  E8D773            call 0xf09
 00019B32  8B9E4AFF          mov bx,[bp-0xb6]
@@ -39650,10 +39231,11 @@
 00019C6C  8BE5              mov sp,bp
 00019C6E  5D                pop bp
 00019C6F  CA0A00            retf 0xa
+\
 00019C72  55                push bp
 00019C73  8BEC              mov bp,sp
 00019C75  B80A00            mov ax,0xa
-00019C78  9A1C3E821F        call 0x1f82:0x3e1c
+00019C78  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019C7D  56                push si
 00019C7E  FF760A            push word [bp+0xa]
 00019C81  FF7608            push word [bp+0x8]
@@ -39728,10 +39310,11 @@
 00019D41  8BE5              mov sp,bp
 00019D43  5D                pop bp
 00019D44  C20800            ret 0x8
+
 00019D47  55                push bp
 00019D48  8BEC              mov bp,sp
 00019D4A  B80C00            mov ax,0xc
-00019D4D  9A1C3E821F        call 0x1f82:0x3e1c
+00019D4D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019D52  B8F81A            mov ax,0x1af8
 00019D55  1E                push ds
 00019D56  50                push ax
@@ -39740,7 +39323,6 @@
 00019D5D  8D46F6            lea ax,[bp-0xa]
 00019D60  16                push ss
 00019D61  50                push ax
-00019D62  90                nop
 00019D63  0E                push cs
 00019D64  E80F71            call 0xe76
 00019D67  0BC0              or ax,ax
@@ -39782,10 +39364,11 @@
 00019DC8  8BE5              mov sp,bp
 00019DCA  5D                pop bp
 00019DCB  C20400            ret 0x4
+
 00019DCE  55                push bp
 00019DCF  8BEC              mov bp,sp
 00019DD1  B80C00            mov ax,0xc
-00019DD4  9A1C3E821F        call 0x1f82:0x3e1c
+00019DD4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019DD9  B8061B            mov ax,0x1b06
 00019DDC  1E                push ds
 00019DDD  50                push ax
@@ -39794,7 +39377,6 @@
 00019DE4  8D46F6            lea ax,[bp-0xa]
 00019DE7  16                push ss
 00019DE8  50                push ax
-00019DE9  90                nop
 00019DEA  0E                push cs
 00019DEB  E88870            call 0xe76
 00019DEE  0BC0              or ax,ax
@@ -39819,7 +39401,6 @@
 00019E25  8D46F6            lea ax,[bp-0xa]
 00019E28  16                push ss
 00019E29  50                push ax
-00019E2A  90                nop
 00019E2B  0E                push cs
 00019E2C  E84362            call 0x72
 00019E2F  FF76F8            push word [bp-0x8]
@@ -39839,21 +39420,20 @@
 00019E53  2B46F4            sub ax,[bp-0xc]
 00019E56  50                push ax
 00019E57  FF1E70CF          call far [0xcf70]
-00019E5B  90                nop
 00019E5C  0E                push cs
 00019E5D  E85A62            call 0xba
 00019E60  8BE5              mov sp,bp
 00019E62  5D                pop bp
 00019E63  CA0400            retf 0x4
+
 00019E66  55                push bp
 00019E67  8BEC              mov bp,sp
 00019E69  33C0              xor ax,ax
-00019E6B  9A1C3E821F        call 0x1f82:0x3e1c
+00019E6B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019E70  833E683900        cmp word [0x3968],byte +0x0
 00019E75  742B              jz 0x9ea2
 00019E77  FF7608            push word [bp+0x8]
 00019E7A  FF7606            push word [bp+0x6]
-00019E7D  90                nop
 00019E7E  0E                push cs
 00019E7F  E8F061            call 0x72
 00019E82  FF7608            push word [bp+0x8]
@@ -39865,15 +39445,15 @@
 00019E92  26394704          cmp [es:bx+0x4],ax
 00019E96  7E05              jng 0x9e9d
 00019E98  9AEB350000        call 0x0:0x35eb
-00019E9D  90                nop
 00019E9E  0E                push cs
 00019E9F  E81862            call 0xba
 00019EA2  5D                pop bp
 00019EA3  CA0400            retf 0x4
+
 00019EA6  55                push bp
 00019EA7  8BEC              mov bp,sp
 00019EA9  B80A00            mov ax,0xa
-00019EAC  9A1C3E821F        call 0x1f82:0x3e1c
+00019EAC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019EB1  FF7606            push word [bp+0x6]
 00019EB4  FF7604            push word [bp+0x4]
 00019EB7  B8F81A            mov ax,0x1af8
@@ -39882,7 +39462,6 @@
 00019EBC  8D46F8            lea ax,[bp-0x8]
 00019EBF  16                push ss
 00019EC0  50                push ax
-00019EC1  90                nop
 00019EC2  0E                push cs
 00019EC3  E8B06F            call 0xe76
 00019EC6  0BC0              or ax,ax
@@ -39938,10 +39517,11 @@
 00019F4D  8BE5              mov sp,bp
 00019F4F  5D                pop bp
 00019F50  C20800            ret 0x8
+
 00019F53  55                push bp
 00019F54  8BEC              mov bp,sp
 00019F56  B80C00            mov ax,0xc
-00019F59  9A1C3E821F        call 0x1f82:0x3e1c
+00019F59  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 00019F5E  FF7606            push word [bp+0x6]
 00019F61  FF7604            push word [bp+0x4]
 00019F64  B8F81A            mov ax,0x1af8
@@ -39950,7 +39530,6 @@
 00019F69  8D46F6            lea ax,[bp-0xa]
 00019F6C  16                push ss
 00019F6D  50                push ax
-00019F6E  90                nop
 00019F6F  0E                push cs
 00019F70  E8036F            call 0xe76
 00019F73  0BC0              or ax,ax
@@ -40013,11 +39592,11 @@
 0001A00F  8BE5              mov sp,bp
 0001A011  5D                pop bp
 0001A012  C20800            ret 0x8
-0001A015  90                nop
+
 0001A016  55                push bp
 0001A017  8BEC              mov bp,sp
 0001A019  B80A00            mov ax,0xa
-0001A01C  9A1C3E821F        call 0x1f82:0x3e1c
+0001A01C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A021  56                push si
 0001A022  0E                push cs
 0001A023  E85A09            call 0xa980
@@ -40071,10 +39650,11 @@
 0001A0AF  8BE5              mov sp,bp
 0001A0B1  5D                pop bp
 0001A0B2  CB                retf
+
 0001A0B3  55                push bp
 0001A0B4  8BEC              mov bp,sp
 0001A0B6  B81400            mov ax,0x14
-0001A0B9  9A1C3E821F        call 0x1f82:0x3e1c
+0001A0B9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A0BE  C746F60000        mov word [bp-0xa],0x0
 0001A0C3  A1C280            mov ax,[0x80c2]
 0001A0C6  8B16C480          mov dx,[0x80c4]
@@ -40231,15 +39811,15 @@
 0001A286  8BE5              mov sp,bp
 0001A288  5D                pop bp
 0001A289  CB                retf
+
 0001A28A  55                push bp
 0001A28B  8BEC              mov bp,sp
 0001A28D  B81400            mov ax,0x14
-0001A290  9A1C3E821F        call 0x1f82:0x3e1c
+0001A290  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A295  57                push di
 0001A296  56                push si
 0001A297  C746FA0000        mov word [bp-0x6],0x0
 0001A29C  C746FE0000        mov word [bp-0x2],0x0
-0001A2A1  90                nop
 0001A2A2  0E                push cs
 0001A2A3  E8F98F            call 0x329f
 0001A2A6  8B1EC0CF          mov bx,[0xcfc0]
@@ -40442,7 +40022,6 @@
 0001A4FA  2BC0              sub ax,ax
 0001A4FC  50                push ax
 0001A4FD  9AD7CD0000        call 0x0:0xcdd7
-0001A502  90                nop
 0001A503  0E                push cs
 0001A504  E87E8D            call 0x3285
 0001A507  5E                pop si
@@ -40450,10 +40029,11 @@
 0001A509  8BE5              mov sp,bp
 0001A50B  5D                pop bp
 0001A50C  CB                retf
+
 0001A50D  55                push bp
 0001A50E  8BEC              mov bp,sp
 0001A510  B80C00            mov ax,0xc
-0001A513  9A1C3E821F        call 0x1f82:0x3e1c
+0001A513  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A518  B80100            mov ax,0x1
 0001A51B  50                push ax
 0001A51C  9AD7CD0000        call 0x0:0xcdd7
@@ -40499,7 +40079,6 @@
 0001A594  FF76F6            push word [bp-0xa]
 0001A597  FF76F4            push word [bp-0xc]
 0001A59A  9A63B00000        call 0x0:0xb063
-0001A59F  90                nop
 0001A5A0  0E                push cs
 0001A5A1  E82F8D            call 0x32d3
 0001A5A4  8B1EC0CF          mov bx,[0xcfc0]
@@ -40511,11 +40090,9 @@
 0001A5B8  FF36B677          push word [0x77b6]
 0001A5BC  2BC0              sub ax,ax
 0001A5BE  50                push ax
-0001A5BF  90                nop
 0001A5C0  0E                push cs
 0001A5C1  E896EC            call 0x925a
 0001A5C4  8946F8            mov [bp-0x8],ax
-0001A5C7  90                nop
 0001A5C8  0E                push cs
 0001A5C9  E8E68C            call 0x32b2
 0001A5CC  837EF800          cmp word [bp-0x8],byte +0x0
@@ -40527,10 +40104,11 @@
 0001A5DE  8BE5              mov sp,bp
 0001A5E0  5D                pop bp
 0001A5E1  CB                retf
+
 0001A5E2  55                push bp
 0001A5E3  8BEC              mov bp,sp
 0001A5E5  33C0              xor ax,ax
-0001A5E7  9A1C3E821F        call 0x1f82:0x3e1c
+0001A5E7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A5EC  B80100            mov ax,0x1
 0001A5EF  50                push ax
 0001A5F0  9AD7CD0000        call 0x0:0xcdd7
@@ -40552,10 +40130,11 @@
 0001A621  E8D503            call 0xa9f9
 0001A624  5D                pop bp
 0001A625  CA0200            retf 0x2
+
 0001A628  55                push bp
 0001A629  8BEC              mov bp,sp
 0001A62B  B80A00            mov ax,0xa
-0001A62E  9A1C3E821F        call 0x1f82:0x3e1c
+0001A62E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A633  8B5E06            mov bx,[bp+0x6]
 0001A636  D1E3              shl bx,1
 0001A638  D1E3              shl bx,1
@@ -40598,10 +40177,11 @@
 0001A699  8BE5              mov sp,bp
 0001A69B  5D                pop bp
 0001A69C  CA0400            retf 0x4
+
 0001A69F  55                push bp
 0001A6A0  8BEC              mov bp,sp
 0001A6A2  33C0              xor ax,ax
-0001A6A4  9A1C3E821F        call 0x1f82:0x3e1c
+0001A6A4  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A6A9  56                push si
 0001A6AA  C45E04            les bx,[bp+0x4]
 0001A6AD  B80E00            mov ax,0xe
@@ -40638,10 +40218,11 @@
 0001A70C  5E                pop si
 0001A70D  5D                pop bp
 0001A70E  C20400            ret 0x4
+
 0001A711  55                push bp
 0001A712  8BEC              mov bp,sp
 0001A714  B80200            mov ax,0x2
-0001A717  9A1C3E821F        call 0x1f82:0x3e1c
+0001A717  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A71C  57                push di
 0001A71D  8B460A            mov ax,[bp+0xa]
 0001A720  2DDA80            sub ax,0x80da
@@ -40673,10 +40254,11 @@
 0001A75C  8BE5              mov sp,bp
 0001A75E  5D                pop bp
 0001A75F  CA0600            retf 0x6
+
 0001A762  55                push bp
 0001A763  8BEC              mov bp,sp
 0001A765  33C0              xor ax,ax
-0001A767  9A1C3E821F        call 0x1f82:0x3e1c
+0001A767  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A76C  57                push di
 0001A76D  C47E06            les di,[bp+0x6]
 0001A770  EB03              jmp short 0xa775
@@ -40690,10 +40272,11 @@
 0001A785  5F                pop di
 0001A786  5D                pop bp
 0001A787  CA0400            retf 0x4
+
 0001A78A  55                push bp
 0001A78B  8BEC              mov bp,sp
 0001A78D  B80600            mov ax,0x6
-0001A790  9A1C3E821F        call 0x1f82:0x3e1c
+0001A790  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A795  56                push si
 0001A796  8B5E04            mov bx,[bp+0x4]
 0001A799  8B4716            mov ax,[bx+0x16]
@@ -40769,10 +40352,11 @@
 0001A866  8BE5              mov sp,bp
 0001A868  5D                pop bp
 0001A869  C20200            ret 0x2
+
 0001A86C  55                push bp
 0001A86D  8BEC              mov bp,sp
 0001A86F  33C0              xor ax,ax
-0001A871  9A1C3E821F        call 0x1f82:0x3e1c
+0001A871  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A876  56                push si
 0001A877  8B4608            mov ax,[bp+0x8]
 0001A87A  2DDA80            sub ax,0x80da
@@ -40809,10 +40393,11 @@
 0001A8D9  5E                pop si
 0001A8DA  5D                pop bp
 0001A8DB  C20600            ret 0x6
+
 0001A8DE  55                push bp
 0001A8DF  8BEC              mov bp,sp
 0001A8E1  33C0              xor ax,ax
-0001A8E3  9A1C3E821F        call 0x1f82:0x3e1c
+0001A8E3  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A8E8  56                push si
 0001A8E9  8B5E04            mov bx,[bp+0x4]
 0001A8EC  C47606            les si,[bp+0x6]
@@ -40864,8 +40449,9 @@
 0001A97B  5E                pop si
 0001A97C  5D                pop bp
 0001A97D  C20600            ret 0x6
+
 0001A980  33C0              xor ax,ax
-0001A982  9A1C3E821F        call 0x1f82:0x3e1c
+0001A982  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A987  FF3676CF          push word [0xcf76]
 0001A98B  FF3674CF          push word [0xcf74]
 0001A98F  0E                push cs
@@ -40878,10 +40464,11 @@
 0001A9A3  50                push ax
 0001A9A4  9AD7CD0000        call 0x0:0xcdd7
 0001A9A9  CB                retf
+
 0001A9AA  55                push bp
 0001A9AB  8BEC              mov bp,sp
 0001A9AD  33C0              xor ax,ax
-0001A9AF  9A1C3E821F        call 0x1f82:0x3e1c
+0001A9AF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A9B4  56                push si
 0001A9B5  8B5E06            mov bx,[bp+0x6]
 0001A9B8  C74706FFFF        mov word [bx+0x6],0xffff
@@ -40895,8 +40482,9 @@
 0001A9CF  5E                pop si
 0001A9D0  5D                pop bp
 0001A9D1  CA0200            retf 0x2
+
 0001A9D4  33C0              xor ax,ax
-0001A9D6  9A1C3E821F        call 0x1f82:0x3e1c
+0001A9D6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001A9DB  833EBA7700        cmp word [0x77ba],byte +0x0
 0001A9E0  7416              jz 0xa9f8
 0001A9E2  FF36BA77          push word [0x77ba]
@@ -40907,10 +40495,11 @@
 0001A9F0  7506              jnz 0xa9f8
 0001A9F2  C706BA770000      mov word [0x77ba],0x0
 0001A9F8  CB                retf
+
 0001A9F9  55                push bp
 0001A9FA  8BEC              mov bp,sp
 0001A9FC  B81A00            mov ax,0x1a
-0001A9FF  9A1C3E821F        call 0x1f82:0x3e1c
+0001A9FF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AA04  FF7608            push word [bp+0x8]
 0001AA07  FF7606            push word [bp+0x6]
 0001AA0A  0E                push cs
@@ -40959,10 +40548,11 @@
 0001AA8C  8BE5              mov sp,bp
 0001AA8E  5D                pop bp
 0001AA8F  CA0400            retf 0x4
+
 0001AA92  55                push bp
 0001AA93  8BEC              mov bp,sp
 0001AA95  B80400            mov ax,0x4
-0001AA98  9A1C3E821F        call 0x1f82:0x3e1c
+0001AA98  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AA9D  8B1EC0CF          mov bx,[0xcfc0]
 0001AAA1  D1E3              shl bx,1
 0001AAA3  D1E3              shl bx,1
@@ -40992,10 +40582,11 @@
 0001AAEC  8BE5              mov sp,bp
 0001AAEE  5D                pop bp
 0001AAEF  CA0400            retf 0x4
+
 0001AAF2  55                push bp
 0001AAF3  8BEC              mov bp,sp
 0001AAF5  B80400            mov ax,0x4
-0001AAF8  9A1C3E821F        call 0x1f82:0x3e1c
+0001AAF8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AAFD  57                push di
 0001AAFE  8B4606            mov ax,[bp+0x6]
 0001AB01  8B5608            mov dx,[bp+0x8]
@@ -41015,10 +40606,11 @@
 0001AB27  8BE5              mov sp,bp
 0001AB29  5D                pop bp
 0001AB2A  CA0400            retf 0x4
+
 0001AB2D  55                push bp
 0001AB2E  8BEC              mov bp,sp
 0001AB30  B81600            mov ax,0x16
-0001AB33  9A1C3E821F        call 0x1f82:0x3e1c
+0001AB33  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AB38  8D46EE            lea ax,[bp-0x12]
 0001AB3B  16                push ss
 0001AB3C  50                push ax
@@ -41092,10 +40684,11 @@
 0001AC0A  8BE5              mov sp,bp
 0001AC0C  5D                pop bp
 0001AC0D  CA0400            retf 0x4
+
 0001AC10  55                push bp
 0001AC11  8BEC              mov bp,sp
 0001AC13  B80400            mov ax,0x4
-0001AC16  9A1C3E821F        call 0x1f82:0x3e1c
+0001AC16  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AC1B  8B5E06            mov bx,[bp+0x6]
 0001AC1E  D1E3              shl bx,1
 0001AC20  D1E3              shl bx,1
@@ -41122,10 +40715,11 @@
 0001AC62  8BE5              mov sp,bp
 0001AC64  5D                pop bp
 0001AC65  CA0200            retf 0x2
+
 0001AC68  55                push bp
 0001AC69  8BEC              mov bp,sp
 0001AC6B  B80E00            mov ax,0xe
-0001AC6E  9A1C3E821F        call 0x1f82:0x3e1c
+0001AC6E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AC73  8B5E08            mov bx,[bp+0x8]
 0001AC76  D1E3              shl bx,1
 0001AC78  D1E3              shl bx,1
@@ -41222,10 +40816,11 @@
 0001AD75  8BE5              mov sp,bp
 0001AD77  5D                pop bp
 0001AD78  C20800            ret 0x8
+
 0001AD7B  55                push bp
 0001AD7C  8BEC              mov bp,sp
 0001AD7E  B80C00            mov ax,0xc
-0001AD81  9A1C3E821F        call 0x1f82:0x3e1c
+0001AD81  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AD86  837E0400          cmp word [bp+0x4],byte +0x0
 0001AD8A  7473              jz 0xadff
 0001AD8C  A1C0CF            mov ax,[0xcfc0]
@@ -41272,10 +40867,11 @@
 0001ADFF  8BE5              mov sp,bp
 0001AE01  5D                pop bp
 0001AE02  C20200            ret 0x2
+
 0001AE05  55                push bp
 0001AE06  8BEC              mov bp,sp
 0001AE08  B80C00            mov ax,0xc
-0001AE0B  9A1C3E821F        call 0x1f82:0x3e1c
+0001AE0B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AE10  837E0400          cmp word [bp+0x4],byte +0x0
 0001AE14  7473              jz 0xae89
 0001AE16  A1C0CF            mov ax,[0xcfc0]
@@ -41322,10 +40918,11 @@
 0001AE89  8BE5              mov sp,bp
 0001AE8B  5D                pop bp
 0001AE8C  C20200            ret 0x2
+
 0001AE8F  55                push bp
 0001AE90  8BEC              mov bp,sp
 0001AE92  B80E00            mov ax,0xe
-0001AE95  9A1C3E821F        call 0x1f82:0x3e1c
+0001AE95  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AE9A  8B1EC0CF          mov bx,[0xcfc0]
 0001AE9E  D1E3              shl bx,1
 0001AEA0  D1E3              shl bx,1
@@ -41432,10 +41029,11 @@
 0001AFBC  8BE5              mov sp,bp
 0001AFBE  5D                pop bp
 0001AFBF  C20200            ret 0x2
+
 0001AFC2  55                push bp
 0001AFC3  8BEC              mov bp,sp
 0001AFC5  B82000            mov ax,0x20
-0001AFC8  9A1C3E821F        call 0x1f82:0x3e1c
+0001AFC8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001AFCD  8D46E4            lea ax,[bp-0x1c]
 0001AFD0  16                push ss
 0001AFD1  50                push ax
@@ -41521,10 +41119,11 @@
 0001B0BA  8BE5              mov sp,bp
 0001B0BC  5D                pop bp
 0001B0BD  CA0400            retf 0x4
+
 0001B0C0  55                push bp
 0001B0C1  8BEC              mov bp,sp
 0001B0C3  B8CC00            mov ax,0xcc
-0001B0C6  9A1C3E821F        call 0x1f82:0x3e1c
+0001B0C6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B0CB  57                push di
 0001B0CC  56                push si
 0001B0CD  9AF2960000        call 0x0:0x96f2
@@ -41535,7 +41134,6 @@
 0001B0DC  B86A39            mov ax,0x396a
 0001B0DF  1E                push ds
 0001B0E0  50                push ax
-0001B0E1  90                nop
 0001B0E2  0E                push cs
 0001B0E3  E814A0            call 0x50fa
 0001B0E6  E91101            jmp 0xb1fa
@@ -41561,7 +41159,6 @@
 0001B111  98                cbw
 0001B112  3D9300            cmp ax,0x93
 0001B115  7C08              jl 0xb11f
-0001B117  90                nop
 0001B118  0E                push cs
 0001B119  E850AB            call 0x5c6c
 0001B11C  E9DB00            jmp 0xb1fa
@@ -41595,7 +41192,6 @@
 0001B16A  53                push bx
 0001B16B  1E                push ds
 0001B16C  FF76FE            push word [bp-0x2]
-0001B16F  90                nop
 0001B170  0E                push cs
 0001B171  E8EB7F            call 0x315f
 0001B174  0BC0              or ax,ax
@@ -41614,7 +41210,6 @@
 0001B195  72C8              jc 0xb15f
 0001B197  833EE6A300        cmp word [0xa3e6],byte +0x0
 0001B19C  7534              jnz 0xb1d2
-0001B19E  90                nop
 0001B19F  0E                push cs
 0001B1A0  E8FC80            call 0x329f
 0001B1A3  1E                push ds
@@ -41622,25 +41217,20 @@
 0001B1A7  8D8634FF          lea ax,[bp-0xcc]
 0001B1AB  16                push ss
 0001B1AC  50                push ax
-0001B1AD  90                nop
 0001B1AE  0E                push cs
 0001B1AF  E8DAD8            call 0x8a8c
 0001B1B2  0BC0              or ax,ax
 0001B1B4  740C              jz 0xb1c2
-0001B1B6  90                nop
 0001B1B7  0E                push cs
 0001B1B8  E8CA80            call 0x3285
-0001B1BB  90                nop
 0001B1BC  0E                push cs
 0001B1BD  E8A29D            call 0x4f62
 0001B1C0  EB38              jmp short 0xb1fa
 0001B1C2  8D8634FF          lea ax,[bp-0xcc]
 0001B1C6  16                push ss
 0001B1C7  50                push ax
-0001B1C8  90                nop
 0001B1C9  0E                push cs
 0001B1CA  E833D9            call 0x8b00
-0001B1CD  90                nop
 0001B1CE  0E                push cs
 0001B1CF  E8B380            call 0x3285
 0001B1D2  FF76FE            push word [bp-0x2]
@@ -41664,10 +41254,11 @@
 0001B1FC  8BE5              mov sp,bp
 0001B1FE  5D                pop bp
 0001B1FF  CB                retf
+
 0001B200  55                push bp
 0001B201  8BEC              mov bp,sp
 0001B203  B80200            mov ax,0x2
-0001B206  9A1C3E821F        call 0x1f82:0x3e1c
+0001B206  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B20B  B9CCCF            mov cx,0xcfcc
 0001B20E  8BD9              mov bx,cx
 0001B210  83BF970000        cmp word [bx+0x97],byte +0x0
@@ -41686,10 +41277,11 @@
 0001B232  8BE5              mov sp,bp
 0001B234  5D                pop bp
 0001B235  C3                ret
+
 0001B236  55                push bp
 0001B237  8BEC              mov bp,sp
 0001B239  33C0              xor ax,ax
-0001B23B  9A1C3E821F        call 0x1f82:0x3e1c
+0001B23B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B240  8B5E06            mov bx,[bp+0x6]
 0001B243  83BF970000        cmp word [bx+0x97],byte +0x0
 0001B248  740B              jz 0xb255
@@ -41701,10 +41293,11 @@
 0001B255  2BC0              sub ax,ax
 0001B257  5D                pop bp
 0001B258  CA0200            retf 0x2
+
 0001B25B  55                push bp
 0001B25C  8BEC              mov bp,sp
 0001B25E  33C0              xor ax,ax
-0001B260  9A1C3E821F        call 0x1f82:0x3e1c
+0001B260  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B265  C45E04            les bx,[bp+0x4]
 0001B268  268B879300        mov ax,[es:bx+0x93]
 0001B26D  260B879500        or ax,[es:bx+0x95]
@@ -41717,10 +41310,11 @@
 0001B287  9AF7020000        call 0x0:0x2f7
 0001B28C  5D                pop bp
 0001B28D  C20400            ret 0x4
+
 0001B290  55                push bp
 0001B291  8BEC              mov bp,sp
 0001B293  33C0              xor ax,ax
-0001B295  9A1C3E821F        call 0x1f82:0x3e1c
+0001B295  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B29A  56                push si
 0001B29B  8B5E04            mov bx,[bp+0x4]
 0001B29E  8BC3              mov ax,bx
@@ -41766,10 +41360,11 @@
 0001B319  5E                pop si
 0001B31A  5D                pop bp
 0001B31B  C20200            ret 0x2
+
 0001B31E  55                push bp
 0001B31F  8BEC              mov bp,sp
 0001B321  B81E00            mov ax,0x1e
-0001B324  9A1C3E821F        call 0x1f82:0x3e1c
+0001B324  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B329  57                push di
 0001B32A  56                push si
 0001B32B  C746E20000        mov word [bp-0x1e],0x0
@@ -41798,7 +41393,6 @@
 0001B367  C45EE4            les bx,[bp-0x1c]
 0001B36A  26FF7702          push word [es:bx+0x2]
 0001B36E  26FF37            push word [es:bx]
-0001B371  90                nop
 0001B372  0E                push cs
 0001B373  E8ECF3            call 0xa762
 0001B376  8BD8              mov bx,ax
@@ -41839,7 +41433,6 @@
 0001B3DC  C45EE4            les bx,[bp-0x1c]
 0001B3DF  26FF7702          push word [es:bx+0x2]
 0001B3E3  26FF37            push word [es:bx]
-0001B3E6  90                nop
 0001B3E7  0E                push cs
 0001B3E8  E877F3            call 0xa762
 0001B3EB  8BD8              mov bx,ax
@@ -41910,10 +41503,11 @@
 0001B4A0  8BE5              mov sp,bp
 0001B4A2  5D                pop bp
 0001B4A3  CA0200            retf 0x2
+
 0001B4A6  55                push bp
 0001B4A7  8BEC              mov bp,sp
 0001B4A9  33C0              xor ax,ax
-0001B4AB  9A1C3E821F        call 0x1f82:0x3e1c
+0001B4AB  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B4B0  56                push si
 0001B4B1  1E                push ds
 0001B4B2  FF7606            push word [bp+0x6]
@@ -41975,10 +41569,11 @@
 0001B54D  5E                pop si
 0001B54E  5D                pop bp
 0001B54F  CA0200            retf 0x2
+
 0001B552  55                push bp
 0001B553  8BEC              mov bp,sp
 0001B555  B80600            mov ax,0x6
-0001B558  9A1C3E821F        call 0x1f82:0x3e1c
+0001B558  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B55D  8B1EC0CF          mov bx,[0xcfc0]
 0001B561  D1E3              shl bx,1
 0001B563  D1E3              shl bx,1
@@ -41992,7 +41587,6 @@
 0001B57A  C45EFA            les bx,[bp-0x6]
 0001B57D  26FF7702          push word [es:bx+0x2]
 0001B581  26FF37            push word [es:bx]
-0001B584  90                nop
 0001B585  0E                push cs
 0001B586  E8D9F1            call 0xa762
 0001B589  8BD8              mov bx,ax
@@ -42016,7 +41610,6 @@
 0001B5BD  750F              jnz 0xb5ce
 0001B5BF  3997AEA4          cmp [bx-0x5b52],dx
 0001B5C3  7509              jnz 0xb5ce
-0001B5C5  90                nop
 0001B5C6  0E                push cs
 0001B5C7  E8D9C2            call 0x78a3
 0001B5CA  0BC0              or ax,ax
@@ -42027,7 +41620,6 @@
 0001B5D6  7412              jz 0xb5ea
 0001B5D8  B80100            mov ax,0x1
 0001B5DB  EB0F              jmp short 0xb5ec
-0001B5DD  90                nop
 0001B5DE  0E                push cs
 0001B5DF  E8319C            call 0x5213
 0001B5E2  EBF4              jmp short 0xb5d8
@@ -42036,10 +41628,11 @@
 0001B5EC  8BE5              mov sp,bp
 0001B5EE  5D                pop bp
 0001B5EF  CA0200            retf 0x2
+
 0001B5F2  55                push bp
 0001B5F3  8BEC              mov bp,sp
 0001B5F5  B80400            mov ax,0x4
-0001B5F8  9A1C3E821F        call 0x1f82:0x3e1c
+0001B5F8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B5FD  B80100            mov ax,0x1
 0001B600  50                push ax
 0001B601  9AD7CD0000        call 0x0:0xcdd7
@@ -42048,12 +41641,10 @@
 0001B609  9AFDCC0000        call 0x0:0xccfd
 0001B60E  FF36C480          push word [0x80c4]
 0001B612  FF36C280          push word [0x80c2]
-0001B616  90                nop
 0001B617  0E                push cs
 0001B618  E877F4            call 0xaa92
 0001B61B  FF36C480          push word [0x80c4]
 0001B61F  FF36C280          push word [0x80c2]
-0001B623  90                nop
 0001B624  0E                push cs
 0001B625  E83AF1            call 0xa762
 0001B628  8BD8              mov bx,ax
@@ -42063,7 +41654,6 @@
 0001B632  8946FC            mov [bp-0x4],ax
 0001B635  FF36C480          push word [0x80c4]
 0001B639  FF36C280          push word [0x80c2]
-0001B63D  90                nop
 0001B63E  0E                push cs
 0001B63F  E820F1            call 0xa762
 0001B642  8BD8              mov bx,ax
@@ -42071,7 +41661,6 @@
 0001B646  8A4604            mov al,[bp+0x4]
 0001B649  FEC0              inc al
 0001B64B  26884701          mov [es:bx+0x1],al
-0001B64F  90                nop
 0001B650  0E                push cs
 0001B651  E87F7C            call 0x32d3
 0001B654  8B1EC0CF          mov bx,[0xcfc0]
@@ -42083,7 +41672,6 @@
 0001B668  FF36B677          push word [0x77b6]
 0001B66C  2BC0              sub ax,ax
 0001B66E  50                push ax
-0001B66F  90                nop
 0001B670  0E                push cs
 0001B671  E8E6DB            call 0x925a
 0001B674  8946FE            mov [bp-0x2],ax
@@ -42091,7 +41679,6 @@
 0001B679  7D30              jnl 0xb6ab
 0001B67B  FF36C480          push word [0x80c4]
 0001B67F  FF36C280          push word [0x80c2]
-0001B683  90                nop
 0001B684  0E                push cs
 0001B685  E8DAF0            call 0xa762
 0001B688  8BD8              mov bx,ax
@@ -42104,22 +41691,18 @@
 0001B69F  FF36B677          push word [0x77b6]
 0001B6A3  2BC0              sub ax,ax
 0001B6A5  50                push ax
-0001B6A6  90                nop
 0001B6A7  0E                push cs
 0001B6A8  E8AFDB            call 0x925a
-0001B6AB  90                nop
 0001B6AC  0E                push cs
 0001B6AD  E8027C            call 0x32b2
 0001B6B0  FF36C480          push word [0x80c4]
 0001B6B4  FF36C280          push word [0x80c2]
-0001B6B8  90                nop
 0001B6B9  0E                push cs
 0001B6BA  E83CF3            call 0xa9f9
 0001B6BD  837E04FF          cmp word [bp+0x4],byte -0x1
 0001B6C1  750D              jnz 0xb6d0
 0001B6C3  FF36C0CF          push word [0xcfc0]
 0001B6C7  FF36C0CF          push word [0xcfc0]
-0001B6CB  90                nop
 0001B6CC  0E                push cs
 0001B6CD  E8F2F8            call 0xafc2
 0001B6D0  B80100            mov ax,0x1
@@ -42133,10 +41716,11 @@
 0001B6E6  8BE5              mov sp,bp
 0001B6E8  5D                pop bp
 0001B6E9  C20200            ret 0x2
+
 0001B6EC  55                push bp
 0001B6ED  8BEC              mov bp,sp
 0001B6EF  B81E00            mov ax,0x1e
-0001B6F2  9A1C3E821F        call 0x1f82:0x3e1c
+0001B6F2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B6F7  C746FA0000        mov word [bp-0x6],0x0
 0001B6FC  8B5E06            mov bx,[bp+0x6]
 0001B6FF  8B879300          mov ax,[bx+0x93]
@@ -42175,13 +41759,11 @@
 0001B75A  FF76F4            push word [bp-0xc]
 0001B75D  9A63B00000        call 0x0:0xb063
 0001B762  EB3A              jmp short 0xb79e
-0001B764  90                nop
 0001B765  0E                push cs
 0001B766  E8E57C            call 0x344e
 0001B769  FF7606            push word [bp+0x6]
 0001B76C  FF36E61A          push word [0x1ae6]
 0001B770  FF36E41A          push word [0x1ae4]
-0001B774  90                nop
 0001B775  0E                push cs
 0001B776  E856D0            call 0x87cf
 0001B779  0BC0              or ax,ax
@@ -42191,23 +41773,21 @@
 0001B784  FF7606            push word [bp+0x6]
 0001B787  FF36E61A          push word [0x1ae6]
 0001B78B  FF36E41A          push word [0x1ae4]
-0001B78F  90                nop
 0001B790  0E                push cs
 0001B791  E84BCF            call 0x86df
-0001B794  90                nop
 0001B795  0E                push cs
 0001B796  E83A7B            call 0x32d3
-0001B799  90                nop
 0001B79A  0E                push cs
 0001B79B  E8E77A            call 0x3285
 0001B79E  8B46FA            mov ax,[bp-0x6]
 0001B7A1  8BE5              mov sp,bp
 0001B7A3  5D                pop bp
 0001B7A4  CA0200            retf 0x2
+
 0001B7A7  55                push bp
 0001B7A8  8BEC              mov bp,sp
 0001B7AA  B81A00            mov ax,0x1a
-0001B7AD  9A1C3E821F        call 0x1f82:0x3e1c
+0001B7AD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B7B2  57                push di
 0001B7B3  56                push si
 0001B7B4  B90300            mov cx,0x3
@@ -42298,7 +41878,6 @@
 0001B88D  8B560C            mov dx,[bp+0xc]
 0001B890  52                push dx
 0001B891  50                push ax
-0001B892  90                nop
 0001B893  0E                push cs
 0001B894  E87E78            call 0x3115
 0001B897  BF8D39            mov di,0x398d
@@ -42361,10 +41940,11 @@
 0001B916  8BE5              mov sp,bp
 0001B918  5D                pop bp
 0001B919  CA0C00            retf 0xc
+
 0001B91C  55                push bp
 0001B91D  8BEC              mov bp,sp
 0001B91F  B81600            mov ax,0x16
-0001B922  9A1C3E821F        call 0x1f82:0x3e1c
+0001B922  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B927  8B5E06            mov bx,[bp+0x6]
 0001B92A  83BF970000        cmp word [bx+0x97],byte +0x0
 0001B92F  7503              jnz 0xb934
@@ -42418,10 +41998,11 @@
 0001B9B4  8BE5              mov sp,bp
 0001B9B6  5D                pop bp
 0001B9B7  CA0200            retf 0x2
+
 0001B9BA  55                push bp
 0001B9BB  8BEC              mov bp,sp
 0001B9BD  B80A00            mov ax,0xa
-0001B9C0  9A1C3E821F        call 0x1f82:0x3e1c
+0001B9C0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001B9C5  C746FA0000        mov word [bp-0x6],0x0
 0001B9CA  EB0E              jmp short 0xb9da
 0001B9CC  FF76FE            push word [bp-0x2]
@@ -42481,10 +42062,11 @@
 0001BA64  8BE5              mov sp,bp
 0001BA66  5D                pop bp
 0001BA67  CA0200            retf 0x2
+
 0001BA6A  55                push bp
 0001BA6B  8BEC              mov bp,sp
 0001BA6D  B80600            mov ax,0x6
-0001BA70  9A1C3E821F        call 0x1f82:0x3e1c
+0001BA70  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BA75  C746FA0000        mov word [bp-0x6],0x0
 0001BA7A  EB3D              jmp short 0xbab9
 0001BA7C  8B5EFA            mov bx,[bp-0x6]
@@ -42514,11 +42096,11 @@
 0001BAC7  8BE5              mov sp,bp
 0001BAC9  5D                pop bp
 0001BACA  CB                retf
-0001BACB  90                nop
+
 0001BACC  55                push bp
 0001BACD  8BEC              mov bp,sp
 0001BACF  B8E000            mov ax,0xe0
-0001BAD2  9A1C3E821F        call 0x1f82:0x3e1c
+0001BAD2  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BAD7  57                push di
 0001BAD8  56                push si
 0001BAD9  9AF2960000        call 0x0:0x96f2
@@ -42529,7 +42111,6 @@
 0001BAE8  B89039            mov ax,0x3990
 0001BAEB  1E                push ds
 0001BAEC  50                push ax
-0001BAED  90                nop
 0001BAEE  0E                push cs
 0001BAEF  E80896            call 0x50fa
 0001BAF2  B8FFFF            mov ax,0xffff
@@ -42555,7 +42136,6 @@
 0001BB1D  98                cbw
 0001BB1E  3D9300            cmp ax,0x93
 0001BB21  7C07              jl 0xbb2a
-0001BB23  90                nop
 0001BB24  0E                push cs
 0001BB25  E844A1            call 0x5c6c
 0001BB28  EBC8              jmp short 0xbaf2
@@ -42591,7 +42171,6 @@
 0001BB76  054C00            add ax,0x4c
 0001BB79  1E                push ds
 0001BB7A  50                push ax
-0001BB7B  90                nop
 0001BB7C  0E                push cs
 0001BB7D  E8DF75            call 0x315f
 0001BB80  0BC0              or ax,ax
@@ -42605,7 +42184,6 @@
 0001BB93  8146FCE701        add word [bp-0x4],0x1e7
 0001BB98  817EFCB6A3        cmp word [bp-0x4],0xa3b6
 0001BB9D  72C4              jc 0xbb63
-0001BB9F  90                nop
 0001BBA0  0E                push cs
 0001BBA1  E8FB76            call 0x329f
 0001BBA4  833EE6A300        cmp word [0xa3e6],byte +0x0
@@ -42617,22 +42195,18 @@
 0001BBB3  8D8620FF          lea ax,[bp-0xe0]
 0001BBB7  16                push ss
 0001BBB8  50                push ax
-0001BBB9  90                nop
 0001BBBA  0E                push cs
 0001BBBB  E8CECE            call 0x8a8c
 0001BBBE  0BC0              or ax,ax
 0001BBC0  740D              jz 0xbbcf
-0001BBC2  90                nop
 0001BBC3  0E                push cs
 0001BBC4  E8BE76            call 0x3285
-0001BBC7  90                nop
 0001BBC8  0E                push cs
 0001BBC9  E83597            call 0x5301
 0001BBCC  E923FF            jmp 0xbaf2
 0001BBCF  8D8620FF          lea ax,[bp-0xe0]
 0001BBD3  16                push ss
 0001BBD4  50                push ax
-0001BBD5  90                nop
 0001BBD6  0E                push cs
 0001BBD7  E826CF            call 0x8b00
 0001BBDA  8D46E8            lea ax,[bp-0x18]
@@ -42652,10 +42226,8 @@
 0001BBFC  0BC0              or ax,ax
 0001BBFE  751E              jnz 0xbc1e
 0001BC00  FF76FE            push word [bp-0x2]
-0001BC03  90                nop
 0001BC04  0E                push cs
 0001BC05  E85D89            call 0x4565
-0001BC08  90                nop
 0001BC09  0E                push cs
 0001BC0A  E87876            call 0x3285
 0001BC0D  C706BEA30100      mov word [0xa3be],0x1
@@ -42665,18 +42237,14 @@
 0001BC1E  837EFAFF          cmp word [bp-0x6],byte -0x1
 0001BC22  7403              jz 0xbc27
 0001BC24  E9CBFE            jmp 0xbaf2
-0001BC27  90                nop
 0001BC28  0E                push cs
 0001BC29  E85976            call 0x3285
-0001BC2C  90                nop
 0001BC2D  0E                push cs
 0001BC2E  E8D096            call 0x5301
 0001BC31  9ACFB00000        call 0x0:0xb0cf
 0001BC36  E9B9FE            jmp 0xbaf2
-0001BC39  90                nop
 0001BC3A  0E                push cs
 0001BC3B  E84776            call 0x3285
-0001BC3E  90                nop
 0001BC3F  0E                push cs
 0001BC40  E8F795            call 0x523a
 0001BC43  9AECB00000        call 0x0:0xb0ec
@@ -42686,10 +42254,11 @@
 0001BC4D  8BE5              mov sp,bp
 0001BC4F  5D                pop bp
 0001BC50  CB                retf
+
 0001BC51  55                push bp
 0001BC52  8BEC              mov bp,sp
 0001BC54  B80200            mov ax,0x2
-0001BC57  9A1C3E821F        call 0x1f82:0x3e1c
+0001BC57  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BC5C  B91489            mov cx,0x8914
 0001BC5F  8BD9              mov bx,cx
 0001BC61  837F2000          cmp word [bx+0x20],byte +0x0
@@ -42702,7 +42271,6 @@
 0001BC73  0E                push cs
 0001BC74  E88F01            call 0xbe06
 0001BC77  8946FE            mov [bp-0x2],ax
-0001BC7A  90                nop
 0001BC7B  0E                push cs
 0001BC7C  E89188            call 0x4510
 0001BC7F  0BC0              or ax,ax
@@ -42713,7 +42281,6 @@
 0001BC87  E87C01            call 0xbe06
 0001BC8A  837EFE00          cmp word [bp-0x2],byte +0x0
 0001BC8E  741A              jz 0xbcaa
-0001BC90  90                nop
 0001BC91  0E                push cs
 0001BC92  E87B88            call 0x4510
 0001BC95  0BC0              or ax,ax
@@ -42728,10 +42295,11 @@
 0001BCAC  8BE5              mov sp,bp
 0001BCAE  5D                pop bp
 0001BCAF  C3                ret
+
 0001BCB0  55                push bp
 0001BCB1  8BEC              mov bp,sp
 0001BCB3  33C0              xor ax,ax
-0001BCB5  9A1C3E821F        call 0x1f82:0x3e1c
+0001BCB5  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BCBA  8B5E06            mov bx,[bp+0x6]
 0001BCBD  837F2000          cmp word [bx+0x20],byte +0x0
 0001BCC1  740B              jz 0xbcce
@@ -42742,10 +42310,11 @@
 0001BCCB  E88900            call 0xbd57
 0001BCCE  5D                pop bp
 0001BCCF  CA0200            retf 0x2
+
 0001BCD2  55                push bp
 0001BCD3  8BEC              mov bp,sp
 0001BCD5  B80800            mov ax,0x8
-0001BCD8  9A1C3E821F        call 0x1f82:0x3e1c
+0001BCD8  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BCDD  C45E04            les bx,[bp+0x4]
 0001BCE0  268B4722          mov ax,[es:bx+0x22]
 0001BCE4  268B5724          mov dx,[es:bx+0x24]
@@ -42785,16 +42354,16 @@
 0001BD51  8BE5              mov sp,bp
 0001BD53  5D                pop bp
 0001BD54  C20400            ret 0x4
+
 0001BD57  55                push bp
 0001BD58  8BEC              mov bp,sp
 0001BD5A  B80200            mov ax,0x2
-0001BD5D  9A1C3E821F        call 0x1f82:0x3e1c
+0001BD5D  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BD62  56                push si
 0001BD63  8B5E04            mov bx,[bp+0x4]
 0001BD66  8B87E501          mov ax,[bx+0x1e5]
 0001BD6A  8946FE            mov [bp-0x2],ax
 0001BD6D  FF76FE            push word [bp-0x2]
-0001BD70  90                nop
 0001BD71  0E                push cs
 0001BD72  E8CA87            call 0x453f
 0001BD75  8B5EFE            mov bx,[bp-0x2]
@@ -42847,10 +42416,11 @@
 0001BE00  8BE5              mov sp,bp
 0001BE02  5D                pop bp
 0001BE03  C20200            ret 0x2
+
 0001BE06  55                push bp
 0001BE07  8BEC              mov bp,sp
 0001BE09  B82200            mov ax,0x22
-0001BE0C  9A1C3E821F        call 0x1f82:0x3e1c
+0001BE0C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BE11  57                push di
 0001BE12  56                push si
 0001BE13  C746DE0000        mov word [bp-0x22],0x0
@@ -43009,10 +42579,11 @@
 0001BFC0  8BE5              mov sp,bp
 0001BFC2  5D                pop bp
 0001BFC3  CA0200            retf 0x2
+
 0001BFC6  55                push bp
 0001BFC7  8BEC              mov bp,sp
 0001BFC9  B80400            mov ax,0x4
-0001BFCC  9A1C3E821F        call 0x1f82:0x3e1c
+0001BFCC  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001BFD1  57                push di
 0001BFD2  8B5E06            mov bx,[bp+0x6]
 0001BFD5  B94600            mov cx,0x46
@@ -43051,7 +42622,6 @@
 0001C021  B8C6A3            mov ax,0xa3c6
 0001C024  1E                push ds
 0001C025  50                push ax
-0001C026  90                nop
 0001C027  0E                push cs
 0001C028  E898CD            call 0x8dc3
 0001C02B  3D0100            cmp ax,0x1
@@ -43071,7 +42641,6 @@
 0001C04C  05E100            add ax,0xe1
 0001C04F  1E                push ds
 0001C050  50                push ax
-0001C051  90                nop
 0001C052  0E                push cs
 0001C053  E8A8CD            call 0x8dfe
 0001C056  FF7606            push word [bp+0x6]
@@ -43089,10 +42658,11 @@
 0001C076  8BE5              mov sp,bp
 0001C078  5D                pop bp
 0001C079  CA0200            retf 0x2
+
 0001C07C  55                push bp
 0001C07D  8BEC              mov bp,sp
 0001C07F  33C0              xor ax,ax
-0001C081  9A1C3E821F        call 0x1f82:0x3e1c
+0001C081  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C086  56                push si
 0001C087  833E7ACF00        cmp word [0xcf7a],byte +0x0
 0001C08C  7435              jz 0xc0c3
@@ -43134,13 +42704,13 @@
 0001C0F8  5E                pop si
 0001C0F9  5D                pop bp
 0001C0FA  C20200            ret 0x2
+
 0001C0FD  55                push bp
 0001C0FE  8BEC              mov bp,sp
 0001C100  B81C00            mov ax,0x1c
-0001C103  9A1C3E821F        call 0x1f82:0x3e1c
+0001C103  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C108  C70668D90100      mov word [0xd968],0x1
 0001C10E  EB05              jmp short 0xc115
-0001C110  90                nop
 0001C111  0E                push cs
 0001C112  E88A71            call 0x329f
 0001C115  B80080            mov ax,0x8000
@@ -43155,7 +42725,6 @@
 0001C12C  0BC0              or ax,ax
 0001C12E  7D28              jnl 0xc158
 0001C130  C70668D90000      mov word [0xd968],0x0
-0001C136  90                nop
 0001C137  0E                push cs
 0001C138  E84A71            call 0x3285
 0001C13B  8B4604            mov ax,[bp+0x4]
@@ -43165,7 +42734,6 @@
 0001C143  B80100            mov ax,0x1
 0001C146  50                push ax
 0001C147  50                push ax
-0001C148  90                nop
 0001C149  0E                push cs
 0001C14A  E8CA91            call 0x5317
 0001C14D  3D0200            cmp ax,0x2
@@ -43220,7 +42788,6 @@
 0001C1D5  FF76FE            push word [bp-0x2]
 0001C1D8  B80100            mov ax,0x1
 0001C1DB  50                push ax
-0001C1DC  90                nop
 0001C1DD  0E                push cs
 0001C1DE  E86471            call 0x3345
 0001C1E1  3DFFFF            cmp ax,0xffff
@@ -43242,7 +42809,6 @@
 0001C20B  3D0200            cmp ax,0x2
 0001C20E  7403              jz 0xc213
 0001C210  E95EFF            jmp 0xc171
-0001C213  90                nop
 0001C214  0E                push cs
 0001C215  E897B6            call 0x78af
 0001C218  8B4EFA            mov cx,[bp-0x6]
@@ -43322,10 +42888,11 @@
 0001C2F7  8BE5              mov sp,bp
 0001C2F9  5D                pop bp
 0001C2FA  C20200            ret 0x2
+
 0001C2FD  55                push bp
 0001C2FE  8BEC              mov bp,sp
 0001C300  B81E00            mov ax,0x1e
-0001C303  9A1C3E821F        call 0x1f82:0x3e1c
+0001C303  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C308  8B4604            mov ax,[bp+0x4]
 0001C30B  054C00            add ax,0x4c
 0001C30E  1E                push ds
@@ -43346,7 +42913,6 @@
 0001C32D  FF7604            push word [bp+0x4]
 0001C330  9A0C4B821F        call 0x1f82:0x4b0c
 0001C335  83C40A            add sp,byte +0xa
-0001C338  90                nop
 0001C339  0E                push cs
 0001C33A  E872B5            call 0x78af
 0001C33D  0BD2              or dx,dx
@@ -43437,7 +43003,6 @@
 0001C415  8D46FA            lea ax,[bp-0x6]
 0001C418  16                push ss
 0001C419  50                push ax
-0001C41A  90                nop
 0001C41B  0E                push cs
 0001C41C  E884C4            call 0x88a3
 0001C41F  0BC0              or ax,ax
@@ -43487,7 +43052,6 @@
 0001C49D  50                push ax
 0001C49E  B80100            mov ax,0x1
 0001C4A1  50                push ax
-0001C4A2  90                nop
 0001C4A3  0E                push cs
 0001C4A4  E800F3            call 0xb7a7
 0001C4A7  8B5E04            mov bx,[bp+0x4]
@@ -43499,10 +43063,11 @@
 0001C4BD  8BE5              mov sp,bp
 0001C4BF  5D                pop bp
 0001C4C0  C20200            ret 0x2
+
 0001C4C3  55                push bp
 0001C4C4  8BEC              mov bp,sp
 0001C4C6  B80400            mov ax,0x4
-0001C4C9  9A1C3E821F        call 0x1f82:0x3e1c
+0001C4C9  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C4CE  56                push si
 0001C4CF  8B5E06            mov bx,[bp+0x6]
 0001C4D2  C45F48            les bx,[bx+0x48]
@@ -43569,10 +43134,11 @@
 0001C580  8BE5              mov sp,bp
 0001C582  5D                pop bp
 0001C583  CA0200            retf 0x2
+
 0001C586  55                push bp
 0001C587  8BEC              mov bp,sp
 0001C589  B80400            mov ax,0x4
-0001C58C  9A1C3E821F        call 0x1f82:0x3e1c
+0001C58C  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C591  B84E00            mov ax,0x4e
 0001C594  50                push ax
 0001C595  8B5E06            mov bx,[bp+0x6]
@@ -43603,10 +43169,11 @@
 0001C5D5  8BE5              mov sp,bp
 0001C5D7  5D                pop bp
 0001C5D8  CA0200            retf 0x2
+
 0001C5DB  55                push bp
 0001C5DC  8BEC              mov bp,sp
 0001C5DE  B81600            mov ax,0x16
-0001C5E1  9A1C3E821F        call 0x1f82:0x3e1c
+0001C5E1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C5E6  8B5E06            mov bx,[bp+0x6]
 0001C5E9  837F2000          cmp word [bx+0x20],byte +0x0
 0001C5ED  7503              jnz 0xc5f2
@@ -43660,10 +43227,11 @@
 0001C672  8BE5              mov sp,bp
 0001C674  5D                pop bp
 0001C675  CA0200            retf 0x2
+
 0001C678  55                push bp
 0001C679  8BEC              mov bp,sp
 0001C67B  B80A00            mov ax,0xa
-0001C67E  9A1C3E821F        call 0x1f82:0x3e1c
+0001C67E  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C683  C746FA0000        mov word [bp-0x6],0x0
 0001C688  EB0E              jmp short 0xc698
 0001C68A  FF76FE            push word [bp-0x2]
@@ -43730,10 +43298,11 @@
 0001C735  8BE5              mov sp,bp
 0001C737  5D                pop bp
 0001C738  CA0200            retf 0x2
+
 0001C73B  55                push bp
 0001C73C  8BEC              mov bp,sp
 0001C73E  B80600            mov ax,0x6
-0001C741  9A1C3E821F        call 0x1f82:0x3e1c
+0001C741  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C746  C746FA0000        mov word [bp-0x6],0x0
 0001C74B  EB3D              jmp short 0xc78a
 0001C74D  8B5EFA            mov bx,[bp-0x6]
@@ -43763,10 +43332,11 @@
 0001C798  8BE5              mov sp,bp
 0001C79A  5D                pop bp
 0001C79B  CB                retf
+
 0001C79C  55                push bp
 0001C79D  8BEC              mov bp,sp
 0001C79F  33C0              xor ax,ax
-0001C7A1  9A1C3E821F        call 0x1f82:0x3e1c
+0001C7A1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C7A6  EB48              jmp short 0xc7f0
 0001C7A8  A13373            mov ax,[0x7333]
 0001C7AB  A35A73            mov [0x735a],ax
@@ -43785,16 +43355,13 @@
 0001C7CC  83C40A            add sp,byte +0xa
 0001C7CF  F606477301        test byte [0x7347],0x1
 0001C7D4  7421              jz 0xc7f7
-0001C7D6  90                nop
 0001C7D7  0E                push cs
 0001C7D8  E8D76A            call 0x32b2
-0001C7DB  90                nop
 0001C7DC  0E                push cs
 0001C7DD  E8FA8D            call 0x55da
 0001C7E0  3D0200            cmp ax,0x2
 0001C7E3  7506              jnz 0xc7eb
 0001C7E5  C706FE728200      mov word [0x72fe],0x82
-0001C7EB  90                nop
 0001C7EC  0E                push cs
 0001C7ED  E8E36A            call 0x32d3
 0001C7F0  833EFE7200        cmp word [0x72fe],byte +0x0
@@ -43802,10 +43369,11 @@
 0001C7F7  A1FE72            mov ax,[0x72fe]
 0001C7FA  5D                pop bp
 0001C7FB  C20200            ret 0x2
+
 0001C7FE  55                push bp
 0001C7FF  8BEC              mov bp,sp
 0001C801  B83400            mov ax,0x34
-0001C804  9A1C3E821F        call 0x1f82:0x3e1c
+0001C804  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001C809  56                push si
 0001C80A  C45E04            les bx,[bp+0x4]
 0001C80D  268B472E          mov ax,[es:bx+0x2e]
@@ -44103,7 +43671,6 @@
 0001CB2C  8D46F0            lea ax,[bp-0x10]
 0001CB2F  16                push ss
 0001CB30  50                push ax
-0001CB31  90                nop
 0001CB32  0E                push cs
 0001CB33  E845A3            call 0x6e7b
 0001CB36  0BC0              or ax,ax
@@ -44234,7 +43801,6 @@
 0001CC71  8D46F0            lea ax,[bp-0x10]
 0001CC74  16                push ss
 0001CC75  50                push ax
-0001CC76  90                nop
 0001CC77  0E                push cs
 0001CC78  E800A2            call 0x6e7b
 0001CC7B  0BC0              or ax,ax
@@ -44275,7 +43841,6 @@
 0001CCD7  8D46F0            lea ax,[bp-0x10]
 0001CCDA  16                push ss
 0001CCDB  50                push ax
-0001CCDC  90                nop
 0001CCDD  0E                push cs
 0001CCDE  E89AA1            call 0x6e7b
 0001CCE1  0BC0              or ax,ax
@@ -44296,10 +43861,11 @@
 0001CCFC  8BE5              mov sp,bp
 0001CCFE  5D                pop bp
 0001CCFF  C20800            ret 0x8
+
 0001CD02  55                push bp
 0001CD03  8BEC              mov bp,sp
 0001CD05  B80600            mov ax,0x6
-0001CD08  9A1C3E821F        call 0x1f82:0x3e1c
+0001CD08  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001CD0D  57                push di
 0001CD0E  56                push si
 0001CD0F  8A4606            mov al,[bp+0x6]
@@ -44556,10 +44122,11 @@
 0001CFFF  8BE5              mov sp,bp
 0001D001  5D                pop bp
 0001D002  C20400            ret 0x4
+
 0001D005  55                push bp
 0001D006  8BEC              mov bp,sp
 0001D008  B83C00            mov ax,0x3c
-0001D00B  9A1C3E821F        call 0x1f82:0x3e1c
+0001D00B  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001D010  57                push di
 0001D011  56                push si
 0001D012  FF360873          push word [0x7308]
@@ -44661,7 +44228,6 @@
 0001D13A  E9D205            jmp 0xd70f
 0001D13D  FF76D8            push word [bp-0x28]
 0001D140  FF76CE            push word [bp-0x32]
-0001D143  90                nop
 0001D144  0E                push cs
 0001D145  E8A361            call 0x32eb
 0001D148  8846D6            mov [bp-0x2a],al
@@ -44712,7 +44278,6 @@
 0001D1CB  E94105            jmp 0xd70f
 0001D1CE  FF76D8            push word [bp-0x28]
 0001D1D1  FF76CE            push word [bp-0x32]
-0001D1D4  90                nop
 0001D1D5  0E                push cs
 0001D1D6  E81261            call 0x32eb
 0001D1D9  8846D6            mov [bp-0x2a],al
@@ -44906,19 +44471,9 @@
 0001D424  FF063E73          inc word [0x733e]
 0001D428  E969FE            jmp 0xd294
 0001D42B  94                xchg ax,sp
-0001D42C  D2                db 0xd2
-0001D42D  B6D2              mov dh,0xd2
-0001D42F  D8D2              fcom st2
-0001D431  05D322            add ax,0x22d3
-0001D434  D34FD3            ror word [bx-0x2d],cl
-0001D437  6C                insb
-0001D438  D394D3AB          rcl word [si-0x542d],cl
-0001D43C  D3D4              rcl sp,cl
-0001D43E  D306D42A          rol word [0x2ad4],cl
-0001D442  D45C              aam 0x5c
-0001D444  D480              aam 0x80
-0001D446  D4AD              aam 0xad
-0001D448  D4C4              aam 0xc4
+
+0001D42C ; data
+
 0001D44A  5E                pop si
 0001D44B  0426              add al,0x26
 0001D44D  8B472E            mov ax,[bx+0x2e]
@@ -45066,9 +44621,7 @@
 0001D5FE  D6                salc
 0001D5FF  69D671D6          imul dx,si,word 0xd671
 0001D603  85D6              test si,dx
-0001D605  8D                db 0x8d
-0001D606  D6                salc
-0001D607  9BD6              wait salc
+0001D605 ; data
 0001D609  A3D68B            mov [0x8bd6],ax
 0001D60C  46                inc si
 0001D60D  CC                int3
@@ -45123,14 +44676,7 @@
 0001D694  22064273          and al,[0x7342]
 0001D698  E94AFE            jmp 0xd4e5
 0001D69B  4C                dec sp
-0001D69C  D513              aad 0x13
-0001D69E  D54C              aad 0x4c
-0001D6A0  D5FB              aad 0xfb
-0001D6A2  D537              aad 0x37
-0001D6A4  D6                salc
-0001D6A5  37                aaa
-0001D6A6  D6                salc
-0001D6A7  9BD5FF            wait aad 0xff
+0001D69C ; data
 0001D6AA  46                inc si
 0001D6AB  CC                int3
 0001D6AC  A10873            mov ax,[0x7308]
@@ -45206,10 +44752,11 @@
 0001D763  8BE5              mov sp,bp
 0001D765  5D                pop bp
 0001D766  C20E00            ret 0xe
+
 0001D769  55                push bp
 0001D76A  8BEC              mov bp,sp
 0001D76C  B80200            mov ax,0x2
-0001D76F  9A1C3E821F        call 0x1f82:0x3e1c
+0001D76F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001D774  C45E06            les bx,[bp+0x6]
 0001D777  26F6473201        test byte [es:bx+0x32],0x1
 0001D77C  746A              jz 0xd7e8
@@ -45261,10 +44808,11 @@
 0001D7F1  8BE5              mov sp,bp
 0001D7F3  5D                pop bp
 0001D7F4  C20600            ret 0x6
+
 0001D7F7  55                push bp
 0001D7F8  8BEC              mov bp,sp
 0001D7FA  B83E00            mov ax,0x3e
-0001D7FD  9A1C3E821F        call 0x1f82:0x3e1c
+0001D7FD  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001D802  57                push di
 0001D803  56                push si
 0001D804  C45E0C            les bx,[bp+0xc]
@@ -45985,12 +45533,10 @@
 0001E06C  C45E08            les bx,[bp+0x8]
 0001E06F  26C6475900        mov byte [es:bx+0x59],0x0
 0001E074  EB0E              jmp short 0xe084
-0001E076  6E                outsb
-0001E077  DF88DF94          fisttp word [bx+si-0x6b21]
-0001E07B  DFA0DF3A          fbld tword [bx+si+0x3adf]
+0001E076  ; data
 0001E07F  E05F              loopne 0xe0e0
 0001E081  E07B              loopne 0xe0fe
-0001E083  DF                db 0xdf
+0001E083  ; data
 0001E084  FF76E8            push word [bp-0x18]
 0001E087  FF76E6            push word [bp-0x1a]
 0001E08A  8B160873          mov dx,[0x7308]
@@ -46092,10 +45638,11 @@
 0001E1B5  8BE5              mov sp,bp
 0001E1B7  5D                pop bp
 0001E1B8  C20E00            ret 0xe
+
 0001E1BB  55                push bp
 0001E1BC  8BEC              mov bp,sp
 0001E1BE  B81400            mov ax,0x14
-0001E1C1  9A1C3E821F        call 0x1f82:0x3e1c
+0001E1C1  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E1C6  57                push di
 0001E1C7  8B4608            mov ax,[bp+0x8]
 0001E1CA  8B560A            mov dx,[bp+0xa]
@@ -46297,10 +45844,11 @@
 0001E3C4  8BE5              mov sp,bp
 0001E3C6  5D                pop bp
 0001E3C7  C20E00            ret 0xe
+
 0001E3CA  55                push bp
 0001E3CB  8BEC              mov bp,sp
 0001E3CD  B80200            mov ax,0x2
-0001E3D0  9A1C3E821F        call 0x1f82:0x3e1c
+0001E3D0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E3D5  B80200            mov ax,0x2
 0001E3D8  50                push ax
 0001E3D9  FF760E            push word [bp+0xe]
@@ -46350,10 +45898,11 @@
 0001E45E  8BE5              mov sp,bp
 0001E460  5D                pop bp
 0001E461  C20C00            ret 0xc
+
 0001E464  55                push bp
 0001E465  8BEC              mov bp,sp
 0001E467  B82800            mov ax,0x28
-0001E46A  9A1C3E821F        call 0x1f82:0x3e1c
+0001E46A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E46F  C706FE720000      mov word [0x72fe],0x0
 0001E475  8D46EA            lea ax,[bp-0x16]
 0001E478  16                push ss
@@ -46446,10 +45995,11 @@
 0001E57C  8BE5              mov sp,bp
 0001E57E  5D                pop bp
 0001E57F  CA0E00            retf 0xe
+
 0001E582  55                push bp
 0001E583  8BEC              mov bp,sp
 0001E585  33C0              xor ax,ax
-0001E587  9A1C3E821F        call 0x1f82:0x3e1c
+0001E587  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E58C  EB0E              jmp short 0xe59c
 0001E58E  C45E06            les bx,[bp+0x6]
 0001E591  FF4606            inc word [bp+0x6]
@@ -46463,10 +46013,11 @@
 0001E5A4  7FE8              jg 0xe58e
 0001E5A6  5D                pop bp
 0001E5A7  C20600            ret 0x6
+
 0001E5AA  55                push bp
 0001E5AB  8BEC              mov bp,sp
 0001E5AD  33C0              xor ax,ax
-0001E5AF  9A1C3E821F        call 0x1f82:0x3e1c
+0001E5AF  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E5B4  EB0E              jmp short 0xe5c4
 0001E5B6  C45E06            les bx,[bp+0x6]
 0001E5B9  FF4606            inc word [bp+0x6]
@@ -46480,10 +46031,11 @@
 0001E5CC  75E8              jnz 0xe5b6
 0001E5CE  5D                pop bp
 0001E5CF  C20600            ret 0x6
+
 0001E5D2  55                push bp
 0001E5D3  8BEC              mov bp,sp
 0001E5D5  33C0              xor ax,ax
-0001E5D7  9A1C3E821F        call 0x1f82:0x3e1c
+0001E5D7  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E5DC  EB08              jmp short 0xe5e6
 0001E5DE  8A4606            mov al,[bp+0x6]
 0001E5E1  98                cbw
@@ -46495,10 +46047,11 @@
 0001E5EE  7FEE              jg 0xe5de
 0001E5F0  5D                pop bp
 0001E5F1  C20400            ret 0x4
+
 0001E5F4  55                push bp
 0001E5F5  8BEC              mov bp,sp
 0001E5F7  B81C00            mov ax,0x1c
-0001E5FA  9A1C3E821F        call 0x1f82:0x3e1c
+0001E5FA  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E5FF  57                push di
 0001E600  56                push si
 0001E601  C646F30F          mov byte [bp-0xd],0xf
@@ -46685,10 +46238,11 @@
 0001E85E  8BE5              mov sp,bp
 0001E860  5D                pop bp
 0001E861  CB                retf
+
 0001E862  55                push bp
 0001E863  8BEC              mov bp,sp
 0001E865  B81E00            mov ax,0x1e
-0001E868  9A1C3E821F        call 0x1f82:0x3e1c
+0001E868  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E86D  833E924200        cmp word [0x4292],byte +0x0
 0001E872  7548              jnz 0xe8bc
 0001E874  C70692420100      mov word [0x4292],0x1
@@ -46725,7 +46279,7 @@
 0001E8C0  55                push bp
 0001E8C1  8BEC              mov bp,sp
 0001E8C3  B81C00            mov ax,0x1c
-0001E8C6  9A1C3E821F        call 0x1f82:0x3e1c
+0001E8C6  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E8CB  56                push si
 0001E8CC  FF7608            push word [bp+0x8]
 0001E8CF  FF7606            push word [bp+0x6]
@@ -46737,7 +46291,6 @@
 0001E8DB  50                push ax
 0001E8DC  2BC0              sub ax,ax
 0001E8DE  50                push ax
-0001E8DF  90                nop
 0001E8E0  0E                push cs
 0001E8E1  E881A5            call 0x8e65
 0001E8E4  8B4606            mov ax,[bp+0x6]
@@ -46778,10 +46331,11 @@
 0001E943  8BE5              mov sp,bp
 0001E945  5D                pop bp
 0001E946  CA0400            retf 0x4
+
 0001E949  55                push bp
 0001E94A  8BEC              mov bp,sp
 0001E94C  B80200            mov ax,0x2
-0001E94F  9A1C3E821F        call 0x1f82:0x3e1c
+0001E94F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E954  57                push di
 0001E955  8B4606            mov ax,[bp+0x6]
 0001E958  B104              mov cl,0x4
@@ -46798,9 +46352,9 @@
 0001E971  8BE5              mov sp,bp
 0001E973  5D                pop bp
 0001E974  CA0200            retf 0x2
+
 0001E977  33C0              xor ax,ax
-0001E979  9A1C3E821F        call 0x1f82:0x3e1c
-0001E97E  90                nop
+0001E979  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001E97F  0E                push cs
 0001E980  E84B07            call 0xf0ce
 0001E983  B8C83D            mov ax,0x3dc8
@@ -46818,13 +46372,6 @@
 0001E99B  9A1DC50000        call 0x0:0xc51d
 0001E9A0  CB                retf
 
-0001E9A1  90                nop
-0001E9A2  0000              add [bx+si],al
-0001E9A4  0000              add [bx+si],al
-0001E9A6  0000              add [bx+si],al
-0001E9A8  0000              add [bx+si],al
-0001E9AA  0000              add [bx+si],al
-0001E9AC  0000              add [bx+si],al
 0001E9AE  55                push bp
 0001E9AF  8BEC              mov bp,sp
 0001E9B1  83EC0C            sub sp,byte +0xc
@@ -46943,6 +46490,7 @@
 0001EAB6  8BE5              mov sp,bp
 0001EAB8  5D                pop bp
 0001EAB9  CA0400            retf 0x4
+
 0001EABC  55                push bp
 0001EABD  8BEC              mov bp,sp
 0001EABF  56                push si
@@ -46973,7 +46521,6 @@
 0001EAFE  803E64D903        cmp byte [0xd964],0x3
 0001EB03  7503              jnz 0xeb08
 0001EB05  EB64              jmp short 0xeb6b
-0001EB07  90                nop
 0001EB08  A801              test al,0x1
 0001EB0A  740E              jz 0xeb1a
 0001EB0C  8ADC              mov bl,ah
@@ -47139,6 +46686,7 @@
 0001EC37  5E                pop si
 0001EC38  5D                pop bp
 0001EC39  CA0200            retf 0x2
+
 0001EC3C  263005            xor [es:di],al
 0001EC3F  81C70020          add di,0x2000
 0001EC43  7904              jns 0xec49
@@ -47267,6 +46815,7 @@
 0001ED60  5E                pop si
 0001ED61  5D                pop bp
 0001ED62  CA0600            retf 0x6
+
 0001ED65  55                push bp
 0001ED66  8BEC              mov bp,sp
 0001ED68  83EC02            sub sp,byte +0x2
@@ -47307,6 +46856,7 @@
 0001EDB1  8BE5              mov sp,bp
 0001EDB3  5D                pop bp
 0001EDB4  CA0E00            retf 0xe
+
 0001EDB7  55                push bp
 0001EDB8  8BEC              mov bp,sp
 0001EDBA  83EC02            sub sp,byte +0x2
@@ -47339,17 +46889,14 @@
 0001EDF4  AA                stosb
 0001EDF5  E2ED              loop 0xede4
 0001EDF7  EB1A              jmp short 0xee13
-0001EDF9  90                nop
 0001EDFA  47                inc di
 0001EDFB  E2E7              loop 0xede4
 0001EDFD  EB14              jmp short 0xee13
-0001EDFF  90                nop
 0001EE00  250FF0            and ax,0xf00f
 0001EE03  0AC4              or al,ah
 0001EE05  AA                stosb
 0001EE06  E2DC              loop 0xede4
 0001EE08  EB09              jmp short 0xee13
-0001EE0A  90                nop
 0001EE0B  25F00F            and ax,0xff0
 0001EE0E  0AC4              or al,ah
 0001EE10  AA                stosb
@@ -47367,6 +46914,7 @@
 0001EE26  8BE5              mov sp,bp
 0001EE28  5D                pop bp
 0001EE29  CA0E00            retf 0xe
+
 0001EE2C  55                push bp
 0001EE2D  8BEC              mov bp,sp
 0001EE2F  57                push di
@@ -47385,6 +46933,7 @@
 0001EE53  5F                pop di
 0001EE54  5D                pop bp
 0001EE55  CA0400            retf 0x4
+
 0001EE58  8BD0              mov dx,ax
 0001EE5A  83E203            and dx,byte +0x3
 0001EE5D  B10D              mov cl,0xd
@@ -47398,6 +46947,7 @@
 0001EE6D  D1FF              sar di,1
 0001EE6F  03F8              add di,ax
 0001EE71  C3                ret
+
 0001EE72  55                push bp
 0001EE73  8BEC              mov bp,sp
 0001EE75  803EC8CF04        cmp byte [0xcfc8],0x4
@@ -47457,6 +47007,7 @@
 0001EF26  2EA25DEA          mov [cs:0xea5d],al
 0001EF2A  5D                pop bp
 0001EF2B  CB                retf
+
 0001EF2C  55                push bp
 0001EF2D  8BEC              mov bp,sp
 0001EF2F  57                push di
@@ -47582,6 +47133,7 @@
 0001F030  8BE5              mov sp,bp
 0001F032  5D                pop bp
 0001F033  CA0A00            retf 0xa
+
 0001F036  55                push bp
 0001F037  8BEC              mov bp,sp
 0001F039  57                push di
@@ -47654,6 +47206,7 @@
 0001F0C8  8BE5              mov sp,bp
 0001F0CA  5D                pop bp
 0001F0CB  CA0600            retf 0x6
+
 0001F0CE  0E                push cs
 0001F0CF  B852EA            mov ax,0xea52
 0001F0D2  50                push ax
@@ -47663,7 +47216,7 @@
 0001F0D9  55                push bp
 0001F0DA  8BEC              mov bp,sp
 0001F0DD  B81C00            mov ax,0x1c
-0001F0E0  9A1C3E821F        call 0x1f82:0x3e1c
+0001F0E0  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001F0E5  57                push di
 0001F0E6  56                push si
 0001F0E7  C646F30F          mov byte [bp-0xd],0xf
@@ -47764,10 +47317,11 @@
 0001F22C  8BE5              mov sp,bp
 0001F22E  5D                pop bp
 0001F22F  CB                retf
+
 0001F230  55                push bp
 0001F231  8BEC              mov bp,sp
 0001F233  B81C00            mov ax,0x1c
-0001F236  9A1C3E821F        call 0x1f82:0x3e1c
+0001F236  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001F23B  833EAE4700        cmp word [0x47ae],byte +0x0
 0001F240  7526              jnz 0xf268
 0001F242  C706AE470100      mov word [0x47ae],0x1
@@ -47791,7 +47345,7 @@
 0001F26C  55                push bp
 0001F26D  8BEC              mov bp,sp
 0001F26F  B85A00            mov ax,0x5a
-0001F272  9A1C3E821F        call 0x1f82:0x3e1c
+0001F272  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001F277  C746B81000        mov word [bp-0x48],0x10
 0001F27C  8D46C8            lea ax,[bp-0x38]
 0001F27F  8946A6            mov [bp-0x5a],ax
@@ -47858,14 +47412,15 @@
 0001F325  8BE5              mov sp,bp
 0001F327  5D                pop bp
 0001F328  CA0400            retf 0x4
+
 0001F32B  55                push bp
 0001F32C  8BEC              mov bp,sp
 0001F32E  B80200            mov ax,0x2
-0001F331  9A1C3E821F        call 0x1f82:0x3e1c
+0001F331  9A1C3E821F        call 0x1f82:0x3e1c	; Check for _IOSTRG.
 0001F336  57                push di
 0001F337  8B4606            mov ax,[bp+0x6]
-0001F33A  250F00            and ax,0xf
-0001F33D  8946FE            mov [bp-0x2],ax
+0001F33A  250F00            and ax,0xf		; Convert to 16 colors.
+0001F33D  8946FE            mov [bp-0x2],ax	; Store converted color.
 0001F340  BB00A0            mov bx,0xa000	; 
 0001F343  8EC3              mov es,bx		;
 0001F345  2BDB              sub bx,bx		;
@@ -47876,10 +47431,11 @@
 0001F34F  8BE5              mov sp,bp
 0001F351  5D                pop bp
 0001F352  CA0200            retf 0x2
+
 0001F355  55                push bp
 0001F356  8BEC              mov bp,sp
 0001F358  33C0              xor ax,ax
-0001F35A  9A1C3E821F        call 0x1f82:0x3e1c
+0001F35A  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001F35F  8B4608            mov ax,[bp+0x8]
 0001F362  A3B8A3            mov [0xa3b8],ax
 0001F365  8B4606            mov ax,[bp+0x6]
@@ -47890,9 +47446,9 @@
 0001F376  A3CC80            mov [0x80cc],ax
 0001F379  5D                pop bp
 0001F37A  CA0400            retf 0x4
+
 0001F37D  33C0              xor ax,ax
-0001F37F  9A1C3E821F        call 0x1f82:0x3e1c
-0001F384  90                nop
+0001F37F  9A1C3E821F        call 0x1f82:0x3e1c		; Check for _IOSTRG.
 0001F385  0E                push cs
 0001F386  E89904            call 0xf822
 0001F389  B89442            mov ax,0x4294
@@ -47910,7 +47466,6 @@
 0001F3A1  9A1DC50000        call 0x0:0xc51d
 0001F3A6  CB                retf
 
-0001F3A7  90                nop
 0001F3A8  55                push bp
 0001F3A9  8BEC              mov bp,sp
 0001F3AB  83EC0A            sub sp,byte +0xa
@@ -47976,6 +47531,7 @@
 0001F434  8BE5              mov sp,bp
 0001F436  5D                pop bp
 0001F437  CA0400            retf 0x4
+
 0001F43A  55                push bp
 0001F43B  8BEC              mov bp,sp
 0001F43D  56                push si
@@ -48015,6 +47571,7 @@
 0001F48E  5E                pop si
 0001F48F  5D                pop bp
 0001F490  CA0200            retf 0x2
+
 0001F493  AA                stosb
 0001F494  EBF7              jmp short 0xf48d
 0001F496  80F40F            xor ah,0xf
@@ -48130,6 +47687,7 @@
 0001F55F  5E                pop si
 0001F560  5D                pop bp
 0001F561  CA0200            retf 0x2
+
 0001F564  8BD0              mov dx,ax
 0001F566  8BF7              mov si,di
 0001F568  1E                push ds
@@ -48211,7 +47769,6 @@
 0001F614  AA                stosb
 0001F615  E2F5              loop 0xf60c
 0001F617  EB14              jmp short 0xf62d
-0001F619  90                nop
 0001F61A  8AC6              mov al,dh
 0001F61C  F6C301            test bl,0x1
 0001F61F  7509              jnz 0xf62a
@@ -48236,6 +47793,7 @@
 0001F640  8BE5              mov sp,bp
 0001F642  5D                pop bp
 0001F643  CA0600            retf 0x6
+
 0001F646  55                push bp
 0001F647  8BEC              mov bp,sp
 0001F649  57                push di
@@ -48280,6 +47838,7 @@
 0001F698  8BE5              mov sp,bp
 0001F69A  5D                pop bp
 0001F69B  CA0E00            retf 0xe
+
 0001F69E  55                push bp
 0001F69F  8BEC              mov bp,sp
 0001F6A1  57                push di
@@ -48316,7 +47875,6 @@
 0001F6E4  AB                stosw
 0001F6E5  E2E9              loop 0xf6d0
 0001F6E7  EB12              jmp short 0xf6fb
-0001F6E9  90                nop
 0001F6EA  47                inc di
 0001F6EB  86C4              xchg al,ah
 0001F6ED  240F              and al,0xf
@@ -48324,7 +47882,6 @@
 0001F6F1  AA                stosb
 0001F6F2  E2DC              loop 0xf6d0
 0001F6F4  EB05              jmp short 0xf6fb
-0001F6F6  90                nop
 0001F6F7  AA                stosb
 0001F6F8  47                inc di
 0001F6F9  E2D5              loop 0xf6d0
@@ -48340,6 +47897,7 @@
 0001F70A  8BE5              mov sp,bp
 0001F70C  5D                pop bp
 0001F70D  CA0E00            retf 0xe
+
 0001F710  55                push bp
 0001F711  8BEC              mov bp,sp
 0001F713  57                push di
@@ -48430,6 +47988,7 @@
 0001F7B4  8BE5              mov sp,bp
 0001F7B6  5D                pop bp
 0001F7B7  CA0A00            retf 0xa
+
 0001F7BA  55                push bp
 0001F7BB  8BEC              mov bp,sp
 0001F7BD  57                push di
@@ -48494,7 +48053,6 @@
 0001F82D  55                push bp
 0001F82E  8BEC              mov bp,sp
 0001F831  B81C00            mov ax,0x1c
-0001F834  90                nop
 0001F835  0E                push cs
 0001F836  E8033E            call 0x363c
 0001F839  57                push di
@@ -48508,7 +48066,6 @@
 0001F848  50                push ax
 0001F849  B81000            mov ax,0x10
 0001F84C  50                push ax
-0001F84D  90                nop
 0001F84E  0E                push cs
 0001F84F  E83245            call 0x3d84
 0001F852  83C40A            add sp,byte +0xa
@@ -48524,11 +48081,9 @@
 0001F86C  50                push ax
 0001F86D  B81000            mov ax,0x10
 0001F870  50                push ax
-0001F871  90                nop
 0001F872  0E                push cs
 0001F873  E80E45            call 0x3d84
 0001F876  83C40A            add sp,byte +0xa
-0001F879  90                nop
 0001F87A  0E                push cs
 0001F87B  E84513            call 0xbc3
 0001F87E  2BC0              sub ax,ax
@@ -48543,7 +48098,6 @@
 0001F890  A2BCA3            mov [0xa3bc],al
 0001F893  B84300            mov ax,0x43
 0001F896  50                push ax
-0001F897  90                nop
 0001F898  0E                push cs
 0001F899  E8C854            call 0x4d64
 0001F89C  83C402            add sp,byte +0x2
@@ -48610,10 +48164,10 @@
 0001F987  8BE5              mov sp,bp
 0001F989  5D                pop bp
 0001F98A  CB                retf
+
 0001F98B  55                push bp
 0001F98C  8BEC              mov bp,sp
 0001F98E  B81C00            mov ax,0x1c
-0001F991  90                nop
 0001F992  0E                push cs
 0001F993  E8A63C            call 0x363c
 0001F996  833EBA5000        cmp word [0x50ba],byte +0x0
@@ -48630,17 +48184,16 @@
 0001F9B6  50                push ax
 0001F9B7  B81000            mov ax,0x10
 0001F9BA  50                push ax
-0001F9BB  90                nop
 0001F9BC  0E                push cs
 0001F9BD  E8C443            call 0x3d84
 0001F9C0  83C40A            add sp,byte +0xa
 0001F9C3  8BE5              mov sp,bp
 0001F9C5  5D                pop bp
 0001F9C6  CB                retf
+
 0001F9C7  55                push bp
 0001F9C8  8BEC              mov bp,sp
 0001F9CA  B88800            mov ax,0x88
-0001F9CD  90                nop
 0001F9CE  0E                push cs
 0001F9CF  E86A3C            call 0x363c
 0001F9D2  FF7608            push word [bp+0x8]
@@ -48707,7 +48260,6 @@
 0001FA86  8D46F8            lea ax,[bp-0x8]
 0001FA89  16                push ss
 0001FA8A  50                push ax
-0001FA8B  90                nop
 0001FA8C  0E                push cs
 0001FA8D  E83047            call 0x41c0
 0001FA90  83C404            add sp,byte +0x4
@@ -48732,32 +48284,29 @@
 0001FAB7  50                push ax
 0001FAB8  B81000            mov ax,0x10
 0001FABB  50                push ax
-0001FABC  90                nop
 0001FABD  0E                push cs
 0001FABE  E8B345            call 0x4074
 0001FAC1  8BE5              mov sp,bp
 0001FAC3  5D                pop bp
 0001FAC4  CA0400            retf 0x4
+
 0001FAC7  55                push bp
 0001FAC8  8BEC              mov bp,sp
 0001FACA  33C0              xor ax,ax
-0001FACC  90                nop
 0001FACD  0E                push cs
 0001FACE  E86B3B            call 0x363c
 0001FAD1  8B4608            mov ax,[bp+0x8]
 0001FAD4  A3B8A3            mov [0xa3b8],ax
 0001FAD7  8B4606            mov ax,[bp+0x6]
 0001FADA  A3BAA3            mov [0xa3ba],ax
-0001FADD  90                nop
 0001FADE  0E                push cs
 0001FADF  E82A0E            call 0x90c
 0001FAE2  5D                pop bp
 0001FAE3  CA0400            retf 0x4
+
 0001FAE6  33C0              xor ax,ax
-0001FAE8  90                nop
 0001FAE9  0E                push cs
 0001FAEA  E84F3B            call 0x363c
-0001FAED  90                nop
 0001FAEE  0E                push cs
 0001FAEF  E83311            call 0xc25
 0001FAF2  B8B047            mov ax,0x47b0
@@ -48774,82 +48323,77 @@
 0001FB09  50                push ax
 0001FB0A  9A1DC50000        call 0x0:0xc51d
 0001FB0F  CB                retf
-0001FB10  0000              add [bx+si],al
-0001FB12  00FF              add bh,bh
-0001FB14  0000              add [bx+si],al
-0001FB16  0000              add [bx+si],al
-0001FB18  FF                db 0xff
-0001FB19  7F3F              jg 0xfb5a
-0001FB1B  1F                pop ds
-0001FB1C  0F07              sysret
-0001FB1E  0301              add ax,[bx+di]
+
+0001FB10  DB 0x00 0x00 0x00 0xFF 0x00 0x00 0x00 0x00 0xFF 0x7F 0x3F 0x1F 0x0F 0x07 0x03 0x01
+
 0001FB20  55                push bp
 0001FB21  8BEC              mov bp,sp
 0001FB23  57                push di
-0001FB24  BF00A0            mov di,0xa000
-0001FB27  8EC7              mov es,di
-0001FB29  33FF              xor di,di
-0001FB2B  BACE03            mov dx,0x3ce		; 3CE VGA graphics index.
+0001FB24  BF00A0            mov di,0xa000		; Set ES:DI to start of VGA video segment.
+0001FB27  8EC7              mov es,di			;
+0001FB29  33FF              xor di,di			;
+0001FB2B  BACE03            mov dx,0x3ce		; VGA graphics index.
 0001FB2E  8A6606            mov ah,[bp+0x6]		;
 0001FB31  B000              mov al,0x0			;
 0001FB33  EE                out dx,al			;
-0001FB34  86C4              xchg al,ah
-0001FB36  42                inc dx
-0001FB37  EE                out dx,al
-0001FB38  4A                dec dx
-0001FB39  86C4              xchg al,ah
-0001FB3B  2E8826F002        mov [cs:0x2f0],ah
-0001FB40  B8010F            mov ax,0xf01
-0001FB43  EE                out dx,al
-0001FB44  86C4              xchg al,ah
-0001FB46  42                inc dx
-0001FB47  EE                out dx,al
-0001FB48  4A                dec dx
-0001FB49  86C4              xchg al,ah
-0001FB4B  2E8826F102        mov [cs:0x2f1],ah
-0001FB50  B9A00F            mov cx,0xfa0
-0001FB53  F3AB              rep stosw
-0001FB55  B80100            mov ax,0x1
-0001FB58  EE                out dx,al
-0001FB59  86C4              xchg al,ah
-0001FB5B  42                inc dx
-0001FB5C  EE                out dx,al
-0001FB5D  4A                dec dx
+0001FB34  86C4              xchg al,ah			;
+0001FB36  42                inc dx			;
+0001FB37  EE                out dx,al			;
+0001FB38  4A                dec dx			;
+0001FB39  86C4              xchg al,ah			;
+0001FB3B  2E8826F002        mov [cs:0x2f0],ah		;
+0001FB40  B8010F            mov ax,0xf01		;
+0001FB43  EE                out dx,al			;
+0001FB44  86C4              xchg al,ah			;
+0001FB46  42                inc dx			;
+0001FB47  EE                out dx,al			;
+0001FB48  4A                dec dx			;
+0001FB49  86C4              xchg al,ah			;
+0001FB4B  2E8826F102        mov [cs:0x2f1],ah		; Copy some data into the video buffer.
+0001FB50  B9A00F            mov cx,0xfa0		;
+0001FB53  F3AB              rep stosw			;
+0001FB55  B80100            mov ax,0x1			; VGA I/O.
+0001FB58  EE                out dx,al			;
+0001FB59  86C4              xchg al,ah			;
+0001FB5B  42                inc dx			;
+0001FB5C  EE                out dx,al			;
+0001FB5D  4A                dec dx			;
 0001FB5E  86C4              xchg al,ah
 0001FB60  2E8826F102        mov [cs:0x2f1],ah
 0001FB65  5F                pop di
 0001FB66  8BE5              mov sp,bp
 0001FB68  5D                pop bp
 0001FB69  CA0200            retf 0x2
+
 0001FB6C  55                push bp
 0001FB6D  8BEC              mov bp,sp
 0001FB6F  83EC08            sub sp,byte +0x8
 0001FB72  56                push si
 0001FB73  57                push di
-0001FB74  BACE03            mov dx,0x3ce
-0001FB77  8A26B2CF          mov ah,[0xcfb2]
-0001FB7B  B000              mov al,0x0
-0001FB7D  EE                out dx,al
-0001FB7E  86C4              xchg al,ah
-0001FB80  42                inc dx
-0001FB81  EE                out dx,al
-0001FB82  4A                dec dx
-0001FB83  86C4              xchg al,ah
-0001FB85  2E8826F002        mov [cs:0x2f0],ah
-0001FB8A  B8010F            mov ax,0xf01
-0001FB8D  EE                out dx,al
-0001FB8E  86C4              xchg al,ah
-0001FB90  42                inc dx
-0001FB91  EE                out dx,al
-0001FB92  4A                dec dx
-0001FB93  86C4              xchg al,ah
-0001FB95  2E8826F102        mov [cs:0x2f1],ah
-0001FB9A  B80300            mov ax,0x3
-0001FB9D  EE                out dx,al
-0001FB9E  86C4              xchg al,ah
-0001FBA0  42                inc dx
-0001FBA1  EE                out dx,al
-0001FBA2  4A                dec dx
+0001FB74  BACE03            mov dx,0x3ce		; Graphics I/O.
+0001FB77  8A26B2CF          mov ah,[0xcfb2]		;
+0001FB7B  B000              mov al,0x0			;
+0001FB7D  EE                out dx,al			;
+0001FB7E  86C4              xchg al,ah			;
+0001FB80  42                inc dx			;
+0001FB81  EE                out dx,al			;
+0001FB82  4A                dec dx			;
+0001FB83  86C4              xchg al,ah			;
+0001FB85  2E8826F002        mov [cs:0x2f0],ah		;
+0001FB8A  B8010F            mov ax,0xf01		;
+0001FB8D  EE                out dx,al			;
+0001FB8E  86C4              xchg al,ah			;
+0001FB90  42                inc dx			;
+0001FB91  EE                out dx,al			;
+0001FB92  4A                dec dx			;
+0001FB93  86C4              xchg al,ah			;
+0001FB95  2E8826F102        mov [cs:0x2f1],ah		;
+0001FB9A  B80300            mov ax,0x3			;
+0001FB9D  EE                out dx,al			;
+0001FB9E  86C4              xchg al,ah			;
+0001FBA0  42                inc dx			;
+0001FBA1  EE                out dx,al			;
+0001FBA2  4A                dec dx			;
 0001FBA3  86C4              xchg al,ah
 0001FBA5  2E8826F402        mov [cs:0x2f4],ah
 0001FBAA  8B4E08            mov cx,[bp+0x8]
@@ -48978,6 +48522,7 @@
 0001FCB8  8BE5              mov sp,bp
 0001FCBA  5D                pop bp
 0001FCBB  CA0400            retf 0x4
+
 0001FCBE  55                push bp
 0001FCBF  8BEC              mov bp,sp
 0001FCC1  83EC02            sub sp,byte +0x2
@@ -48985,7 +48530,7 @@
 0001FCC5  57                push di
 0001FCC6  1E                push ds
 0001FCC7  FC                cld
-0001FCC8  BACE03            mov dx,0x3ce
+0001FCC8  BACE03            mov dx,0x3ce		; Used for VGA port I/O.
 0001FCCB  8A26B2CF          mov ah,[0xcfb2]
 0001FCCF  B000              mov al,0x0
 0001FCD1  8A1E64D9          mov bl,[0xd964]
@@ -49018,8 +48563,8 @@
 0001FD09  4A                dec dx
 0001FD0A  86C4              xchg al,ah
 0001FD0C  2E8826F402        mov [cs:0x2f4],ah
-0001FD11  B800A0            mov ax,0xa000
-0001FD14  8EC0              mov es,ax
+0001FD11  B800A0            mov ax,0xa000		; VGA video segment.
+0001FD14  8EC0              mov es,ax			;
 0001FD16  8B1ECC80          mov bx,[0x80cc]
 0001FD1A  8B5606            mov dx,[bp+0x6]
 0001FD1D  4A                dec dx
@@ -49130,6 +48675,7 @@
 0001FDF2  8BE5              mov sp,bp
 0001FDF4  5D                pop bp
 0001FDF5  CA0200            retf 0x2
+
 0001FDF8  22DF              and bl,bh
 0001FDFA  EBB2              jmp short 0xfdae
 0001FDFC  803E64D900        cmp byte [0xd964],0x0
@@ -49295,6 +48841,7 @@
 0001FF3C  5E                pop si
 0001FF3D  5D                pop bp
 0001FF3E  CA0200            retf 0x2
+
 0001FF41  8A26BAA3          mov ah,[0xa3ba]
 0001FF45  3226B8A3          xor ah,[0xa3b8]
 0001FF49  F6C401            test ah,0x1
@@ -49498,6 +49045,7 @@
 000200DD  8BE5              mov sp,bp
 000200DF  5D                pop bp
 000200E0  CA0600            retf 0x6
+
 000200E3  E9DAFE            jmp 0xffc0
 000200E6  55                push bp
 000200E7  8BEC              mov bp,sp
@@ -49558,7 +49106,6 @@
 00020164  D2E0              shl al,cl
 00020166  8846FC            mov [bp-0x4],al
 00020169  EB18              jmp short 0x183
-0002016B  90                nop
 0002016C  E9FB02            jmp 0x46a
 0002016F  2B4E0E            sub cx,[bp+0xe]
 00020172  D2EC              shr ah,cl
@@ -50034,7 +49581,6 @@
 00020539  D2E0              shl al,cl
 0002053B  8846FC            mov [bp-0x4],al
 0002053E  EB18              jmp short 0x558
-00020540  90                nop
 00020541  E95203            jmp 0x896
 00020544  2B4E0E            sub cx,[bp+0xe]
 00020547  D2EC              shr ah,cl
@@ -50493,23 +50039,25 @@
 000208E3  5D                pop bp
 000208E4  CA0E00            retf 0xe
 000208E7  CB                retf
-000208E8  8ACB              mov cl,bl
-000208EA  D1FB              sar bx,1
-000208EC  D1FB              sar bx,1
-000208EE  D1FB              sar bx,1
-000208F0  D1E0              shl ax,1
-000208F2  D1E0              shl ax,1
-000208F4  D1E0              shl ax,1
-000208F6  03D8              add bx,ax
-000208F8  D1E0              shl ax,1
-000208FA  D1E0              shl ax,1
-000208FC  03D8              add bx,ax
-000208FE  B800A0            mov ax,0xa000
-00020901  8EC0              mov es,ax
-00020903  80E107            and cl,0x7
-00020906  80F107            xor cl,0x7
+
+000208E8  8ACB              mov cl,bl			; CL = Least significant byte at [0xa3b8].
+000208EA  D1FB              sar bx,1			; bx \= 8
+000208EC  D1FB              sar bx,1			;
+000208EE  D1FB              sar bx,1			;
+000208F0  D1E0              shl ax,1			; ax =\ 8
+000208F2  D1E0              shl ax,1			;
+000208F4  D1E0              shl ax,1			;
+000208F6  03D8              add bx,ax			; bx += ax
+000208F8  D1E0              shl ax,1			; ax =\ 4
+000208FA  D1E0              shl ax,1			;
+000208FC  03D8              add bx,ax			; bx += ax
+000208FE  B800A0            mov ax,0xa000		; VGA video segment.
+00020901  8EC0              mov es,ax			;
+00020903  80E107            and cl,0x7			; Preserve and invert the right most 3 bits.
+00020906  80F107            xor cl,0x7			;
 00020909  B401              mov ah,0x1
 0002090B  C3                ret
+
 0002090C  55                push bp
 0002090D  8BEC              mov bp,sp
 0002090F  57                push di
@@ -50524,6 +50072,7 @@
 00020925  8BE5              mov sp,bp
 00020927  5D                pop bp
 00020928  CB                retf
+
 00020929  55                push bp
 0002092A  8BEC              mov bp,sp
 0002092C  83EC06            sub sp,byte +0x6
@@ -50771,7 +50320,9 @@
 00020AE9  5F                pop di
 00020AEA  8BE5              mov sp,bp
 00020AEC  5D                pop bp
+
 00020AED  CA0A00            retf 0xa
+
 00020AF0  55                push bp
 00020AF1  8BEC              mov bp,sp
 00020AF3  57                push di
@@ -50892,6 +50443,7 @@
 00020BBD  8BE5              mov sp,bp
 00020BBF  5D                pop bp
 00020BC0  CA0600            retf 0x6
+
 00020BC3  FA                cli
 00020BC4  BACE03            mov dx,0x3ce
 00020BC7  B80000            mov ax,0x0
@@ -50948,15 +50500,16 @@
 00020C21  86C4              xchg al,ah
 00020C23  FB                sti
 00020C24  CB                retf
+
 00020C25  0E                push cs
 00020C26  B8F002            mov ax,0x2f0
 00020C29  50                push ax
 00020C2A  9A1DC50000        call 0x0:0xc51d
 00020C2F  CB                retf
+
 00020C30  55                push bp
 00020C31  8BEC              mov bp,sp
 00020C33  B81C00            mov ax,0x1c
-00020C36  90                nop
 00020C37  0E                push cs
 00020C38  E8012A            call 0x363c
 00020C3B  57                push di
@@ -50970,7 +50523,6 @@
 00020C4A  50                push ax
 00020C4B  B81000            mov ax,0x10
 00020C4E  50                push ax
-00020C4F  90                nop
 00020C50  0E                push cs
 00020C51  E83031            call 0x3d84
 00020C54  83C40A            add sp,byte +0xa
@@ -50986,7 +50538,6 @@
 00020C6E  50                push ax
 00020C6F  B81000            mov ax,0x10
 00020C72  50                push ax
-00020C73  90                nop
 00020C74  0E                push cs
 00020C75  E80C31            call 0x3d84
 00020C78  83C40A            add sp,byte +0xa
@@ -51021,41 +50572,41 @@
 00020CC8  F2A5              repne movsw
 00020CCA  13C9              adc cx,cx
 00020CCC  F2A4              repne movsb
-00020CCE  C7069ACF8C15      mov word [0xcf9a],0x158c
-00020CD4  C7069CCF821F      mov word [0xcf9c],0x1f82
-00020CDA  C706AE771C19      mov word [0x77ae],0x191c
-00020CE0  C706B077821F      mov word [0x77b0],0x1f82
-00020CE6  C706C2A3C222      mov word [0xa3c2],0x22c2
-00020CEC  C706C4A3821F      mov word [0xa3c4],0x1f82
-00020CF2  C706BCCFDB1B      mov word [0xcfbc],0x1bdb
-00020CF8  C706BECF821F      mov word [0xcfbe],0x1f82
-00020CFE  C706A877DE1C      mov word [0x77a8],0x1cde
-00020D04  C706AA77821F      mov word [0x77aa],0x1f82
-00020D0A  C706BC80DE1D      mov word [0x80bc],0x1dde
-00020D10  C706BE80821F      mov word [0x80be],0x1f82
-00020D16  C706D2806F1E      mov word [0x80d2],0x1e6f
-00020D1C  C706D480821F      mov word [0x80d4],0x1f82
-00020D22  C70670CF5220      mov word [0xcf70],0x2052
-00020D28  C70672CF821F      mov word [0xcf72],0x1f82
-00020D2E  C706B2774D21      mov word [0x77b2],0x214d
-00020D34  C706B477821F      mov word [0x77b4],0x1f82
-00020D3A  C70680CF0323      mov word [0xcf80],0x2303
-00020D40  C70682CF821F      mov word [0xcf82],0x1f82
-00020D46  C706C8805015      mov word [0x80c8],0x1550
-00020D4C  C706CA80821F      mov word [0x80ca],0x1f82
-00020D52  C7066ED9C523      mov word [0xd96e],0x23c5
-00020D58  C70670D9821F      mov word [0xd970],0x1f82
-00020D5E  C706F6CBCB27      mov word [0xcbf6],0x27cb
-00020D64  C706F8CB821F      mov word [0xcbf8],0x1f82
+00020CCE  C7069ACF8C15      mov word [0xcf9a],0x158c	; Far addresses.
+00020CD4  C7069CCF821F      mov word [0xcf9c],0x1f82	;
+00020CDA  C706AE771C19      mov word [0x77ae],0x191c	;
+00020CE0  C706B077821F      mov word [0x77b0],0x1f82	;
+00020CE6  C706C2A3C222      mov word [0xa3c2],0x22c2	;
+00020CEC  C706C4A3821F      mov word [0xa3c4],0x1f82	;
+00020CF2  C706BCCFDB1B      mov word [0xcfbc],0x1bdb	;
+00020CF8  C706BECF821F      mov word [0xcfbe],0x1f82	;
+00020CFE  C706A877DE1C      mov word [0x77a8],0x1cde	;
+00020D04  C706AA77821F      mov word [0x77aa],0x1f82	;
+00020D0A  C706BC80DE1D      mov word [0x80bc],0x1dde	;
+00020D10  C706BE80821F      mov word [0x80be],0x1f82	;
+00020D16  C706D2806F1E      mov word [0x80d2],0x1e6f	;
+00020D1C  C706D480821F      mov word [0x80d4],0x1f82	;
+00020D22  C70670CF5220      mov word [0xcf70],0x2052	;
+00020D28  C70672CF821F      mov word [0xcf72],0x1f82	;
+00020D2E  C706B2774D21      mov word [0x77b2],0x214d	;
+00020D34  C706B477821F      mov word [0x77b4],0x1f82	;
+00020D3A  C70680CF0323      mov word [0xcf80],0x2303	;
+00020D40  C70682CF821F      mov word [0xcf82],0x1f82	;
+00020D46  C706C8805015      mov word [0x80c8],0x1550	;
+00020D4C  C706CA80821F      mov word [0x80ca],0x1f82	;
+00020D52  C7066ED9C523      mov word [0xd96e],0x23c5	;
+00020D58  C70670D9821F      mov word [0xd970],0x1f82	;	
+00020D5E  C706F6CBCB27      mov word [0xcbf6],0x27cb	;
+00020D64  C706F8CB821F      mov word [0xcbf8],0x1f82	;
 00020D6A  5E                pop si
 00020D6B  5F                pop di
 00020D6C  8BE5              mov sp,bp
 00020D6E  5D                pop bp
 00020D6F  CB                retf
+
 00020D70  55                push bp
 00020D71  8BEC              mov bp,sp
 00020D73  B81C00            mov ax,0x1c
-00020D76  90                nop
 00020D77  0E                push cs
 00020D78  E8C128            call 0x363c
 00020D7B  833E885500        cmp word [0x5588],byte +0x0
@@ -51072,17 +50623,16 @@
 00020D9B  50                push ax
 00020D9C  B81000            mov ax,0x10
 00020D9F  50                push ax
-00020DA0  90                nop
 00020DA1  0E                push cs
 00020DA2  E8DF2F            call 0x3d84
 00020DA5  83C40A            add sp,byte +0xa
 00020DA8  8BE5              mov sp,bp
 00020DAA  5D                pop bp
 00020DAB  CB                retf
+
 00020DAC  55                push bp
 00020DAD  8BEC              mov bp,sp
 00020DAF  33C0              xor ax,ax
-00020DB1  90                nop
 00020DB2  0E                push cs
 00020DB3  E88628            call 0x363c
 00020DB6  FF7608            push word [bp+0x8]
@@ -51093,10 +50643,10 @@
 00020DC5  E86700            call 0xe2f
 00020DC8  5D                pop bp
 00020DC9  CA0400            retf 0x4
+
 00020DCC  55                push bp
 00020DCD  8BEC              mov bp,sp
 00020DCF  33C0              xor ax,ax
-00020DD1  90                nop
 00020DD2  0E                push cs
 00020DD3  E86628            call 0x363c
 00020DD6  C7068273BC50      mov word [0x7382],0x50bc
@@ -51106,10 +50656,10 @@
 00020DE4  EE                out dx,al
 00020DE5  5D                pop bp
 00020DE6  C20400            ret 0x4
+
 00020DE9  55                push bp
 00020DEA  8BEC              mov bp,sp
 00020DEC  33C0              xor ax,ax
-00020DEE  90                nop
 00020DEF  0E                push cs
 00020DF0  E84928            call 0x363c
 00020DF3  8B5E06            mov bx,[bp+0x6]
@@ -51125,10 +50675,10 @@
 00020E0F  0BC1              or ax,cx
 00020E11  5D                pop bp
 00020E12  C20600            ret 0x6
+
 00020E15  55                push bp
 00020E16  8BEC              mov bp,sp
 00020E18  33C0              xor ax,ax
-00020E1A  90                nop
 00020E1B  0E                push cs
 00020E1C  E81D28            call 0x363c
 00020E1F  C45E06            les bx,[bp+0x6]
@@ -51137,10 +50687,10 @@
 00020E29  262B4702          sub ax,[es:bx+0x2]
 00020E2D  5D                pop bp
 00020E2E  CB                retf
+
 00020E2F  55                push bp
 00020E30  8BEC              mov bp,sp
 00020E32  B86201            mov ax,0x162
-00020E35  90                nop
 00020E36  0E                push cs
 00020E37  E80228            call 0x363c
 00020E3A  57                push di
@@ -51234,7 +50784,6 @@
 00020F47  8D86C0FE          lea ax,[bp-0x140]
 00020F4B  16                push ss
 00020F4C  50                push ax
-00020F4D  90                nop
 00020F4E  0E                push cs
 00020F4F  E8DA34            call 0x442c
 00020F52  83C40C            add sp,byte +0xc
@@ -51343,7 +50892,6 @@
 00021078  837EEE10          cmp word [bp-0x12],byte +0x10
 0002107C  7303              jnc 0x1081
 0002107E  E9FEFE            jmp 0xf7f
-00021081  90                nop
 00021082  0E                push cs
 00021083  E8590B            call 0x1bdf
 00021086  8946E2            mov [bp-0x1e],ax
@@ -51409,10 +50957,10 @@
 00021136  8BE5              mov sp,bp
 00021138  5D                pop bp
 00021139  C20400            ret 0x4
+
 0002113C  55                push bp
 0002113D  8BEC              mov bp,sp
 0002113F  B80200            mov ax,0x2
-00021142  90                nop
 00021143  0E                push cs
 00021144  E8F524            call 0x363c
 00021147  57                push di
@@ -51439,11 +50987,10 @@
 00021176  8BE5              mov sp,bp
 00021178  5D                pop bp
 00021179  CA0200            retf 0x2
+
 0002117C  33C0              xor ax,ax
-0002117E  90                nop
 0002117F  0E                push cs
 00021180  E8B924            call 0x363c
-00021183  90                nop
 00021184  0E                push cs
 00021185  E8D10E            call 0x2059
 00021188  B8BC50            mov ax,0x50bc
@@ -51460,338 +51007,10 @@
 0002119F  50                push ax
 000211A0  9A1DC50000        call 0x0:0xc51d
 000211A5  CB                retf
-000211A6  0000              add [bx+si],al
-000211A8  0000              add [bx+si],al
-000211AA  0000              add [bx+si],al
-000211AC  0000              add [bx+si],al
-000211AE  0000              add [bx+si],al
-000211B0  0000              add [bx+si],al
-000211B2  0000              add [bx+si],al
-000211B4  0000              add [bx+si],al
-000211B6  0000              add [bx+si],al
-000211B8  0000              add [bx+si],al
-000211BA  0000              add [bx+si],al
-000211BC  0000              add [bx+si],al
-000211BE  0000              add [bx+si],al
-000211C0  0000              add [bx+si],al
-000211C2  0000              add [bx+si],al
-000211C4  0000              add [bx+si],al
-000211C6  0000              add [bx+si],al
-000211C8  0000              add [bx+si],al
-000211CA  F9                stc
-000211CB  1F                pop ds
-000211CC  9D                popf
-000211CD  1F                pop ds
-000211CE  42                inc dx
-000211CF  1F                pop ds
-000211D0  E91E81            jmp 0x92f1
-000211D3  24D2              and al,0xd2
-000211D5  243D              and al,0x3d
-000211D7  25A725            and ax,0x25a7
-000211DA  3F                aas
-000211DB  268C26EC26        mov [es:0x26ec],fs
-000211E0  4B                dec bx
-000211E1  27                daa
-000211E2  0055AA            add [di-0x56],dl
-000211E5  FF00              inc word [bx+si]
-000211E7  030F              add cx,[bx]
-000211E9  3F                aas
-000211EA  FF00              inc word [bx+si]
-000211EC  030C              add cx,[si]
-000211EE  0F30              wrmsr
-000211F0  333C              xor di,[si]
-000211F2  3F                aas
-000211F3  C0C3CC            rol bl,byte 0xcc
-000211F6  CF                iret
-000211F7  F0F3FC            rep lock cld
-000211FA  FF00              inc word [bx+si]
-000211FC  0102              add [bp+si],ax
-000211FE  0300              add ax,[bx+si]
-00021200  0102              add [bp+si],ax
-00021202  0300              add ax,[bx+si]
-00021204  0102              add [bp+si],ax
-00021206  0300              add ax,[bx+si]
-00021208  0102              add [bp+si],ax
-0002120A  0304              add ax,[si]
-0002120C  050607            add ax,0x706
-0002120F  0405              add al,0x5
-00021211  06                push es
-00021212  07                pop es
-00021213  0405              add al,0x5
-00021215  06                push es
-00021216  07                pop es
-00021217  0405              add al,0x5
-00021219  06                push es
-0002121A  07                pop es
-0002121B  0809              or [bx+di],cl
-0002121D  0A0B              or cl,[bp+di]
-0002121F  0809              or [bx+di],cl
-00021221  0A0B              or cl,[bp+di]
-00021223  0809              or [bx+di],cl
-00021225  0A0B              or cl,[bp+di]
-00021227  0809              or [bx+di],cl
-00021229  0A0B              or cl,[bp+di]
-0002122B  0C0D              or al,0xd
-0002122D  0E                push cs
-0002122E  0F                db 0x0f
-0002122F  0C0D              or al,0xd
-00021231  0E                push cs
-00021232  0F                db 0x0f
-00021233  0C0D              or al,0xd
-00021235  0E                push cs
-00021236  0F                db 0x0f
-00021237  0C0D              or al,0xd
-00021239  0E                push cs
-0002123A  0F0001            sldt [bx+di]
-0002123D  0203              add al,[bp+di]
-0002123F  0001              add [bx+di],al
-00021241  0203              add al,[bp+di]
-00021243  0001              add [bx+di],al
-00021245  0203              add al,[bp+di]
-00021247  0001              add [bx+di],al
-00021249  0203              add al,[bp+di]
-0002124B  0405              add al,0x5
-0002124D  06                push es
-0002124E  07                pop es
-0002124F  0405              add al,0x5
-00021251  06                push es
-00021252  07                pop es
-00021253  0405              add al,0x5
-00021255  06                push es
-00021256  07                pop es
-00021257  0405              add al,0x5
-00021259  06                push es
-0002125A  07                pop es
-0002125B  0809              or [bx+di],cl
-0002125D  0A0B              or cl,[bp+di]
-0002125F  0809              or [bx+di],cl
-00021261  0A0B              or cl,[bp+di]
-00021263  0809              or [bx+di],cl
-00021265  0A0B              or cl,[bp+di]
-00021267  0809              or [bx+di],cl
-00021269  0A0B              or cl,[bp+di]
-0002126B  0C0D              or al,0xd
-0002126D  0E                push cs
-0002126E  0F                db 0x0f
-0002126F  0C0D              or al,0xd
-00021271  0E                push cs
-00021272  0F                db 0x0f
-00021273  0C0D              or al,0xd
-00021275  0E                push cs
-00021276  0F                db 0x0f
-00021277  0C0D              or al,0xd
-00021279  0E                push cs
-0002127A  0F0001            sldt [bx+di]
-0002127D  0203              add al,[bp+di]
-0002127F  0001              add [bx+di],al
-00021281  0203              add al,[bp+di]
-00021283  0001              add [bx+di],al
-00021285  0203              add al,[bp+di]
-00021287  0001              add [bx+di],al
-00021289  0203              add al,[bp+di]
-0002128B  0405              add al,0x5
-0002128D  06                push es
-0002128E  07                pop es
-0002128F  0405              add al,0x5
-00021291  06                push es
-00021292  07                pop es
-00021293  0405              add al,0x5
-00021295  06                push es
-00021296  07                pop es
-00021297  0405              add al,0x5
-00021299  06                push es
-0002129A  07                pop es
-0002129B  0809              or [bx+di],cl
-0002129D  0A0B              or cl,[bp+di]
-0002129F  0809              or [bx+di],cl
-000212A1  0A0B              or cl,[bp+di]
-000212A3  0809              or [bx+di],cl
-000212A5  0A0B              or cl,[bp+di]
-000212A7  0809              or [bx+di],cl
-000212A9  0A0B              or cl,[bp+di]
-000212AB  0C0D              or al,0xd
-000212AD  0E                push cs
-000212AE  0F                db 0x0f
-000212AF  0C0D              or al,0xd
-000212B1  0E                push cs
-000212B2  0F                db 0x0f
-000212B3  0C0D              or al,0xd
-000212B5  0E                push cs
-000212B6  0F                db 0x0f
-000212B7  0C0D              or al,0xd
-000212B9  0E                push cs
-000212BA  0F0001            sldt [bx+di]
-000212BD  0203              add al,[bp+di]
-000212BF  0001              add [bx+di],al
-000212C1  0203              add al,[bp+di]
-000212C3  0001              add [bx+di],al
-000212C5  0203              add al,[bp+di]
-000212C7  0001              add [bx+di],al
-000212C9  0203              add al,[bp+di]
-000212CB  0405              add al,0x5
-000212CD  06                push es
-000212CE  07                pop es
-000212CF  0405              add al,0x5
-000212D1  06                push es
-000212D2  07                pop es
-000212D3  0405              add al,0x5
-000212D5  06                push es
-000212D6  07                pop es
-000212D7  0405              add al,0x5
-000212D9  06                push es
-000212DA  07                pop es
-000212DB  0809              or [bx+di],cl
-000212DD  0A0B              or cl,[bp+di]
-000212DF  0809              or [bx+di],cl
-000212E1  0A0B              or cl,[bp+di]
-000212E3  0809              or [bx+di],cl
-000212E5  0A0B              or cl,[bp+di]
-000212E7  0809              or [bx+di],cl
-000212E9  0A0B              or cl,[bp+di]
-000212EB  0C0D              or al,0xd
-000212ED  0E                push cs
-000212EE  0F                db 0x0f
-000212EF  0C0D              or al,0xd
-000212F1  0E                push cs
-000212F2  0F                db 0x0f
-000212F3  0C0D              or al,0xd
-000212F5  0E                push cs
-000212F6  0F                db 0x0f
-000212F7  0C0D              or al,0xd
-000212F9  0E                push cs
-000212FA  0F0010            lldt [bx+si]
-000212FD  2030              and [bx+si],dh
-000212FF  0010              add [bx+si],dl
-00021301  2030              and [bx+si],dh
-00021303  0010              add [bx+si],dl
-00021305  2030              and [bx+si],dh
-00021307  0010              add [bx+si],dl
-00021309  2030              and [bx+si],dh
-0002130B  40                inc ax
-0002130C  50                push ax
-0002130D  60                pusha
-0002130E  7040              jo 0x1350
-00021310  50                push ax
-00021311  60                pusha
-00021312  7040              jo 0x1354
-00021314  50                push ax
-00021315  60                pusha
-00021316  7040              jo 0x1358
-00021318  50                push ax
-00021319  60                pusha
-0002131A  7080              jo 0x129c
-0002131C  90                nop
-0002131D  A0B080            mov al,[0x80b0]
-00021320  90                nop
-00021321  A0B080            mov al,[0x80b0]
-00021324  90                nop
-00021325  A0B080            mov al,[0x80b0]
-00021328  90                nop
-00021329  A0B0C0            mov al,[0xc0b0]
-0002132C  D0E0              shl al,1
-0002132E  F0C0D0E0          lock rcl al,byte 0xe0
-00021332  F0C0D0E0          lock rcl al,byte 0xe0
-00021336  F0C0D0E0          lock rcl al,byte 0xe0
-0002133A  F00010            lock add [bx+si],dl
-0002133D  2030              and [bx+si],dh
-0002133F  0010              add [bx+si],dl
-00021341  2030              and [bx+si],dh
-00021343  0010              add [bx+si],dl
-00021345  2030              and [bx+si],dh
-00021347  0010              add [bx+si],dl
-00021349  2030              and [bx+si],dh
-0002134B  40                inc ax
-0002134C  50                push ax
-0002134D  60                pusha
-0002134E  7040              jo 0x1390
-00021350  50                push ax
-00021351  60                pusha
-00021352  7040              jo 0x1394
-00021354  50                push ax
-00021355  60                pusha
-00021356  7040              jo 0x1398
-00021358  50                push ax
-00021359  60                pusha
-0002135A  7080              jo 0x12dc
-0002135C  90                nop
-0002135D  A0B080            mov al,[0x80b0]
-00021360  90                nop
-00021361  A0B080            mov al,[0x80b0]
-00021364  90                nop
-00021365  A0B080            mov al,[0x80b0]
-00021368  90                nop
-00021369  A0B0C0            mov al,[0xc0b0]
-0002136C  D0E0              shl al,1
-0002136E  F0C0D0E0          lock rcl al,byte 0xe0
-00021372  F0C0D0E0          lock rcl al,byte 0xe0
-00021376  F0C0D0E0          lock rcl al,byte 0xe0
-0002137A  F00010            lock add [bx+si],dl
-0002137D  2030              and [bx+si],dh
-0002137F  0010              add [bx+si],dl
-00021381  2030              and [bx+si],dh
-00021383  0010              add [bx+si],dl
-00021385  2030              and [bx+si],dh
-00021387  0010              add [bx+si],dl
-00021389  2030              and [bx+si],dh
-0002138B  40                inc ax
-0002138C  50                push ax
-0002138D  60                pusha
-0002138E  7040              jo 0x13d0
-00021390  50                push ax
-00021391  60                pusha
-00021392  7040              jo 0x13d4
-00021394  50                push ax
-00021395  60                pusha
-00021396  7040              jo 0x13d8
-00021398  50                push ax
-00021399  60                pusha
-0002139A  7080              jo 0x131c
-0002139C  90                nop
-0002139D  A0B080            mov al,[0x80b0]
-000213A0  90                nop
-000213A1  A0B080            mov al,[0x80b0]
-000213A4  90                nop
-000213A5  A0B080            mov al,[0x80b0]
-000213A8  90                nop
-000213A9  A0B0C0            mov al,[0xc0b0]
-000213AC  D0E0              shl al,1
-000213AE  F0C0D0E0          lock rcl al,byte 0xe0
-000213B2  F0C0D0E0          lock rcl al,byte 0xe0
-000213B6  F0C0D0E0          lock rcl al,byte 0xe0
-000213BA  F00010            lock add [bx+si],dl
-000213BD  2030              and [bx+si],dh
-000213BF  0010              add [bx+si],dl
-000213C1  2030              and [bx+si],dh
-000213C3  0010              add [bx+si],dl
-000213C5  2030              and [bx+si],dh
-000213C7  0010              add [bx+si],dl
-000213C9  2030              and [bx+si],dh
-000213CB  40                inc ax
-000213CC  50                push ax
-000213CD  60                pusha
-000213CE  7040              jo 0x1410
-000213D0  50                push ax
-000213D1  60                pusha
-000213D2  7040              jo 0x1414
-000213D4  50                push ax
-000213D5  60                pusha
-000213D6  7040              jo 0x1418
-000213D8  50                push ax
-000213D9  60                pusha
-000213DA  7080              jo 0x135c
-000213DC  90                nop
-000213DD  A0B080            mov al,[0x80b0]
-000213E0  90                nop
-000213E1  A0B080            mov al,[0x80b0]
-000213E4  90                nop
-000213E5  A0B080            mov al,[0x80b0]
-000213E8  90                nop
-000213E9  A0B0C0            mov al,[0xc0b0]
-000213EC  D0E0              shl al,1
-000213EE  F0C0D0E0          lock rcl al,byte 0xe0
-000213F2  F0C0D0E0          lock rcl al,byte 0xe0
-000213F6  F0C0D0E0          lock rcl al,byte 0xe0
-000213FA  F055              lock push bp
+
+000211CA  data.
+
+000213FB  55                push bp
 000213FC  8BEC              mov bp,sp
 000213FE  83EC0C            sub sp,byte +0xc
 00021401  56                push si
@@ -51800,8 +51019,8 @@
 00021406  8946F8            mov [bp-0x8],ax
 00021409  A1BAA3            mov ax,[0xa3ba]
 0002140C  8946F6            mov [bp-0xa],ax
-0002140F  B800B8            mov ax,0xb800
-00021412  8EC0              mov es,ax
+0002140F  B800B8            mov ax,0xb800		; CGA/EGA
+00021412  8EC0              mov es,ax			;
 00021414  BE0020            mov si,0x2000
 00021417  BF50E0            mov di,0xe050
 0002141A  8B4E08            mov cx,[bp+0x8]
@@ -51827,8 +51046,8 @@
 0002144E  897EFC            mov [bp-0x4],di
 00021451  51                push cx
 00021452  53                push bx
-00021453  B800B8            mov ax,0xb800
-00021456  8EC0              mov es,ax
+00021453  B800B8            mov ax,0xb800		; CGA/EGA
+00021456  8EC0              mov es,ax			;
 00021458  8B46F6            mov ax,[bp-0xa]
 0002145B  8B5EF8            mov bx,[bp-0x8]
 0002145E  E8A906            call 0x1b0a
@@ -51904,12 +51123,13 @@
 000214F8  8BE5              mov sp,bp
 000214FA  5D                pop bp
 000214FB  CA0400            retf 0x4
+
 000214FE  55                push bp
 000214FF  8BEC              mov bp,sp
 00021501  56                push si
 00021502  57                push di
-00021503  B800B8            mov ax,0xb800
-00021506  8EC0              mov es,ax
+00021503  B800B8            mov ax,0xb800		; CGA/EGA
+00021506  8EC0              mov es,ax			;
 00021508  8B3ECC80          mov di,[0x80cc]
 0002150C  A1B8A3            mov ax,[0xa3b8]
 0002150F  8B4E06            mov cx,[bp+0x6]
@@ -51960,7 +51180,6 @@
 00021575  803E64D903        cmp byte [0xd964],0x3
 0002157A  7503              jnz 0x157f
 0002157C  EB5C              jmp short 0x15da
-0002157E  90                nop
 0002157F  0AF6              or dh,dh
 00021581  7816              js 0x1599
 00021583  0BC9              or cx,cx
@@ -51989,6 +51208,7 @@
 000215B1  5E                pop si
 000215B2  5D                pop bp
 000215B3  CA0200            retf 0x2
+
 000215B6  0AF6              or dh,dh
 000215B8  7811              js 0x15cb
 000215BA  0BC9              or cx,cx
@@ -52077,6 +51297,7 @@
 0002167B  8BE5              mov sp,bp
 0002167D  5D                pop bp
 0002167E  CA0200            retf 0x2
+
 00021681  263005            xor [es:di],al
 00021684  03FE              add di,si
 00021686  3376FE            xor si,[bp-0x2]
@@ -52282,6 +51503,7 @@
 0002186C  8BE5              mov sp,bp
 0002186E  5D                pop bp
 0002186F  CA0600            retf 0x6
+
 00021872  55                push bp
 00021873  8BEC              mov bp,sp
 00021875  83EC06            sub sp,byte +0x6
@@ -52391,6 +51613,7 @@
 00021967  8BE5              mov sp,bp
 00021969  5D                pop bp
 0002196A  CA0E00            retf 0xe
+
 0002196D  55                push bp
 0002196E  8BEC              mov bp,sp
 00021970  83EC06            sub sp,byte +0x6
@@ -52552,6 +51775,7 @@
 00021ADC  8BE5              mov sp,bp
 00021ADE  5D                pop bp
 00021ADF  CA0E00            retf 0xe
+
 00021AE2  55                push bp
 00021AE3  8BEC              mov bp,sp
 00021AE5  57                push di
@@ -52700,7 +51924,7 @@
 00021C3A  1E                push ds
 00021C3B  07                pop es
 00021C3C  8BF7              mov si,di
-00021C3E  B800B8            mov ax,0xb800		; CGA
+00021C3E  B800B8            mov ax,0xb800		; CGA/EGA
 00021C41  8ED8              mov ds,ax			;
 00021C43  BF3855            mov di,0x5538
 00021C46  B91000            mov cx,0x10
@@ -53439,7 +52663,6 @@
 000222AD  B8FF7F            mov ax,0x7fff
 000222B0  33D2              xor dx,dx
 000222B2  EB06              jmp short 0x22ba
-000222B4  90                nop
 000222B5  F7760A            div word [bp+0xa]
 000222B8  8BD8              mov bx,ax
 000222BA  33C0              xor ax,ax
@@ -53463,7 +52686,6 @@
 000222DA  55                push bp
 000222DB  8BEC              mov bp,sp
 000222DD  33C0              xor ax,ax
-000222DF  90                nop
 000222E0  0E                push cs
 000222E1  E85813            call 0x363c
 000222E4  8B4606            mov ax,[bp+0x6]
@@ -53483,7 +52705,6 @@
 00022306  55                push bp
 00022307  8BEC              mov bp,sp
 00022309  B82A02            mov ax,0x22a
-0002230C  90                nop
 0002230D  0E                push cs
 0002230E  E82B13            call 0x363c
 00022311  C45E06            les bx,[bp+0x6]
@@ -53504,7 +52725,6 @@
 0002233F  8D46DA            lea ax,[bp-0x26]
 00022342  16                push ss
 00022343  50                push ax
-00022344  90                nop
 00022345  0E                push cs
 00022346  E81208            call 0x2b5b
 00022349  8946FC            mov [bp-0x4],ax
@@ -53517,7 +52737,6 @@
 0002235C  8D46DA            lea ax,[bp-0x26]
 0002235F  16                push ss
 00022360  50                push ax
-00022361  90                nop
 00022362  0E                push cs
 00022363  E8FB0E            call 0x3261
 00022366  8946FC            mov [bp-0x4],ax
@@ -53542,7 +52761,6 @@
 0002239B  99                cwd
 0002239C  52                push dx
 0002239D  50                push ax
-0002239E  90                nop
 0002239F  0E                push cs
 000223A0  E8CA0B            call 0x2f6d
 000223A3  8946FC            mov [bp-0x4],ax
@@ -53561,7 +52779,6 @@
 000223CC  051200            add ax,0x12
 000223CF  52                push dx
 000223D0  50                push ax
-000223D1  90                nop
 000223D2  0E                push cs
 000223D3  E8AC02            call 0x2682
 000223D6  833EAACF00        cmp word [0xcfaa],byte +0x0
@@ -53575,7 +52792,6 @@
 000223F2  051400            add ax,0x14
 000223F5  52                push dx
 000223F6  50                push ax
-000223F7  90                nop
 000223F8  0E                push cs
 000223F9  E88602            call 0x2682
 000223FC  8B86D6FD          mov ax,[bp-0x22a]
@@ -53583,7 +52799,6 @@
 00022404  051600            add ax,0x16
 00022407  52                push dx
 00022408  50                push ax
-00022409  90                nop
 0002240A  0E                push cs
 0002240B  E87402            call 0x2682
 0002240E  8B86D6FD          mov ax,[bp-0x22a]
@@ -53591,7 +52806,6 @@
 00022416  051800            add ax,0x18
 00022419  52                push dx
 0002241A  50                push ax
-0002241B  90                nop
 0002241C  0E                push cs
 0002241D  E86202            call 0x2682
 00022420  8B86D6FD          mov ax,[bp-0x22a]
@@ -53599,7 +52813,6 @@
 00022428  051E00            add ax,0x1e
 0002242B  52                push dx
 0002242C  50                push ax
-0002242D  90                nop
 0002242E  0E                push cs
 0002242F  E85002            call 0x2682
 00022432  8B86D6FD          mov ax,[bp-0x22a]
@@ -53607,7 +52820,6 @@
 0002243A  052200            add ax,0x22
 0002243D  52                push dx
 0002243E  50                push ax
-0002243F  90                nop
 00022440  0E                push cs
 00022441  E83E02            call 0x2682
 00022444  8B86D6FD          mov ax,[bp-0x22a]
@@ -53615,7 +52827,6 @@
 0002244C  052400            add ax,0x24
 0002244F  52                push dx
 00022450  50                push ax
-00022451  90                nop
 00022452  0E                push cs
 00022453  E82C02            call 0x2682
 00022456  E9E000            jmp 0x2539
@@ -53640,7 +52851,6 @@
 0002248B  C49ED6FD          les bx,[bp-0x22a]
 0002248F  26FF7748          push word [es:bx+0x48]
 00022493  26FF7746          push word [es:bx+0x46]
-00022497  90                nop
 00022498  0E                push cs
 00022499  E87802            call 0x2714
 0002249C  8946FC            mov [bp-0x4],ax
@@ -53679,7 +52889,6 @@
 000224FA  99                cwd
 000224FB  52                push dx
 000224FC  50                push ax
-000224FD  90                nop
 000224FE  0E                push cs
 000224FF  E8A702            call 0x27a9
 00022502  8946FC            mov [bp-0x4],ax
@@ -53710,7 +52919,6 @@
 00022554  8D46DA            lea ax,[bp-0x26]
 00022557  16                push ss
 00022558  50                push ax
-00022559  90                nop
 0002255A  0E                push cs
 0002255B  E80107            call 0x2c5f
 0002255E  E9F2FD            jmp 0x2353
@@ -53721,7 +52929,6 @@
 00022567  55                push bp
 00022568  8BEC              mov bp,sp
 0002256A  B85600            mov ax,0x56
-0002256D  90                nop
 0002256E  0E                push cs
 0002256F  E8CA10            call 0x363c
 00022572  57                push di
@@ -53737,7 +52944,6 @@
 0002258C  50                push ax
 0002258D  FF7610            push word [bp+0x10]
 00022590  FF760E            push word [bp+0xe]
-00022593  90                nop
 00022594  0E                push cs
 00022595  E82013            call 0x38b8
 00022598  83C406            add sp,byte +0x6
@@ -53769,13 +52975,11 @@
 000225F9  8D46B4            lea ax,[bp-0x4c]
 000225FC  16                push ss
 000225FD  50                push ax
-000225FE  90                nop
 000225FF  0E                push cs
 00022600  E8320A            call 0x3035
 00022603  8946B0            mov [bp-0x50],ax
 00022606  8956B2            mov [bp-0x4e],dx
 00022609  FF76FE            push word [bp-0x2]
-0002260C  90                nop
 0002260D  0E                push cs
 0002260E  E80D12            call 0x381e
 00022611  83C402            add sp,byte +0x2
@@ -53827,7 +53031,6 @@
 00022682  55                push bp
 00022683  8BEC              mov bp,sp
 00022685  33C0              xor ax,ax
-00022687  90                nop
 00022688  0E                push cs
 00022689  E8B00F            call 0x363c
 0002268C  56                push si
@@ -53847,7 +53050,6 @@
 000226A7  55                push bp
 000226A8  8BEC              mov bp,sp
 000226AA  B80A00            mov ax,0xa
-000226AD  90                nop
 000226AE  0E                push cs
 000226AF  E88A0F            call 0x363c
 000226B2  C45E06            les bx,[bp+0x6]
@@ -53869,14 +53071,12 @@
 000226DF  50                push ax
 000226E0  8D46F6            lea ax,[bp-0xa]
 000226E3  50                push ax
-000226E4  90                nop
 000226E5  0E                push cs
 000226E6  E84D29            call 0x5036
 000226E9  B008              mov al,0x8
 000226EB  50                push ax
 000226EC  8D46FC            lea ax,[bp-0x4]
 000226EF  50                push ax
-000226F0  90                nop
 000226F1  0E                push cs
 000226F2  E88529            call 0x507a
 000226F5  FF46FA            inc word [bp-0x6]
@@ -53894,7 +53094,6 @@
 00022714  55                push bp
 00022715  8BEC              mov bp,sp
 00022717  B80C00            mov ax,0xc
-0002271A  90                nop
 0002271B  0E                push cs
 0002271C  E81D0F            call 0x363c
 0002271F  B80300            mov ax,0x3
@@ -53904,7 +53103,6 @@
 00022725  C45E12            les bx,[bp+0x12]
 00022728  26FF7718          push word [es:bx+0x18]
 0002272C  26FF7716          push word [es:bx+0x16]
-00022730  90                nop
 00022731  0E                push cs
 00022732  E87727            call 0x4eac
 00022735  8846F6            mov [bp-0xa],al
@@ -53942,7 +53140,6 @@
 00022789  99                cwd
 0002278A  52                push dx
 0002278B  50                push ax
-0002278C  90                nop
 0002278D  0E                push cs
 0002278E  E8DC07            call 0x2f6d
 00022791  8946FC            mov [bp-0x4],ax
@@ -53960,7 +53157,6 @@
 000227A9  55                push bp
 000227AA  8BEC              mov bp,sp
 000227AC  B87A00            mov ax,0x7a
-000227AF  90                nop
 000227B0  0E                push cs
 000227B1  E8880E            call 0x363c
 000227B4  57                push di
@@ -54067,7 +53263,6 @@
 000228CF  50                push ax
 000228D0  FF7690            push word [bp-0x70]
 000228D3  FF76A0            push word [bp-0x60]
-000228D6  90                nop
 000228D7  0E                push cs
 000228D8  E82B0A            call 0x3306
 000228DB  0BC0              or ax,ax
@@ -54098,7 +53293,6 @@
 00022920  FF76F8            push word [bp-0x8]
 00022923  FF768E            push word [bp-0x72]
 00022926  FF768C            push word [bp-0x74]
-00022929  90                nop
 0002292A  0E                push cs
 0002292B  E87A09            call 0x32a8
 0002292E  83C40C            add sp,byte +0xc
@@ -54129,7 +53323,6 @@
 00022976  FF7696            push word [bp-0x6a]
 00022979  52                push dx
 0002297A  50                push ax
-0002297B  90                nop
 0002297C  0E                push cs
 0002297D  E8AC19            call 0x432c
 00022980  83C40A            add sp,byte +0xa
@@ -54163,7 +53356,6 @@
 000229D0  2BC0              sub ax,ax
 000229D2  50                push ax
 000229D3  FF7694            push word [bp-0x6c]
-000229D6  90                nop
 000229D7  0E                push cs
 000229D8  E89205            call 0x2f6d
 000229DB  8946A2            mov [bp-0x5e],ax
@@ -54188,7 +53380,6 @@
 00022A0C  FF76F8            push word [bp-0x8]
 00022A0F  FF768E            push word [bp-0x72]
 00022A12  FF768C            push word [bp-0x74]
-00022A15  90                nop
 00022A16  0E                push cs
 00022A17  E88E08            call 0x32a8
 00022A1A  83C40C            add sp,byte +0xc
@@ -54217,7 +53408,6 @@
 00022A50  55                push bp
 00022A51  8BEC              mov bp,sp
 00022A53  B80A00            mov ax,0xa
-00022A56  90                nop
 00022A57  0E                push cs
 00022A58  E8E10B            call 0x363c
 00022A5B  8B460E            mov ax,[bp+0xe]
@@ -54269,7 +53459,6 @@
 00022AE8  50                push ax
 00022AE9  50                push ax
 00022AEA  FF76FE            push word [bp-0x2]
-00022AED  90                nop
 00022AEE  0E                push cs
 00022AEF  E84C0D            call 0x383e
 00022AF2  83C408            add sp,byte +0x8
@@ -54279,7 +53468,6 @@
 00022AFB  50                push ax
 00022AFC  50                push ax
 00022AFD  FF76FE            push word [bp-0x2]
-00022B00  90                nop
 00022B01  0E                push cs
 00022B02  E8390D            call 0x383e
 00022B05  83C408            add sp,byte +0x8
@@ -54296,7 +53484,6 @@
 00022B25  50                push ax
 00022B26  50                push ax
 00022B27  FF76FE            push word [bp-0x2]
-00022B2A  90                nop
 00022B2B  0E                push cs
 00022B2C  E80F0D            call 0x383e
 00022B2F  83C408            add sp,byte +0x8
@@ -54317,7 +53504,6 @@
 00022B5B  55                push bp
 00022B5C  8BEC              mov bp,sp
 00022B5E  B80C00            mov ax,0xc
-00022B61  90                nop
 00022B62  0E                push cs
 00022B63  E8D60A            call 0x363c
 00022B66  8B460A            mov ax,[bp+0xa]
@@ -54399,7 +53585,6 @@
 00022C5F  55                push bp
 00022C60  8BEC              mov bp,sp
 00022C62  B80400            mov ax,0x4
-00022C65  90                nop
 00022C66  0E                push cs
 00022C67  E8D209            call 0x363c
 00022C6A  C45E06            les bx,[bp+0x6]
@@ -54432,7 +53617,6 @@
 00022CBA  55                push bp
 00022CBB  8BEC              mov bp,sp
 00022CBD  B80400            mov ax,0x4
-00022CC0  90                nop
 00022CC1  0E                push cs
 00022CC2  E87709            call 0x363c
 00022CC5  2BC0              sub ax,ax
@@ -54449,7 +53633,6 @@
 00022CE0  FF7606            push word [bp+0x6]
 00022CE3  C45E0A            les bx,[bp+0xa]
 00022CE6  26FF7708          push word [es:bx+0x8]
-00022CEA  90                nop
 00022CEB  0E                push cs
 00022CEC  E84F0B            call 0x383e
 00022CEF  83C408            add sp,byte +0x8
@@ -54474,7 +53657,6 @@
 00022D25  55                push bp
 00022D26  8BEC              mov bp,sp
 00022D28  B80C00            mov ax,0xc
-00022D2B  90                nop
 00022D2C  0E                push cs
 00022D2D  E80C09            call 0x363c
 00022D30  8B4606            mov ax,[bp+0x6]
@@ -54548,7 +53730,6 @@
 00022E04  50                push ax
 00022E05  C45EF8            les bx,[bp-0x8]
 00022E08  26FF7708          push word [es:bx+0x8]
-00022E0C  90                nop
 00022E0D  0E                push cs
 00022E0E  E8570C            call 0x3a68
 00022E11  83C408            add sp,byte +0x8
@@ -54563,7 +53744,6 @@
 00022E29  051600            add ax,0x16
 00022E2C  52                push dx
 00022E2D  50                push ax
-00022E2E  90                nop
 00022E2F  0E                push cs
 00022E30  E874F8            call 0x26a7
 00022E33  C45EF8            les bx,[bp-0x8]
@@ -54668,7 +53848,6 @@
 00022F6D  55                push bp
 00022F6E  8BEC              mov bp,sp
 00022F70  B80400            mov ax,0x4
-00022F73  90                nop
 00022F74  0E                push cs
 00022F75  E8C406            call 0x363c
 00022F78  2BC0              sub ax,ax
@@ -54700,7 +53879,6 @@
 00022FC6  FF760A            push word [bp+0xa]
 00022FC9  C45E0E            les bx,[bp+0xe]
 00022FCC  26FF7708          push word [es:bx+0x8]
-00022FD0  90                nop
 00022FD1  0E                push cs
 00022FD2  E8930A            call 0x3a68
 00022FD5  83C408            add sp,byte +0x8
@@ -54733,7 +53911,6 @@
 00023024  55                push bp
 00023025  8BEC              mov bp,sp
 00023027  33C0              xor ax,ax
-00023029  90                nop
 0002302A  0E                push cs
 0002302B  E80E06            call 0x363c
 0002302E  2BC0              sub ax,ax
@@ -54744,7 +53921,6 @@
 00023035  55                push bp
 00023036  8BEC              mov bp,sp
 00023038  B82600            mov ax,0x26
-0002303B  90                nop
 0002303C  0E                push cs
 0002303D  E8FC05            call 0x363c
 00023040  FF760A            push word [bp+0xa]
@@ -54823,7 +53999,6 @@
 000230FC  55                push bp
 000230FD  8BEC              mov bp,sp
 000230FF  B82800            mov ax,0x28
-00023102  90                nop
 00023103  0E                push cs
 00023104  E83505            call 0x363c
 00023107  C746D80100        mov word [bp-0x28],0x1
@@ -54943,7 +54118,6 @@
 00023245  55                push bp
 00023246  8BEC              mov bp,sp
 00023248  33C0              xor ax,ax
-0002324A  90                nop
 0002324B  0E                push cs
 0002324C  E8ED03            call 0x363c
 0002324F  FF7608            push word [bp+0x8]
@@ -54959,7 +54133,6 @@
 00023261  55                push bp
 00023262  8BEC              mov bp,sp
 00023264  B80400            mov ax,0x4
-00023267  90                nop
 00023268  0E                push cs
 00023269  E8D003            call 0x363c
 0002326C  FF7608            push word [bp+0x8]
@@ -55036,7 +54209,6 @@
 00023306  0055              push bp
 00023307  8BEC              mov bp,sp
 00023309  B81400            mov ax,0x14
-0002330C  90                nop
 0002330D  0E                push cs
 0002330E  E82B03            call 0x363c
 00023311  C45E0E            les bx,[bp+0xe]
@@ -55175,13 +54347,11 @@
 00023480  F3AA              rep stosb
 00023482  16                push ss
 00023483  1F                pop ds
-00023484  90                nop
 00023485  0E                push cs
 00023486  E85100            call 0x34da
 00023489  16                push ss
 0002348A  1F                pop ds
 0002348B  9A00000000        call 0x0:0x0
-00023490  90                nop
 00023491  0E                push cs
 00023492  E8C51C            call 0x515a
 00023495  33ED              xor bp,bp
@@ -55192,7 +54362,6 @@
 000234A7  FF369256          push word [0x5692]
 000234AB  9A29000000        call 0x0:0x29
 000234B0  50                push ax
-000234B1  90                nop
 000234B2  0E                push cs
 000234B3  E8E800            call 0x359e
 000234B6  B8FE30            mov ax,0x30fe	; Program data segment.
@@ -55200,10 +54369,8 @@
 000234BB  B80300            mov ax,0x3
 000234BE  36C70602567E3D    mov word [ss:0x5602],0x3d7e
 000234C5  50                push ax
-000234C6  90                nop
 000234C7  0E                push cs
 000234C8  E83F1C            call 0x510a
-000234CB  90                nop
 000234CC  0E                push cs
 000234CD  E85D1E            call 0x532d			; Displays an error message.
 000234D0  B8FF00            mov ax,0xff
@@ -55309,7 +54476,6 @@
 000235C1  BE5260            mov si,0x6052
 000235C4  BF5260            mov di,0x6052
 000235C7  E85F00            call 0x3629
-000235CA  90                nop
 000235CB  0E                push cs
 000235CC  E8651B            call 0x5134
 000235CF  0BC0              or ax,ax
@@ -55439,7 +54605,6 @@
 	000236FD  817E0AFE30        cmp word [bp+0xa],0x30fe
 	00023702  7554              jnz 0x3758
 	00023704  FF76FA            push word [bp-0x6]
-	00023707  90                nop
 	00023708  0E                push cs
 	00023709  E88224            call 0x5b8e			; Checks for _IOSTRG.
 	0002370C  83C402            add sp,byte +0x2
@@ -55454,8 +54619,6 @@
 		00023728  B8B058            mov ax,0x58b0
 		0002372B  BAFE30            mov dx,0x30fe
 		0002372E  EB0B              jmp short 0x373b
-		00023730  90                nop
-		00023731  90                nop
 	00023732  C45E08            les bx,[bp+0x8]
 	00023735  B8B05A            mov ax,0x5ab0
 	00023738  BAFE30            mov dx,0x30fe
@@ -55467,7 +54630,6 @@
 	0002374D  C747020002        mov word [bx+0x2],0x200
 	00023752  C60701            mov byte [bx],0x1
 	00023755  EB0D              jmp short 0x3764
-		00023757  90                nop
 		00023758  FF760A            push word [bp+0xa]
 		0002375B  FF7608            push word [bp+0x8]
 		0002375E  E8131F            call 0x5674
@@ -55504,13 +54666,11 @@
 000237B2  52                push dx
 000237B3  26FF7706          push word [es:bx+0x6]
 000237B7  FF76FA            push word [bp-0x6]
-000237BA  90                nop
 000237BB  0E                push cs
 000237BC  E89303            call 0x3b52
 000237BF  83C408            add sp,byte +0x8
 000237C2  8946FC            mov [bp-0x4],ax
 000237C5  EB1C              jmp short 0x37e3
-000237C7  90                nop
 000237C8  8B5EFA            mov bx,[bp-0x6]
 000237CB  F6877E5620        test byte [bx+0x567e],0x20 ; Checks for _IOERR.
 000237D0  7411              jz 0x37e3
@@ -55520,7 +54680,6 @@
 	000237D8  50                push ax
 	000237D9  50                push ax
 	000237DA  53                push bx
-	000237DB  90                nop
 	000237DC  0E                push cs
 	000237DD  E85E00            call 0x383e
 	000237E0  83C408            add sp,byte +0x8
@@ -55536,7 +54695,6 @@
 000237FB  16                push ss
 000237FC  50                push ax
 000237FD  FF76FA            push word [bp-0x6]
-00023800  90                nop
 00023801  0E                push cs
 00023802  E84D03            call 0x3b52
 00023805  83C408            add sp,byte +0x8
@@ -55676,7 +54834,6 @@
 00023952  CD21              int 0x21				;
 00023954  1F                pop ds
 00023955  EB67              jmp short 0x39be
-00023957  90                nop
 00023958  F646FC80          test byte [bp-0x4],0x80
 0002395C  7503              jnz 0x3961
 0002395E  E9AD00            jmp 0x3a0e
@@ -55707,7 +54864,6 @@
 00023999  B80042            mov ax,0x4200	; 
 0002399C  CD21              int 0x21		;
 0002399E  EB6E              jmp short 0x3a0e
-000239A0  90                nop
 000239A1  C646FD00          mov byte [bp-0x3],0x0
 000239A5  8B4E0C            mov cx,[bp+0xc]
 000239A8  E8AC00            call 0x3a57
@@ -55893,6 +55049,7 @@
 00023B4A  807EFF0A          cmp byte [bp-0x1],0xa
 00023B4E  75DB              jnz 0x3b2b
 00023B50  EBBE              jmp short 0x3b10
+
 00023B52  55                push bp
 00023B53  8BEC              mov bp,sp
 00023B55  83EC08            sub sp,byte +0x8
@@ -55930,7 +55087,6 @@
 00023BA5  7551              jnz 0x3bf8
 00023BA7  1E                push ds
 00023BA8  8E5EFA            mov ds,[bp-0x6]
-00023BAB  90                nop
 00023BAC  0E                push cs
 00023BAD  E8E81C            call 0x5898
 00023BB0  1F                pop ds
@@ -56228,7 +55384,6 @@
 00023DF1  1E                push ds
 00023DF2  16                push ss
 00023DF3  1F                pop ds
-00023DF4  90                nop
 00023DF5  0E                push cs
 00023DF6  E87F15            call 0x5378		; intdos/intdosx error handler.
 00023DF9  1F                pop ds
@@ -56274,14 +55429,12 @@
 00023E48  8C5EF8            mov [bp-0x8],ds
 00023E4B  FF7608            push word [bp+0x8]
 00023E4E  FF7606            push word [bp+0x6]
-00023E51  90                nop
 00023E52  0E                push cs
 00023E53  E8CA1C            call 0x5b20		; strlen()
 00023E56  83C404            add sp,byte +0x4
 00023E59  8BF0              mov si,ax
 00023E5B  FF76F8            push word [bp-0x8]
 00023E5E  FF76F6            push word [bp-0xa]
-00023E61  90                nop
 00023E62  0E                push cs
 00023E63  E89818            call 0x56fe
 00023E66  83C404            add sp,byte +0x4
@@ -56293,7 +55446,6 @@
 00023E76  50                push ax
 00023E77  FF7608            push word [bp+0x8]
 00023E7A  FF7606            push word [bp+0x6]
-00023E7D  90                nop
 00023E7E  0E                push cs
 00023E7F  E82A15            call 0x53ac
 00023E82  83C40C            add sp,byte +0xc
@@ -56301,7 +55453,6 @@
 00023E88  FF76F8            push word [bp-0x8]
 00023E8B  FF76F6            push word [bp-0xa]
 00023E8E  FF76FE            push word [bp-0x2]
-00023E91  90                nop
 00023E92  0E                push cs
 00023E93  E82219            call 0x57b8
 00023E96  83C406            add sp,byte +0x6
@@ -56320,7 +55471,6 @@
 00023EBB  53                push bx
 00023EBC  B80A00            mov ax,0xa
 00023EBF  50                push ax
-00023EC0  90                nop
 00023EC1  0E                push cs
 00023EC2  E89BF7            call 0x3660
 00023EC5  83C406            add sp,byte +0x6
@@ -56333,7 +55483,6 @@
 00023ED3  5D                pop bp
 00023ED4  CB                retf
 
-00023ED5  90                nop
 00023ED6  55                push bp
 00023ED7  8BEC              mov bp,sp
 00023ED9  B80100            mov ax,0x1
@@ -56342,7 +55491,6 @@
 00023EDF  50                push ax
 00023EE0  50                push ax
 00023EE1  FF7606            push word [bp+0x6]
-00023EE4  90                nop
 00023EE5  0E                push cs
 00023EE6  E855F9            call 0x383e
 00023EE9  83C408            add sp,byte +0x8
@@ -56360,7 +55508,6 @@
 00023EFE  50                push ax
 00023EFF  50                push ax
 00023F00  56                push si
-00023F01  90                nop
 00023F02  0E                push cs
 00023F03  E838F9            call 0x383e
 00023F06  83C408            add sp,byte +0x8
@@ -56373,14 +55520,12 @@
 00023F19  B8FFFF            mov ax,0xffff
 00023F1C  99                cwd
 00023F1D  EB30              jmp short 0x3f4f
-00023F1F  90                nop
 00023F20  B80200            mov ax,0x2
 00023F23  50                push ax
 00023F24  2BC0              sub ax,ax
 00023F26  50                push ax
 00023F27  50                push ax
 00023F28  56                push si
-00023F29  90                nop
 00023F2A  0E                push cs
 00023F2B  E810F9            call 0x383e
 00023F2E  83C408            add sp,byte +0x8
@@ -56391,7 +55536,6 @@
 00023F3A  FF76FA            push word [bp-0x6]
 00023F3D  FF76F8            push word [bp-0x8]
 00023F40  56                push si
-00023F41  90                nop
 00023F42  0E                push cs
 00023F43  E8F8F8            call 0x383e
 00023F46  83C408            add sp,byte +0x8
@@ -56543,7 +55687,6 @@
 0002405A  833F00            cmp word [bx],byte +0x0
 0002405D  7510              jnz 0x406f
 0002405F  50                push ax
-00024060  90                nop
 00024061  0E                push cs
 00024062  E849FC            call 0x3cae
 00024065  0BC0              or ax,ax
@@ -56608,7 +55751,6 @@
 000240F1  1E                push ds
 000240F2  16                push ss
 000240F3  1F                pop ds
-000240F4  90                nop
 000240F5  0E                push cs
 000240F6  E87F12            call 0x5378		; intdos/intdosx error handler.
 000240F9  1F                pop ds
@@ -56658,7 +55800,6 @@
 000241A5  EB0F              jmp short 0x41b6
 000241A7  1F                pop ds
 000241A8  1E                push ds
-000241A9  90                nop
 000241AA  0E                push cs
 000241AB  E8CA11            call 0x5378			; Alleged intdos/intdosx error handler.
 000241AE  C57E0A            lds di,[bp+0xa]
@@ -56859,7 +56000,6 @@
 00024343  56                push si
 00024344  06                push es
 00024345  57                push di
-00024346  90                nop
 00024347  0E                push cs
 00024348  E8C1FA            call 0x3e0c
 0002434B  8B4E0E            mov cx,[bp+0xe]
@@ -56955,7 +56095,6 @@
 000243F7  8BEC              mov bp,sp
 000243F9  B8FFFF            mov ax,0xffff
 000243FC  EB06              jmp short 0x4404
-000243FE  90                nop
 000243FF  55                push bp
 00024400  8BEC              mov bp,sp
 00024402  33C0              xor ax,ax
@@ -56979,7 +56118,6 @@
 0002442B  55                push bp
 0002442C  B8EC              mov bp,sp
 0002442F  B81000            mov ax,0x10
-00024432  90                nop
 00024433  0E                push cs
 00024434  E805F2            call 0x363c
 00024437  57                push di
@@ -57057,7 +56195,6 @@
 000244F8  2BC9              sub cx,cx
 000244FA  51                push cx
 000244FB  50                push ax
-000244FC  90                nop
 000244FD  0E                push cs
 000244FE  E8470A            call 0x4f48
 00024501  034606            add ax,[bp+0x6]
@@ -57077,7 +56214,6 @@
 0002451A  55                push bp
 0002451B  8BEC              mov bp,sp
 0002451D  B80800            mov ax,0x8
-00024520  90                nop
 00024521  0E                push cs
 00024522  E817F1            call 0x363c
 00024525  56                push si
@@ -57102,7 +56238,6 @@
 00024558  FF362A5F          push word [0x5f2a]
 0002455C  E89301            call 0x46f2
 0002455F  EB70              jmp short 0x45d1
-00024561  90                nop
 00024562  FF760A            push word [bp+0xa]
 00024565  FF7608            push word [bp+0x8]
 00024568  A12A5F            mov ax,[0x5f2a]
@@ -57216,7 +56351,6 @@
 00024683  FF76F8            push word [bp-0x8]
 00024686  FF7606            push word [bp+0x6]
 00024689  FF7604            push word [bp+0x4]
-0002468C  90                nop
 0002468D  0E                push cs
 0002468E  E87BF7            call 0x3e0c
 00024691  FF760A            push word [bp+0xa]
@@ -57224,7 +56358,6 @@
 00024697  FF76FA            push word [bp-0x6]
 0002469A  FF76F8            push word [bp-0x8]
 0002469D  8BF0              mov si,ax
-0002469F  90                nop
 000246A0  0E                push cs
 000246A1  E868F7            call 0x3e0c
 000246A4  3BC6              cmp ax,si
@@ -57260,17 +56393,14 @@
 000246ED  5D                pop bp
 000246EE  C20800            ret 0x8
 
-000246F1  90                nop
 000246F2  55                push bp
 000246F3  8BEC              mov bp,sp
 000246F5  B80200            mov ax,0x2
-000246F8  90                nop
 000246F9  0E                push cs
 000246FA  E83FEF            call 0x363c
 000246FD  56                push si
 000246FE  8B7604            mov si,[bp+0x4]
 00024701  EB37              jmp short 0x473a
-00024703  90                nop
 00024704  C45E0A            les bx,[bp+0xa]
 00024707  268A07            mov al,[es:bx]
 0002470A  8846FE            mov [bp-0x2],al
@@ -57299,7 +56429,6 @@
 00024747  5D                pop bp
 00024748  C20A00            ret 0xa
 
-0002474B  90                nop
 0002474C  8BC5              mov ax,bp
 0002474E  8BEC              mov bp,sp
 00024750  8CDA              mov dx,ds
@@ -57336,10 +56465,8 @@
 0002479C  8E5F0C            mov ds,[bx+0xc]
 0002479F  CB                retf
 
-000247A0  0204              add al,[si]
-000247A2  080B              or [bp+di],cl
-000247A4  0F                db 0xf
-000247A5  16                push ss
+000247A0 ; data
+
 000247A6  55                push bp
 000247A7  8BEC              mov bp,sp
 000247A9  83EC04            sub sp,byte +0x4
@@ -57352,7 +56479,6 @@
 000247BE  B80016            mov ax,0x1600
 000247C1  F9                stc
 000247C2  E9A60B            jmp 0x536b
-000247C5  90                nop
 000247C6  0E                push cs
 000247C7  E87F00            call 0x4849
 000247CA  72F2              jc 0x47be
@@ -57420,7 +56546,6 @@
 00024859  E2F8              loop 0x4853
 0002485B  F9                stc
 0002485C  EB0F              jmp short 0x486d
-0002485E  90                nop
 0002485F  49                dec cx
 00024860  8BC1              mov ax,cx
 00024862  D1E0              shl ax,1
@@ -57516,7 +56641,6 @@
 000248FB  50                push ax
 000248FC  B80800            mov ax,0x8
 000248FF  50                push ax
-00024900  90                nop
 00024901  0E                push cs
 00024902  E844FF            call 0x4849
 00024905  16                push ss
@@ -57609,7 +56733,6 @@
 000249A8  50                push ax
 000249A9  B81900            mov ax,0x19
 000249AC  50                push ax
-000249AD  90                nop
 000249AE  0E                push cs
 000249AF  E80012            call 0x5bb2
 000249B2  83C406            add sp,byte +0x6
@@ -57638,14 +56761,12 @@
 000249F2  8D46EE            lea ax,[bp-0x12]
 000249F5  16                push ss
 000249F6  50                push ax
-000249F7  90                nop
 000249F8  0E                push cs
 000249F9  E810F7            call 0x410c
 000249FC  83C408            add sp,byte +0x8
 000249FF  8D469E            lea ax,[bp-0x62]
 00024A02  16                push ss
 00024A03  50                push ax
-00024A04  90                nop
 00024A05  0E                push cs
 00024A06  E81711            call 0x5b20		; strlen()
 00024A09  83C404            add sp,byte +0x4
@@ -57661,7 +56782,6 @@
 00024A23  7E03              jng 0x4a28
 00024A25  8B76DE            mov si,[bp-0x22]
 00024A28  56                push si
-00024A29  90                nop
 00024A2A  0E                push cs
 00024A2B  E8930E            call 0x58c1
 00024A2E  83C402            add sp,byte +0x2
@@ -57687,7 +56807,6 @@
 00024A66  50                push ax
 00024A67  FF76FE            push word [bp-0x2]
 00024A6A  FF76FC            push word [bp-0x4]
-00024A6D  90                nop
 00024A6E  0E                push cs
 00024A6F  E87810            call 0x5aea
 00024A72  83C408            add sp,byte +0x8
@@ -57734,7 +56853,6 @@
 00024ADC  50                push ax
 00024ADD  FF7608            push word [bp+0x8]
 00024AE0  FF7606            push word [bp+0x6]
-00024AE3  90                nop
 00024AE4  0E                push cs
 00024AE5  E86AF7            call 0x4252
 00024AE8  83C406            add sp,byte +0x6
@@ -57747,7 +56865,6 @@
 00024AF9  50                push ax
 00024AFA  FF76FE            push word [bp-0x2]
 00024AFD  FF76FC            push word [bp-0x4]
-00024B00  90                nop
 00024B01  0E                push cs
 00024B02  E807F7            call 0x420c
 00024B05  83C408            add sp,byte +0x8
@@ -57758,7 +56875,6 @@
 00024B10  50                push ax
 00024B11  FF76FE            push word [bp-0x2]
 00024B14  FF76FC            push word [bp-0x4]
-00024B17  90                nop
 00024B18  0E                push cs
 00024B19  E8F0F6            call 0x420c
 00024B1C  83C408            add sp,byte +0x8
@@ -57769,7 +56885,6 @@
 00024B27  50                push ax
 00024B28  FF76FE            push word [bp-0x2]
 00024B2B  FF76FC            push word [bp-0x4]
-00024B2E  90                nop
 00024B2F  0E                push cs
 00024B30  E8D9F6            call 0x420c
 00024B33  83C408            add sp,byte +0x8
@@ -57792,7 +56907,6 @@
 00024B59  5D                pop bp
 00024B5A  C3                ret
 
-00024B5B  90                nop
 00024B5C  55                push bp
 00024B5D  8BEC              mov bp,sp
 00024B5F  83EC56            sub sp,byte +0x56
@@ -57801,7 +56915,6 @@
 00024B66  50                push ax
 00024B67  FF7608            push word [bp+0x8]
 00024B6A  FF7606            push word [bp+0x6]
-00024B6D  90                nop
 00024B6E  0E                push cs
 00024B6F  E87611            call 0x5ce8
 00024B72  83C408            add sp,byte +0x8
@@ -57810,14 +56923,12 @@
 00024B79  C7066F560200      mov word [0x566f],0x2
 00024B7F  B8FFFF            mov ax,0xffff
 00024B82  E9C601            jmp 0x4d4b
-00024B85  90                nop
 00024B86  2BC0              sub ax,ax
 00024B88  50                push ax
 00024B89  8D46AA            lea ax,[bp-0x56]
 00024B8C  50                push ax
 00024B8D  B81A00            mov ax,0x1a
 00024B90  50                push ax
-00024B91  90                nop
 00024B92  0E                push cs
 00024B93  E81C10            call 0x5bb2
 00024B96  83C406            add sp,byte +0x6
@@ -57836,7 +56947,6 @@
 00024BB8  8D46EA            lea ax,[bp-0x16]
 00024BBB  16                push ss
 00024BBC  50                push ax
-00024BBD  90                nop
 00024BBE  0E                push cs
 00024BBF  E89CF5            call 0x415e
 00024BC2  83C40C            add sp,byte +0xc
@@ -57863,7 +56973,6 @@
 00024BF7  50                push ax
 00024BF8  B81900            mov ax,0x19
 00024BFB  50                push ax
-00024BFC  90                nop
 00024BFD  0E                push cs
 00024BFE  E8B10F            call 0x5bb2
 00024C01  83C406            add sp,byte +0x6
@@ -57878,7 +56987,6 @@
 00024C17  50                push ax
 00024C18  FF7608            push word [bp+0x8]
 00024C1B  FF7606            push word [bp+0x6]
-00024C1E  90                nop
 00024C1F  0E                push cs
 00024C20  E8C510            call 0x5ce8
 00024C23  83C408            add sp,byte +0x8
@@ -57891,7 +56999,6 @@
 00024C33  50                push ax
 00024C34  50                push ax
 00024C35  FF76DA            push word [bp-0x26]
-00024C38  90                nop
 00024C39  0E                push cs
 00024C3A  E84FFD            call 0x498c
 00024C3D  83C408            add sp,byte +0x8
@@ -57902,7 +57009,6 @@
 00024C4A  E932FF            jmp 0x4b7f
 00024C4D  FF7608            push word [bp+0x8]
 00024C50  FF7606            push word [bp+0x6]
-00024C53  90                nop
 00024C54  0E                push cs
 00024C55  E8E3FC            call 0x493b
 00024C58  83C404            add sp,byte +0x4
@@ -57910,13 +57016,11 @@
 00024C5C  7432              jz 0x4c90
 00024C5E  FF76D8            push word [bp-0x28]
 00024C61  FF76D6            push word [bp-0x2a]
-00024C64  90                nop
 00024C65  0E                push cs
 00024C66  E8D2FC            call 0x493b
 00024C69  83C404            add sp,byte +0x4
 00024C6C  FF76D8            push word [bp-0x28]
 00024C6F  FF76D6            push word [bp-0x2a]
-00024C72  90                nop
 00024C73  0E                push cs
 00024C74  E8350C            call 0x58ac
 00024C77  83C404            add sp,byte +0x4
@@ -57929,12 +57033,10 @@
 00024C8E  EB12              jmp short 0x4ca2
 00024C90  FF76D8            push word [bp-0x28]
 00024C93  FF76D6            push word [bp-0x2a]
-00024C96  90                nop
 00024C97  0E                push cs
 00024C98  E8110C            call 0x58ac
 00024C9B  83C404            add sp,byte +0x4
 00024C9E  E9DEFE            jmp 0x4b7f
-00024CA1  90                nop
 00024CA2  C45E0A            les bx,[bp+0xa]
 00024CA5  2BC0              sub ax,ax
 00024CA7  26894702          mov [es:bx+0x2],ax
@@ -57985,7 +57087,6 @@
 00024D20  D3E8              shr ax,cl
 00024D22  257F00            and ax,0x7f
 00024D25  50                push ax
-00024D26  90                nop
 00024D27  0E                push cs
 00024D28  E8990E            call 0x5bc4
 00024D2B  83C40C            add sp,byte +0xc
@@ -58076,8 +57177,6 @@
 00024E67  804F1601          or byte [bx+0x16],0x1
 00024E6B  8B4606            mov ax,[bp+0x6]
 00024E6E  E9CAFF            jmp 0x4e3b
-00024E71  90                nop
-00024E72  90                nop
 	00024E73  8BD0              mov dx,ax
 	00024E75  B104              mov cl,0x4
 	00024E77  D3EA              shr dx,cl
@@ -58288,7 +57387,6 @@
 0002503C  8B07              mov ax,[bx]
 0002503E  8B5702            mov dx,[bx+0x2]
 00025041  8B4E08            mov cx,[bp+0x8]
-00025044  90                nop
 00025045  0E                push cs
 00025046  E8D5FF            call 0x501e
 00025049  8B5E06            mov bx,[bp+0x6]
@@ -58304,7 +57402,6 @@
 0002505E  8B07              mov ax,[bx]
 00025060  8B5702            mov dx,[bx+0x2]
 00025063  8B4E08            mov cx,[bp+0x8]
-00025066  90                nop
 00025067  0E                push cs
 00025068  E8BFFF            call 0x502a
 0002506B  8B5E06            mov bx,[bp+0x6]
@@ -58320,7 +57417,6 @@
 00025080  8B07              mov ax,[bx]
 00025082  8B5702            mov dx,[bx+0x2]
 00025085  8B4E08            mov cx,[bp+0x8]
-00025088  90                nop
 00025089  0E                push cs
 0002508A  E87100            call 0x50fe
 0002508D  8B5E06            mov bx,[bp+0x6]
@@ -58397,12 +57493,10 @@
 00025140  E2FB              loop 0x513d
 00025142  80F455            xor ah,0x55
 00025145  7411              jz 0x5158
-00025147  90                nop
 00025148  0E                push cs
 00025149  E8BEFF            call 0x510a
 0002514C  B80100            mov ax,0x1
 0002514F  50                push ax
-00025150  90                nop
 00025151  0E                push cs
 00025152  E8D801            call 0x532d
 00025155  B80100            mov ax,0x1
@@ -58543,7 +57637,6 @@
 0002526E  0AC0              or al,al
 00025270  7503              jnz 0x5275
 00025272  EB7E              jmp short 0x52f2
-00025274  90                nop
 00025275  36893F            mov [ss:bx],di
 00025278  368C5702          mov [ss:bx+0x2],ss
 0002527C  83C304            add bx,byte +0x4
@@ -58630,6 +57723,7 @@
 00025367  8BE5              mov sp,bp
 00025369  5D                pop bp
 0002536A  CB                retf
+
 0002536B  7307              jnc 0x5374
 0002536D  E80E00            call 0x537e
 00025370  B8FFFF            mov ax,0xffff
@@ -58678,7 +57772,6 @@
 000253B6  FF760C            push word [bp+0xc]
 000253B9  50                push ax
 000253BA  FF760A            push word [bp+0xa]
-000253BD  90                nop
 000253BE  0E                push cs
 000253BF  E886FB            call 0x4f48
 000253C2  8946FC            mov [bp-0x4],ax
@@ -58691,7 +57784,6 @@
 000253D8  7506              jnz 0x53e0
 000253DA  2BC0              sub ax,ax
 000253DC  E98F02            jmp 0x566e
-000253DF  90                nop
 000253E0  C45E0E            les bx,[bp+0xe]
 000253E3  26F6470A0C        test byte [es:bx+0xa],0xc
 000253E8  7403              jz 0x53ed
@@ -58701,7 +57793,6 @@
 000253F1  50                push ax
 000253F2  06                push es
 000253F3  53                push bx
-000253F4  90                nop
 000253F5  0E                push cs
 000253F6  E813EA            call 0x3e0c
 000253F9  99                cwd
@@ -58734,7 +57825,6 @@
 00025445  268A07            mov al,[es:bx]
 00025448  98                cbw
 00025449  50                push ax
-0002544A  90                nop
 0002544B  0E                push cs
 0002544C  E811E2            call 0x3660
 0002544F  83C406            add sp,byte +0x6
@@ -58756,7 +57846,6 @@
 00025481  50                push ax
 00025482  06                push es
 00025483  53                push bx
-00025484  90                nop
 00025485  0E                push cs
 00025486  E883E9            call 0x3e0c
 00025489  99                cwd
@@ -58796,8 +57885,6 @@
 000254E5  7607              jna 0x54ee
 000254E7  8B46F8            mov ax,[bp-0x8]
 000254EA  EB09              jmp short 0x54f5
-000254EC  90                nop
-000254ED  90                nop
 000254EE  C45E0E            les bx,[bp+0xe]
 000254F1  268B4704          mov ax,[es:bx+0x4]
 000254F5  8946F4            mov [bp-0xc],ax
@@ -58808,7 +57895,6 @@
 00025504  C45E0E            les bx,[bp+0xe]
 00025507  26FF7702          push word [es:bx+0x2]
 0002550B  26FF37            push word [es:bx]
-0002550E  90                nop
 0002550F  0E                push cs
 00025510  E8F30B            call 0x6106
 00025513  83C40A            add sp,byte +0xa
@@ -58849,14 +57935,12 @@
 0002557A  8BD9              mov bx,cx
 0002557C  268807            mov [es:bx],al
 0002557F  EB17              jmp short 0x5598
-00025581  90                nop
 00025582  FF7610            push word [bp+0x10]
 00025585  FF760E            push word [bp+0xe]
 00025588  C45E06            les bx,[bp+0x6]
 0002558B  268A07            mov al,[es:bx]
 0002558E  98                cbw
 0002558F  50                push ax
-00025590  90                nop
 00025591  0E                push cs
 00025592  E8CBE0            call 0x3660
 00025595  83C406            add sp,byte +0x6
@@ -58874,7 +57958,6 @@
 000255BB  0B46FA            or ax,[bp-0x6]
 000255BE  7473              jz 0x5633
 000255C0  E90AFF            jmp 0x54cd
-000255C3  90                nop
 000255C4  8B46F8            mov ax,[bp-0x8]
 000255C7  0B46FA            or ax,[bp-0x6]
 000255CA  7467              jz 0x5633
@@ -58908,7 +57991,6 @@
 0002561D  268A07            mov al,[es:bx]
 00025620  98                cbw
 00025621  50                push ax
-00025622  90                nop
 00025623  0E                push cs
 00025624  E839E0            call 0x3660
 00025627  83C406            add sp,byte +0x6
@@ -58924,7 +58006,6 @@
 00025642  1B56FA            sbb dx,[bp-0x6]
 00025645  52                push dx
 00025646  50                push ax
-00025647  90                nop
 00025648  0E                push cs
 00025649  E850FA            call 0x509c
 0002564C  EB20              jmp short 0x566e
@@ -58938,13 +58019,11 @@
 00025665  0B46FA            or ax,[bp-0x6]
 00025668  74C9              jz 0x5633
 0002566A  E97AFF            jmp 0x55e7
-0002566D  90                nop
 0002566E  5E                pop si
 0002566F  8BE5              mov sp,bp
 00025671  5D                pop bp
 00025672  CB                retf
 
-00025673  90                nop
 00025674  55                push bp
 00025675  8BEC              mov bp,sp
 00025677  83EC04            sub sp,byte +0x4
@@ -58962,7 +58041,6 @@
 00025694  8C5EFE            mov [bp-0x2],ds
 00025697  B80002            mov ax,0x200
 0002569A  50                push ax
-0002569B  90                nop
 0002569C  0E                push cs
 0002569D  E82102            call 0x58c1
 000256A0  83C402            add sp,byte +0x2
@@ -59006,7 +58084,6 @@
 00025717  C746FCB058        mov word [bp-0x4],0x58b0
 0002571C  C746FEFE30        mov word [bp-0x2],0x30fe
 00025721  EB19              jmp short 0x573c
-00025723  90                nop
 00025724  817E06C85C        cmp word [bp+0x6],0x5cc8
 00025729  7535              jnz 0x5760
 0002572B  817E08FE30        cmp word [bp+0x8],0x30fe
@@ -59081,7 +58158,6 @@
 000257EC  268A470B          mov al,[es:bx+0xb]
 000257F0  98                cbw
 000257F1  50                push ax
-000257F2  90                nop
 000257F3  0E                push cs
 000257F4  E89703            call 0x5b8e			; Checks for _IOSTRG.
 000257F7  83C402            add sp,byte +0x2
@@ -59102,7 +58178,6 @@
 0002581B  8C5EFE            mov [bp-0x2],ds
 0002581E  FF760A            push word [bp+0xa]
 00025821  FF7608            push word [bp+0x8]
-00025824  90                nop
 00025825  0E                push cs
 00025826  E8C505            call 0x5dee
 00025829  83C404            add sp,byte +0x4
@@ -59129,7 +58204,6 @@
 00025873  268A470B          mov al,[es:bx+0xb]
 00025877  98                cbw
 00025878  50                push ax
-00025879  90                nop
 0002587A  0E                push cs
 0002587B  E81003            call 0x5b8e				; Checks for _IOSTRG.
 0002587E  83C402            add sp,byte +0x2
@@ -59137,7 +58211,6 @@
 00025883  740E              jz 0x5893
 00025885  FF760A            push word [bp+0xa]
 00025888  FF7608            push word [bp+0x8]
-0002588B  90                nop
 0002588C  0E                push cs
 0002588D  E85E05            call 0x5dee
 00025890  83C404            add sp,byte +0x4
@@ -59145,7 +58218,6 @@
 00025895  5D                pop bp
 00025896  CB                retf
 
-00025897  90                nop
 00025898  59                pop cx
 00025899  5A                pop dx
 0002589A  A1AE56            mov ax,[0x56ae]		; The stack pointer should be equal or greater than a value at [0x56ae].
@@ -59189,7 +58261,6 @@
 000258EA  E88100            call 0x596e
 000258ED  750B              jnz 0x58fa
 000258EF  FF7606            push word [bp+0x6]
-000258F2  90                nop
 000258F3  0E                push cs
 000258F4  E8B7E3            call 0x3cae
 000258F7  83C402            add sp,byte +0x2
@@ -59214,7 +58285,6 @@
 0002591A  51                push cx
 0002591B  B002              mov al,0x2
 0002591D  50                push ax
-0002591E  90                nop
 0002591F  0E                push cs
 00025920  E85905            call 0x5e7c
 00025923  83C408            add sp,byte +0x8
@@ -59429,7 +58499,6 @@
 00025AD3  50                push ax
 00025AD4  06                push es
 00025AD5  1F                pop ds
-00025AD6  90                nop
 00025AD7  0E                push cs
 00025AD8  E8A103            call 0x5e7c
 00025ADB  83C408            add sp,byte +0x8
@@ -59549,7 +58618,6 @@
 00025BE8  99                cwd
 00025BE9  52                push dx
 00025BEA  50                push ax
-00025BEB  90                nop
 00025BEC  0E                push cs
 00025BED  E858F3            call 0x4f48
 00025BF0  8946EA            mov [bp-0x16],ax
@@ -59574,7 +58642,6 @@
 00025C1B  99                cwd
 00025C1C  52                push dx
 00025C1D  50                push ax
-00025C1E  90                nop
 00025C1F  0E                push cs
 00025C20  E825F3            call 0x4f48
 00025C23  B9100E            mov cx,0xe10
@@ -59589,7 +58656,6 @@
 00025C33  50                push ax
 00025C34  894EE4            mov [bp-0x1c],cx
 00025C37  895EE6            mov [bp-0x1a],bx
-00025C3A  90                nop
 00025C3B  0E                push cs
 00025C3C  E809F3            call 0x4f48
 00025C3F  B98051            mov cx,0x5180
@@ -59609,7 +58675,6 @@
 00025C5B  50                push ax
 00025C5C  894EE0            mov [bp-0x20],cx
 00025C5F  895EE2            mov [bp-0x1e],bx
-00025C62  90                nop
 00025C63  0E                push cs
 00025C64  E8E1F2            call 0x4f48
 00025C67  0346E0            add ax,[bp-0x20]
@@ -59629,7 +58694,6 @@
 00025C8D  8B460A            mov ax,[bp+0xa]
 00025C90  03C7              add ax,di
 00025C92  8946FC            mov [bp-0x4],ax
-00025C95  90                nop
 00025C96  0E                push cs
 00025C97  E8A602            call 0x5f40				; Only call to that particular procedure.
 00025C9A  A1F65F            mov ax,[0x5ff6]
@@ -59648,7 +58712,6 @@
 00025CC1  8D46EE            lea ax,[bp-0x12]
 00025CC4  16                push ss
 00025CC5  50                push ax
-00025CC6  90                nop
 00025CC7  0E                push cs
 00025CC8  E85903            call 0x6024
 00025CCB  83C404            add sp,byte +0x4
@@ -59664,7 +58727,6 @@
 00025CE5  5D                pop bp
 00025CE6  CB                retf
 
-00025CE7  90                nop
 00025CE8  55                push bp
 00025CE9  8BEC              mov bp,sp
 00025CEB  83EC20            sub sp,byte +0x20
@@ -59783,7 +58845,6 @@
 00025DC6  740E              jz 0x5dd6
 00025DC8  06                push es
 00025DC9  53                push bx
-00025DCA  90                nop
 00025DCB  0E                push cs
 00025DCC  E81F00            call 0x5dee
 00025DCF  83C404            add sp,byte +0x4
@@ -59801,7 +58862,6 @@
 00025DEB  5D                pop bp
 00025DEC  CB                retf
 
-00025DED  90                nop
 00025DEE  55                push bp
 00025DEF  8BEC              mov bp,sp
 00025DF1  83EC04            sub sp,byte +0x4
@@ -59825,34 +58885,33 @@
 00025E1C  D1E3              shl bx,1
 00025E1E  F687A05D01        test byte [bx+0x5da0],0x1
 00025E23  7438              jz 0x5e5d
-00025E25  8B5E06            mov bx,[bp+0x6]
-00025E28  268B07            mov ax,[es:bx]
-00025E2B  262B4706          sub ax,[es:bx+0x6]
-00025E2F  8946FC            mov [bp-0x4],ax
-00025E32  0BC0              or ax,ax
+	00025E25  8B5E06            mov bx,[bp+0x6]
+	00025E28  268B07            mov ax,[es:bx]
+	00025E2B  262B4706          sub ax,[es:bx+0x6]
+	00025E2F  8946FC            mov [bp-0x4],ax
+	00025E32  0BC0              or ax,ax
 00025E34  7E27              jng 0x5e5d
-00025E36  50                push ax
-00025E37  26FF7708          push word [es:bx+0x8]
-00025E3B  26FF7706          push word [es:bx+0x6]
-00025E3F  268A470B          mov al,[es:bx+0xb]
-00025E43  98                cbw
-00025E44  50                push ax
-00025E45  90                nop
-00025E46  0E                push cs
-00025E47  E808DD            call 0x3b52
-00025E4A  83C408            add sp,byte +0x8
-00025E4D  3B46FC            cmp ax,[bp-0x4]
-00025E50  740B              jz 0x5e5d
-00025E52  C45E06            les bx,[bp+0x6]
-00025E55  26804F0A20        or byte [es:bx+0xa],0x20
-00025E5A  BEFFFF            mov si,0xffff
+	00025E36  50                push ax
+	00025E37  26FF7708          push word [es:bx+0x8]
+	00025E3B  26FF7706          push word [es:bx+0x6]
+	00025E3F  268A470B          mov al,[es:bx+0xb]
+	00025E43  98                cbw
+	00025E44  50                push ax
+	00025E46  0E                push cs
+	00025E47  E808DD            call 0x3b52
+	00025E4A  83C408            add sp,byte +0x8
+	00025E4D  3B46FC            cmp ax,[bp-0x4]
+	00025E50  740B              jz 0x5e5d
+	00025E52  C45E06            les bx,[bp+0x6]
+	00025E55  26804F0A20        or byte [es:bx+0xa],0x20
+	00025E5A  BEFFFF            mov si,0xffff			;
 00025E5D  C45E06            les bx,[bp+0x6]
-00025E60  268B4706          mov ax,[es:bx+0x6]
-00025E64  268B5708          mov dx,[es:bx+0x8]
+00025E60  268B4706          mov ax,[es:bx+0x6]			; DX:AX = segment:offset
+00025E64  268B5708          mov dx,[es:bx+0x8]			;
 00025E68  268907            mov [es:bx],ax
 00025E6B  26895702          mov [es:bx+0x2],dx
 00025E6F  26C747040000      mov word [es:bx+0x4],0x0
-00025E75  8BC6              mov ax,si
+00025E75  8BC6              mov ax,si				
 00025E77  5E                pop si
 00025E78  8BE5              mov sp,bp
 00025E7A  5D                pop bp
@@ -59968,7 +59027,6 @@
 00025F57  B8EA5F            mov ax,0x5fea
 00025F5A  1E                push ds
 00025F5B  50                push ax
-00025F5C  90                nop
 00025F5D  0E                push cs
 00025F5E  E80702            call 0x6168
 00025F61  83C404            add sp,byte +0x4
@@ -59987,7 +59045,6 @@
 00025F82  53                push bx
 00025F83  FF36FE5F          push word [0x5ffe]
 00025F87  FF36FC5F          push word [0x5ffc]
-00025F8B  90                nop
 00025F8C  0E                push cs
 00025F8D  E8A0DD            call 0x3d30
 00025F90  83C40A            add sp,byte +0xa
@@ -59998,13 +59055,11 @@
 00025F99  8346FA03          add word [bp-0x6],byte +0x3
 00025F9D  FF76FC            push word [bp-0x4]
 00025FA0  FF76FA            push word [bp-0x6]
-00025FA3  90                nop
 00025FA4  0E                push cs
 00025FA5  E8BC01            call 0x6164
 00025FA8  83C404            add sp,byte +0x4
 00025FAB  52                push dx
 00025FAC  50                push ax
-00025FAD  90                nop
 00025FAE  0E                push cs
 00025FAF  E896EF            call 0x4f48
 00025FB2  A3F65F            mov [0x5ff6],ax
@@ -60036,12 +59091,10 @@
 00025FF4  50                push ax
 00025FF5  FF360260          push word [0x6002]
 00025FF9  FF360060          push word [0x6000]
-00025FFD  90                nop
 00025FFE  0E                push cs
 00025FFF  E82EDD            call 0x3d30
 00026002  83C40A            add sp,byte +0xa
 00026005  EB09              jmp short 0x6010
-00026007  90                nop
 00026008  C41E0060          les bx,[0x6000]
 0002600C  26C60700          mov byte [es:bx],0x0
 00026010  C41E0060          les bx,[0x6000]
@@ -60054,7 +59107,6 @@
 00026021  5D                pop bp
 00026022  CB                retf
 
-00026023  90                nop
 00026024  55                push bp
 00026025  8BEC              mov bp,sp
 00026027  83EC06            sub sp,byte +0x6
@@ -60082,7 +59134,6 @@
 0002606E  8B87D05F          mov ax,[bx+0x5fd0]
 00026072  050700            add ax,0x7
 00026075  EB0E              jmp short 0x6085
-00026077  90                nop
 00026078  8B5E06            mov bx,[bp+0x6]
 0002607B  268B5F08          mov bx,[es:bx+0x8]
 0002607F  D1E3              shl bx,1
@@ -60125,7 +59176,6 @@
 000260E2  7C1B              jl 0x60ff
 000260E4  B80100            mov ax,0x1
 000260E7  EB18              jmp short 0x6101
-000260E9  90                nop
 000260EA  C45E06            les bx,[bp+0x6]
 000260ED  8B46FE            mov ax,[bp-0x2]
 000260F0  2639470E          cmp [es:bx+0xe],ax
@@ -60156,14 +59206,11 @@
 00026186  746E              jz 0x61f6				; return.
 00026188  FF7608            push word [bp+0x8]
 0002618B  FF7606            push word [bp+0x6]
-0002618E  90                nop
 0002618F  0E                push cs
 00026190  E88DF9            call 0x5b20				; strlen()
 00026193  83C404            add sp,byte +0x4
 00026196  8BF0              mov si,ax
 00026198  EB06              jmp short 0x61a0
-0002619A  90                nop
-0002619B  90                nop
 0002619C  8346FA04          add word [bp-0x6],byte +0x4
 000261A0  C45EFA            les bx,[bp-0x6]
 000261A3  268B07            mov ax,[es:bx]
@@ -60171,7 +59218,6 @@
 000261AA  744A              jz 0x61f6				; return.
 000261AC  26FF7702          push word [es:bx+0x2]
 000261B0  26FF37            push word [es:bx]
-000261B3  90                nop
 000261B4  0E                push cs
 000261B5  E868F9            call 0x5b20				; strlen()
 000261B8  83C404            add sp,byte +0x4
@@ -60187,7 +59233,6 @@
 000261D2  C45EFA            les bx,[bp-0x6]
 000261D5  26FF7702          push word [es:bx+0x2]
 000261D9  26FF37            push word [es:bx]
-000261DC  90                nop
 000261DD  0E                push cs
 000261DE  E81D00            call 0x61fe				; strncmp()
 000261E1  83C40A            add sp,byte +0xa
@@ -60198,7 +59243,6 @@
 000261EE  8D4001            lea ax,[bx+si+0x1]
 000261F1  8CC2              mov dx,es
 000261F3  EB04              jmp short 0x61f9
-000261F5  90                nop
 ; Exit:
 000261F6  2BC0              sub ax,ax
 000261F8  99                cwd
