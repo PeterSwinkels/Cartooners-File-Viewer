@@ -46342,7 +46342,7 @@
 0001E95A  D3E0              shl ax,cl
 0001E95C  0B4606            or ax,[bp+0x6]
 0001E95F  8946FE            mov [bp-0x2],ax
-0001E962  BB00B8            mov bx,0xb800	; Text mode?
+0001E962  BB00B8            mov bx,0xb800	; Text mode/CGA
 0001E965  8EC3              mov es,bx		;
 0001E967  2BDB              sub bx,bx		; Moves to the start of the video buffer to start writing 0x8000 bytes
 0001E969  B90080            mov cx,0x8000	;
@@ -46381,8 +46381,8 @@
 0001E9B9  8946F8            mov [bp-0x8],ax
 0001E9BC  A1BAA3            mov ax,[0xa3ba]
 0001E9BF  8946F6            mov [bp-0xa],ax
-0001E9C2  B800B8            mov ax,0xb800
-0001E9C5  8EC0              mov es,ax
+0001E9C2  B800B8            mov ax,0xb800	 ; Text mode/CGA
+0001E9C5  8EC0              mov es,ax	   	 ;
 0001E9C7  BE0020            mov si,0x2000
 0001E9CA  BFA080            mov di,0x80a0
 0001E9CD  8B4E08            mov cx,[bp+0x8]
@@ -46406,8 +46406,8 @@
 0001E9FD  2BF9              sub di,cx
 0001E9FF  897EFC            mov [bp-0x4],di
 0001EA02  51                push cx
-0001EA03  B800B8            mov ax,0xb800
-0001EA06  8EC0              mov es,ax
+0001EA03  B800B8            mov ax,0xb800	 ; Text mode/CGA
+0001EA06  8EC0              mov es,ax		 ;
 0001EA08  8B46F6            mov ax,[bp-0xa]
 0001EA0B  8B7EF8            mov di,[bp-0x8]
 0001EA0E  E84704            call 0xee58
@@ -46495,8 +46495,8 @@
 0001EABD  8BEC              mov bp,sp
 0001EABF  56                push si
 0001EAC0  57                push di
-0001EAC1  B800B8            mov ax,0xb800
-0001EAC4  8EC0              mov es,ax
+0001EAC1  B800B8            mov ax,0xb800	 ; Text mode/CGA
+0001EAC4  8EC0              mov es,ax		 ;
 0001EAC6  8B3ECC80          mov di,[0x80cc]
 0001EACA  8B1EBAA3          mov bx,[0xa3ba]
 0001EACE  83E301            and bx,byte +0x1
@@ -46638,8 +46638,8 @@
 0001EBC5  8BEC              mov bp,sp
 0001EBC7  56                push si
 0001EBC8  57                push di
-0001EBC9  B800B8            mov ax,0xb800
-0001EBCC  8EC0              mov es,ax
+0001EBC9  B800B8            mov ax,0xb800	; Text mode/CGA
+0001EBCC  8EC0              mov es,ax		;
 0001EBCE  8B3ECC80          mov di,[0x80cc]
 0001EBD2  A1BAA3            mov ax,[0xa3ba]
 0001EBD5  8B4E06            mov cx,[bp+0x6]
@@ -46698,8 +46698,8 @@
 0001EC50  8BEC              mov bp,sp
 0001EC52  56                push si
 0001EC53  57                push di
-0001EC54  B800B8            mov ax,0xb800
-0001EC57  8EC0              mov es,ax
+0001EC54  B800B8            mov ax,0xb800	; Text mode/CGA
+0001EC57  8EC0              mov es,ax		;
 0001EC59  8B3ECC80          mov di,[0x80cc]
 0001EC5D  8B16B8A3          mov dx,[0xa3b8]
 0001EC61  80E201            and dl,0x1
@@ -46720,8 +46720,8 @@
 0001EC84  51                push cx
 0001EC85  1E                push ds
 0001EC86  57                push di
-0001EC87  B900B8            mov cx,0xb800
-0001EC8A  8EC1              mov es,cx
+0001EC87  B900B8            mov cx,0xb800	: Text mode/CGA
+0001EC8A  8EC1              mov es,cx		;
 0001EC8C  8A0EBCA3          mov cl,[0xa3bc]
 0001EC90  32ED              xor ch,ch
 0001EC92  32E4              xor ah,ah
@@ -46827,8 +46827,8 @@
 0001ED74  47                inc di
 0001ED75  83E7FE            and di,byte -0x2
 0001ED78  E8DD00            call 0xee58
-0001ED7B  BA00B8            mov dx,0xb800
-0001ED7E  8EC2              mov es,dx
+0001ED7B  BA00B8            mov dx,0xb800	 ; Text mode/CGA
+0001ED7E  8EC2              mov es,dx		 ;
 0001ED80  8B560E            mov dx,[bp+0xe]
 0001ED83  D1EA              shr dx,1
 0001ED85  7427              jz 0xedae
@@ -46866,8 +46866,8 @@
 0001EDC0  8B4610            mov ax,[bp+0x10]
 0001EDC3  8B7E12            mov di,[bp+0x12]
 0001EDC6  E88F00            call 0xee58
-0001EDC9  BA00B8            mov dx,0xb800
-0001EDCC  8EC2              mov es,dx
+0001EDC9  BA00B8            mov dx,0xb800	; Text mode/CGA
+0001EDCC  8EC2              mov es,dx		;
 0001EDCE  8B560E            mov dx,[bp+0xe]
 0001EDD1  D1EA              shr dx,1
 0001EDD3  744E              jz 0xee23
@@ -47032,7 +47032,7 @@
 0001EF52  1E                push ds
 0001EF53  07                pop es
 0001EF54  8BF7              mov si,di
-0001EF56  B800B8            mov ax,0xb800		; CGA.
+0001EF56  B800B8            mov ax,0xb800		; Text mode/CGA
 0001EF59  8ED8              mov ds,ax			;
 0001EF5B  BFF241            mov di,0x41f2
 0001EF5E  B91000            mov cx,0x10
@@ -47150,8 +47150,8 @@
 0001F04B  8BD9              mov bx,cx
 0001F04D  8B7E0A            mov di,[bp+0xa]
 0001F050  E805FE            call 0xee58
-0001F053  B800B8            mov ax,0xb800
-0001F056  8EC0              mov es,ax
+0001F053  B800B8            mov ax,0xb800		; Text mode/CGA
+0001F056  8EC0              mov es,ax			;
 0001F058  BEF241            mov si,0x41f2
 0001F05B  B91000            mov cx,0x10
 0001F05E  2BCB              sub cx,bx
@@ -47475,7 +47475,7 @@
 0001F3B3  8946F8            mov [bp-0x8],ax
 0001F3B6  A1BAA3            mov ax,[0xa3ba]
 0001F3B9  8946F6            mov [bp-0xa],ax
-0001F3BC  B800A0            mov ax,0xa000		; Selects the VGA video segment.
+0001F3BC  B800A0            mov ax,0xa000		; Selects the EGA/VGA video segment.
 0001F3BF  8EC0              mov es,ax			;
 0001F3C1  8B3ECC80          mov di,[0x80cc]
 0001F3C5  BE4001            mov si,0x140
@@ -47536,8 +47536,8 @@
 0001F43B  8BEC              mov bp,sp
 0001F43D  56                push si
 0001F43E  57                push di
-0001F43F  B800A0            mov ax,0xa000
-0001F442  8EC0              mov es,ax
+0001F43F  B800A0            mov ax,0xa000		; EGA/VGA
+0001F442  8EC0              mov es,ax			;
 0001F444  8B3ECC80          mov di,[0x80cc]
 0001F448  A1B8A3            mov ax,[0xa3b8]
 0001F44B  8B4E06            mov cx,[bp+0x6]
@@ -47659,8 +47659,8 @@
 0001F51E  8BEC              mov bp,sp
 0001F520  56                push si
 0001F521  57                push di
-0001F522  B800A0            mov ax,0xa000
-0001F525  8EC0              mov es,ax
+0001F522  B800A0            mov ax,0xa000	; EGA/VGA
+0001F525  8EC0              mov es,ax		;
 0001F527  8B3ECC80          mov di,[0x80cc]
 0001F52B  BB3F01            mov bx,0x13f
 0001F52E  8B16BAA3          mov dx,[0xa3ba]
@@ -47715,8 +47715,8 @@
 0001F592  83EC02            sub sp,byte +0x2
 0001F595  56                push si
 0001F596  57                push di
-0001F597  B800A0            mov ax,0xa000
-0001F59A  8EC0              mov es,ax
+0001F597  B800A0            mov ax,0xa000	; EGA/VGA
+0001F59A  8EC0              mov es,ax		;
 0001F59C  8B3ECC80          mov di,[0x80cc]
 0001F5A0  8B4606            mov ax,[bp+0x6]
 0001F5A3  D1E0              shl ax,1
@@ -47746,8 +47746,8 @@
 0001F5E4  51                push cx
 0001F5E5  1E                push ds
 0001F5E6  57                push di
-0001F5E7  B900A0            mov cx,0xa000
-0001F5EA  8EC1              mov es,cx
+0001F5E7  B900A0            mov cx,0xa000	; EGA/VGA
+0001F5EA  8EC1              mov es,cx		;
 0001F5EC  8A0EBCA3          mov cl,[0xa3bc]
 0001F5F0  32ED              xor ch,ch
 0001F5F2  8B5EFE            mov bx,[bp-0x2]
@@ -47803,8 +47803,8 @@
 0001F64F  F76E10            imul word [bp+0x10]
 0001F652  034612            add ax,[bp+0x12]
 0001F655  8BF8              mov di,ax
-0001F657  BA00A0            mov dx,0xa000
-0001F65A  8EC2              mov es,dx
+0001F657  BA00A0            mov dx,0xa000	; EGA/VGA
+0001F65A  8EC2              mov es,dx		;
 0001F65C  C57608            lds si,[bp+0x8]
 0001F65F  B84001            mov ax,0x140
 0001F662  2B460E            sub ax,[bp+0xe]
@@ -47848,8 +47848,8 @@
 0001F6A7  F76E10            imul word [bp+0x10]
 0001F6AA  034612            add ax,[bp+0x12]
 0001F6AD  8BF8              mov di,ax
-0001F6AF  BA00A0            mov dx,0xa000
-0001F6B2  8EC2              mov es,dx
+0001F6AF  BA00A0            mov dx,0xa000	; EGA/VGA
+0001F6B2  8EC2              mov es,dx		;
 0001F6B4  C57608            lds si,[bp+0x8]
 0001F6B7  B84001            mov ax,0x140
 0001F6BA  2B460E            sub ax,[bp+0xe]
@@ -48011,8 +48011,8 @@
 0001F7DE  7E02              jng 0xf7e2
 0001F7E0  03C1              add ax,cx
 0001F7E2  8BF8              mov di,ax
-0001F7E4  B800A0            mov ax,0xa000
-0001F7E7  8EC0              mov es,ax
+0001F7E4  B800A0            mov ax,0xa000	; EGA/VGA
+0001F7E7  8EC0              mov es,ax		;
 0001F7E9  B91000            mov cx,0x10
 0001F7EC  2BCB              sub cx,bx
 0001F7EE  8B5E06            mov bx,[bp+0x6]
@@ -48329,7 +48329,7 @@
 0001FB20  55                push bp
 0001FB21  8BEC              mov bp,sp
 0001FB23  57                push di
-0001FB24  BF00A0            mov di,0xa000		; Set ES:DI to start of VGA video segment.
+0001FB24  BF00A0            mov di,0xa000		; Set ES:DI to start of EGA/VGA video segment.
 0001FB27  8EC7              mov es,di			;
 0001FB29  33FF              xor di,di			;
 0001FB2B  BACE03            mov dx,0x3ce		; VGA graphics index.
@@ -48563,7 +48563,7 @@
 0001FD09  4A                dec dx
 0001FD0A  86C4              xchg al,ah
 0001FD0C  2E8826F402        mov [cs:0x2f4],ah
-0001FD11  B800A0            mov ax,0xa000		; VGA video segment.
+0001FD11  B800A0            mov ax,0xa000		; EGA/VGA video segment.
 0001FD14  8EC0              mov es,ax			;
 0001FD16  8B1ECC80          mov bx,[0x80cc]
 0001FD1A  8B5606            mov dx,[bp+0x6]
@@ -48788,8 +48788,8 @@
 0001FEC8  4A                dec dx
 0001FEC9  86C4              xchg al,ah
 0001FECB  2E8826F402        mov [cs:0x2f4],ah
-0001FED0  B800A0            mov ax,0xa000
-0001FED3  8EC0              mov es,ax
+0001FED0  B800A0            mov ax,0xa000	 ; EGA/VGA.
+0001FED3  8EC0              mov es,ax		 ;
 0001FED5  8B1ECC80          mov bx,[0x80cc]
 0001FED9  B401              mov ah,0x1
 0001FEDB  8A0EF855          mov cl,[0x55f8]
@@ -49187,8 +49187,8 @@
 00020219  81E30C30          and bx,0x300c
 0002021D  0BD3              or dx,bx
 0002021F  8BDA              mov bx,dx
-00020221  B800A0            mov ax,0xa000
-00020224  8EC0              mov es,ax
+00020221  B800A0            mov ax,0xa000	; EGA/VGA
+00020224  8EC0              mov es,ax		;
 00020226  D0C1              rol cl,1
 00020228  D0C1              rol cl,1
 0002022A  D0C7              rol bh,1
@@ -49299,8 +49299,8 @@
 000202FE  81E30C30          and bx,0x300c
 00020302  0BD3              or dx,bx
 00020304  8BDA              mov bx,dx
-00020306  B800A0            mov ax,0xa000
-00020309  8EC0              mov es,ax
+00020306  B800A0            mov ax,0xa000	 ; EGA/VGA
+00020309  8EC0              mov es,ax		 ;
 0002030B  D0C1              rol cl,1
 0002030D  D0C1              rol cl,1
 0002030F  D0C7              rol bh,1
@@ -49414,8 +49414,8 @@
 000203E8  81E30C30          and bx,0x300c
 000203EC  0BD3              or dx,bx
 000203EE  8BDA              mov bx,dx
-000203F0  B800A0            mov ax,0xa000
-000203F3  8EC0              mov es,ax
+000203F0  B800A0            mov ax,0xa000	; EGA/VGA
+000203F3  8EC0              mov es,ax		;
 000203F5  D0C1              rol cl,1
 000203F7  D0C1              rol cl,1
 000203F9  D0C7              rol bh,1
@@ -49662,8 +49662,8 @@
 000205EE  81E30C30          and bx,0x300c
 000205F2  0BD3              or dx,bx
 000205F4  8BDA              mov bx,dx
-000205F6  B800A0            mov ax,0xa000
-000205F9  8EC0              mov es,ax
+000205F6  B800A0            mov ax,0xa000	; EGA/VGA
+000205F9  8EC0              mov es,ax		;
 000205FB  D0C1              rol cl,1
 000205FD  D0C1              rol cl,1
 000205FF  D0C7              rol bh,1
@@ -49788,8 +49788,8 @@
 000206F0  81E30C30          and bx,0x300c
 000206F4  0BD3              or dx,bx
 000206F6  8BDA              mov bx,dx
-000206F8  B800A0            mov ax,0xa000
-000206FB  8EC0              mov es,ax
+000206F8  B800A0            mov ax,0xa000	 ; EGA/VGA
+000206FB  8EC0              mov es,ax		;
 000206FD  D0C1              rol cl,1
 000206FF  D0C1              rol cl,1
 00020701  D0C7              rol bh,1
@@ -49917,8 +49917,8 @@
 000207F7  81E30C30          and bx,0x300c
 000207FB  0BD3              or dx,bx
 000207FD  8BDA              mov bx,dx
-000207FF  B800A0            mov ax,0xa000
-00020802  8EC0              mov es,ax
+000207FF  B800A0            mov ax,0xa000	; EGA/VGA
+00020802  8EC0              mov es,ax		;
 00020804  D0C1              rol cl,1
 00020806  D0C1              rol cl,1
 00020808  D0C7              rol bh,1
@@ -50051,7 +50051,7 @@
 000208F8  D1E0              shl ax,1			; ax =\ 4
 000208FA  D1E0              shl ax,1			;
 000208FC  03D8              add bx,ax			; bx += ax
-000208FE  B800A0            mov ax,0xa000		; VGA video segment.
+000208FE  B800A0            mov ax,0xa000		; EGA/VGA video segment.
 00020901  8EC0              mov es,ax			;
 00020903  80E107            and cl,0x7			; Preserve and invert the right most 3 bits.
 00020906  80F107            xor cl,0x7			;
@@ -50977,8 +50977,8 @@
 0002115F  0BC2              or ax,dx
 00021161  0B4606            or ax,[bp+0x6]
 00021164  8946FE            mov [bp-0x2],ax
-00021167  BB00B8            mov bx,0xb800
-0002116A  8EC3              mov es,bx
+00021167  BB00B8            mov bx,0xb800		; Text mode/CGA
+0002116A  8EC3              mov es,bx			;
 0002116C  2BDB              sub bx,bx
 0002116E  B90040            mov cx,0x4000
 00021171  8BFB              mov di,bx
@@ -51019,7 +51019,7 @@
 00021406  8946F8            mov [bp-0x8],ax
 00021409  A1BAA3            mov ax,[0xa3ba]
 0002140C  8946F6            mov [bp-0xa],ax
-0002140F  B800B8            mov ax,0xb800		; CGA/EGA
+0002140F  B800B8            mov ax,0xb800		; Text mode/CGA
 00021412  8EC0              mov es,ax			;
 00021414  BE0020            mov si,0x2000
 00021417  BF50E0            mov di,0xe050
@@ -51046,7 +51046,7 @@
 0002144E  897EFC            mov [bp-0x4],di
 00021451  51                push cx
 00021452  53                push bx
-00021453  B800B8            mov ax,0xb800		; CGA/EGA
+00021453  B800B8            mov ax,0xb800		; Text mode/CGA
 00021456  8EC0              mov es,ax			;
 00021458  8B46F6            mov ax,[bp-0xa]
 0002145B  8B5EF8            mov bx,[bp-0x8]
@@ -51128,7 +51128,7 @@
 000214FF  8BEC              mov bp,sp
 00021501  56                push si
 00021502  57                push di
-00021503  B800B8            mov ax,0xb800		; CGA/EGA
+00021503  B800B8            mov ax,0xb800		; Text mode/CGA
 00021506  8EC0              mov es,ax			;
 00021508  8B3ECC80          mov di,[0x80cc]
 0002150C  A1B8A3            mov ax,[0xa3b8]
@@ -51250,8 +51250,8 @@
 00021601  83EC02            sub sp,byte +0x2
 00021604  56                push si
 00021605  57                push di
-00021606  B800B8            mov ax,0xb800
-00021609  8EC0              mov es,ax
+00021606  B800B8            mov ax,0xb800		; Text mode/CGA
+00021609  8EC0              mov es,ax			;
 0002160B  8B3ECC80          mov di,[0x80cc]
 0002160F  A1BAA3            mov ax,[0xa3ba]
 00021612  8B4E06            mov cx,[bp+0x6]
@@ -51309,8 +51309,8 @@
 00021692  83EC02            sub sp,byte +0x2
 00021695  56                push si
 00021696  57                push di
-00021697  B800B8            mov ax,0xb800
-0002169A  8EC0              mov es,ax
+00021697  B800B8            mov ax,0xb800		; Text mode/CGA
+0002169A  8EC0              mov es,ax			;
 0002169C  8B3ECC80          mov di,[0x80cc]
 000216A0  BA0020            mov dx,0x2000
 000216A3  F706BAA30100      test word [0xa3ba],0x1
@@ -51338,8 +51338,8 @@
 000216E0  51                push cx
 000216E1  1E                push ds
 000216E2  57                push di
-000216E3  B900B8            mov cx,0xb800
-000216E6  8EC1              mov es,cx
+000216E3  B900B8            mov cx,0xb800		; Text mode/CGA
+000216E6  8EC1              mov es,cx			;
 000216E8  8A0EBCA3          mov cl,[0xa3bc]
 000216EC  32ED              xor ch,ch
 000216EE  32E4              xor ah,ah
@@ -51519,8 +51519,8 @@
 00021890  43                inc bx
 00021891  83E3FE            and bx,byte -0x2
 00021894  E87302            call 0x1b0a
-00021897  B800B8            mov ax,0xb800
-0002189A  8EC0              mov es,ax
+00021897  B800B8            mov ax,0xb800		; Text mode/CGA
+0002189A  8EC0              mov es,ax			;
 0002189C  F7C20200          test dx,0x2
 000218A0  741F              jz 0x18c1
 000218A2  8B560E            mov dx,[bp+0xe]
@@ -51629,8 +51629,8 @@
 0002198B  43                inc bx
 0002198C  83E3FE            and bx,byte -0x2
 0002198F  E87801            call 0x1b0a
-00021992  B800B8            mov ax,0xb800
-00021995  8EC0              mov es,ax
+00021992  B800B8            mov ax,0xb800		; Text mode/CGA
+00021995  8EC0              mov es,ax			;
 00021997  F7C20200          test dx,0x2
 0002199B  741F              jz 0x19bc
 0002199D  8B560E            mov dx,[bp+0xe]
@@ -51924,7 +51924,7 @@
 00021C3A  1E                push ds
 00021C3B  07                pop es
 00021C3C  8BF7              mov si,di
-00021C3E  B800B8            mov ax,0xb800		; CGA/EGA
+00021C3E  B800B8            mov ax,0xb800		;  Text mode/CGA
 00021C41  8ED8              mov ds,ax			;
 00021C43  BF3855            mov di,0x5538
 00021C46  B91000            mov cx,0x10
@@ -52336,8 +52336,8 @@
 0002201A  7902              jns 0x201e
 0002201C  33DB              xor bx,bx
 0002201E  E8E9FA            call 0x1b0a
-00022021  B800B8            mov ax,0xb800
-00022024  8EC0              mov es,ax
+00022021  B800B8            mov ax,0xb800	; Text mode/CGA
+00022024  8EC0              mov es,ax		;
 00022026  BE3855            mov si,0x5538
 00022029  8BD1              mov dx,cx
 0002202B  B91000            mov cx,0x10
