@@ -6,6 +6,7 @@ Actors dialog.	text	215400	0	36
 Background screen buffer.	rectangles	207590	0	8	
 Blank... (act option)	text	203866	0	11	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
+Button corner rounding procedure	8086_code	66835	0	51	
 Button edge style information.	binary	205638	0	38	
 Bytes per row #1.	binary	207560	0	1	
 Bytes per row #2.	binary	207588	0	1	
@@ -39,6 +40,7 @@ CTRL-Break handler.	8086_code	8	0	33	Handles the CTRL-Break keys being pressed.
 Day and month abbreviations.	text	225252	0	58	
 Delete file.	8086_code	150864	0	13	
 Dialog line break.	binary	203406	0	4	
+Dialog placement procedure	8086_code	67754	0	51	
 Dialog. #1	text	204355	0	134	
 Dialog. #2	text	205418	0	45	
 Dialog. #3	text	205710	0	51	
@@ -97,6 +99,7 @@ Hand icon record size.	binary	203388	0	2
 Hand icon.	point	203384	0	4	
 Hand icon.	far_address	203394	0	4	
 Hand.	icon	203088	204320	248	
+int 0x21 wrapper	8086_code	154546	0	18	Wrapper for int 0x21.
 intdos()	8086_code	147724	0	82	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
@@ -177,7 +180,7 @@ Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display e
 Run-time error messages.	text	225344	0	224	
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
-segread	8086_code	147904	0	29	
+segread()	8086_code	147904	0	29	
 Select drive.	8086_code	151188	0	23	Returns the number of drives.
 Speaking icon record size.	binary	203364	0	2	
 Speaking icon.	point	203360	0	4	
