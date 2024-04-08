@@ -56627,22 +56627,24 @@
 
 00024933  55                push bp
 00024934  B8EC              mov bp,sp
-00024937  B439              mov ah,0x39
-00024939  EB05              jmp short 0x4940
+00024937  B439              mov ah,0x39			; Create a directory.
+00024939  EB05              jmp short 0x4940		;
+
 0002493B  55                push bp
 0002493C  8BEC              mov bp,sp
-0002493E  B43B              mov ah,0x3b
-00024940  1E                push ds
-00024941  C55606            lds dx,[bp+0x6]
-00024944  CD21              int 0x21
+0002493E  B43B              mov ah,0x3b			; Change Current Directory (chdir).
+00024940  1E                push ds			;
+00024941  C55606            lds dx,[bp+0x6]		;
+00024944  CD21              int 0x21			;
 00024946  1F                pop ds
 00024947  E90E0A            jmp 0x5358
+
 0002494A  55                push bp
 0002494B  8BEC              mov bp,sp
-0002494D  B43A              mov ah,0x3a
-0002494F  1E                push ds
-00024950  C55606            lds dx,[bp+0x6]
-00024953  CD21              int 0x21
+0002494D  B43A              mov ah,0x3a			;
+0002494F  1E                push ds			;
+00024950  C55606            lds dx,[bp+0x6]		;
+00024953  CD21              int 0x21			; Remove Subdirectory (rmdir).
 00024955  73EF              jnc 0x4946
 00024957  3D1000            cmp ax,0x10
 0002495A  75EA              jnz 0x4946
@@ -57060,7 +57062,7 @@
 
 00024D76  55                push bp
 00024D77  8BEC              mov bp,sp
-00024D79  B74F              mov bh,0x4f
+00024D79  B74F              mov bh,0x4f		; Find next matching file???
 00024D7B  1E                push ds
 00024D7C  C55606            lds dx,[bp+0x6]
 00024D7F  EB09              jmp short 0x4d8a
@@ -57071,22 +57073,23 @@
 00024D87  C5560C            lds dx,[bp+0xc]
 00024D8A  B41A              mov ah,0x1a		; Set disk transfer address.
 00024D8C  CD21              int 0x21		;
-00024D8E  80FF4E            cmp bh,0x4e
-00024D91  7506              jnz 0x4d99
-00024D93  C55606            lds dx,[bp+0x6]
-00024D96  8B4E0A            mov cx,[bp+0xa]
-00024D99  8AE7              mov ah,bh
-00024D9B  CD21              int 0x21
+00024D8E  80FF4E            cmp bh,0x4e		; Find First Matching File.
+00024D91  7506              jnz 0x4d99		;
+00024D93  C55606            lds dx,[bp+0x6]	;
+00024D96  8B4E0A            mov cx,[bp+0xa]	;
+00024D99  8AE7              mov ah,bh		;
+00024D9B  CD21              int 0x21		;
 00024D9D  1F                pop ds
 00024D9E  E9BF05            jmp 0x5360
 
+***************************************************************************
 00024DA2  55                push bp
 00024DA3  8BEC              mov bp,sp
 00024DA5  8B4606            mov ax,[bp+0x6]
 00024DA8  1E                push ds
-00024DA9  C55608            lds dx,[bp+0x8]
-00024DAC  B425              mov ah,0x25
-00024DAE  CD21              int 0x21
+00024DA9  C55608            lds dx,[bp+0x8]	; Set interrupt vector. 
+00024DAC  B425              mov ah,0x25		;
+00024DAE  CD21              int 0x21		;
 00024DB0  1F                pop ds
 00024DB1  33C0              xor ax,ax
 00024DB3  8BE5              mov sp,bp
@@ -57096,24 +57099,25 @@
 00024DB8  55                push bp
 00024DB9  8BEC              mov bp,sp
 00024DBB  8A5606            mov dl,[bp+0x6]
-00024DBE  B436              mov ah,0x36
-00024DC0  CD21              int 0x21
-00024DC2  3DFFFF            cmp ax,0xffff
-00024DC5  7508              jnz 0x4dcf
-00024DC7  C7066F561600      mov word [0x566f],0x16
-00024DCD  EB14              jmp short 0x4de3
+00024DBE  B436              mov ah,0x36		; Get free disk space.
+00024DC0  CD21              int 0x21		;
+00024DC2  3DFFFF            cmp ax,0xffff	; Check for invalid drive.
+00024DC5  7508              jnz 0x4dcf		;
+	00024DC7  C7066F561600      mov word [0x566f],0x16	; Error code? - Defined in ERRNO.H. - TO DO: Document all instances of [0x566f].
+	00024DCD  EB14              jmp short 0x4de3
 00024DCF  56                push si
 00024DD0  1E                push ds
-00024DD1  C57608            lds si,[bp+0x8]
-00024DD4  894404            mov [si+0x4],ax
-00024DD7  895C02            mov [si+0x2],bx
-00024DDA  894C06            mov [si+0x6],cx
-00024DDD  8914              mov [si],dx
+00024DD1  C57608            lds si,[bp+0x8]	; struct diskfree_t ???
+00024DD4  894404            mov [si+0x4],ax	;
+00024DD7  895C02            mov [si+0x2],bx	;
+00024DDA  894C06            mov [si+0x6],cx	;
+00024DDD  8914              mov [si],dx		;
 00024DDF  1F                pop ds
 00024DE0  5E                pop si
 00024DE1  33C0              xor ax,ax
 00024DE3  5D                pop bp
 00024DE4  CB                retf
+*****************************************************************************
 
 00024E47  55                push bp
 00024E48  8BEC              mov bp,sp
@@ -57122,8 +57126,8 @@
 
 00024E50  55                push bp
 00024E51  8BEC              mov bp,sp
-00024E53  B430              mov ah,0x30
-00024E55  CD21              int 0x21
+00024E53  B430              mov ah,0x30			; Get DOS version.
+00024E55  CD21              int 0x21			;
 00024E57  8B26665F          mov sp,[0x5f66]
 00024E5B  83C418            add sp,byte +0x18
 00024E5E  8BDC              mov bx,sp
@@ -58672,7 +58676,7 @@
 00025CE5  5D                pop bp
 00025CE6  CB                retf
 
-00025CE8  55                push bp
+00025CE8  55                push bp			; Appears to be related to retrieving the current path.
 00025CE9  8BEC              mov bp,sp
 00025CEB  83EC20            sub sp,byte +0x20
 00025CEE  56                push si
