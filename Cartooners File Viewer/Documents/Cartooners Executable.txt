@@ -1,11 +1,15 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
+ _bios_equiplist	8086_code	150880	0	3	
 _dos_findfirst/_dos_findnext	8086_code	150902	0	41	
 _dos_getdiskfree	8086_code	150968	0	45	
+_dos_getdrive	8086_code	151014	0	20	
+_dos_getvect	8086_code	150884	0	18	
 _dos_setvect	8086_code	150946	0	21	
 8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
 Actors dialog.	text	215400	0	36	
+atoi()	8086_code	154424	0	86	
 Background screen buffer.	rectangles	207590	0	8	
 Blank... (act option)	text	203866	0	11	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
@@ -41,7 +45,6 @@ Critical unknown #19	binary	208064	0	2	Modification influences the about dialog 
 Cross arrows.	icon	202528	204320	51	
 CTRL-Break handler.	8086_code	8	0	33	Handles the CTRL-Break keys being pressed.
 Day and month abbreviations.	text	225252	0	58	
-Delete file.	8086_code	150864	0	13	
 Dialog line break.	binary	203406	0	4	
 Dialog placement procedure	8086_code	67754	0	51	
 Dialog. #1	text	204355	0	134	
@@ -94,9 +97,6 @@ Free memory OK button text.	far_address	212374	0	4
 Free memory OK button.	rectangles	212364	0	8	
 Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
-Get current drive.	8086_code	151014	0	20	
-Get equipment flags.	8086_code	150880	0	3	
-Get interrupt vector.	8086_code	150884	0	18	
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
@@ -178,6 +178,7 @@ Pause dialog.	rectangles	211236	0	8
 PIT configuration.	8086_code	64482	0	47	Configures the system timer to run faster and redirects interrupt 0x08.
 PIT reset.	8086_code	64529	0	48	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
 PRINTING...	text	213416	0	10	
+remove()	8086_code	150864	0	13	
 Right arrow.	icon	201916	204320	177	
 Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
 Run-time error messages.	text	225344	0	224	
