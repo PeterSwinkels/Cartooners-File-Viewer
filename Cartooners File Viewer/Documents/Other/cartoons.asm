@@ -58437,56 +58437,6 @@
 00025B1E  5D                pop bp
 00025B1F  CB                retf
 
-00024D38  55                push bp
-00024D39  8BEC              mov bp,sp
-00025B3B  57                push di
-00025B3C  56                push si
-00025B3D  1E                push ds
-00025B3E  C57606            lds si,[bp+0x6]	; Load a pointer to a string.
-00025B41  33C0              xor ax,ax		; Set AX, BX and DX to zero.
-00025B43  99                cwd			;
-00025B44  33DB              xor bx,bx		;
-00025B46  AC                lodsb		; Load a character from DS:SI 
-00025B47  3C20              cmp al,0x20		; Check for the space character.
-00025B49  74FB              jz 0x5b46		; Loop back and load the next character if a space character was found.
-00025B4B  3C09              cmp al,0x9		; Check for the tab character.
-00025B4D  74F7              jz 0x5b46		; Loop back and load the next character if a tab character was found.
-00025B4F  50                push ax		; Save the first non-whitespace character on the stack.
-00025B50  3C2D              cmp al,0x2d		; Check for the minus character.
-00025B52  7404              jz 0x5b58		; Skip the check for the plus character if a minus character was found.
-00025B54  3C2B              cmp al,0x2b		; Check for the plus character.
-00025B56  7501              jnz 0x5b59		; If no plus character was found then do not load the next character.
-00025B58  AC                lodsb		; Load the next character if a plus character was foud.
-00025B59  3C39              cmp al,0x39		; Check for the nine character.
-00025B5B  771F              ja 0x5b7c		; If the character has an ASCII value greater than the nine character then abort and return.
-00025B5D  2C30              sub al,0x30		; Attempt to convert the character's ASCII value to a numeric value.
-00025B5F  721B              jc 0x5b7c		; If the conversion results in a negative value then abort and return.
-00025B61  D1E3              shl bx,1
-00025B63  D1D2              rcl dx,1		; Rotates the bits in DX to the left.
-00025B65  8BCB              mov cx,bx
-00025B67  8BFA              mov di,dx		; DI = DX.
-00025B69  D1E3              shl bx,1
-00025B6B  D1D2              rcl dx,1
-00025B6D  D1E3              shl bx,1
-00025B6F  D1D2              rcl dx,1		; Rotates the bits in DX to the left.
-00025B71  03D9              add bx,cx
-00025B73  13D7              adc dx,di
-00025B75  03D8              add bx,ax		; Add the character digit's numeric value to the accumulated value of any preceding digits.
-00025B77  83D200            adc dx,byte +0x0	; Increase DX by one if the accumulated value exceeded 0xFFFF.
-00025B7A  EBDC              jmp short 0x5b58	; Jump back to convert any remaining characters.
-00025B7C  58                pop ax		; Retrieve the first non-whitespace character from the stack.
-00025B7D  3C2D              cmp al,0x2d		; Check whether the first non-whitespace character is the minus character.
-00025B7F  93                xchg ax,bx		; Store the value of the converted string in AX.
-00025B80  7507              jnz 0x5b89		; If the first non-whitespace character is not the minus character then return.
-00025B82  F7D8              neg ax		; Convert the value of the converted string to negative value if the first non-whitespace character is the minus character.
-00025B84  83D200            adc dx,byte +0x0	; Add one to DX if AX contained a non-zero value.
-00025B87  F7DA              neg dx		; Negate DX.
-00025B89  1F                pop ds
-00025B8A  5E                pop si
-00025B8B  5F                pop di
-00025B8C  5D                pop bp
-00025B8D  CB                retf
-
 00025BC4  55                push bp
 00025BC5  8BEC              mov bp,sp
 00025BC7  83EC20            sub sp,byte +0x20
