@@ -201,6 +201,7 @@ Speech balloon types.	text	203620	0	198
 Speech balloon.	icon	202240	204320	141	
 Startup files.	text	203964	0	46	
 strlen()	8086_code	154400	0	23	
+strchr()	8086_code	147934	0	45	
 strncmp()	8086_code	156158	0	59	
 strncpy()	8086_code	155910	0	94	
 strrchr()	8086_code	148050	0	47	

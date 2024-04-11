@@ -55768,32 +55768,6 @@
 000241BE  5D                pop bp
 000241BF  CB                retf
 
-; strchr() ???
-000241DD  55                push bp
-000241DE  8BEC              mov bp,sp
-000241E1  57                push di
-000241E2  C47E06            les di,[bp+0x6]	; Address of a string.
-000241E5  8BDF              mov bx,di		; Save offset of string.
-000241E7  33C0              xor ax,ax		; CX will be set to the last character before the terminating null.
-000241E9  B9FFFF            mov cx,0xffff	;
-000241EC  F2AE              repne scasb		;
-000241EE  41                inc cx		;
-000241EF  F7D9              neg cx		;
-000241F1  8A460A            mov al,[bp+0xa]     ; Search CX characters for 'AL'.
-000241F4  8BFB              mov di,bx		; 
-000241F6  F2AE              repne scasb		;
-000241F8  4F                dec di		; Check whether the last character scanned and the preceding character are the same.
-000241F9  263805            cmp [es:di],al	;
-000241FC  7404              jz 0x4202		;
-	000241FE  33FF              xor di,di		; The string's address will be null.
-	00024200  8EC7              mov es,di		;
-00024202  8BC7              mov ax,di		; Return the string's address.
-00024204  8CC2              mov dx,es		;
-00024206  5F                pop di
-00024207  8BE5              mov sp,bp
-00024209  5D                pop bp
-0002420A  CB                retf
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Notes:
 ;;; 1. CMP AL, 0x1A - The carry flag will be set if AL is less than 0x1A.
