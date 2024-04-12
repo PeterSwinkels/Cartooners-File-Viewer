@@ -55820,52 +55820,6 @@
 0002424F  5D                pop bp
 00024250  CB                retf
 
-00024280  55                push bp
-00024281  8BEC              mov bp,sp
-00024283  8CD9              mov cx,ds		; Save data segment.
-00024285  C55E06            lds bx,[bp+0x6]	; DS:BX = string address.
-00024288  8BD3              mov dx,bx		; Save string offset.
-0002428A  8A07              mov al,[bx]
-0002428C  0AC0              or al,al
-0002428E  7411              jz 0x42a1
-	00024290  2C41              sub al,0x41			; Check whether AL - 'A' is equal to or greater than 26.
-	00024292  3C1A              cmp al,0x1a			;
-	00024294  7304              jnc 0x429a			;
-		00024296  0461              add al,0x61			; Replace character with lower case by adding 'a'.
-		00024298  8807              mov [bx],al			;
-	0002429A  43                inc bx	; Next character.
-	0002429B  8A07              mov al,[bx]
-	0002429D  0AC0              or al,al
-	0002429F  75EF              jnz 0x4290
-000242A1  92                xchg ax,dx		; DX:AX = string address.
-000242A2  8CDA              mov dx,ds		;
-000242A4  8ED9              mov ds,cx		; Restore data segment.
-000242A6  5D                pop bp
-000242A7  CB                retf
-
-000242A8  55                push bp
-000242A9  8BEC              mov bp,sp
-000242AB  8CD9              mov cx,ds		; Save data segment.
-000242AD  C55E06            lds bx,[bp+0x6]	; DS:BX = string address.
-000242B0  8BD3              mov dx,bx		; Save string offset.
-000242B2  8A07              mov al,[bx]
-000242B4  0AC0              or al,al
-000242B6  7411              jz 0x42c9
-	000242B8  2C61              sub al,0x61			; Check whether AL - 'a' is equal to or greater than 26.
-	000242BA  3C1A              cmp al,0x1a			;
-	000242BC  7304              jnc 0x42c2			;
-		000242BE  0441              add al,0x41			; Replace character with upper case by adding 'A'.
-		000242C0  8807              mov [bx],al			;
-	000242C2  43                inc bx
-	000242C3  8A07              mov al,[bx]
-	000242C5  0AC0              or al,al
-	000242C7  75EF              jnz 0x42b8
-000242C9  92                xchg ax,dx		; DX:AX = string address.
-000242CA  8CDA              mov dx,ds		;
-000242CC  8ED9              mov ds,cx		; Restore data segment.
-000242CE  5D                pop bp
-000242CF  CB                retf
-
 000242D0  55                push bp
 000242D1  8BEC              mov bp,sp
 000242D3  83EC20            sub sp,byte +0x20
@@ -58383,33 +58337,6 @@
 00025AE4  7402              jz 0x5ae8
 00025AE6  0BD2              or dx,dx
 00025AE8  C3                ret
-
-00024DEA  55                push bp
-00024DEB  8BEC              mov bp,sp
-00025AED  8BD7              mov dx,di
-00025AEF  8BDE              mov bx,si
-00025AF1  1E                push ds
-00025AF2  C5760A            lds si,[bp+0xa]
-00025AF5  8BFE              mov di,si
-00025AF7  8CD8              mov ax,ds
-00025AF9  8EC0              mov es,ax
-; CX is set to the position of a null byte inside string at ES:DI.
-00025B04  C47E06            les di,[bp+0x6]
-00025B07  8BC7              mov ax,di
-00025B09  A801              test al,0x1
-00025B0B  7402              jz 0x5b0f
-	00025B0D  A4                movsb
-	00025B0E  49                dec cx
-00025B0F  D1E9              shr cx,1
-00025B11  F3A5              rep movsw
-00025B13  13C9              adc cx,cx
-00025B15  F3A4              rep movsb
-00025B17  8BF3              mov si,bx
-00025B19  8BFA              mov di,dx
-00025B1B  1F                pop ds
-00025B1C  8CC2              mov dx,es
-00025B1E  5D                pop bp
-00025B1F  CB                retf
 
 00025BC4  55                push bp
 00025BC5  8BEC              mov bp,sp

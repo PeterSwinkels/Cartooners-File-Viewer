@@ -200,11 +200,14 @@ Speech balloon properties dialog.	rectangles	203426	0	152
 Speech balloon types.	text	203620	0	198	
 Speech balloon.	icon	202240	204320	141	
 Startup files.	text	203964	0	46	
-strlen()	8086_code	154400	0	23	
 strchr()	8086_code	147934	0	45	
+strcpy	8086_code	154346	0	54	
+strlen()	8086_code	154400	0	23	
+strlwr()	8086_code	148096	0	40	
 strncmp()	8086_code	156158	0	59	
 strncpy()	8086_code	155910	0	94	
-strrchr()	8086_code	148050	0	47	
+strrchr()	8086_code	148050	0	46	
+strupr()	8086_code	148136	0	40	
 Supported file extensions.	text	204244	0	30	
 Thought balloon information.	binary	157308	0	1468	
 Ticket screen CGA.	palette	193808	0	32	
