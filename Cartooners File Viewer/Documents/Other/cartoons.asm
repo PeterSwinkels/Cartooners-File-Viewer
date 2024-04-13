@@ -53020,12 +53020,12 @@
 000226D4  0946F6            or [bp-0xa],ax
 000226D7  837EFA03          cmp word [bp-0x6],byte +0x3
 000226DB  7D18              jnl 0x26f5
-000226DD  B008              mov al,0x8
-000226DF  50                push ax
-000226E0  8D46F6            lea ax,[bp-0xa]
-000226E3  50                push ax
-000226E5  0E                push cs
-000226E6  E84D29            call 0x5036
+000226DD  B008              mov al,0x8		; The number of rotations and shifts.
+000226DF  50                push ax		;
+000226E0  8D46F6            lea ax,[bp-0xa]	; Offset of the values to rotated and shifted.
+000226E3  50                push ax		;
+000226E5  0E                push cs		; Near call with far return.
+000226E6  E84D29            call 0x5036		; Call the function which in turn calls the arithmetic function.
 000226E9  B008              mov al,0x8
 000226EB  50                push ax
 000226EC  8D46FC            lea ax,[bp-0x4]
@@ -57202,25 +57202,26 @@
 00025026  E2FA              loop 0x5022
 00025028  CB                retf
 
+; Arithmetic function that shifts and rotates bits a given number of times.
 0002502A  55                push bp
 0002502B  8BEC              mov bp,sp
-0002502D  E306              jcxz 0x5034
-0002502E  D1FA              sar dx,1
-00025030  D1D8              rcr ax,1
+0002502D  E306              jcxz 0x5034		; Return if CX equals zero.
+0002502E  D1FA              sar dx,1		; dx *= 0x2
+00025030  D1D8              rcr ax,1		; rotate ax to the right.
 00025032  E2FA              loop 0x502e
 00025034  CB                retf
 
 00025036  55                push bp
 00025037  8BEC              mov bp,sp
-00025039  8B5E06            mov bx,[bp+0x6]
-0002503C  8B07              mov ax,[bx]
-0002503E  8B5702            mov dx,[bx+0x2]
-00025041  8B4E08            mov cx,[bp+0x8]
-00025045  0E                push cs
-00025046  E8D5FF            call 0x501e
-00025049  8B5E06            mov bx,[bp+0x6]
-0002504C  8907              mov [bx],ax
-0002504E  895702            mov [bx+0x2],dx
+00025039  8B5E06            mov bx,[bp+0x6]	; Retrieve the offset of the values to be rotated and shifted.
+0002503C  8B07              mov ax,[bx]		; Bits to be rotated.
+0002503E  8B5702            mov dx,[bx+0x2]	; Bits to be shifted.
+00025041  8B4E08            mov cx,[bp+0x8]	; The number of shifts and rotations to be performed.
+00025045  0E                push cs		; Near call with a far return.
+00025046  E8D5FF            call 0x501e		; Call arithmetic function.
+00025049  8B5E06            mov bx,[bp+0x6]	; Return the results.
+0002504C  8907              mov [bx],ax		;
+0002504E  895702            mov [bx+0x2],dx	;
 00025051  8BE5              mov sp,bp
 00025053  5D                pop bp
 00025054  CA0400            retf 0x4
