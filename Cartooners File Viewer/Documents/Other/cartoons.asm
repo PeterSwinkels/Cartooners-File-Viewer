@@ -58934,58 +58934,57 @@
 
 00026168  55                push bp
 00026169  8BEC              mov bp,sp
-0002616B  83EC06            sub sp,byte +0x6
-0002616E  56                push si
-0002616F  A19856            mov ax,[0x5698]
-00026172  8B169A56          mov dx,[0x569a]
-00026176  8946FA            mov [bp-0x6],ax
-00026179  8956FC            mov [bp-0x4],dx
-0002617C  0BC2              or ax,dx
-0002617E  7476              jz 0x61f6				; return.
-00026180  8B4606            mov ax,[bp+0x6]
-00026183  0B4608            or ax,[bp+0x8]
-00026186  746E              jz 0x61f6				; return.
-00026188  FF7608            push word [bp+0x8]
-0002618B  FF7606            push word [bp+0x6]
-0002618F  0E                push cs
+0002616B  83EC06            sub sp,byte +0x6			; Increase stack by 0x3 words.
+0002616E  56                push si				; Save SI.
+0002616F  A19856            mov ax,[0x5698]			; DX:AX = a pointer???
+00026172  8B169A56          mov dx,[0x569a]			;
+00026176  8946FA            mov [bp-0x6],ax			; Place pointer on the stack.
+00026179  8956FC            mov [bp-0x4],dx			;
+0002617C  0BC2              or ax,dx				; Return with a null result if DX and AX are null.
+0002617E  7476              jz 0x61f6				; 
+00026180  8B4606            mov ax,[bp+0x6]			; Return with a null result if [BP+0x6] and AX are null.
+00026183  0B4608            or ax,[bp+0x8]			;
+00026186  746E              jz 0x61f6				; 
+00026188  FF7608            push word [bp+0x8]			; A pointer to a string
+0002618B  FF7606            push word [bp+0x6]			;
+0002618F  0E                push cs				; Near call to function with a far return.
 00026190  E88DF9            call 0x5b20				; strlen()
-00026193  83C404            add sp,byte +0x4
-00026196  8BF0              mov si,ax
-00026198  EB06              jmp short 0x61a0
-0002619C  8346FA04          add word [bp-0x6],byte +0x4
-000261A0  C45EFA            les bx,[bp-0x6]
-000261A3  268B07            mov ax,[es:bx]
-000261A6  260B4702          or ax,[es:bx+0x2]
-000261AA  744A              jz 0x61f6				; return.
-000261AC  26FF7702          push word [es:bx+0x2]
-000261B0  26FF37            push word [es:bx]
-000261B4  0E                push cs
+00026193  83C404            add sp,byte +0x4			; Decrease the stack by 0x2 words.
+00026196  8BF0              mov si,ax				; SI = length of string.
+00026198  EB06              jmp short 0x61a0			;
+0002619C  8346FA04          add word [bp-0x6],byte +0x4         ; Called if the second string check returns a length less than the first string check.
+000261A0  C45EFA            les bx,[bp-0x6]			; ES:BX = poiner.
+000261A3  268B07            mov ax,[es:bx]			;
+000261A6  260B4702          or ax,[es:bx+0x2]			;
+000261AA  744A              jz 0x61f6				; Return with a null result if pointer ES:BX is null.
+000261AC  26FF7702          push word [es:bx+0x2]		; A pointer to a string.
+000261B0  26FF37            push word [es:bx]			;
+000261B4  0E                push cs				; Near call to function with a far return.
 000261B5  E868F9            call 0x5b20				; strlen()
-000261B8  83C404            add sp,byte +0x4
-000261BB  3BC6              cmp ax,si
-000261BD  7EDD              jle 0x619c
-000261BF  C45EFA            les bx,[bp-0x6]
-000261C2  26C41F            les bx,[es:bx]
-000261C5  2680383D          cmp byte [es:bx+si],0x3d
-000261C9  75D1              jnz 0x619c
-000261CB  56                push si
-000261CC  FF7608            push word [bp+0x8]
-000261CF  FF7606            push word [bp+0x6]
-000261D2  C45EFA            les bx,[bp-0x6]
-000261D5  26FF7702          push word [es:bx+0x2]
-000261D9  26FF37            push word [es:bx]
-000261DD  0E                push cs
+000261B8  83C404            add sp,byte +0x4			; Decrease stack by 0x2 words.
+000261BB  3BC6              cmp ax,si				; Check whether the length of the other string matches.
+000261BD  7EDD              jle 0x619c				; Jump back to increase the value at [bp-0x6] and repeat check if this string is shorter.
+000261BF  C45EFA            les bx,[bp-0x6]			; ES:BX = a pointer.
+000261C2  26C41F            les bx,[es:bx]			;
+000261C5  2680383D          cmp byte [es:bx+si],0x3d		; Jump back to increase the value at [bp-0x6] and repeat check if what could be the "=" character is not found.
+000261C9  75D1              jnz 0x619c				; 
+000261CB  56                push si				;
+000261CC  FF7608            push word [bp+0x8]			; A pointer to string.
+000261CF  FF7606            push word [bp+0x6]			;
+000261D2  C45EFA            les bx,[bp-0x6]			; A pointer to string.
+000261D5  26FF7702          push word [es:bx+0x2]		;
+000261D9  26FF37            push word [es:bx]			;
+000261DD  0E                push cs				; Near call to function with a far return.
 000261DE  E81D00            call 0x61fe				; strncmp()
-000261E1  83C40A            add sp,byte +0xa
-000261E4  0BC0              or ax,ax
-000261E6  75B4              jnz 0x619c
-000261E8  C45EFA            les bx,[bp-0x6]
-000261EB  26C41F            les bx,[es:bx]
-000261EE  8D4001            lea ax,[bx+si+0x1]
-000261F1  8CC2              mov dx,es
-000261F3  EB04              jmp short 0x61f9
-; Exit:
-000261F6  2BC0              sub ax,ax
+000261E1  83C40A            add sp,byte +0xa			; Decrease stack by 0x5 words.
+000261E4  0BC0              or ax,ax				; Jump back to increase the value at [bp-0x6] and repeat check if the strings do not match.
+000261E6  75B4              jnz 0x619c				;
+000261E8  C45EFA            les bx,[bp-0x6]			; ES:BX = pointer.
+000261EB  26C41F            les bx,[es:bx]			; ES:BX = another pointer.
+000261EE  8D4001            lea ax,[bx+si+0x1]			; AX:DX = ES:bx+si+0x1
+000261F1  8CC2              mov dx,es				;
+000261F3  EB04              jmp short 0x61f9			; Return.
+000261F6  2BC0              sub ax,ax				; Zero AX and DX, then return.
 000261F8  99                cwd
 000261F9  5E                pop si
 000261FA  8BE5              mov sp,bp

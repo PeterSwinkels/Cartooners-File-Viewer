@@ -495,6 +495,14 @@ Extension: *.lpt
 0x9C	BYTE		Unknown.
 0x9D	DWORD		Null.
 0xA1	BYTE		Unknown.
+
+Note:
+Laserjet.lpt:
+Offset:		Value:		Description:
+0x38		0x1B "*t150R"	Select 150 dots per inch graphics mode.
+0x5A		0x1B "*b150W"	Transfer '150' byte raster image as stream.
+0x6B		0x1B "&a+4V"	Move to vertical position '#' in decipoints.
+
 ===================================================================================================
 
 [Scenes and Static Actors]
