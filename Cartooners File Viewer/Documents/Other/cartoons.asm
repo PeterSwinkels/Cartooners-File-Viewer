@@ -54677,7 +54677,8 @@
 		00023832  CD21              int 0x21			;
 		00023834  7205              jc 0x383b			; Error check.
 		00023836  C6877E5600        mov byte [bx+0x567e],0x0	; Clears all IO flags.
-0002383B  E91A1B            jmp 0x5358
+0002383B  E91A1B            jmp 0x5358	; <<<--- jumps to a common return point. Investigate!
+
 0002383E  55                push bp
 0002383F  8BEC              mov bp,sp
 00023841  83EC04            sub sp,byte +0x4
@@ -56537,35 +56538,11 @@
 0002490F  5B                pop bx
 00024910  CB                retf
 
-00024911  55                push bp
-00024912  B8EC              mov bp,sp
-00024915  1E                push ds
-00024916  C55606            lds dx,[bp+0x6]
-00024919  B80043            mov ax,0x4300		; Get file-attributes.
-0002491C  CD21              int 0x21			;
-0002491E  1F                pop ds
-0002491F  720F              jc 0x4930
-00024921  F6460A02          test byte [bp+0xa],0x2
-00024925  7409              jz 0x4930
-00024927  F6C101            test cl,0x1
-0002492A  7404              jz 0x4930
-0002492C  B8000D            mov ax,0xd00
-0002492F  F9                stc
-00024930  E9250A            jmp 0x5358
 
 00024933  55                push bp
 00024934  B8EC              mov bp,sp
 00024937  B439              mov ah,0x39			; Create a directory.
-00024939  EB05              jmp short 0x4940		;
-
-0002493B  55                push bp
-0002493C  8BEC              mov bp,sp
-0002493E  B43B              mov ah,0x3b			; Change Current Directory (chdir).
-00024940  1E                push ds			;
-00024941  C55606            lds dx,[bp+0x6]		;
-00024944  CD21              int 0x21			;
-00024946  1F                pop ds
-00024947  E90E0A            jmp 0x5358
+00024939  EB05              jmp short 0x4940		; <<<--- Where is the code that is being called here???
 
 0002494A  55                push bp
 0002494B  8BEC              mov bp,sp
@@ -57540,11 +57517,7 @@
 000252F8  C747020000        mov word [bx+0x2],0x0
 000252FD  FF2E745F          jmp far [0x5f74]
 
-00025358  7213              jc 0x536d
-0002535A  33C0              xor ax,ax
-0002535C  8BE5              mov sp,bp
-0002535E  5D                pop bp
-0002535F  CB                retf
+00025358  ; Error check (CF) and return.
 
 00025360  73F8              jnc 0x535a
 00025362  50                push ax
