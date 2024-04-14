@@ -1,5 +1,6 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
  _bios_equiplist	8086_code	150880	0	3	
+_chdir	8086_code	149819	0	13	
 _dos_findfirst/_dos_findnext	8086_code	150902	0	41	
 _dos_getdiskfree	8086_code	150968	0	45	
 _dos_getdrive	8086_code	151014	0	20	
@@ -69,6 +70,7 @@ Exclamation icon.	point	203336	0	4
 Exclamation icon.	far_address	203346	0	4	
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
+file read-only/hidden check	8086_code	149777	0	32	
 File system related characters.	text	206751	0	23	
 Filled circle.	icon	201476	204320	69	
 Frame number Cancel button edge type.	binary	211380	0	1	
@@ -97,6 +99,7 @@ Free memory OK button text.	far_address	212374	0	4
 Free memory OK button.	rectangles	212364	0	8	
 Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
+function end point with error check	8086_code	152408	0	8	Used by multiple functions.
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
