@@ -54665,20 +54665,6 @@
 0002381C  5D                pop bp
 0002381D  CB                retf
 
-0002381E  55                push bp
-0002381F  8BEC              mov bp,sp
-00023821  8B5E06            mov bx,[bp+0x6]		; Check whether a value is lower than another value.
-00023824  3B1E7C56          cmp bx,[0x567c]		;
-00023828  7206              jb 0x3830			;
-	0002382A  B80009            mov ax,0x900	; Error code???
-	0002382D  F9                stc			;
-	0002382E  EB0B              jmp short 0x383b	; Which indirectly means jumping to 0x5358.
-		00023830  B43E              mov ah,0x3e			; Closes a file.
-		00023832  CD21              int 0x21			;
-		00023834  7205              jc 0x383b			; Error check.
-		00023836  C6877E5600        mov byte [bx+0x567e],0x0	; Clears all IO flags.
-0002383B  E91A1B            jmp 0x5358	; <<<--- jumps to a common return point. Investigate!
-
 0002383E  55                push bp
 0002383F  8BEC              mov bp,sp
 00023841  83EC04            sub sp,byte +0x4
@@ -56537,36 +56523,6 @@
 0002490E  59                pop cx
 0002490F  5B                pop bx
 00024910  CB                retf
-
-
-00024933  55                push bp
-00024934  B8EC              mov bp,sp
-00024937  B439              mov ah,0x39			; Create a directory.
-00024939  EB05              jmp short 0x4940		; <<<--- Where is the code that is being called here???
-
-0002494A  55                push bp
-0002494B  8BEC              mov bp,sp
-0002494D  B43A              mov ah,0x3a			;
-0002494F  1E                push ds			;
-00024950  C55606            lds dx,[bp+0x6]		;
-00024953  CD21              int 0x21			; Remove Subdirectory (rmdir).
-00024955  73EF              jnc 0x4946
-00024957  3D1000            cmp ax,0x10
-0002495A  75EA              jnz 0x4946
-0002495C  92                xchg ax,dx
-0002495D  93                xchg ax,bx
-0002495E  8A07              mov al,[bx]
-00024960  43                inc bx
-00024961  3C00              cmp al,0x0
-00024963  740A              jz 0x496f
-00024965  3C3F              cmp al,0x3f
-00024967  7404              jz 0x496d
-00024969  3C2A              cmp al,0x2a
-0002496B  75F1              jnz 0x495e
-0002496D  B203              mov dl,0x3
-0002496F  92                xchg ax,dx
-00024970  F9                stc
-00024971  EBD3              jmp short 0x4946
 
 00024973  55                push bp
 00024974  B8EC              mov bp,sp
