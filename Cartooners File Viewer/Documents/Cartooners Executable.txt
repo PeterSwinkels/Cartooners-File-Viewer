@@ -1,6 +1,5 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
  _bios_equiplist	8086_code	150880	0	3	
-_chdir	8086_code	149819	0	13	
 _dos_findfirst/_dos_findnext	8086_code	150902	0	41	
 _dos_getdiskfree	8086_code	150968	0	45	
 _dos_getdrive	8086_code	151014	0	20	
@@ -20,6 +19,7 @@ Bytes per row #1.	binary	207560	0	1
 Bytes per row #2.	binary	207588	0	1	
 C_FILE_INFO.	text	222775	0	11	
 Cancel printing.	text	213433	0	35	
+chdir	8086_code	149819	0	13	
 Checked circle.	icon	201404	204320	69	
 Circle.	icon	201332	204320	69	
 Critical error interrupt handler setup.	8086_code	151034	0	35	Sets up the critical error handler interrupt.
@@ -70,6 +70,7 @@ Exclamation icon.	point	203336	0	4
 Exclamation icon.	far_address	203346	0	4	
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
+fclose()	8086_code	145438	0	30	
 file read-only/hidden check	8086_code	149777	0	32	
 File system related characters.	text	206751	0	23	
 Filled circle.	icon	201476	204320	69	
@@ -142,6 +143,7 @@ Menu screen CGA.	palette	170480	0	32
 Menu screen EGA.	palette	170512	0	32	
 Menu screen.	image	170544	170512	9772	
 Menu screen.	rectangles	206778	0	40	
+mkdir	8086_code	149812	0	6	
 Mouse arrow transparency bitmask.	mousemask	214610	0	32	
 Mouse arrow.	bitmap	214642	214610	32	
 Mouse handler disable.	8086_code	95974	0	24	Disables the mouse handler.
@@ -183,6 +185,7 @@ PIT reset.	8086_code	64529	0	48	Resets the system timer to its default speed and
 PRINTING...	text	213416	0	10	
 remove()	8086_code	150864	0	13	
 Right arrow.	icon	201916	204320	177	
+rmdir()	8086_code	149834	0	40	
 Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
 Run-time error messages.	text	225344	0	224	
 Save movie dialog drive mask. 	text	204352	0	3	
