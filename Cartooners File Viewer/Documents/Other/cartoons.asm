@@ -54711,6 +54711,7 @@
 000238AE  7205              jc 0x38b5			; Error check.
 	000238B0  80A77E56FD        and byte [bx+0x567e],0xfd	; Removes _IOWRT.
 000238B5  E9B31A            jmp 0x536b
+
 000238B8  55                push bp
 000238B9  8BEC              mov bp,sp
 000238BB  83EC04            sub sp,byte +0x4
@@ -54741,6 +54742,7 @@
 				000238FB  E9A300            jmp 0x39a1	;
 000238FE  F9                stc
 000238FF  E9691A            jmp 0x536b
+
 00023902  93                xchg ax,bx
 00023903  8BC1              mov ax,cx
 00023905  250005            and ax,0x500
@@ -54822,6 +54824,7 @@
 000239C6  1F                pop ds
 000239C7  7303              jnc 0x39cc
 000239C9  E99F19            jmp 0x536b
+
 000239CC  93                xchg ax,bx
 000239CD  F646FEFF          test byte [bp-0x2],0xff
 000239D1  7507              jnz 0x39da
@@ -54948,6 +54951,7 @@
 00023AE2  5F                pop di
 00023AE3  5E                pop si
 00023AE4  E98418            jmp 0x536b			; <<<--- Is jumped to by the above error handler in case of an error.
+
 00023AE7  83F901            cmp cx,byte +0x1		; Exit point for the above loop.
 00023AEA  7407              jz 0x3af3
 00023AEC  803C0A            cmp byte [si],0xa
@@ -55001,6 +55005,7 @@
 00023B61  B80009            mov ax,0x900
 00023B64  F9                stc
 00023B65  E90318            jmp 0x536b
+
 00023B68  F6877E5620        test byte [bx+0x567e],0x20	; Checks for _IOERR.
 00023B6D  740B              jz 0x3b7a
 00023B6F  B80242            mov ax,0x4202	; Move to the end of a file.
@@ -55119,11 +55124,13 @@
 00023C5B  5F                pop di
 00023C5C  8E5EFA            mov ds,[bp-0x6]
 00023C5F  E90917            jmp 0x536b
+
 00023C62  8B4E0C            mov cx,[bp+0xc]
 00023C65  0BC9              or cx,cx
 00023C67  7505              jnz 0x3c6e
 00023C69  8BC1              mov ax,cx
 00023C6B  E9FD16            jmp 0x536b
+
 00023C6E  1E                push ds
 00023C6F  C55608            lds dx,[bp+0x8]
 00023C72  B440              mov ah,0x40		; Write to file.
@@ -56350,6 +56357,7 @@
 000247BE  B80016            mov ax,0x1600
 000247C1  F9                stc
 000247C2  E9A60B            jmp 0x536b
+
 000247C6  0E                push cs
 000247C7  E87F00            call 0x4849
 000247CA  72F2              jc 0x47be
@@ -57483,13 +57491,14 @@
 00025369  5D                pop bp
 0002536A  CB                retf
 
-0002536B  7307              jnc 0x5374
-0002536D  E80E00            call 0x537e
-00025370  B8FFFF            mov ax,0xffff
-00025373  99                cwd
-00025374  8BE5              mov sp,bp
-00025376  5D                pop bp
-00025377  CB                retf
+; Common exit point for several procedures.
+0002536B  7307              jnc 0x5374		;
+0002536D  E80E00            call 0x537e		; <<<---Call if an error has occurred.
+00025370  B8FFFF            mov ax,0xffff	; Set AX and DX to 0xFFFF.
+00025373  99                cwd			;
+00025374  8BE5              mov sp,bp		; Return.
+00025376  5D                pop bp		;
+00025377  CB                retf		;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; intdos error handler ???
@@ -57498,29 +57507,29 @@
 0002537A  E80100            call 0x537e			;
 0002537D  CB                retf			;
 
-0002537E  A27A56            mov [0x567a],al		; Indirectly called by intdos.
-00025381  0AE4              or ah,ah
-00025383  7523              jnz 0x53a8
+0002537E  A27A56            mov [0x567a],al		; Indirectly called by intdos and directly called for error handling by several other procedures.
+00025381  0AE4              or ah,ah			; If there is an error code in AH then copy it to AL.
+00025383  7523              jnz 0x53a8			;
 00025385  803E775603        cmp byte [0x5677],0x3
 0002538A  720D              jc 0x5399
-0002538C  3C22              cmp al,0x22
+0002538C  3C22              cmp al,0x22			; Check for invalid disk change.
 0002538E  730D              jnc 0x539d
-00025390  3C20              cmp al,0x20
+00025390  3C20              cmp al,0x20			; Check for sharing violation.
 00025392  7205              jc 0x5399
 00025394  B005              mov al,0x5
-00025396  EB07              jmp short 0x539f
+00025396  EB07              jmp short 0x539f		; Jump to conversion to with lookup table.
 00025399  3C13              cmp al,0x13
 0002539B  7602              jna 0x539f
 0002539D  B013              mov al,0x13
-0002539F  BB785F            mov bx,0x5f78
-000253A2  D7                xlatb
-000253A3  98                cbw				; Exit point.
-000253A4  A36F56            mov [0x566f],ax		; Retrieve an error code as defined in ERRNO.H.
+0002539F  BB785F            mov bx,0x5f78		; Set lookup table address.
+000253A2  D7                xlatb			; Translate AL using the lookup table.
+000253A3  98                cbw				; Convert and save error code, then return.
+000253A4  A36F56            mov [0x566f],ax		; 
+000253A7  C3                ret				;
 
-000253A7  C3                ret
-000253A8  8AC4              mov al,ah
-000253AA  EBF7              jmp short 0x53a3
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+000253A8  8AC4              mov al,ah			; Set AL to AH and return.
+000253AA  EBF7              jmp short 0x53a3		;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 
 000253AC  55                push bp
 000253AD  8BEC              mov bp,sp
