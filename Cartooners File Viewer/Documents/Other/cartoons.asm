@@ -57481,55 +57481,11 @@
 000252F8  C747020000        mov word [bx+0x2],0x0
 000252FD  FF2E745F          jmp far [0x5f74]
 
-00025358  ; Error check (CF) and return.
-
-00025360  73F8              jnc 0x535a
-00025362  50                push ax
-00025363  E81800            call 0x537e
-00025366  58                pop ax
-00025367  8BE5              mov sp,bp
-00025369  5D                pop bp
-0002536A  CB                retf
-
-; Common exit point for several procedures.
-0002536B  7307              jnc 0x5374		;
-0002536D  E80E00            call 0x537e		; <<<---Call if an error has occurred.
-00025370  B8FFFF            mov ax,0xffff	; Set AX and DX to 0xFFFF.
-00025373  99                cwd			;
-00025374  8BE5              mov sp,bp		; Return.
-00025376  5D                pop bp		;
-00025377  CB                retf		;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; intdos error handler ???
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-00025378  32E4              xor ah,ah			; Called by intdos.
-0002537A  E80100            call 0x537e			;
-0002537D  CB                retf			;
-
-0002537E  A27A56            mov [0x567a],al		; Indirectly called by intdos and directly called for error handling by several other procedures.
-00025381  0AE4              or ah,ah			; If there is an error code in AH then copy it to AL.
-00025383  7523              jnz 0x53a8			;
-00025385  803E775603        cmp byte [0x5677],0x3
-0002538A  720D              jc 0x5399
-0002538C  3C22              cmp al,0x22			; Check for invalid disk change.
-0002538E  730D              jnc 0x539d
-00025390  3C20              cmp al,0x20			; Check for sharing violation.
-00025392  7205              jc 0x5399
-00025394  B005              mov al,0x5
-00025396  EB07              jmp short 0x539f		; Jump to conversion to with lookup table.
-00025399  3C13              cmp al,0x13
-0002539B  7602              jna 0x539f
-0002539D  B013              mov al,0x13
-0002539F  BB785F            mov bx,0x5f78		; Set lookup table address.
-000253A2  D7                xlatb			; Translate AL using the lookup table.
-000253A3  98                cbw				; Convert and save error code, then return.
-000253A4  A36F56            mov [0x566f],ax		; 
-000253A7  C3                ret				;
-
-000253A8  8AC4              mov al,ah			; Set AL to AH and return.
-000253AA  EBF7              jmp short 0x53a3		;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+00025358 ; Error check (CF) and return.
+00025360 ; Common exit point #1 for several procedures with a call to the error code translator in case of an error.
+0002536B ; Common exit point #2 for several procedures with a call to the error code translator in case of an error.
+00025378 ; Jumps to error code translator after clearing the AH register.
+0002537E ; Error code translator entry point.
 
 000253AC  55                push bp
 000253AD  8BEC              mov bp,sp
