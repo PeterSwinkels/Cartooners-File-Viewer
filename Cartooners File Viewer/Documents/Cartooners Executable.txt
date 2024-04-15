@@ -59,6 +59,7 @@ Dialog. #8	text	211572	0	790
 Drive letters.	text	205676	0	34	
 Driver file extensions	text	205510	0	12	
 Eraser.	icon	202096	204320	141	
+Error code translator.	8086_code	152440	0	51	Saves the error code at [0x566F].
 Error message retrieval.	8086_code	152322	0	41	Returns the position of an error message to be written to STDERR.
 Error messages. #1	text	200737	0	307	
 Error messages. #2	text	204489	0	28	
@@ -71,7 +72,7 @@ Exclamation icon.	far_address	203346	0	4
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
 fclose()	8086_code	145438	0	30	
-file read-only/hidden check	8086_code	149777	0	32	
+File read-only/hidden check.	8086_code	149777	0	32	
 File system related characters.	text	206751	0	23	
 Filled circle.	icon	201476	204320	69	
 Frame number Cancel button edge type.	binary	211380	0	1	
@@ -100,7 +101,9 @@ Free memory OK button text.	far_address	212374	0	4
 Free memory OK button.	rectangles	212364	0	8	
 Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
-function end point with error check	8086_code	152408	0	8	Used by multiple functions.
+Function end point with error check #1.	8086_code	152408	0	8	Used by multiple functions. Clear the AX register in case of an error.
+Function end point with error check #2.	8086_code	152416 	0	11	Used by multiple functions. Calls the error code translator in case of an error while preserving the original code in the AX register.
+Function end point with error check #3.	8086_code	152427 	0	13	Used by multiple functions. Calls the error code translator in case of an error.
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
