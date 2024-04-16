@@ -55335,7 +55335,7 @@
 00023DF2  16                push ss
 00023DF3  1F                pop ds
 00023DF5  0E                push cs
-00023DF6  E87F15            call 0x5378		; intdos/intdosx error handler.
+00023DF6  E87F15            call 0x5378		; Error code translator.
 00023DF9  1F                pop ds
 00023DFA  BE0100            mov si,0x1
 00023DFD  8B05              mov ax,[di]
@@ -55702,7 +55702,7 @@
 000240F2  16                push ss
 000240F3  1F                pop ds
 000240F5  0E                push cs
-000240F6  E87F12            call 0x5378		; intdos/intdosx error handler.
+000240F6  E87F12            call 0x5378		; Error code translator.
 000240F9  1F                pop ds
 000240FA  BE0100            mov si,0x1
 000240FD  8B05              mov ax,[di]
@@ -55715,24 +55715,25 @@
 0002410A  5D                pop bp
 0002410B  CB                retf
 
-; int _CDECL intdosx(union REGS *, union REGS *, struct SREGS *); ???
+; intdosx does not appear to be have been used in this binary.
+; This is not the intdosx function. The intdos function has already been identified.
 0002415E  55                push bp
 0002415F  8BEC              mov bp,sp
 00024161  56                push si
 00024162  57                push di
 00024163  1E                push ds
-00024164  C57E06            lds di,[bp+0x6]
-00024167  8B05              mov ax,[di]
-00024169  8B5D02            mov bx,[di+0x2]
-0002416C  8B4D04            mov cx,[di+0x4]
-0002416F  8B5506            mov dx,[di+0x6]
-00024172  8B7508            mov si,[di+0x8]
+00024164  C57E06            lds di,[bp+0x6]		; Copy the parameters to the AX, BX, CX, DX and SI registers.
+00024167  8B05              mov ax,[di]			;
+00024169  8B5D02            mov bx,[di+0x2]		;
+0002416C  8B4D04            mov cx,[di+0x4]		;
+0002416F  8B5506            mov dx,[di+0x6]		;
+00024172  8B7508            mov si,[di+0x8]		;
 00024175  FF750A            push word [di+0xa]
 00024178  C57E0E            lds di,[bp+0xe]
 0002417B  8E05              mov es,[di]
 0002417D  8E5D06            mov ds,[di+0x6]
 00024180  5F                pop di
-00024181  CD21              int 0x21			; <<<--- DOS CALL
+00024181  CD21              int 0x21			; MS-DOS function call.
 00024183  57                push di
 00024184  1E                push ds
 00024185  C57E0E            lds di,[bp+0xe]
@@ -55745,17 +55746,17 @@
 00024198  895506            mov [di+0x6],dx
 0002419B  897508            mov [di+0x8],si
 0002419E  8F450A            pop word [di+0xa]
-000241A1  7204              jc 0x41a7
-000241A3  33F6              xor si,si
-000241A5  EB0F              jmp short 0x41b6
-000241A7  1F                pop ds
-000241A8  1E                push ds
-000241AA  0E                push cs
-000241AB  E8CA11            call 0x5378			; Alleged intdos/intdosx error handler.
+000241A1  7204              jc 0x41a7			; Jump to the error code translator call if an error has occurred.
+000241A3  33F6              xor si,si			; Clear the SI register and return if no error has occurred.
+000241A5  EB0F              jmp short 0x41b6		;
+000241A7  1F                pop ds			; Restore and save the DS register.
+000241A8  1E                push ds			;
+000241AA  0E                push cs			; Near call with far return.
+000241AB  E8CA11            call 0x5378			; Error code translator.
 000241AE  C57E0A            lds di,[bp+0xa]
-000241B1  BE0100            mov si,0x1
+000241B1  BE0100            mov si,0x1			; 0x1 = error, 0x0 = no error.
 000241B4  8B05              mov ax,[di]
-000241B6  89750C            mov [di+0xc],si
+000241B6  89750C            mov [di+0xc],si		; Preserve the SI regiser containing the error flag and return.
 000241B9  1F                pop ds
 000241BA  5F                pop di
 000241BB  5E                pop si
