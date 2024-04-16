@@ -53025,7 +53025,7 @@
 000226E0  8D46F6            lea ax,[bp-0xa]	; Offset of the values to rotated and shifted.
 000226E3  50                push ax		;
 000226E5  0E                push cs		; Near call with far return.
-000226E6  E84D29            call 0x5036		; Call the function which in turn calls the arithmetic function.
+000226E6  E84D29            call 0x5036		; Call the function which in turn calls the bit rotating shifting function.
 000226E9  B008              mov al,0x8
 000226EB  50                push ax
 000226EC  8D46FC            lea ax,[bp-0x4]
@@ -57137,7 +57137,7 @@
 0002501A  5D                pop bp
 0002501B  CA0800            retf 0x8
 
-; Arithmetic function that rotates and shifts bits to the left the number of times specified in the CL register.
+; Function that rotates and shifts bits to the left the number of times specified in the CL register.
 0002501E  32ED              xor ch,ch		; Ensure that the CX register's value does not exceed 0xFF.
 00025020  E306              jcxz 0x5028		; Return if CX equals zero.
 00025022  D1E0              shl ax,1		; Shift the bits in the AX register to the left and preserve the left most bit shifted out in the carry flag.
@@ -57145,7 +57145,7 @@
 00025026  E2FA              loop 0x5022		; Keep rotating and shifting until the CX register has been decremented to zero.
 00025028  CB                retf
 
-; Arithmetic function that rotates and shifts bits to the right the number of times specified in the CX register.
+; Function that rotates and shifts bits to the right the number of times specified in the CX register.
 0002502A  55                push bp
 0002502B  8BEC              mov bp,sp
 0002502D  E306              jcxz 0x5034		; Return if CX equals zero.
