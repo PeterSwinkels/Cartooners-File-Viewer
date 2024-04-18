@@ -57194,7 +57194,7 @@
 00025082  8B5702            mov dx,[bx+0x2]
 00025085  8B4E08            mov cx,[bp+0x8]
 00025089  0E                push cs
-0002508A  E87100            call 0x50fe
+0002508A  E87100            call 0x50fe		; Is this calling to the middle of an opcode???
 0002508D  8B5E06            mov bx,[bp+0x6]
 00025090  8907              mov [bx],ax
 00025092  895702            mov [bx+0x2],dx
@@ -57250,6 +57250,7 @@
 000250F9  5D                pop bp
 000250FA  CA0800            retf 0x8
 
+; Function that rotates and shifts bits to the left the number of times specified in the CL register.
 000250FD  32ED              xor ch,ch
 00025100  E306              jcxz 0x5108	
 	00025102  D1EA              shr dx,1
@@ -58368,53 +58369,7 @@
 00025CE5  5D                pop bp
 00025CE6  CB                retf
 
-00025CE8  55                push bp			; Appears to be related to retrieving the current path.
-00025CE9  8BEC              mov bp,sp
-00025CEB  83EC20            sub sp,byte +0x20
-00025CEE  56                push si
-00025CEF  57                push di
-00025CF0  1E                push ds
-00025CF1  C5760A            lds si,[bp+0xa]
-00025CF4  8CD0              mov ax,ss
-00025CF6  8EC0              mov es,ax
-00025CF8  B91000            mov cx,0x10
-00025CFB  33C0              xor ax,ax
-00025CFD  8D7EE0            lea di,[bp-0x20]
-00025D00  F3AB              rep stosw
-00025D02  AC                lodsb
-00025D03  0AC0              or al,al
-00025D05  7414              jz 0x5d1b
-00025D07  8BF8              mov di,ax
-00025D09  8BC8              mov cx,ax
-00025D0B  B001              mov al,0x1
-00025D0D  80E107            and cl,0x7
-00025D10  D2E0              shl al,cl
-00025D12  B103              mov cl,0x3
-00025D14  D3EF              shr di,cl
-00025D16  0843E0            or [bp+di-0x20],al
-00025D19  EBE7              jmp short 0x5d02
-00025D1B  C57606            lds si,[bp+0x6]
-00025D1E  33D2              xor dx,dx
-00025D20  AC                lodsb
-00025D21  25FF00            and ax,0xff
-00025D24  7419              jz 0x5d3f
-00025D26  8BF8              mov di,ax
-00025D28  8BC8              mov cx,ax
-00025D2A  B001              mov al,0x1
-00025D2C  80E107            and cl,0x7
-00025D2F  D2E0              shl al,cl
-00025D31  B103              mov cl,0x3
-00025D33  D3EF              shr di,cl
-00025D35  2243E0            and al,[bp+di-0x20]
-00025D38  74E6              jz 0x5d20
-00025D3A  8D44FF            lea ax,[si-0x1]
-00025D3D  8CDA              mov dx,ds
-00025D3F  1F                pop ds
-00025D40  5F                pop di
-00025D41  5E                pop si
-00025D42  8BE5              mov sp,bp
-00025D44  5D                pop bp
-00025D45  CB                retf
+00025CE8  ; strpbrk()
 
 00025D46  8B4E0E            mov cx,[bp+0xe]			; Counter.
 00025D49  8B4606            mov ax,[bp+0x6]			;
@@ -58503,60 +58458,7 @@
 00025DEB  5D                pop bp
 00025DEC  CB                retf
 
-00025DEE  55                push bp
-00025DEF  8BEC              mov bp,sp
-00025DF1  83EC04            sub sp,byte +0x4
-00025DF4  56                push si
-00025DF5  2BF6              sub si,si
-00025DF7  C45E06            les bx,[bp+0x6]
-00025DFA  268A470A          mov al,[es:bx+0xa]
-00025DFE  2403              and al,0x3
-00025E00  3C02              cmp al,0x2
-00025E02  7559              jnz 0x5e5d
-00025E04  26F6470A08        test byte [es:bx+0xa],0x8
-00025E09  751A              jnz 0x5e25
-00025E0B  8BC3              mov ax,bx
-00025E0D  2DB05C            sub ax,0x5cb0
-00025E10  99                cwd
-00025E11  B90C00            mov cx,0xc
-00025E14  F7F9              idiv cx
-00025E16  8BD8              mov bx,ax
-00025E18  D1E3              shl bx,1
-00025E1A  03D8              add bx,ax
-00025E1C  D1E3              shl bx,1
-00025E1E  F687A05D01        test byte [bx+0x5da0],0x1
-00025E23  7438              jz 0x5e5d
-	00025E25  8B5E06            mov bx,[bp+0x6]
-	00025E28  268B07            mov ax,[es:bx]
-	00025E2B  262B4706          sub ax,[es:bx+0x6]
-	00025E2F  8946FC            mov [bp-0x4],ax
-	00025E32  0BC0              or ax,ax
-00025E34  7E27              jng 0x5e5d
-	00025E36  50                push ax
-	00025E37  26FF7708          push word [es:bx+0x8]
-	00025E3B  26FF7706          push word [es:bx+0x6]
-	00025E3F  268A470B          mov al,[es:bx+0xb]
-	00025E43  98                cbw
-	00025E44  50                push ax
-	00025E46  0E                push cs
-	00025E47  E808DD            call 0x3b52
-	00025E4A  83C408            add sp,byte +0x8
-	00025E4D  3B46FC            cmp ax,[bp-0x4]
-	00025E50  740B              jz 0x5e5d
-	00025E52  C45E06            les bx,[bp+0x6]
-	00025E55  26804F0A20        or byte [es:bx+0xa],0x20
-	00025E5A  BEFFFF            mov si,0xffff			;
-00025E5D  C45E06            les bx,[bp+0x6]
-00025E60  268B4706          mov ax,[es:bx+0x6]			; DX:AX = segment:offset
-00025E64  268B5708          mov dx,[es:bx+0x8]			;
-00025E68  268907            mov [es:bx],ax
-00025E6B  26895702          mov [es:bx+0x2],dx
-00025E6F  26C747040000      mov word [es:bx+0x4],0x0
-00025E75  8BC6              mov ax,si				
-00025E77  5E                pop si
-00025E78  8BE5              mov sp,bp
-00025E7A  5D                pop bp
-00025E7B  CB                retf
+00025DEE ; fflush()
 
 00025E7C  55                push bp
 00025E7D  8BEC              mov bp,sp
@@ -58830,65 +58732,19 @@
 00026104  5D                pop bp
 00026105  CB                retf
 
+
+
+; =============== S U B	R O U T	I N E =======================================
+
+; Attributes: bp-based frame thunk
+
+j___catox_0	proc far		; CODE XREF: sub_35F50+55p
+		jmp	near ptr __catox
+j___catox_0	endp
+
+; ---------------------------------------------------------------------------
+		align 2
 00026164  E9D1F9            jmp 0x5b38
 
-00026168  55                push bp
-00026169  8BEC              mov bp,sp
-0002616B  83EC06            sub sp,byte +0x6			; Increase stack by 0x3 words.
-0002616E  56                push si				; Save SI.
-0002616F  A19856            mov ax,[0x5698]			; DX:AX = a pointer???
-00026172  8B169A56          mov dx,[0x569a]			;
-00026176  8946FA            mov [bp-0x6],ax			; Place pointer on the stack.
-00026179  8956FC            mov [bp-0x4],dx			;
-0002617C  0BC2              or ax,dx				; Return with a null result if DX and AX are null.
-0002617E  7476              jz 0x61f6				; 
-00026180  8B4606            mov ax,[bp+0x6]			; Return with a null result if [BP+0x6] and AX are null.
-00026183  0B4608            or ax,[bp+0x8]			;
-00026186  746E              jz 0x61f6				; 
-00026188  FF7608            push word [bp+0x8]			; A pointer to a string
-0002618B  FF7606            push word [bp+0x6]			;
-0002618F  0E                push cs				; Near call to function with a far return.
-00026190  E88DF9            call 0x5b20				; strlen()
-00026193  83C404            add sp,byte +0x4			; Decrease the stack by 0x2 words.
-00026196  8BF0              mov si,ax				; SI = length of string.
-00026198  EB06              jmp short 0x61a0			;
-0002619C  8346FA04          add word [bp-0x6],byte +0x4         ; Called if the second string check returns a length less than the first string check.
-000261A0  C45EFA            les bx,[bp-0x6]			; ES:BX = poiner.
-000261A3  268B07            mov ax,[es:bx]			;
-000261A6  260B4702          or ax,[es:bx+0x2]			;
-000261AA  744A              jz 0x61f6				; Return with a null result if pointer ES:BX is null.
-000261AC  26FF7702          push word [es:bx+0x2]		; A pointer to a string.
-000261B0  26FF37            push word [es:bx]			;
-000261B4  0E                push cs				; Near call to function with a far return.
-000261B5  E868F9            call 0x5b20				; strlen()
-000261B8  83C404            add sp,byte +0x4			; Decrease stack by 0x2 words.
-000261BB  3BC6              cmp ax,si				; Check whether the length of the other string matches.
-000261BD  7EDD              jle 0x619c				; Jump back to increase the value at [bp-0x6] and repeat check if this string is shorter.
-000261BF  C45EFA            les bx,[bp-0x6]			; ES:BX = a pointer.
-000261C2  26C41F            les bx,[es:bx]			;
-000261C5  2680383D          cmp byte [es:bx+si],0x3d		; Jump back to increase the value at [bp-0x6] and repeat check if what could be the "=" character is not found.
-000261C9  75D1              jnz 0x619c				; 
-000261CB  56                push si				;
-000261CC  FF7608            push word [bp+0x8]			; A pointer to string.
-000261CF  FF7606            push word [bp+0x6]			;
-000261D2  C45EFA            les bx,[bp-0x6]			; A pointer to string.
-000261D5  26FF7702          push word [es:bx+0x2]		;
-000261D9  26FF37            push word [es:bx]			;
-000261DD  0E                push cs				; Near call to function with a far return.
-000261DE  E81D00            call 0x61fe				; strncmp()
-000261E1  83C40A            add sp,byte +0xa			; Decrease stack by 0x5 words.
-000261E4  0BC0              or ax,ax				; Jump back to increase the value at [bp-0x6] and repeat check if the strings do not match.
-000261E6  75B4              jnz 0x619c				;
-000261E8  C45EFA            les bx,[bp-0x6]			; ES:BX = pointer.
-000261EB  26C41F            les bx,[es:bx]			; ES:BX = another pointer.
-000261EE  8D4001            lea ax,[bx+si+0x1]			; AX:DX = ES:bx+si+0x1
-000261F1  8CC2              mov dx,es				;
-000261F3  EB04              jmp short 0x61f9			; Return.
-000261F6  2BC0              sub ax,ax				; Zero AX and DX, then return.
-000261F8  99                cwd
-000261F9  5E                pop si
-000261FA  8BE5              mov sp,bp
-000261FC  5D                pop bp
-000261FD  CB                retf
 
 
