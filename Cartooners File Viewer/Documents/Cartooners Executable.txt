@@ -1,16 +1,17 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
- _bios_equiplist	8086_code	150880	0	3	
-_dos_findfirst/_dos_findnext	8086_code	150902	0	41	
-_dos_getdiskfree	8086_code	150968	0	45	
-_dos_getdrive	8086_code	151014	0	20	
-_dos_getvect	8086_code	150884	0	18	
-_dos_setvect	8086_code	150946	0	21	
+_bios_equiplist()	8086_code	150880	0	3	
+_dos_findfirst()/_dos_findnext()	8086_code	150902	0	41	
+_dos_getdiskfree()	8086_code	150968	0	45	
+_dos_getdrive()	8086_code	151014	0	20	
+_dos_getvect()	8086_code	150884	0	18	
+_dos_setvect()	8086_code	150946	0	21	
 8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
 Actors dialog.	text	215400	0	36	
 atoi()	8086_code	154424	0	86	
 Background screen buffer.	rectangles	207590	0	8	
+bdos()	8086_code	154546	0	18	
 Blank... (act option)	text	203866	0	11	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
 Button corner rounding procedure	8086_code	66835	0	51	
@@ -19,7 +20,7 @@ Bytes per row #1.	binary	207560	0	1
 Bytes per row #2.	binary	207588	0	1	
 C_FILE_INFO.	text	222775	0	11	
 Cancel printing.	text	213433	0	35	
-chdir	8086_code	149819	0	13	
+chdir()	8086_code	149819	0	13	
 Checked circle.	icon	201404	204320	69	
 Circle.	icon	201332	204320	69	
 Critical error interrupt handler setup.	8086_code	151034	0	35	Sets up the critical error handler interrupt.
@@ -72,6 +73,7 @@ Exclamation icon.	far_address	203346	0	4
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
 fclose()	8086_code	145438	0	30	
+fflush()	8086_code	155118	0	142	
 File read-only/hidden check.	8086_code	149777	0	32	
 File system related characters.	text	206751	0	23	
 Filled circle.	icon	201476	204320	69	
@@ -104,12 +106,12 @@ Free memory.	rectangles	212436	0	8
 Function end point with error check #1.	8086_code	152408	0	8	Used by multiple functions. Clear the AX register in case of an error.
 Function end point with error check #2.	8086_code	152416 	0	11	Used by multiple functions. Calls the error code translator in case of an error while preserving the original code in the AX register.
 Function end point with error check #3.	8086_code	152427 	0	13	Used by multiple functions. Calls the error code translator in case of an error.
+getenv()	8086_code	 156008 	0	150	
 GUI CGA/EGA.	palette	204320	0	32	
 Hand icon record size.	binary	203388	0	2	
 Hand icon.	point	203384	0	4	
 Hand icon.	far_address	203394	0	4	
 Hand.	icon	203088	204320	248	
-int 0x21 wrapper	8086_code	154546	0	18	Wrapper for int 0x21.
 intdos()	8086_code	147724	0	82	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
@@ -139,6 +141,7 @@ Levels dialog OK button.	rectangles	209632	0	8
 Levels dialog.	rectangles	209942	0	8	
 Locate text.	text	214590	0	8	
 Loop arrow.	icon	202384	204320	141	
+memcpy()	8086_code	155910	0	94	
 Menu and ticket screen buttons.	rectangles	206818	0	16	
 Menu bar.	rectangles	205468	0	8	
 Menu cursor blink count.	binary	205466	0	2	
@@ -146,7 +149,7 @@ Menu screen CGA.	palette	170480	0	32
 Menu screen EGA.	palette	170512	0	32	
 Menu screen.	image	170544	170512	9772	
 Menu screen.	rectangles	206778	0	40	
-mkdir	8086_code	149812	0	6	
+mkdir()	8086_code	149812	0	6	
 Mouse arrow transparency bitmask.	mousemask	214610	0	32	
 Mouse arrow.	bitmap	214642	214610	32	
 Mouse handler disable.	8086_code	95974	0	24	Disables the mouse handler.
@@ -209,12 +212,12 @@ Speech balloon properties dialog.	rectangles	203426	0	152
 Speech balloon types.	text	203620	0	198	
 Speech balloon.	icon	202240	204320	141	
 Startup files.	text	203964	0	46	
+strpbrk()	8086_code	154856	0	94	
 strchr()	8086_code	147934	0	45	
-strcpy	8086_code	154346	0	54	
+strcpy()	8086_code	154346	0	54	
 strlen()	8086_code	154400	0	23	
 strlwr()	8086_code	148096	0	40	
 strncmp()	8086_code	156158	0	59	
-strncpy()	8086_code	155910	0	94	
 strrchr()	8086_code	148050	0	46	
 strupr()	8086_code	148136	0	40	
 Supported file extensions.	text	204244	0	30	
