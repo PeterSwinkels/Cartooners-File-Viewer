@@ -36,8 +36,8 @@ Public Module MSDOSEXEModule
       Public ImageSize As Integer              'Defines the executable's image size in pages of 0x200 bytes.
       Public RelocationCount As Integer        'Defines the executable's number or relocation items.
       Public HeaderSize As Integer             'Defines the executable's header size in paragraphs of 0x10 bytes.
-      Public MinimumParagraphs As Integer      'Defines the executable's maximum memory requirement in paragraphs of 0x10 bytes.
-      Public MaximumParagraphs As Integer      'Defines the executable's minimum memory requirement in paragraphs of 0x10 bytes.
+      Public MinimumParagraphs As Integer      'Defines the executable's minimum memory requirement in paragraphs of 0x10 bytes.
+      Public MaximumParagraphs As Integer      'Defines the executable's maximum memory requirement in paragraphs of 0x10 bytes.
       Public StackSegment As Integer           'Defines the stack segment (SS) register's initial value.
       Public StackPointer As Integer           'Defines the stack pointer (SP) register's initial value.
       Public Checksum As Integer               'Defines the executable's negative pgm checksum.

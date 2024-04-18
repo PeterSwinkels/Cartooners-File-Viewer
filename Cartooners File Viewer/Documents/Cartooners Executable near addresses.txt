@@ -1,6 +1,7 @@
 Description:	Address:
 Critical error function segment.	5F64
 Critical error function offset.	5F62
+Environment variables (envp).	5698
 Errno.h code.	566F
 Key flag.	D966
 INT 0x08 offset.	55F4
