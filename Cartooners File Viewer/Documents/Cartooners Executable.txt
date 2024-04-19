@@ -1,10 +1,16 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
 _bios_equiplist()	8086_code	150880	0	3	
-_dos_findfirst()/_dos_findnext()	8086_code	150902	0	41	
+_dos_findfirst()	8086_code	150912	0	31	
+_dos_findnext()	8086_code	150902	0	10	
 _dos_getdiskfree()	8086_code	150968	0	45	
 _dos_getdrive()	8086_code	151014	0	20	
 _dos_getvect()	8086_code	150884	0	18	
+_dos_setdrive	8086_code	151188	0	23	
 _dos_setvect()	8086_code	150946	0	21	
+_ftbuf()	8086_code	 153528	0	223	
+_harderr()	8086_code	151034	0	35	
+_hardresume	8086_code	151111	0	8	
+_hardresume() function.	8086_code	151069	0	42	
 8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
@@ -23,8 +29,6 @@ Cancel printing.	text	213433	0	35
 chdir()	8086_code	149819	0	13	
 Checked circle.	icon	201404	204320	69	
 Circle.	icon	201332	204320	69	
-Critical error interrupt handler setup.	8086_code	151034	0	35	Sets up the critical error handler interrupt.
-Critical error interrupt handler.	8086_code	151069	0	42	Handles critical errors.
 Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
 Critical unknown #02	binary	205370	0	48	Causes freezing at startup when modified.
 Critical unknown #03	binary	205463	0	3	Modification causes freezing at startup.
@@ -74,6 +78,7 @@ Exclamation.	icon	202592	204320	248
 Executable extensions.	text	225068	0	15	
 fclose()	8086_code	145438	0	30	
 fflush()	8086_code	155118	0	142	
+ffree()	8086_code	153768	0	25	
 File read-only/hidden check.	8086_code	149777	0	32	
 File system related characters.	text	206751	0	23	
 Filled circle.	icon	201476	204320	69	
@@ -103,6 +108,7 @@ Free memory OK button text.	far_address	212374	0	4
 Free memory OK button.	rectangles	212364	0	8	
 Free memory.	far_address	212446	0	4	
 Free memory.	rectangles	212436	0	8	
+fwrite()	8086_code	152492	0	711	
 Function end point with error check #1.	8086_code	152408	0	8	Used by multiple functions. Clear the AX register in case of an error.
 Function end point with error check #2.	8086_code	152416 	0	11	Used by multiple functions. Calls the error code translator in case of an error while preserving the original code in the AX register.
 Function end point with error check #3.	8086_code	152427 	0	13	Used by multiple functions. Calls the error code translator in case of an error.
@@ -115,6 +121,9 @@ Hand.	icon	203088	204320	248
 intdos()	8086_code	147724	0	82	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
+isatty()	8086_code	154510	0	35	Returns true if _IOSTRG is detected.
+isatty() call #1.	8086_code	0	0	8	
+isatty() call #2.	8086_code	1810	0	8	
 Key retrieval.	8086_code	95848	0	39	Checks whether a key is pressed and returns which if so.
 Keyboard layout.	text	215156	0	117	
 Left arrow.	icon	201736	204320	178	
@@ -141,6 +150,7 @@ Levels dialog OK button.	rectangles	209632	0	8
 Levels dialog.	rectangles	209942	0	8	
 Locate text.	text	214590	0	8	
 Loop arrow.	icon	202384	204320	141	
+malloc()	8086_code	153793	0	63	
 memcpy()	8086_code	155910	0	94	
 Menu and ticket screen buttons.	rectangles	206818	0	16	
 Menu bar.	rectangles	205468	0	8	
@@ -197,7 +207,6 @@ Run-time error messages.	text	225344	0	224
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
 segread()	8086_code	147904	0	29	
-Select drive.	8086_code	151188	0	23	Returns the number of drives.
 Speaking icon record size.	binary	203364	0	2	
 Speaking icon.	point	203360	0	4	
 Speaking icon.	far_address	203370	0	4	
@@ -284,9 +293,6 @@ Unknown #48	binary	165421	0	514	257x 2 byte records.
 Unknown #49	binary	165935	0	56	28x 2 byte records.
 Unknown #50	binary	165991	0	2159	1080x 2 byte records. 
 Unknown #51	binary	212468	0	20	Influences the Free Memory dialog.
-Verify _IOSTRG call #1.	8086_code	0	0	8	
-Verify _IOSTRG call #2.	8086_code	1810	0	8	
-Verify _IOSTRG.	8086_code	154510	0	35	Returns true if _IOSTRG is detected.
 Version.	text	206929	0	6	
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
