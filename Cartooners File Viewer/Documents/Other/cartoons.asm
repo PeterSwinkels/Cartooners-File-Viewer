@@ -54561,7 +54561,7 @@
 00023702  7554              jnz 0x3758
 00023704  FF76FA            push word [bp-0x6]
 00023708  0E                push cs
-00023709  E88224            call 0x5b8e			; Checks for _IOSTRG.
+00023709  E88224            call 0x5b8e			; Calls isatty().
 0002370C  83C402            add sp,byte +0x2
 0002370F  0BC0              or ax,ax
 00023711  7551              jnz 0x3764
@@ -56930,10 +56930,7 @@
 00024D4D  5D                pop bp
 00024D4E  CB                retf
 
-00024E47  55                push bp
-00024E48  8BEC              mov bp,sp
-00024E4A  8B4606            mov ax,[bp+0x6]
-00024E4D  EBE8              jmp short 0x4e37
+00024E47 ; _hardresume()
 
 00024E50  55                push bp
 00024E51  8BEC              mov bp,sp
@@ -57492,267 +57489,7 @@
 0002536B ; Common exit point #2 for several procedures with a call to the error code translator in case of an error.
 00025378 ; Jumps to error code translator after clearing the AH register.
 0002537E ; Error code translator entry point.
-
-000253AC  55                push bp
-000253AD  8BEC              mov bp,sp
-000253AF  83EC1A            sub sp,byte +0x1a
-000253B2  56                push si
-000253B3  2BC0              sub ax,ax
-000253B5  50                push ax
-000253B6  FF760C            push word [bp+0xc]
-000253B9  50                push ax
-000253BA  FF760A            push word [bp+0xa]
-000253BE  0E                push cs
-000253BF  E886FB            call 0x4f48
-000253C2  8946FC            mov [bp-0x4],ax
-000253C5  8956FE            mov [bp-0x2],dx
-000253C8  8946F8            mov [bp-0x8],ax
-000253CB  8956FA            mov [bp-0x6],dx
-000253CE  837E0A00          cmp word [bp+0xa],byte +0x0
-000253D2  7406              jz 0x53da
-000253D4  837E0C00          cmp word [bp+0xc],byte +0x0
-000253D8  7506              jnz 0x53e0
-000253DA  2BC0              sub ax,ax
-000253DC  E98F02            jmp 0x566e
-000253E0  C45E0E            les bx,[bp+0xe]
-000253E3  26F6470A0C        test byte [es:bx+0xa],0xc
-000253E8  7403              jz 0x53ed
-000253EA  E98600            jmp 0x5473
-000253ED  B8B05C            mov ax,0x5cb0
-000253F0  1E                push ds
-000253F1  50                push ax
-000253F2  06                push es
-000253F3  53                push bx
-000253F5  0E                push cs
-000253F6  E813EA            call 0x3e0c
-000253F9  99                cwd
-000253FA  B90C00            mov cx,0xc
-000253FD  F7F9              idiv cx
-000253FF  8BD8              mov bx,ax
-00025401  D1E3              shl bx,1
-00025403  03D8              add bx,ax
-00025405  D1E3              shl bx,1
-00025407  F687A05D01        test byte [bx+0x5da0],0x1
-0002540C  7565              jnz 0x5473
-0002540E  C45E0E            les bx,[bp+0xe]
-00025411  26FF4F04          dec word [es:bx+0x4]
-00025415  7825              js 0x543c
-00025417  C45E06            les bx,[bp+0x6]
-0002541A  268A07            mov al,[es:bx]
-0002541D  C45E0E            les bx,[bp+0xe]
-00025420  268B0F            mov cx,[es:bx]
-00025423  268B7702          mov si,[es:bx+0x2]
-00025427  26830701          add word [es:bx],byte +0x1
-0002542B  7306              jnc 0x5433
-0002542D  268147020010      add word [es:bx+0x2],0x1000
-00025433  8EC6              mov es,si
-00025435  8BD9              mov bx,cx
-00025437  268807            mov [es:bx],al
-0002543A  EB16              jmp short 0x5452
-0002543C  FF7610            push word [bp+0x10]
-0002543F  FF760E            push word [bp+0xe]
-00025442  C45E06            les bx,[bp+0x6]
-00025445  268A07            mov al,[es:bx]
-00025448  98                cbw
-00025449  50                push ax
-0002544B  0E                push cs
-0002544C  E811E2            call 0x3660
-0002544F  83C406            add sp,byte +0x6
-00025452  C45E0E            les bx,[bp+0xe]
-00025455  26F6470A20        test byte [es:bx+0xa],0x20
-0002545A  7403              jz 0x545f
-0002545C  E97BFF            jmp 0x53da
-0002545F  83460601          add word [bp+0x6],byte +0x1
-00025463  1BC0              sbb ax,ax
-00025465  250010            and ax,0x1000
-00025468  014608            add [bp+0x8],ax
-0002546B  836EF801          sub word [bp-0x8],byte +0x1
-0002546F  835EFA00          sbb word [bp-0x6],byte +0x0
-00025473  C45E0E            les bx,[bp+0xe]
-00025476  26F6470A08        test byte [es:bx+0xa],0x8
-0002547B  7524              jnz 0x54a1
-0002547D  B8B05C            mov ax,0x5cb0
-00025480  1E                push ds
-00025481  50                push ax
-00025482  06                push es
-00025483  53                push bx
-00025485  0E                push cs
-00025486  E883E9            call 0x3e0c
-00025489  99                cwd
-0002548A  B90C00            mov cx,0xc
-0002548D  F7F9              idiv cx
-0002548F  8BD8              mov bx,ax
-00025491  D1E3              shl bx,1
-00025493  03D8              add bx,ax
-00025495  D1E3              shl bx,1
-00025497  F687A05D01        test byte [bx+0x5da0],0x1
-0002549C  7503              jnz 0x54a1
-0002549E  E92301            jmp 0x55c4
-000254A1  8B46F8            mov ax,[bp-0x8]
-000254A4  0B46FA            or ax,[bp-0x6]
-000254A7  7503              jnz 0x54ac
-000254A9  E98701            jmp 0x5633
-000254AC  8B460E            mov ax,[bp+0xe]
-000254AF  8B5610            mov dx,[bp+0x10]
-000254B2  050A00            add ax,0xa
-000254B5  8946EE            mov [bp-0x12],ax
-000254B8  8956F0            mov [bp-0x10],dx
-000254BB  8B460E            mov ax,[bp+0xe]
-000254BE  050400            add ax,0x4
-000254C1  8946EA            mov [bp-0x16],ax
-000254C4  8956EC            mov [bp-0x14],dx
-000254C7  8946E6            mov [bp-0x1a],ax
-000254CA  8956E8            mov [bp-0x18],dx
-000254CD  C45EE6            les bx,[bp-0x1a]
-000254D0  26833F00          cmp word [es:bx],byte +0x0
-000254D4  747E              jz 0x5554
-000254D6  268B07            mov ax,[es:bx]
-000254D9  2BD2              sub dx,dx
-000254DB  3B56FA            cmp dx,[bp-0x6]
-000254DE  720E              jc 0x54ee
-000254E0  7705              ja 0x54e7
-000254E2  3B46F8            cmp ax,[bp-0x8]
-000254E5  7607              jna 0x54ee
-000254E7  8B46F8            mov ax,[bp-0x8]
-000254EA  EB09              jmp short 0x54f5
-000254EE  C45E0E            les bx,[bp+0xe]
-000254F1  268B4704          mov ax,[es:bx+0x4]
-000254F5  8946F4            mov [bp-0xc],ax
-000254F8  C746F60000        mov word [bp-0xa],0x0
-000254FD  50                push ax
-000254FE  FF7608            push word [bp+0x8]
-00025501  FF7606            push word [bp+0x6]
-00025504  C45E0E            les bx,[bp+0xe]
-00025507  26FF7702          push word [es:bx+0x2]
-0002550B  26FF37            push word [es:bx]
-0002550F  0E                push cs
-00025510  E8F30B            call 0x6106
-00025513  83C40A            add sp,byte +0xa
-00025516  C45E0E            les bx,[bp+0xe]
-00025519  2BC0              sub ax,ax
-0002551B  8B4EF4            mov cx,[bp-0xc]
-0002551E  26010F            add [es:bx],cx
-00025521  1346F6            adc ax,[bp-0xa]
-00025524  B90C00            mov cx,0xc
-00025527  D3E0              shl ax,cl
-00025529  26014702          add [es:bx+0x2],ax
-0002552D  2BC0              sub ax,ax
-0002552F  8B4EF4            mov cx,[bp-0xc]
-00025532  014E06            add [bp+0x6],cx
-00025535  1346F6            adc ax,[bp-0xa]
-00025538  B90C00            mov cx,0xc
-0002553B  D3E0              shl ax,cl
-0002553D  014608            add [bp+0x8],ax
-00025540  8B46F4            mov ax,[bp-0xc]
-00025543  8B56F6            mov dx,[bp-0xa]
-00025546  2946F8            sub [bp-0x8],ax
-00025549  1956FA            sbb [bp-0x6],dx
-0002554C  C45EE6            les bx,[bp-0x1a]
-0002554F  262907            sub [es:bx],ax
-00025552  EB64              jmp short 0x55b8
-00025554  C45EEA            les bx,[bp-0x16]
-00025557  26FF0F            dec word [es:bx]
-0002555A  7826              js 0x5582
-0002555C  C45E06            les bx,[bp+0x6]
-0002555F  268A07            mov al,[es:bx]
-00025562  C45E0E            les bx,[bp+0xe]
-00025565  268B0F            mov cx,[es:bx]
-00025568  268B7702          mov si,[es:bx+0x2]
-0002556C  26830701          add word [es:bx],byte +0x1
-00025570  7306              jnc 0x5578
-00025572  268147020010      add word [es:bx+0x2],0x1000
-00025578  8EC6              mov es,si
-0002557A  8BD9              mov bx,cx
-0002557C  268807            mov [es:bx],al
-0002557F  EB17              jmp short 0x5598
-00025582  FF7610            push word [bp+0x10]
-00025585  FF760E            push word [bp+0xe]
-00025588  C45E06            les bx,[bp+0x6]
-0002558B  268A07            mov al,[es:bx]
-0002558E  98                cbw
-0002558F  50                push ax
-00025591  0E                push cs
-00025592  E8CBE0            call 0x3660
-00025595  83C406            add sp,byte +0x6
-00025598  C45EEE            les bx,[bp-0x12]
-0002559B  26F60720          test byte [es:bx],0x20
-0002559F  7403              jz 0x55a4
-000255A1  E98F00            jmp 0x5633
-000255A4  83460601          add word [bp+0x6],byte +0x1
-000255A8  1BC0              sbb ax,ax
-000255AA  250010            and ax,0x1000
-000255AD  014608            add [bp+0x8],ax
-000255B0  836EF801          sub word [bp-0x8],byte +0x1
-000255B4  835EFA00          sbb word [bp-0x6],byte +0x0
-000255B8  8B46F8            mov ax,[bp-0x8]
-000255BB  0B46FA            or ax,[bp-0x6]
-000255BE  7473              jz 0x5633
-000255C0  E90AFF            jmp 0x54cd
-000255C4  8B46F8            mov ax,[bp-0x8]
-000255C7  0B46FA            or ax,[bp-0x6]
-000255CA  7467              jz 0x5633
-000255CC  8B460E            mov ax,[bp+0xe]
-000255CF  8B5610            mov dx,[bp+0x10]
-000255D2  050A00            add ax,0xa
-000255D5  8946E6            mov [bp-0x1a],ax
-000255D8  8956E8            mov [bp-0x18],dx
-000255DB  8B460E            mov ax,[bp+0xe]
-000255DE  050400            add ax,0x4
-000255E1  8946EA            mov [bp-0x16],ax
-000255E4  8956EC            mov [bp-0x14],dx
-000255E7  C45EEA            les bx,[bp-0x16]
-000255EA  26FF0F            dec word [es:bx]
-000255ED  7825              js 0x5614
-000255EF  C45E06            les bx,[bp+0x6]
-000255F2  268A07            mov al,[es:bx]
-000255F5  C45E0E            les bx,[bp+0xe]
-000255F8  268B0F            mov cx,[es:bx]
-000255FB  268B7702          mov si,[es:bx+0x2]
-000255FF  26830701          add word [es:bx],byte +0x1
-00025603  7306              jnc 0x560b
-00025605  268147020010      add word [es:bx+0x2],0x1000
-0002560B  8EC6              mov es,si
-0002560D  8BD9              mov bx,cx
-0002560F  268807            mov [es:bx],al
-00025612  EB16              jmp short 0x562a
-00025614  FF7610            push word [bp+0x10]
-00025617  FF760E            push word [bp+0xe]
-0002561A  C45E06            les bx,[bp+0x6]
-0002561D  268A07            mov al,[es:bx]
-00025620  98                cbw
-00025621  50                push ax
-00025623  0E                push cs
-00025624  E839E0            call 0x3660
-00025627  83C406            add sp,byte +0x6
-0002562A  C45EE6            les bx,[bp-0x1a]
-0002562D  26F60720          test byte [es:bx],0x20
-00025631  741B              jz 0x564e
-00025633  2BC0              sub ax,ax
-00025635  50                push ax
-00025636  FF760A            push word [bp+0xa]
-00025639  8B46FC            mov ax,[bp-0x4]
-0002563C  8B56FE            mov dx,[bp-0x2]
-0002563F  2B46F8            sub ax,[bp-0x8]
-00025642  1B56FA            sbb dx,[bp-0x6]
-00025645  52                push dx
-00025646  50                push ax
-00025648  0E                push cs
-00025649  E850FA            call 0x509c
-0002564C  EB20              jmp short 0x566e
-0002564E  83460601          add word [bp+0x6],byte +0x1
-00025652  1BC0              sbb ax,ax
-00025654  250010            and ax,0x1000
-00025657  014608            add [bp+0x8],ax
-0002565A  836EF801          sub word [bp-0x8],byte +0x1
-0002565E  835EFA00          sbb word [bp-0x6],byte +0x0
-00025662  8B46F8            mov ax,[bp-0x8]
-00025665  0B46FA            or ax,[bp-0x6]
-00025668  74C9              jz 0x5633
-0002566A  E97AFF            jmp 0x55e7
-0002566E  5E                pop si
-0002566F  8BE5              mov sp,bp
-00025671  5D                pop bp
-00025672  CB                retf
+000253AC ; frwite()
 
 00025674  55                push bp
 00025675  8BEC              mov bp,sp
@@ -57868,85 +57605,8 @@
 000257B6  5D                pop bp
 000257B7  CB                retf
 
-000257B8  55                push bp
-000257B9  8BEC              mov bp,sp
-000257BB  83EC04            sub sp,byte +0x4
-000257BE  837E0600          cmp word [bp+0x6],byte +0x0
-000257C2  7503              jnz 0x57c7
-000257C4  E98900            jmp 0x5850
-000257C7  817E08BC5C        cmp word [bp+0x8],0x5cbc
-000257CC  7507              jnz 0x57d5
-000257CE  817E0AFE30        cmp word [bp+0xa],0x30fe
-000257D3  7414              jz 0x57e9
-000257D5  817E08C85C        cmp word [bp+0x8],0x5cc8
-000257DA  7403              jz 0x57df
-000257DC  E9B400            jmp 0x5893
-000257DF  817E0AFE30        cmp word [bp+0xa],0x30fe
-000257E4  7403              jz 0x57e9
-000257E6  E9AA00            jmp 0x5893
-000257E9  C45E08            les bx,[bp+0x8]
-000257EC  268A470B          mov al,[es:bx+0xb]
-000257F0  98                cbw
-000257F1  50                push ax
-000257F3  0E                push cs
-000257F4  E89703            call 0x5b8e			; Checks for _IOSTRG.
-000257F7  83C402            add sp,byte +0x2
-000257FA  0BC0              or ax,ax
-000257FC  7503              jnz 0x5801
-000257FE  E99200            jmp 0x5893
-00025801  8B4608            mov ax,[bp+0x8]
-00025804  2DB05C            sub ax,0x5cb0
-00025807  99                cwd
-00025808  B90C00            mov cx,0xc
-0002580B  F7F9              idiv cx
-0002580D  8BC8              mov cx,ax
-0002580F  D1E0              shl ax,1
-00025811  03C1              add ax,cx
-00025813  D1E0              shl ax,1
-00025815  05A05D            add ax,0x5da0
-00025818  8946FC            mov [bp-0x4],ax
-0002581B  8C5EFE            mov [bp-0x2],ds
-0002581E  FF760A            push word [bp+0xa]
-00025821  FF7608            push word [bp+0x8]
-00025825  0E                push cs
-00025826  E8C505            call 0x5dee
-00025829  83C404            add sp,byte +0x4
-0002582C  C45EFC            les bx,[bp-0x4]
-0002582F  26C60700          mov byte [es:bx],0x0
-00025833  26C747020000      mov word [es:bx+0x2],0x0
-00025839  C45E08            les bx,[bp+0x8]
-0002583C  2BC0              sub ax,ax
-0002583E  99                cwd
-0002583F  268907            mov [es:bx],ax
-00025842  26895702          mov [es:bx+0x2],dx
-00025846  26894706          mov [es:bx+0x6],ax
-0002584A  26895708          mov [es:bx+0x8],dx
-0002584E  EB43              jmp short 0x5893
-00025850  C45E08            les bx,[bp+0x8]
-00025853  26817F06B058      cmp word [es:bx+0x6],0x58b0
-00025859  7508              jnz 0x5863
-0002585B  26817F08FE30      cmp word [es:bx+0x8],0x30fe
-00025861  7410              jz 0x5873
-00025863  26817F06B05A      cmp word [es:bx+0x6],0x5ab0
-00025869  7528              jnz 0x5893
-0002586B  26817F08FE30      cmp word [es:bx+0x8],0x30fe
-00025871  7520              jnz 0x5893
-00025873  268A470B          mov al,[es:bx+0xb]
-00025877  98                cbw
-00025878  50                push ax
-0002587A  0E                push cs
-0002587B  E81003            call 0x5b8e				; Checks for _IOSTRG.
-0002587E  83C402            add sp,byte +0x2
-00025881  0BC0              or ax,ax
-00025883  740E              jz 0x5893
-00025885  FF760A            push word [bp+0xa]
-00025888  FF7608            push word [bp+0x8]
-0002588C  0E                push cs
-0002588D  E85E05            call 0x5dee
-00025890  83C404            add sp,byte +0x4
-00025893  8BE5              mov sp,bp
-00025895  5D                pop bp
-00025896  CB                retf
+
+000257B8  ; ftbuf
 
 00025898  59                pop cx
 00025899  5A                pop dx
@@ -57958,47 +57618,9 @@
 000258A5  52                push dx
 000258A6  51                push cx
 000258A7  CB                retf
-000258A8  33C0              xor ax,ax
-000258AA  EBF9              jmp short 0x58a5
-000258AC  55                push bp
-000258AD  8BEC              mov bp,sp
-000258AF  C45E06            les bx,[bp+0x6]		; Check whether ES:BX is a null pointer.
-000258B2  8CC0              mov ax,es			;
-000258B4  0BC3              or ax,bx			;
-000258B6  7405              jz 0x58bd			;
-000258B8  26804FFE01        or byte [es:bx-0x2],0x1	; ES:BX is not a null pointer.
-000258BD  8BE5              mov sp,bp
-000258BF  5D                pop bp
-000258C0  CB                retf
 
-000258C1  55                push bp
-000258C2  8BEC              mov bp,sp
-000258C4  83EC02            sub sp,byte +0x2
-000258C7  56                push si
-000258C8  57                push di
-000258C9  8B4606            mov ax,[bp+0x6]
-000258CC  3DF1FF            cmp ax,0xfff1
-000258CF  731E              jnc 0x58ef
-000258D1  833E905F00        cmp word [0x5f90],byte +0x0
-000258D6  7508              jnz 0x58e0
-000258D8  E82500            call 0x5900
-000258DB  7412              jz 0x58ef
-000258DD  A3905F            mov [0x5f90],ax
-000258E0  E88B00            call 0x596e
-000258E3  7515              jnz 0x58fa
-000258E5  E81800            call 0x5900
-000258E8  7405              jz 0x58ef
-000258EA  E88100            call 0x596e
-000258ED  750B              jnz 0x58fa
-000258EF  FF7606            push word [bp+0x6]
-000258F3  0E                push cs
-000258F4  E8B7E3            call 0x3cae
-000258F7  83C402            add sp,byte +0x2
-000258FA  5F                pop di
-000258FB  5E                pop si
-000258FC  8BE5              mov sp,bp
-000258FE  5D                pop bp
-000258FF  CB                retf
+000258A8  ; ffree()
+000258C1  ; malloc()
 
 00025900  BBF000            mov bx,0xf0
 00025903  395E06            cmp [bp+0x6],bx
