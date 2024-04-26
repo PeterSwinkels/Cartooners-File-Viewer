@@ -1,0 +1,337 @@
+Description:	Type:	Offset:	Related:	Size:	Comment:
+8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
+About Cartooners	text	208068	0	226	
+About dialog text alignment.	binary	208066	0	1	
+access()	8086_code	149777	0	32	
+Actors dialog.	text	215400	0	36	
+aFahdiff()	8086_code	146956	0	43	
+aFldiv()	8086_code	151212	0	154	
+aFlmul()	8086_code	151368	0	50	
+aFlrem()	8086_code	151451	0	129	
+aFlshl()	8086_code	151582	0	11	
+aFlshr()	8086_code	151594	0	11	
+atexit()	8086_code	148470	0	8	
+atoi()	8086_code	154424	0	86	
+Background screen buffer.	rectangles	207590	0	8	
+bdos()	8086_code	154546	0	18	
+bios_equiplist()	8086_code	150880	0	3	
+Blank... (act option)	text	203866	0	11	
+Buffer for speech balloon text in Act menu.	text	203882	0	31	
+Button corner rounding procedure	8086_code	66835	0	51	
+Button edge style information.	binary	205638	0	38	
+Bytes per row #1.	binary	207560	0	1	
+Bytes per row #2.	binary	207588	0	1	
+C_FILE_INFO.	text	222775	0	11	
+Cancel printing.	text	213433	0	35	
+chdir()	8086_code	149819	0	13	
+Checked circle.	icon	201404	204320	69	
+Circle.	icon	201332	204320	69	
+close()	8086_code	145438	0	30	
+Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
+Critical unknown #02	binary	205370	0	48	Causes freezing at startup when modified.
+Critical unknown #03	binary	205463	0	3	Modification causes freezing at startup.
+Critical unknown #04	binary	207630	0	2	Modification causes files not to be listed in load dialog.
+Critical unknown #05	binary	225335	0	1	Changing to zero causes an out of memory error at start up.
+Critical unknown #06	binary	209880	0	2	Changing causes the levels dialog to freeze.
+Critical unknown #07	binary	209894	0	16	Changing affects the levels dialog.
+Critical unknown #08	binary	209918	0	16	Changing affects the levels dialog.
+Critical unknown #09	binary 	209950	0	58	Changing disables the levels dialog.
+Critical unknown #10	binary	205618	0	20	Unsafe to modify - affects GUI's appearance.
+Critical unknown #11	binary	211054	0	1	Modification causes the pause dialog to freeze when opened.
+Critical unknown #12	binary	211078	0	1	Modification causes the pause dialog to freeze when opened.
+Critical unknown #13	binary	213594	0	996	Unsafe to modify - causes freezing when opening dialogs.
+Critical unknown #14	binary	205761	0	990	Unsafe to modify - causes freezing when opening file dialogs.
+Critical unknown #15	binary	208295	0	629	Unsafe to modify - disables the no printer driver message box.
+Critical unknown #16	binary	200736	0	1	Modification causes a null pointer assignment error upon exit.
+Critical unknown #17	binary	180320	0	1	Modification causes either freezing at title screen or termination.
+Critical unknown #18	binary	201104	0	1	Modification causes a division by zero termination.
+Critical unknown #19	binary	208064	0	2	Modification influences the about dialog text.
+Cross arrows.	icon	202528	204320	51	
+CTRL-Break handler.	8086_code	8	0	33	Handles the CTRL-Break keys being pressed.
+ctype	binary	224775	0	256	
+Day and month abbreviations.	text	225252	0	58	
+Dialog line break.	binary	203406	0	4	
+Dialog placement procedure	8086_code	67754	0	51	
+Dialog. #1	text	204355	0	134	
+Dialog. #2	text	205418	0	45	
+Dialog. #3	text	205710	0	51	
+Dialog. #4	text	207842	0	220	
+Dialog. #5	text	208924	0	704	
+Dialog. #6	text	210124	0	14	
+Dialog. #7	text	210869	0	10	
+Dialog. #8	text	211572	0	790	
+dos_findfirst()	8086_code	150912	0	31	
+dos_findnext()	8086_code	150902	0	10	
+dos_getdiskfree()	8086_code	150968	0	45	
+dos_getdrive()	8086_code	151014	0	20	
+dos_getvect()	8086_code	150884	0	18	
+dos_setdrive	8086_code	151188	0	23	
+dos_setvect()	8086_code	150946	0	21	
+Drive letters.	text	205676	0	34	
+Driver file extensions	text	205510	0	12	
+dtoxmode()	8086_code	150138	0	225	
+Eraser.	icon	202096	204320	141	
+Error code translator.	8086_code	152440	0	51	Saves the error code at [0x566F].
+Error message retrieval.	8086_code	152322	0	41	Returns the position of an error message to be written to STDERR.
+Error messages. #1	text	200737	0	307	
+Error messages. #2	text	204489	0	28	
+Error messages. #3	text	204523	0	39	
+Error messages. #4	text	206936	0	611	
+Exclamation balloon information.	binary	158802	0	2029	
+Exclamation icon record size.	binary	203340	0	2	
+Exclamation icon.	point	203336	0	4	
+Exclamation icon.	far_address	203346	0	4	
+Exclamation.	icon	202592	204320	248	
+Executable extensions.	text	225068	0	15	
+exit()	8086_code	144821	0	70	
+exit()	8086_code	144798	0	22	
+fflush()	8086_code	155118	0	142	
+ffree()	8086_code	153768	0	25	
+File system related characters.	text	206751	0	23	
+filelength()	8086_code	147182	0	102	
+Filled circle.	icon	201476	204320	69	
+flsbuf()	8086_code	144992	0	446	
+Frame number Cancel button edge type.	binary	211380	0	1	
+Frame number Cancel button id.	binary	211362	0	2	
+Frame number Cancel button style.	binary	211372	0	2	
+Frame number Cancel button text.	far_address	211374	0	4	
+Frame number Cancel button.	rectangles	211364	0	8	
+Frame number dialog.	rectangles	211470	0	8	
+Frame number OK button edge type.	binary	211356	0	1	
+Frame number OK button id.	binary	211338	0	2	
+Frame number OK button style.	binary	211348	0	2	
+Frame number OK button.	rectangles	211340	0	8	
+Frame number OK button.	far_address	211350	0	4	
+Frame number text label.	rectangles	211388	0	8	
+Frame number text.	far_address	211398	0	4	
+Frame number textbox border.	rectangles	211448	0	8	
+Frame number textbox.	rectangles	211424	0	8	
+Frame number textbox.	far_address	211434	0	4	
+Free memory bar.	rectangles	212388	0	8	
+Free memory dialog.	rectangles	212458	0	8	
+Free memory kbs.	far_address	212422	0	4	
+Free memory label.	rectangles	212412	0	8	
+Free memory OK button id.	binary	212362	0	2	
+Free memory OK button style.	binary	212372	0	2	
+Free memory OK button text.	far_address	212374	0	4	
+Free memory OK button.	rectangles	212364	0	8	
+Free memory.	far_address	212446	0	4	
+Free memory.	rectangles	212436	0	8	
+freect()	8086_code	147455	0	82	
+ftbuf()	8086_code	153528	0	223	
+Function end point with error check #1.	8086_code	152408	0	8	Used by multiple functions. Clear the AX register in case of an error.
+Function end point with error check #2.	8086_code	152416	0	11	Used by multiple functions. Calls the error code translator in case of an error while preserving the original code in the AX register.
+Function end point with error check #3.	8086_code	152427	0	13	Used by multiple functions. Calls the error code translator in case of an error.
+fwrite()	8086_code	152492	0	711	
+getcwd()	8086_code	149876	0	24	
+getdcwd	8086_code	149900	0	238	
+getenv()	8086_code	156008	0	150	
+GUI CGA/EGA.	palette	204320	0	32	
+Hand icon record size.	binary	203388	0	2	
+Hand icon.	point	203384	0	4	
+Hand icon.	far_address	203394	0	4	
+Hand.	icon	203088	204320	248	
+harderr()	8086_code	151034	0	35	
+hardresume	8086_code	151111	0	8	
+hardresume() function.	8086_code	151069	0	42	
+int86()	8086_code	146820	0	136	
+int86x()	8086_code	147572	0	152	
+intdos()	8086_code	147724	0	82	
+intdosx()	8086_code	147806	0	98	
+Interface icon buffer.	rectangles	207548	0	8	
+Invalid actor error.	text	215274	0	31	
+isatty()	8086_code	154510	0	35	Returns true if _IOSTRG is detected.
+isatty() call #1.	8086_code	0	0	8	
+isatty() call #2.	8086_code	1810	0	8	
+itoa()	8086_code	146782	0	26	
+Key retrieval.	8086_code	95848	0	39	Checks whether a key is pressed and returns which if so.
+Keyboard layout.	text	215156	0	117	
+Left arrow.	icon	201736	204320	178	
+Level rectangle #1.	rectangles	209680	0	8	
+Level rectangle #2.	rectangles	209704	0	8	
+Level rectangle #3.	rectangles	209728	0	8	
+Level rectangle #4.	rectangles	209752	0	8	
+Level rectangle #5.	rectangles	209776	0	8	
+Level rectangle #6.	rectangles	209800	0	8	
+Level rectangle #7.	rectangles	209824	0	8	
+Level rectangle #8.	rectangles	209848	0	8	
+Levels dialog Cancel button edge type.	binary	209672	0	1	If the second to last bit is set the button will have no rounded edges.
+Levels dialog Cancel button id.	binary	209654	0	2	
+Levels dialog Cancel button style.	binary	209664	0	2	Modification causes freezing upon opening the levels dialog.
+Levels dialog Cancel button text.	far_address	209666	0	4	
+Levels dialog Cancel button.	rectangles	209656	0	8	
+Levels dialog Level text label layout.	binary	209874	0	6	BYTES {x, y, bottom, null, right, null}
+Levels dialog Level text.	far_address	209882	0	4	
+Levels dialog Ok button edge type.	binary	209648	0	1	If the second to last bit is set the button will have no rounded edges.
+Levels dialog OK button id.	binary	209630	0	2	
+Levels dialog OK button style.	binary	209640	0	2	
+Levels dialog OK button text.	far_address	209642	0	4	
+Levels dialog OK button.	rectangles	209632	0	8	
+Levels dialog.	rectangles	209942	0	8	
+Locate text.	text	214590	0	8	
+longjmp()	8086_code	149366	0	42	
+Loop arrow.	icon	202384	204320	141	
+lseek()	8086_code	145470	0	120	
+ltoa()	8086_code	146810	0	8	
+main()	8086_code	41	0	318	
+malloc()	8086_code	153793	0	63	
+memcpy()	8086_code	155910	0	94	
+memmove()	8086_code	148268	0	202	
+Menu and ticket screen buttons.	rectangles	206818	0	16	
+Menu bar.	rectangles	205468	0	8	
+Menu cursor blink count.	binary	205466	0	2	
+Menu screen CGA.	palette	170480	0	32	
+Menu screen EGA.	palette	170512	0	32	
+Menu screen.	image	170544	170512	9772	
+Menu screen.	rectangles	206778	0	40	
+mkdir()	8086_code	149812	0	6	
+Mouse arrow transparency bitmask.	mousemask	214610	0	32	
+Mouse arrow.	bitmap	214642	214610	32	
+Mouse handler disable.	8086_code	95974	0	24	Disables the mouse handler.
+Mouse handler setup.	8086_code	95925	0	49	Set up the mouse handler for responding to the left button.
+Mouse wait transparency bitmask.	mousemask	214674	0	32	
+Mouse wait.	bitmap	214706	214674	32	
+Moveable item screen buffer.	rectangles	207576	0	8	
+Movie dialog. #1	text	204148	0	62	
+Movie dialog. #2	text	206882	0	23	
+Movie editor buttons.	text	201706	0	9	
+Movie editor menus.	text	204638	0	706	
+Movie editor.	rectangles	201554	0	152	
+Movie file item types.	text	203941	0	23	
+Movie item directories.	text	203913	0	28	
+MS Run-time Library copyright.	text	200680	0	56	
+Music dialog.	text	205476	0	30	
+onexit()	8086_code	148479	0	44	
+Palette dialog.	text	215305	0	22	
+Pause dialog Cancel button edge type.	binary	211086	0	1	If the second to last bit is set the button will have no rounded edges.
+Pause dialog Cancel button id.	binary	211068	0	2	
+Pause dialog Cancel button text.	far_address	211080	0	4	
+Pause dialog Cancel button.	rectangles	211070	0	8	
+Pause dialog Long label.	rectangles	211118	0	8	
+Pause dialog Long label.	far_address	211128	0	4	
+Pause dialog OK button edge type.	binary	211062	0	1	If the second to last bit is set the button will have no rounded edges.
+Pause dialog OK button text.	far_address	211056	0	4	
+Pause dialog OK button.	rectangles	211046	0	8	
+Pause dialog scrollbar.	rectangles	211142	0	8	
+Pause dialog Seconds counter.	rectangles	211190	0	8	
+Pause dialog Seconds label.	rectangles	211166	0	8	
+Pause dialog Seconds text.	far_address	211176	0	4	
+Pause dialog Short label.	rectangles	211094	0	8	
+Pause dialog Short text.	far_address	211104	0	4	
+Pause dialog speed value.	far_address	211200	0	4	
+Pause dialog text.	rectangles	211214	0	8	
+Pause dialog text.	far_address	211224	0	4	
+Pause dialog.	rectangles	211236	0	8	
+PIT configuration.	8086_code	64482	0	47	Configures the system timer to run faster and redirects interrupt 0x08.
+PIT reset.	8086_code	64529	0	48	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
+PRINTING...	text	213416	0	10	
+puts()	8086_code	147002	0	155	
+qsort()	8086_code	148523	0	239	
+read()	8086_code	146024	0	233	
+remove()	8086_code	150864	0	13	
+Right arrow.	icon	201916	204320	177	
+rmdir()	8086_code	149834	0	40	
+Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
+Run-time error messages.	text	225344	0	224	
+Save movie dialog drive mask. 	text	204352	0	3	
+Scenes dialog.	text	215370	0	30	
+segread()	8086_code	147904	0	29	
+signal()	8086_code	149414	0	163	
+Speaking icon record size.	binary	203364	0	2	
+Speaking icon.	point	203360	0	4	
+Speaking icon.	far_address	203370	0	4	
+Speaking.	icon	202840	204320	248	
+Speech balloon dialog buttons.	text	203578	0	18	
+Speech balloon dialog buttons.	rectangles	203596	0	24	
+Speech balloon information.	binary	156224	0	1074	
+Speech balloon layouts.	text	203820	0	46	
+Speech balloon line break	binary	203412	0	3	
+Speech balloon menu slots.	text	168150	0	2125	
+Speech balloon properties dialog.	rectangles	203426	0	152	
+Speech balloon types.	text	203620	0	198	
+Speech balloon.	icon	202240	204320	141	
+Startup files.	text	203964	0	46	
+stat()	8086_code	150364	0	499	
+strchr()	8086_code	147934	0	45	
+strcpy()	8086_code	154346	0	54	
+strcspn()	8086_code	148176	0	92	
+stricmp()	8086_code	147980	0	69	
+strlen()	8086_code	154400	0	23	
+strlwr()	8086_code	148096	0	40	
+strncat()	8086_code	146676	0	59	
+strncmp()	8086_code	156158	0	59	
+strncpy()	8086_code	146736	0	42	
+strpbrk()	8086_code	154856	0	94	
+strrchr()	8086_code	148050	0	46	
+strupr()	8086_code	148136	0	40	
+Supported file extensions.	text	204244	0	30	
+tell()	8086_code	147158	0	24	
+Thought balloon information.	binary	157308	0	1468	
+Ticket screen CGA.	palette	193808	0	32	
+Ticket screen EGA.	palette	193776	0	32	
+Ticket screen.	image	193840	193776	6814	
+Ticket screen.	rectangles	206834	0	48	
+Ticket screen.	text	206905	0	16	
+Time zones.	text	225226	0	11	
+Title screen CGA.	palette	183056	0	32	
+Title screen EGA.	palette	183088	0	32	
+Title screen mouse pointer boolean.	binary	214604	0	2	0 = on, non-zero = off
+Title Screen.	image	183122	183088	10646	Appears for 5 seconds at startup.
+Undo menu options.	text	204562	0	75	
+Unknown #01	binary	157298	0	10	Appears to be safe to modify.
+Unknown #02	binary	201716	0	20	Appears to be safe to modify.
+Unknown #03	binary	205522	0	95	Appears to be safe to modify.
+Unknown #04	binary	213426	0	7	Appears to be safe to modify.
+Unknown #05	binary	213468	0	126	Appears to be safe to modify.
+Unknown #06	binary	214738	0	418	Appears to be safe to modify.
+Unknown #07	binary	215328	0	42	Appears to be safe to modify.
+Unknown #08	binary	215436	0	504	Appears to be safe to modify.
+Unknown #09	binary	215940	0	32	Appears to be safe to modify.
+Unknown #10	binary	158776	0	26	Appears to be safe to modify.
+Unknown #11	binary	215972	0	37	Appears to be safe to modify.
+Unknown #12	binary	216268	0	6507	Appears to be safe to modify.
+Unknown #13	binary	222786	0	1989	Appears to be safe to modify.
+Unknown #14	binary	225032	0	36	Appears to be safe to modify.
+Unknown #15	binary	225083	0	143	Appears to be safe to modify.
+Unknown #16	binary	225237	0	15	Appears to be safe to modify.
+Unknown #17	binary	225310	0	24	Appears to be safe to modify.
+Unknown #18	binary	160831	0	840	60x 14 byte records.
+Unknown #19	binary	180321	0	281	Appears to be safe to modify.
+Unknown #20	binary	180943	0	2113	Appears to be safe to modify.
+Unknown #21	binary	183120	0	2	Appears to be safe to modify.
+Unknown #22	binary	201044	0	60	Appears to be safe to modify.
+Unknown #23	binary	201105	0	227	Appears to be safe to modify.
+Unknown #24	binary	201545	0	9	Appears to be safe to modify.
+Unknown #25	binary	203415	0	11	Appears to be safe to modify.
+Unknown #26	binary	203410	0	2	Appears to be safe to modify.
+Unknown #27	text	203877	0	5	Appears to be safe to modify.
+Unknown #28	binary	204210	0	34	Appears to be safe to modify.
+Unknown #29	binary	204274	0	46	Appears to be safe to modify.
+Unknown #30	binary	204517	0	6	Appears to be safe to modify.
+Unknown #31	binary	205344	0	26	Appears to be safe to modify.
+Unknown #32	binary	206921	0	8	Appears to be safe to modify.
+Unknown #33	binary	207562	0	13	Appears to be safe to modify.
+Unknown #34	binary	207598	0	32	Appears to be safe to modify.
+Unknown #35	binary	207632	0	16	Appears to be safe to modify.
+Unknown #36	binary	204035	0	35	Appears to be safe to modify.
+Unknown #37	binary	207648	0	108	Appears to be safe to modify.
+Unknown #38	binary	207812	0	30	Appears to be safe to modify.
+Unknown #39	binary	225334	0	1	Appears to be safe to modify.
+Unknown #40	binary	225336	0	8	Appears to be safe to modify.
+Unknown #41	binary	214598	0	6	Appears to be safe to modify.
+Unknown #42	binary	210008	0	116	Appears to be safe to modify.
+Unknown #43	binary	210138	0	731	Appears to be safe to modify.
+Unknown #44	binary	210879	0	167	Appears to be safe to modify.
+Unknown #45	binary	211204	0	10	Appears to be safe to modify.
+Unknown #46	binary	161671	0	3240	60x 54 byte records.
+Unknown #47	binary	164911	0	510	255x 2 byte records.
+Unknown #48	binary	165421	0	514	257x 2 byte records.
+Unknown #49	binary	165935	0	56	28x 2 byte records.
+Unknown #50	binary	165991	0	2159	1080x 2 byte records. 
+Unknown #51	binary	212468	0	20	Influences the Free Memory dialog.
+Version.	text	206929	0	6	
+Video mode error message.	text	207756	0	56	
+Way menu items. #1	text	170275	0	190	
+Way menu items. #2	text	216009	0	259	
+Write error message to STDERR.	8086_code	152365	0	41	Takes an error message's offset and outputs the message to STDERR.
+write()	8086_code	146258	0	215	
