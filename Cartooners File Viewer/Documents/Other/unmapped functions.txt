@@ -1,0 +1,50 @@
+_amlink	seg002	6286	22			R	.	L	.	.	.	.
+_catox	seg002	6318	56	6	4	R	F	L	.	B	.	.
+_chkstk	seg002	00003E1C	24			R	F	L	.	.	.	.
+_cinit	seg002	00003CBA	000000C4			R	F	L	.	.	.	.
+_ctermsub	seg002	00003DDC	0000002D			R	.	L	.	.	.	.
+_cXENIXtoDOSmode	seg002	4237	11			R	.	L	.	.	.	.
+_dtoxtime	seg002	000063A4	123	26	0000000C	R	F	L	.	B	.	.
+_exit	seg002	00003D95	47	2	4	.	.	L	.	B	T	.
+_FF_MSGBANNER	seg002	000058EA	24	2	0	R	F	L	.	B	.	.
+_ffree	seg002	0000608C	15	2	4	R	F	L	.	B	T	.
+_flsbuf	seg002	3,00E+40	000001BE	0000000E	6	R	F	L	.	B	T	.
+_freect	seg002	000047DF	52	4	2	R	F	L	.	B	T	.
+_ftbuf	seg002	00005F98	000000DF	6	6	R	F	L	.	B	T	.
+_getbuf	seg002	5,00E+54	0000008A	6	4	R	.	L	.	B	.	.
+_maperror	seg002	00005B58	6			R	F	L	.	.	.	.
+_memavl	seg002	000047A3	0000003C	4	0	R	F	L	.	B	T	.
+_memmax	seg002	0000475A	49	4	0	R	F	L	.	B	T	.
+_NMSG_TEXT	seg002	00005AE2	0000002B	6	2	R	F	L	.	B	.	.
+_NMSG_WRITE	seg002	00005B0D	0000002B	4	2	R	F	L	.	B	.	.
+_nullcheck	seg002	5914	26	2	0	R	F	L	.	.	.	.
+_setargv	seg002	0000593A	000001A7			R	.	L	.	.	.	.
+_sigentry	seg002	5029	28	2	0	R	F	L	.	B	.	.
+_stbuf	seg002	00005EDE	000000BA	0000000A	4	R	F	L	.	B	.	.
+brkctl	seg002	0000665C	0000006E	6	0000000A	R	F	L	.	B	.	.
+open	seg002	4098	0000019F	6	8	R	F	L	.	B	T	.
+setjmp	seg002	00004F2C	0000002A	0	4	R	F	L	.	B	.	.
+stackavail	seg002	6078	14			R	F	L	.	.	T	.
+j___catox	seg002	0000453A	3	0	FFFFFFFE	R	F	L	.	.	.	.
+j___catox_0	seg002	6944	3	6	0	R	F	L	.	B	.	.
+quicksort	seg002	00004CFA	000001D7	0000000A	8	R	.	L	S	B	.	.
+start	seg002	00003BEC	000000CD			.	.	L	.	.	.	.
+sub_33629	seg002	3000000000	13			R	.	L	.	.	.	.
+sub_33C06	seg002	43000000	0000005C			R	F	L	.	.	.	.
+sub_33F54	seg002	4734	26	2	0	R	.	L	.	B	.	.
+sub_34051	seg002	4831	22	2	0	R	.	L	.	B	.	.
+sub_34D60	seg002	5540	3			R	F	.	.	.	.	.
+sub_34E50	seg002	5630	42	2	2	R	F	.	.	B	.	.
+sub_3537E	seg002	00005B5E	0000002E	0	0	R	.	L	.	.	.	.
+sub_35900	seg002	60	0000006E			R	.	L	.	.	.	.
+sub_3596E	seg002	0000614E	17			R	.	L	.	.	.	.
+sub_35EEA	seg002	000066CA	56			R	.	L	.	.	.	.
+sub_35F40	seg002	6720	10	0	0	R	F	L	.	.	.	.
+sub_35F50	seg002	6730	000000D3	0000000A	0	R	F	L	.	B	.	.
+sub_36024	seg002	6804	0	0000000A	4	R	F	L	.	B	.	.
+swap	seg002	00004ED2	59	4	0000000A	R	.	L	S	B	.	.
+unknown_libname_1	seg002	0000447C	12	2	2	R	F	L	.	B	.	.
+unknown_libname_2	seg002	0000448E	46	6	2	R	F	L	.	B	.	.
+unknown_libname_3	seg002	5816	21	2	4	R	F	L	.	B	.	.
+unknown_libname_4	seg002	5838	21	2	4	R	F	L	.	B	.	.
+unknown_libname_5	seg002	0000585A	21	2	4	R	F	L	.	B	.	.
