@@ -54122,193 +54122,11 @@
 000233F8  5D                pop bp
 000233F9  CA0C00            retf 0xc
 
-;<<< Entry point >>>
-0002340C  B430              mov ah,0x30		;
-0002340E  CD21              int 0x21		;
-00023410  3C02              cmp al,0x2		; Quits if the MS-DOS version is lower than 2.0
-00023412  7302              jnc 0x3416		;
-00023414  CD20              int 0x20		;
-00023416  BFFE30            mov di,0x30fe	; 
-00023419  8B360200          mov si,[0x2]	;
-0002341D  2BF7              sub si,di		;
-0002341F  81FE0010          cmp si,0x1000	; 
-00023423  7203              jc 0x3428		; Jump to 0x3428 when [0x02] - 12542 is lower than 4096.
-00023425  BE0010            mov si,0x1000	;
-00023428  FA                cli			;
-00023429  8ED7              mov ss,di		;
-0002342B  81C47ED9          add sp,0xd97e	;
-0002342F  FB                sti			;
-00023430  7314              jnc 0x3446		; Jump to 0x3446 if there are not at least 55678 bytes of free stack space.
-00023432  16                push ss		; Set the data segment to the stack segment.
-00023433  1F                pop ds		;
-00023435  0E                push cs		; Save the code segment on the stack.
-00023436  E8D11C            call 0x510a		; Display error 203.
-00023439  33C0              xor ax,ax		; Push a null word onto the stack.
-0002343B  50                push ax		;
-0002343D  0E                push cs		; Save the code segment on the stack.
-0002343E  E8EC1E            call 0x532d		; Display an error message.
-00023441  B8FF4C            mov ax,0x4cff	; exit(-1);
-00023444  CD21              int 0x21		;
-; Continue here if there is enough stack space.
-00023446  83E4FE            and sp,byte -0x2    ; Set the stack pointer to the start of the paragraph it points to.
-00023449  3689260456        mov [ss:0x5604],sp	; Save the stack pointer.
-0002344E  3689260056        mov [ss:0x5600],sp	;
-00023453  8BC6              mov ax,si		; ax = (si >> 0x4) - 0x01 --- Converts an offset to a segment?
-00023455  B104              mov cl,0x4		;
-00023457  D3E0              shl ax,cl		;
-00023459  48                dec ax		;
-0002345A  36A3FE55          mov [ss:0x55fe],ax	; Save ax.
-0002345E  03F7              add si,di			; SI = SI + 0x30fe
-00023460  89360200          mov [0x2],si		; Saves SI to DS:0x02.
-00023464  8CC3              mov bx,es			; Blocksize = 0xFFFF - (ES - SI)
-00023466  2BDE              sub bx,si			;
-00023468  F7DB              neg bx			;
-0002346A  B44A              mov ah,0x4a			; Modify an allocated memory block.
-0002346C  CD21              int 0x21			;
-0002346E  368C1E7556        mov [ss:0x5675],ds
-00023473  16                push ss
-00023474  07                pop es
-00023475  FC                cld
-00023476  BF4061            mov di,0x6140
-00023479  B980D9            mov cx,0xd980
-0002347C  2BCF              sub cx,di
-0002347E  33C0              xor ax,ax
-00023480  F3AA              rep stosb
-00023482  16                push ss
-00023483  1F                pop ds
-00023485  0E                push cs
-00023486  E85100            call 0x34da
-00023489  16                push ss
-0002348A  1F                pop ds
-0002348B  9A00000000        call 0x0:0x0
-00023491  0E                push cs
-00023492  E8C51C            call 0x515a
-00023495  33ED              xor bp,bp
-00023497  FF369A56          push word [0x569a]
-0002349B  FF369856          push word [0x5698]
-0002349F  FF369656          push word [0x5696]
-000234A3  FF369456          push word [0x5694]
-000234A7  FF369256          push word [0x5692]
-000234AB  9A29000000        call 0x0:0x29
-000234B0  50                push ax
-000234B2  0E                push cs
-000234B3  E8E800            call 0x359e
-000234B6  B8FE30            mov ax,0x30fe	; Program data segment.
-000234B9  8ED8              mov ds,ax		;
-000234BB  B80300            mov ax,0x3
-000234BE  36C70602567E3D    mov word [ss:0x5602],0x3d7e
-000234C5  50                push ax
-000234C7  0E                push cs
-000234C8  E83F1C            call 0x510a
-000234CC  0E                push cs
-000234CD  E85D1E            call 0x532d			; Displays an error message.
-000234D0  B8FF00            mov ax,0xff
-000234D3  50                push ax
-000234D4  0E                push cs
-000234D5  FF160256          call [0x5602]
-000234D9  00B430CD          add [si-0x32d0],dh
-000234DD  21A37756          and [bp+di+0x5677],sp
-000234E1  B80035            mov ax,0x3500		; Saves the division by zero handler.
-000234E4  CD21              int 0x21			;
-000234E6  891E6356          mov [0x5663],bx		;
-000234EA  8C066556          mov [0x5665],es		;
-000234EE  0E                push cs			; Sets the division by zero handler to CS:0x3c96
-000234EF  1F                pop ds			;
-000234F0  B80025            mov ax,0x2500		;
-000234F3  BA963C            mov dx,0x3c96		;
-000234F6  CD21              int 0x21			;
-000234F8  16                push ss			; Sets the data segment to the stack segment.
-000234F9  1F                pop ds			;
-000234FA  8B0E4460          mov cx,[0x6044]
-000234FE  E32E              jcxz 0x352e
-00023500  8E067556          mov es,[0x5675]
-00023504  268B362C00        mov si,[es:0x2c]
-00023509  C5064660          lds ax,[0x6046]
-0002350D  8CDA              mov dx,ds
-0002350F  33DB              xor bx,bx
-00023511  36FF1E4260        call far [ss:0x6042]
-00023516  7305              jnc 0x351d
-00023518  16                push ss
-00023519  1F                pop ds
-0002351A  E9111C            jmp 0x512e
-0002351D  36C5064A60        lds ax,[ss:0x604a]
-00023522  8CDA              mov dx,ds
-00023524  BB0300            mov bx,0x3
-00023527  36FF1E4260        call far [ss:0x6042]
-0002352C  16                push ss
-0002352D  1F                pop ds
-0002352E  8E067556          mov es,[0x5675]
-00023532  268B0E2C00        mov cx,[es:0x2c]
-00023537  E336              jcxz 0x356f
-00023539  8EC1              mov es,cx
-0002353B  33FF              xor di,di
-0002353D  26803D00          cmp byte [es:di],0x0
-00023541  742C              jz 0x356f
-00023543  B90C00            mov cx,0xc
-00023546  BE5656            mov si,0x5656
-00023549  F3A6              repe cmpsb
-0002354B  740B              jz 0x3558
-0002354D  B9FF7F            mov cx,0x7fff
-00023550  33C0              xor ax,ax
-00023552  F2AE              repne scasb
-00023554  7519              jnz 0x356f
-00023556  EBE5              jmp short 0x353d
-00023558  06                push es
-00023559  1E                push ds
-0002355A  07                pop es
-0002355B  1F                pop ds
-0002355C  8BF7              mov si,di
-0002355E  BF7E56            mov di,0x567e
-00023561  AC                lodsb
-00023562  98                cbw
-00023563  91                xchg ax,cx
-00023564  AC                lodsb
-00023565  FEC0              inc al
-00023567  7401              jz 0x356a
-00023569  48                dec ax
-0002356A  AA                stosb
-0002356B  E2F7              loop 0x3564
-0002356D  16                push ss
-0002356E  1F                pop ds
-0002356F  BB0400            mov bx,0x4			; Gets device information for the printer.
-00023572  80A77E56BF        and byte [bx+0x567e],0xbf	; _IOREAD + _IOWRT + _IOFBF + _IOLBF + _IONBF +_IOMYBUF + _IOEOF + _IOERR + _IORW
-00023577  B80044            mov ax,0x4400		;
-0002357A  CD21              int 0x21			;
-0002357C  720A              jc 0x3588			; Checks whether an error occurred.
-0002357E  F6C280            test dl,0x80		; Checks whether the device is a character device.
-00023581  7405              jz 0x3588			;
-	00023583  808F7E5640        or byte [bx+0x567e],0x40	; Set _IOSTRG.
-00023588  4B                dec bx			; Checks whether there is any device information. ((0x00 - 0x01) == (sign flag == true))
-00023589  79E7              jns 0x3572			;
-0002358B  BE4E60            mov si,0x604e
-0002358E  BF4E60            mov di,0x604e
-00023591  E89500            call 0x3629
-00023594  BE4E60            mov si,0x604e
-00023597  BF4E60            mov di,0x604e
-0002359A  E88C00            call 0x3629
-0002359D  CB                retf
-
+0002340C	; start()
+000234DA	; cinit()  
 0002359E	; exit()
 000235B5	; _exit()
-
-000235FC  8B0E4460          mov cx,[0x6044]
-00023600  E307              jcxz 0x3609
-	00023602  BB0200            mov bx,0x2
-	00023605  FF1E4260          call far [0x6042]
-00023609  1E                push ds
-0002360A  C5166356          lds dx,[0x5663]
-0002360E  B80025            mov ax,0x2500		; Set vector.
-00023611  CD21              int 0x21			;
-00023613  1F                pop ds
-00023614  803EA45600        cmp byte [0x56a4],0x0
-00023619  740D              jz 0x3628
-0002361B  1E                push ds
-0002361C  A0A556            mov al,[0x56a5]
-0002361F  C516A656          lds dx,[0x56a6]
-00023623  B425              mov ah,0x25			; Set vector.
-00023625  CD21              int 0x21			;
-00023627  1F                pop ds
-00023628  C3                ret
+000235FC	; ctermsub()
 
 00023629  3BF7              cmp si,di
 0002362B  730E              jnc 0x363b
@@ -54320,27 +54138,7 @@
 00023639  EBEE              jmp short 0x3629
 0002363B  C3                ret
 
-0002363C  59                pop cx
-0002363D  5A                pop dx
-0002363E  8BDC              mov bx,sp
-00023640  2BD8              sub bx,ax
-00023642  720B              jc 0x364f
-00023644  3B1EAE56          cmp bx,[0x56ae]	; Stack related value.
-00023648  7205              jb 0x364f		;
-0002364A  8BE3              mov sp,bx
-0002364C  52                push dx
-0002364D  51                push cx
-0002364E  CB                retf
-
-0002364F  A1AA56            mov ax,[0x56aa]
-00023652  40                inc ax
-00023653  7505              jnz 0x365a
-00023655  33C0              xor ax,ax
-00023657  E96BFE            jmp 0x34c5
-0002365A  52                push dx
-0002365B  51                push cx
-0002365C  FF2EAA56          jmp far [0x56aa]
-
+0002363C  	; chkstk()
 00023660  	; flsbuf()
 0002383E	; lseek()
 
@@ -54516,17 +54314,7 @@
 00023A51  5D                pop bp
 00023A52  CB                retf
 
-00023A53  32C9              xor cl,cl
-00023A55  EBDC              jmp short 0x3a33
-00023A57  A17156            mov ax,[0x5671]
-00023A5A  F7D0              not ax
-00023A5C  23C1              and ax,cx
-00023A5E  33C9              xor cx,cx
-00023A60  A880              test al,0x80
-00023A62  7503              jnz 0x3a67
-00023A64  80C901            or cl,0x1
-00023A67  C3                ret
-
+00023A53  cXENIXtoDOSmode()
 00023A68  read()
 00023B52  write()
 
@@ -55764,145 +55552,14 @@
 
 00025986  E9CE00            jmp 0x5A54
 
-00025989	_amalloc()
-00025A6C	_amexpand()
-00025AA6	_amlink()
-00025AC8	_amallocbrk()
-
-00025BC4  55                push bp
-00025BC5  8BEC              mov bp,sp
-00025BC7  83EC20            sub sp,byte +0x20
-00025BCA  57                push di
-00025BCB  56                push si
-00025BCC  8B7606            mov si,[bp+0x6]
-00025BCF  B88051            mov ax,0x5180
-00025BD2  BA0100            mov dx,0x1
-00025BD5  52                push dx
-00025BD6  50                push ax
-00025BD7  8D4403            lea ax,[si+0x3]
-00025BDA  99                cwd
-00025BDB  33C2              xor ax,dx
-00025BDD  2BC2              sub ax,dx
-00025BDF  B90200            mov cx,0x2
-00025BE2  D3F8              sar ax,cl
-00025BE4  33C2              xor ax,dx
-00025BE6  2BC2              sub ax,dx
-00025BE8  99                cwd
-00025BE9  52                push dx
-00025BEA  50                push ax
-00025BEC  0E                push cs
-00025BED  E858F3            call 0x4f48
-00025BF0  8946EA            mov [bp-0x16],ax
-00025BF3  8956EC            mov [bp-0x14],dx
-00025BF6  8B5E08            mov bx,[bp+0x8]
-00025BF9  D1E3              shl bx,1
-00025BFB  8BBFCE5F          mov di,[bx+0x5fce]
-00025BFF  8BC6              mov ax,si
-00025C01  99                cwd
-00025C02  B90400            mov cx,0x4
-00025C05  F7F9              idiv cx
-00025C07  0BD2              or dx,dx
-00025C09  7507              jnz 0x5c12
-00025C0B  837E0802          cmp word [bp+0x8],byte +0x2
-00025C0F  7E01              jng 0x5c12
-00025C11  47                inc di
-00025C12  B83C00            mov ax,0x3c
-00025C15  99                cwd
-00025C16  52                push dx
-00025C17  50                push ax
-00025C18  8B460E            mov ax,[bp+0xe]
-00025C1B  99                cwd
-00025C1C  52                push dx
-00025C1D  50                push ax
-00025C1F  0E                push cs
-00025C20  E825F3            call 0x4f48
-00025C23  B9100E            mov cx,0xe10
-00025C26  2BDB              sub bx,bx
-00025C28  53                push bx
-00025C29  51                push cx
-00025C2A  8BC8              mov cx,ax
-00025C2C  8B460C            mov ax,[bp+0xc]
-00025C2F  8BDA              mov bx,dx
-00025C31  99                cwd
-00025C32  52                push dx
-00025C33  50                push ax
-00025C34  894EE4            mov [bp-0x1c],cx
-00025C37  895EE6            mov [bp-0x1a],bx
-00025C3B  0E                push cs
-00025C3C  E809F3            call 0x4f48
-00025C3F  B98051            mov cx,0x5180
-00025C42  BB0100            mov bx,0x1
-00025C45  53                push bx
-00025C46  51                push cx
-00025C47  8BC8              mov cx,ax
-00025C49  B86D01            mov ax,0x16d
-00025C4C  8BDA              mov bx,dx
-00025C4E  F7EE              imul si
-00025C50  8BD0              mov dx,ax
-00025C52  8B460A            mov ax,[bp+0xa]
-00025C55  03C2              add ax,dx
-00025C57  03C7              add ax,di
-00025C59  99                cwd
-00025C5A  52                push dx
-00025C5B  50                push ax
-00025C5C  894EE0            mov [bp-0x20],cx
-00025C5F  895EE2            mov [bp-0x1e],bx
-00025C63  0E                push cs
-00025C64  E8E1F2            call 0x4f48
-00025C67  0346E0            add ax,[bp-0x20]
-00025C6A  1356E2            adc dx,[bp-0x1e]
-00025C6D  0346E4            add ax,[bp-0x1c]
-00025C70  1356E6            adc dx,[bp-0x1a]
-00025C73  8BC8              mov cx,ax
-00025C75  8B4610            mov ax,[bp+0x10]
-00025C78  8BDA              mov bx,dx
-00025C7A  99                cwd
-00025C7B  03C8              add cx,ax
-00025C7D  13DA              adc bx,dx
-00025C7F  81C100A6          add cx,0xa600
-00025C83  81D3CE12          adc bx,0x12ce
-00025C87  014EEA            add [bp-0x16],cx
-00025C8A  115EEC            adc [bp-0x14],bx
-00025C8D  8B460A            mov ax,[bp+0xa]
-00025C90  03C7              add ax,di
-00025C92  8946FC            mov [bp-0x4],ax
-00025C96  0E                push cs
-00025C97  E8A602            call 0x5f40				; Only call to that particular procedure.
-00025C9A  A1F65F            mov ax,[0x5ff6]
-00025C9D  8B16F85F          mov dx,[0x5ff8]
-00025CA1  0146EA            add [bp-0x16],ax
-00025CA4  1156EC            adc [bp-0x14],dx
-00025CA7  8D4450            lea ax,[si+0x50]
-00025CAA  8946F8            mov [bp-0x8],ax
-00025CAD  8B4608            mov ax,[bp+0x8]
-00025CB0  48                dec ax
-00025CB1  8946F6            mov [bp-0xa],ax
-00025CB4  8B460C            mov ax,[bp+0xc]
-00025CB7  8946F2            mov [bp-0xe],ax
-00025CBA  833EFA5F00        cmp word [0x5ffa],byte +0x0
-00025CBF  741A              jz 0x5cdb
-00025CC1  8D46EE            lea ax,[bp-0x12]
-00025CC4  16                push ss
-00025CC5  50                push ax
-00025CC7  0E                push cs
-00025CC8  E85903            call 0x6024
-00025CCB  83C404            add sp,byte +0x4
-00025CCE  0BC0              or ax,ax
-00025CD0  7409              jz 0x5cdb
-00025CD2  816EEA100E        sub word [bp-0x16],0xe10
-00025CD7  835EEC00          sbb word [bp-0x14],byte +0x0
-00025CDB  8B46EA            mov ax,[bp-0x16]
-00025CDE  8B56EC            mov dx,[bp-0x14]
-00025CE1  5E                pop si
-00025CE2  5F                pop di
-00025CE3  8BE5              mov sp,bp
-00025CE5  5D                pop bp
-00025CE6  CB                retf
-
+00025989  ; _amalloc()
+00025A6C  ; _amexpand()
+00025AA6  ; _amlink()
+00025AC8  ; _amallocbrk()
+00025BC4  ; dtoxtime()
 00025CE8  ; strpbrk()
-
-00025D46  ; ltoa() function
-00025D53  ; itoa() function
+00025D46  ; ltoa()
+00025D53  ; itoa()
 
 00025DAA  55                push bp
 00025DAB  8BEC              mov bp,sp

@@ -128,9 +128,30 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
+   'This procedure returns whether the Cartooner's executable regions overlap.
+   Private Function CheckForDuplicateRegions() As String
+      Try
+         Dim Duplicates As String = String.Join(NewLine, Regions().GroupBy(Function(Region) Region.Description).
+                                                         Where(Function(DescriptionGroup) DescriptionGroup.Count > 1).
+                                                         Select(Function(DescriptionGroup) String.Join(", ",
+                                                         DescriptionGroup.GroupBy(Function(Region) Region.Type).
+                                                         Where(Function(TypeSubgroup) TypeSubgroup.Count > 1).
+                                                         Select(Function(TypeSubgroup) TypeSubgroup.First.Description).
+                                                         ToList())).
+                                                         ToList())
+
+         Return If(Duplicates.Trim() = Nothing, Nothing, $"Duplicates:{NewLine}{Duplicates}")
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
    'This procedures manages the Cartooners executable's data file.
    Private Function DataFile(Optional CartoonersPath As String = Nothing) As DataFileStr
       Try
+         Dim Duplicates As String = Nothing
          Dim Overlaps As String = Nothing
          Static CurrentFile As New DataFileStr With {.Data = Nothing, .Path = Nothing}
 
@@ -145,11 +166,12 @@ Public Class CartoonersClass
                            EXEHeaderSize(Data:= .Data)
                            RelocationItems(Data:= .Data)
 
+                           Duplicates = CheckForDuplicateRegions()
                            Overlaps = CheckForRegionOverlap()
-                           If Not Overlaps = Nothing Then
-                              UpdateDataBox(Overlaps)
-                           Else
+                           If Duplicates = Nothing AndAlso Overlaps = Nothing Then
                               DisplayInformationMenu.PerformClick()
+                           Else
+                              UpdateDataBox($"{Overlaps}{NewLine}{Duplicates}")
                            End If
                         Else
                            MessageBox.Show("Invalid MS-DOS executable signature.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)

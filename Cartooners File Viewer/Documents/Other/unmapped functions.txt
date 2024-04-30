@@ -1,11 +1,3 @@
-_amlink	seg002	6286	22			R	.	L	.	.	.	.
-_catox	seg002	6318	56	6	4	R	F	L	.	B	.	.
-_chkstk	seg002	00003E1C	24			R	F	L	.	.	.	.
-_cinit	seg002	00003CBA	000000C4			R	F	L	.	.	.	.
-_ctermsub	seg002	00003DDC	0000002D			R	.	L	.	.	.	.
-_cXENIXtoDOSmode	seg002	4237	11			R	.	L	.	.	.	.
-_dtoxtime	seg002	000063A4	123	26	0000000C	R	F	L	.	B	.	.
-_exit	seg002	00003D95	47	2	4	.	.	L	.	B	T	.
 _FF_MSGBANNER	seg002	000058EA	24	2	0	R	F	L	.	B	.	.
 _ffree	seg002	0000608C	15	2	4	R	F	L	.	B	T	.
 _flsbuf	seg002	3,00E+40	000001BE	0000000E	6	R	F	L	.	B	T	.

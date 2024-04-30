@@ -1,4 +1,5 @@
 Description:	Type:	Offset:	Related:	Size:	Comment:
+_exit()	8086_code	144821	0	70	
 8086 executable code.	binary	0	0	156217	Compiled with the Microsoft C Compiler 5.10 (1988).
 About Cartooners	text	208068	0	226	
 About dialog text alignment.	binary	208066	0	1	
@@ -17,7 +18,7 @@ amallocbrk()	8086_code	154312	0	33
 amexpand()	8086_code	154220	0	58	
 amlink()	8086_code	154278	0	34	
 atexit()	8086_code	148470	0	8	
-atoi()	8086_code	154424	0	86	
+atoi()	8086_code	154424	0	86	catox()
 Background screen buffer.	rectangles	207590	0	8	
 bdos()	8086_code	154546	0	18	
 bios_equiplist()	8086_code	150880	0	3	
@@ -31,6 +32,8 @@ C_FILE_INFO.	text	222775	0	11
 Cancel printing.	text	213433	0	35	
 chdir()	8086_code	149819	0	13	
 Checked circle.	icon	201404	204320	69	
+chkstk()	8086_code	144956	0	33	
+cinit()	8086_code	144602	0	196	
 Circle.	icon	201332	204320	69	
 close()	8086_code	145438	0	30	
 Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
@@ -53,8 +56,10 @@ Critical unknown #17	binary	180320	0	1	Modification causes either freezing at ti
 Critical unknown #18	binary	201104	0	1	Modification causes a division by zero termination.
 Critical unknown #19	binary	208064	0	2	Modification influences the about dialog text.
 Cross arrows.	icon	202528	204320	51	
+ctermsub()	8086_code	144892	0	45	
 CTRL-Break handler.	8086_code	8	0	33	Handles the CTRL-Break keys being pressed.
 ctype	binary	224775	0	256	
+cXENIXtoDOSmode()	8086_code	146003	0	21	
 Day and month abbreviations.	text	225252	0	58	
 Dialog line break.	binary	203406	0	4	
 Dialog placement procedure	8086_code	67754	0	51	
@@ -76,6 +81,7 @@ dos_setvect()	8086_code	150946	0	21
 Drive letters.	text	205676	0	34	
 Driver file extensions	text	205510	0	12	
 dtoxmode()	8086_code	150138	0	225	
+dtoxtime()	8086_code	154564	0	291	
 Eraser.	icon	202096	204320	141	
 Error code translator.	8086_code	152440	0	51	Saves the error code at [0x566F].
 Error message retrieval.	8086_code	152322	0	41	Returns the position of an error message to be written to STDERR.
@@ -89,7 +95,6 @@ Exclamation icon.	point	203336	0	4
 Exclamation icon.	far_address	203346	0	4	
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
-exit()	8086_code	144821	0	70	
 exit()	8086_code	144798	0	22	
 fflush()	8086_code	155118	0	142	
 ffree()	8086_code	153768	0	25	
@@ -259,6 +264,7 @@ Speech balloon properties dialog.	rectangles	203426	0	152
 Speech balloon types.	text	203620	0	198	
 Speech balloon.	icon	202240	204320	141	
 Startup files.	text	203964	0	46	
+start()	8086_code	144396	0	202	
 stat()	8086_code	150364	0	499	
 strchr()	8086_code	147934	0	45	
 strcpy()	8086_code	154346	0	54	

@@ -1,4 +1,6 @@
 Description:	Address:
+Argument count (argc).	5692
+Argument variables (argv).	5694
 Critical error function segment.	5F64
 Critical error function offset.	5F62
 Environment variables (envp).	5698
