@@ -96,6 +96,7 @@ Exclamation icon.	far_address	203346	0	4
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
 exit()	8086_code	144798	0	22	
+FF_MSGBANNER()	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
 fflush()	8086_code	155118	0	142	
 ffree()	8086_code	153768	0	25	
 File system related characters.	text	206751	0	23	
@@ -156,6 +157,8 @@ isatty() call #1.	8086_code	0	0	8
 isatty() call #2.	8086_code	1810	0	8	
 itoa()	8086_code	146782	0	26	
 itoa() function.	8086_code	154963	0	86	
+j___catox	8086_code	146778	0	3	
+j___catox_0	8086_code	156004	0	3	
 Key retrieval.	8086_code	95848	0	39	Checks whether a key is pressed and returns which if so.
 Keyboard layout.	text	215156	0	117	
 Left arrow.	icon	201736	204320	178	
@@ -214,6 +217,7 @@ Movie file item types.	text	203941	0	23
 Movie item directories.	text	203913	0	28	
 MS Run-time Library copyright.	text	200680	0	56	
 Music dialog.	text	205476	0	30	
+NMSG_WRITE()	8086_code	152365	0	41	
 onexit()	8086_code	148479	0	44	
 Palette dialog.	text	215305	0	22	
 Pause dialog Cancel button edge type.	binary	211086	0	1	If the second to last bit is set the button will have no rounded edges.
@@ -244,7 +248,6 @@ read()	8086_code	146024	0	233
 remove()	8086_code	150864	0	13	
 Right arrow.	icon	201916	204320	177	
 rmdir()	8086_code	149834	0	40	
-Run-time error 203 handler.	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
 Run-time error messages.	text	225344	0	224	
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
@@ -347,5 +350,4 @@ Version.	text	206929	0	6
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
 Way menu items. #2	text	216009	0	259	
-Write error message to STDERR.	8086_code	152365	0	41	Takes an error message's offset and outputs the message to STDERR.
 write()	8086_code	146258	0	215	

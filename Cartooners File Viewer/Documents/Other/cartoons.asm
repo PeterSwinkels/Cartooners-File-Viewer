@@ -54416,10 +54416,10 @@
 00023CF2  5D                pop bp
 00023CF3  CB                retf
 
-00023CF4	; strncat ???
+00023CF4	; strncat()
 00023D2F	; strncpy()
 
-00023D5A  E9DB1D            jmp 0x5b38
+00023D5A	; j___catox()
 
 00023D5D 	; itao()
 00023D7A  	; ltoa()
@@ -55866,19 +55866,7 @@
 00026104  5D                pop bp
 00026105  CB                retf
 
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame thunk
-
-j___catox_0	proc far		; CODE XREF: sub_35F50+55p
-		jmp	near ptr __catox
-j___catox_0	endp
-
-; ---------------------------------------------------------------------------
-		align 2
-00026164  E9D1F9            jmp 0x5b38
+00026164	; j___catox_0()
 
 
 
