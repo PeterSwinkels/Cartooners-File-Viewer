@@ -23,6 +23,7 @@ Background screen buffer.	rectangles	207590	0	8
 bdos()	8086_code	154546	0	18	
 bios_equiplist()	8086_code	150880	0	3	
 Blank... (act option)	text	203866	0	11	
+brkctl()	8086_code	155260	0	110	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
 Button corner rounding procedure	8086_code	66835	0	51	
 Button edge style information.	binary	205638	0	38	
@@ -36,6 +37,7 @@ chkstk()	8086_code	144956	0	33
 cinit()	8086_code	144602	0	196	
 Circle.	icon	201332	204320	69	
 close()	8086_code	145438	0	30	
+close() function.	8086_code	152408	0	8	
 Critical unknown #01	binary	180602	0	341	Unsafe to modify - causes freezing at title screen. 
 Critical unknown #02	binary	205370	0	48	Causes freezing at startup when modified.
 Critical unknown #03	binary	205463	0	3	Modification causes freezing at startup.
@@ -72,6 +74,7 @@ Dialog. #6	text	210124	0	14
 Dialog. #7	text	210869	0	10	
 Dialog. #8	text	211572	0	790	
 dos_findfirst()	8086_code	150912	0	31	
+dos_findfirst() function.	8086_code	152416	0	11	
 dos_findnext()	8086_code	150902	0	10	
 dos_getdiskfree()	8086_code	150968	0	45	
 dos_getdrive()	8086_code	151014	0	20	
@@ -83,8 +86,6 @@ Driver file extensions	text	205510	0	12
 dtoxmode()	8086_code	150138	0	225	
 dtoxtime()	8086_code	154564	0	291	
 Eraser.	icon	202096	204320	141	
-Error code translator.	8086_code	152440	0	51	Saves the error code at [0x566F].
-Error message retrieval.	8086_code	152322	0	41	Returns the position of an error message to be written to STDERR.
 Error messages. #1	text	200737	0	307	
 Error messages. #2	text	204489	0	28	
 Error messages. #3	text	204523	0	39	
@@ -96,9 +97,9 @@ Exclamation icon.	far_address	203346	0	4
 Exclamation.	icon	202592	204320	248	
 Executable extensions.	text	225068	0	15	
 exit()	8086_code	144798	0	22	
-FF_MSGBANNER()	8086_code	151818	0	36	Gives the command to display either a run-time error code 203 or 255.
+FF_MSGBANNER()	8086_code	151818	0	36	
 fflush()	8086_code	155118	0	142	
-ffree()	8086_code	153768	0	25	
+ffree()	8086_code	153772	0	21	
 File system related characters.	text	206751	0	23	
 filelength()	8086_code	147182	0	102	
 Filled circle.	icon	201476	204320	69	
@@ -131,9 +132,6 @@ Free memory.	far_address	212446	0	4
 Free memory.	rectangles	212436	0	8	
 freect()	8086_code	147455	0	82	
 ftbuf()	8086_code	153528	0	223	
-Function end point with error check #1.	8086_code	152408	0	8	Used by multiple functions. Clear the AX register in case of an error.
-Function end point with error check #2.	8086_code	152416	0	11	Used by multiple functions. Calls the error code translator in case of an error while preserving the original code in the AX register.
-Function end point with error check #3.	8086_code	152427	0	13	Used by multiple functions. Calls the error code translator in case of an error.
 fwrite()	8086_code	152492	0	711	
 getcwd()	8086_code	149876	0	24	
 getdcwd	8086_code	149900	0	238	
@@ -152,7 +150,7 @@ intdos()	8086_code	147724	0	82
 intdosx()	8086_code	147806	0	98	
 Interface icon buffer.	rectangles	207548	0	8	
 Invalid actor error.	text	215274	0	31	
-isatty()	8086_code	154510	0	35	Returns true if _IOSTRG is detected.
+isatty()	8086_code	154510	0	35	
 isatty() call #1.	8086_code	0	0	8	
 isatty() call #2.	8086_code	1810	0	8	
 itoa()	8086_code	146782	0	26	
@@ -188,9 +186,10 @@ longjmp()	8086_code	149366	0	42
 Loop arrow.	icon	202384	204320	141	
 lseek()	8086_code	145470	0	120	
 ltoa()	8086_code	146810	0	8	
-ltoa() function.	8086_code	154950 	0	13	
+ltoa() function.	8086_code	154950	0	13	
 main()	8086_code	41	0	318	
 malloc()	8086_code	153793	0	63	
+maperror()	8086_code	152440	0	51	
 memcpy()	8086_code	155910	0	94	
 memmove()	8086_code	148268	0	202	
 Menu and ticket screen buttons.	rectangles	206818	0	16	
@@ -217,8 +216,12 @@ Movie file item types.	text	203941	0	23
 Movie item directories.	text	203913	0	28	
 MS Run-time Library copyright.	text	200680	0	56	
 Music dialog.	text	205476	0	30	
+NMSG_TEXT()	8086_code	152322	0	41	
 NMSG_WRITE()	8086_code	152365	0	41	
+nullcheck()	8086_code	151854	0	44	
 onexit()	8086_code	148479	0	44	
+open()	8086_code	145592	0	411	
+open() function.	8086_code	152427	0	13	
 Palette dialog.	text	215305	0	22	
 Pause dialog Cancel button edge type.	binary	211086	0	1	If the second to last bit is set the button will have no rounded edges.
 Pause dialog Cancel button id.	binary	211068	0	2	
@@ -243,6 +246,7 @@ PIT configuration.	8086_code	64482	0	47	Configures the system timer to run faste
 PIT reset.	8086_code	64529	0	48	Resets the system timer to its default speed and restores interrupt 0x08 to its original vector.
 PRINTING...	text	213416	0	10	
 puts()	8086_code	147002	0	155	
+quicksort()	8086_code	148762	0	469	
 qsort()	8086_code	148523	0	239	
 read()	8086_code	146024	0	233	
 remove()	8086_code	150864	0	13	
@@ -252,6 +256,9 @@ Run-time error messages.	text	225344	0	224
 Save movie dialog drive mask. 	text	204352	0	3	
 Scenes dialog.	text	215370	0	30	
 segread()	8086_code	147904	0	29	
+setargv()	8086_code	151898	0	420	
+setjmp()	8086_code	149324	0	42	
+sigentry()	8086_code	149577	0	40	
 signal()	8086_code	149414	0	163	
 Speaking icon record size.	binary	203364	0	2	
 Speaking icon.	point	203360	0	4	
@@ -266,9 +273,11 @@ Speech balloon menu slots.	text	168150	0	2125
 Speech balloon properties dialog.	rectangles	203426	0	152	
 Speech balloon types.	text	203620	0	198	
 Speech balloon.	icon	202240	204320	141	
-Startup files.	text	203964	0	46	
+stackavail()	8086_code	153752	0	20	
 start()	8086_code	144396	0	202	
+Startup files.	text	203964	0	46	
 stat()	8086_code	150364	0	499	
+stbuf()	8086_code	153342	0	186	
 strchr()	8086_code	147934	0	45	
 strcpy()	8086_code	154346	0	54	
 strcspn()	8086_code	148176	0	92	
@@ -282,6 +291,7 @@ strpbrk()	8086_code	154856	0	94
 strrchr()	8086_code	148050	0	46	
 strupr()	8086_code	148136	0	40	
 Supported file extensions.	text	204244	0	30	
+swap()	8086_code	149234	0	87	
 tell()	8086_code	147158	0	24	
 Thought balloon information.	binary	157308	0	1468	
 Ticket screen CGA.	palette	193808	0	32	
