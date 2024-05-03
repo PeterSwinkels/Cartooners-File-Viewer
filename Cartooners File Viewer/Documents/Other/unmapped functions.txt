@@ -1,9 +1,3 @@
-_getbuf	seg002	5,00E+54	0000008A	6	4	R	.	L	.	B	.	.
-_memavl	seg002	000047A3	0000003C	4	0	R	F	L	.	B	T	.
-_memmax	seg002	0000475A	49	4	0	R	F	L	.	B	T	.
-sub_33629	seg002	3000000000	13			R	.	L	.	.	.	.
-sub_33C06	seg002	43000000	0000005C			R	F	L	.	.	.	.
-sub_33F54	seg002	4734	26	2	0	R	.	L	.	B	.	.
 sub_34051	seg002	4831	22	2	0	R	.	L	.	B	.	.
 sub_34D60	seg002	5540	3			R	F	.	.	.	.	.
 sub_34E50	seg002	5630	42	2	2	R	F	.	.	B	.	.

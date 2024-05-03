@@ -35,6 +35,7 @@ chdir()	8086_code	149819	0	13
 Checked circle.	icon	201404	204320	69	
 chkstk()	8086_code	144956	0	33	
 cinit()	8086_code	144602	0	196	
+cinit()/exit() helper.	8086_code	144937	0	19	
 Circle.	icon	201332	204320	69	
 close()	8086_code	145438	0	30	
 close() function.	8086_code	152408	0	8	
@@ -133,6 +134,7 @@ Free memory.	rectangles	212436	0	8
 freect()	8086_code	147455	0	82	
 ftbuf()	8086_code	153528	0	223	
 fwrite()	8086_code	152492	0	711	
+getbuf()	8086_code	153204	0	138	
 getcwd()	8086_code	149876	0	24	
 getdcwd	8086_code	149900	0	238	
 getenv()	8086_code	156008	0	150	
@@ -190,7 +192,10 @@ ltoa() function.	8086_code	154950	0	13
 main()	8086_code	41	0	318	
 malloc()	8086_code	153793	0	63	
 maperror()	8086_code	152440	0	51	
+memavl()	8086_code	147395 	0	60	
 memcpy()	8086_code	155910	0	94	
+memmax()	8086_code	147322	0	73	
+memmax()/memavl() helper.	8086_code	147284	0	38	
 memmove()	8086_code	148268	0	202	
 Menu and ticket screen buttons.	rectangles	206818	0	16	
 Menu bar.	rectangles	205468	0	8	
@@ -360,4 +365,6 @@ Version.	text	206929	0	6
 Video mode error message.	text	207756	0	56	
 Way menu items. #1	text	170275	0	190	
 Way menu items. #2	text	216009	0	259	
-write()	8086_code	146258	0	215	
+write()	8086_code	146258	0	180	
+write() helper.	8086_code	146438	0	35	
+write() function.	8086_code	146530	0	56	
