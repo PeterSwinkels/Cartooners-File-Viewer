@@ -14,6 +14,7 @@ aFlshr()	8086_code	151594	0	11
 aFuldif()	8086_code	151708	0	95	
 aFulshr()	8086_code	151806	0	11	
 aMalloc()	8086_code	153993	0	227	
+aMalloc() function.	8086_code	153990	0	3	
 amallocbrk()	8086_code	154312	0	33	
 amexpand()	8086_code	154220	0	58	
 amlink()	8086_code	154278	0	34	
@@ -24,6 +25,7 @@ bdos()	8086_code	154546	0	18
 bios_equiplist()	8086_code	150880	0	3	
 Blank... (act option)	text	203866	0	11	
 brkctl()	8086_code	155260	0	110	
+brkctl() helper.	8086_code	 155370	0	86	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
 Button corner rounding procedure	8086_code	66835	0	51	
 Button edge style information.	binary	205638	0	38	
@@ -86,6 +88,9 @@ Drive letters.	text	205676	0	34
 Driver file extensions	text	205510	0	12	
 dtoxmode()	8086_code	150138	0	225	
 dtoxtime()	8086_code	154564	0	291	
+dtoxtime() helper #1.	8086_code	 155456	0	16	
+dtoxtime() helper #2.	8086_code	 155684	0	226	
+dtoxtime() sub-helper	8086_code	 155472	0	211	
 Eraser.	icon	202096	204320	141	
 Error messages. #1	text	200737	0	307	
 Error messages. #2	text	204489	0	28	
@@ -191,11 +196,14 @@ ltoa()	8086_code	146810	0	8
 ltoa() function.	8086_code	154950	0	13	
 main()	8086_code	41	0	318	
 malloc()	8086_code	153793	0	63	
+malloc() helper() #1.	8086_code	153856	0	110	
+malloc() helper() #2.	8086_code	153966 	0	23	
 maperror()	8086_code	152440	0	51	
 memavl()	8086_code	147395 	0	60	
 memcpy()	8086_code	155910	0	94	
 memmax()	8086_code	147322	0	73	
-memmax()/memavl() helper.	8086_code	147284	0	38	
+memmax()/memavl() helper #1.	8086_code	147284	0	38	
+memmax()/memavl() helper #2.	8086_code	147537	0	34	
 memmove()	8086_code	148268	0	202	
 Menu and ticket screen buttons.	rectangles	206818	0	16	
 Menu bar.	rectangles	205468	0	8	
@@ -295,6 +303,7 @@ strncpy()	8086_code	146736	0	42
 strpbrk()	8086_code	154856	0	94	
 strrchr()	8086_code	148050	0	46	
 strupr()	8086_code	148136	0	40	
+sub_24E50	8086_code	151120	0	64	
 Supported file extensions.	text	204244	0	30	
 swap()	8086_code	149234	0	87	
 tell()	8086_code	147158	0	24	

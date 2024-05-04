@@ -1,13 +1,3 @@
-sub_34051	seg002	4831	22	2	0	R	.	L	.	B	.	.
-sub_34D60	seg002	5540	3			R	F	.	.	.	.	.
-sub_34E50	seg002	5630	42	2	2	R	F	.	.	B	.	.
-sub_3537E	seg002	00005B5E	0000002E	0	0	R	.	L	.	.	.	.
-sub_35900	seg002	60	0000006E			R	.	L	.	.	.	.
-sub_3596E	seg002	0000614E	17			R	.	L	.	.	.	.
-sub_35EEA	seg002	000066CA	56			R	.	L	.	.	.	.
-sub_35F40	seg002	6720	10	0	0	R	F	L	.	.	.	.
-sub_35F50	seg002	6730	000000D3	0000000A	0	R	F	L	.	B	.	.
-sub_36024	seg002	6804	0	0000000A	4	R	F	L	.	B	.	.
 unknown_libname_1	seg002	0000447C	12	2	2	R	F	L	.	B	.	.
 unknown_libname_2	seg002	0000448E	46	6	2	R	F	L	.	B	.	.
 unknown_libname_3	seg002	5816	21	2	4	R	F	L	.	B	.	.

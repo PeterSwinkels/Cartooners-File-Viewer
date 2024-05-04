@@ -148897,7 +148897,7 @@ word_46F92	dw 0			; DATA XREF: _signal+5Ew seg002:508Fr
 		db  44h	; D
 		db  54h	; T
 		db    0
-word_46FD6	dw 7080h		; DATA XREF: __dtoxtime+D6r
+word_46FD6	dw 7080h		; DATA XREF: __+D6r
 					; sub_35F50+62w
 word_46FD8	dw 0			; DATA XREF: __dtoxtime+D9r
 					; sub_35F50+65w
