@@ -1,6 +1,0 @@
-0 = divide by zero
-8 = timer
-1b = ctrl-break				***
-23 = ctrl-break termination address
-24 = critical error handler		***
-43 = user font table			***

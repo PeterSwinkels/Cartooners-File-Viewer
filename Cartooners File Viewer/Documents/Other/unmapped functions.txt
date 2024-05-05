@@ -1,5 +1,0 @@
-unknown_libname_1	seg002	0000447C	12	2	2	R	F	L	.	B	.	.
-unknown_libname_2	seg002	0000448E	46	6	2	R	F	L	.	B	.	.
-unknown_libname_3	seg002	5816	21	2	4	R	F	L	.	B	.	.
-unknown_libname_4	seg002	5838	21	2	4	R	F	L	.	B	.	.
-unknown_libname_5	seg002	0000585A	21	2	4	R	F	L	.	B	.	.
