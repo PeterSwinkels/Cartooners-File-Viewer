@@ -47623,51 +47623,6 @@
 0001F642  5D                pop bp
 0001F643  CA0600            retf 0x6
 
-0001F646  55                push bp
-0001F647  8BEC              mov bp,sp
-0001F649  57                push di
-0001F64A  56                push si
-0001F64B  1E                push ds
-0001F64C  B84001            mov ax,0x140
-0001F64F  F76E10            imul word [bp+0x10]
-0001F652  034612            add ax,[bp+0x12]
-0001F655  8BF8              mov di,ax
-0001F657  BA00A0            mov dx,0xa000	; EGA/VGA
-0001F65A  8EC2              mov es,dx		;
-0001F65C  C57608            lds si,[bp+0x8]
-0001F65F  B84001            mov ax,0x140
-0001F662  2B460E            sub ax,[bp+0xe]
-0001F665  D1F8              sar ax,1
-0001F667  8BD0              mov dx,ax
-0001F669  8B4E0C            mov cx,[bp+0xc]
-0001F66C  E327              jcxz 0xf695
-0001F66E  8B5E0E            mov bx,[bp+0xe]
-0001F671  D1FB              sar bx,1
-0001F673  7420              jz 0xf695
-0001F675  51                push cx
-0001F676  8BCB              mov cx,bx
-0001F678  AC                lodsb
-0001F679  8AE0              mov ah,al
-0001F67B  D0E8              shr al,1
-0001F67D  D0E8              shr al,1
-0001F67F  D0E8              shr al,1
-0001F681  D0E8              shr al,1
-0001F683  250F0F            and ax,0xf0f
-0001F686  AB                stosw
-0001F687  E2EF              loop 0xf678
-0001F689  59                pop cx
-0001F68A  037606            add si,[bp+0x6]
-0001F68D  8BC2              mov ax,dx
-0001F68F  D1E0              shl ax,1
-0001F691  03F8              add di,ax
-0001F693  E2E0              loop 0xf675
-0001F695  1F                pop ds
-0001F696  5E                pop si
-0001F697  5F                pop di
-0001F698  8BE5              mov sp,bp
-0001F69A  5D                pop bp
-0001F69B  CA0E00            retf 0xe
-
 0001F69E  55                push bp
 0001F69F  8BEC              mov bp,sp
 0001F6A1  57                push di

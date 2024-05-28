@@ -28,7 +28,7 @@ bdos()	8086_code	154546	0	18
 bios_equiplist()	8086_code	150880	0	3	
 Blank... (act option)	text	203866	0	11	
 brkctl()	8086_code	155260	0	110	
-brkctl() helper.	8086_code	 155370	0	86	
+brkctl() helper.	8086_code	155370	0	86	
 Buffer for speech balloon text in Act menu.	text	203882	0	31	
 Button corner rounding procedure	8086_code	66835	0	51	
 Button edge style information.	binary	205638	0	38	
@@ -91,9 +91,9 @@ Drive letters.	text	205676	0	34
 Driver file extensions	text	205510	0	12	
 dtoxmode()	8086_code	150138	0	225	
 dtoxtime()	8086_code	154564	0	291	
-dtoxtime() helper #1.	8086_code	 155456	0	16	
-dtoxtime() helper #2.	8086_code	 155684	0	226	
-dtoxtime() sub-helper	8086_code	 155472	0	211	
+dtoxtime() helper #1.	8086_code	155456	0	16	
+dtoxtime() helper #2.	8086_code	155684	0	226	
+dtoxtime() sub-helper	8086_code	155472	0	211	
 Eraser.	icon	202096	204320	141	
 Error messages. #1	text	200737	0	307	
 Error messages. #2	text	204489	0	28	
@@ -154,6 +154,7 @@ Hand.	icon	203088	204320	248
 harderr()	8086_code	151034	0	35	
 hardresume	8086_code	151111	0	8	
 hardresume() function.	8086_code	151069	0	42	
+Image drawing routine for VGA.	8086_code	128582	0	86	
 int86()	8086_code	146820	0	136	
 int86x()	8086_code	147572	0	152	
 intdos()	8086_code	147724	0	82	
@@ -200,9 +201,9 @@ ltoa() function.	8086_code	154950	0	13
 main()	8086_code	41	0	318	
 malloc()	8086_code	153793	0	63	
 malloc() helper() #1.	8086_code	153856	0	110	
-malloc() helper() #2.	8086_code	153966 	0	23	
+malloc() helper() #2.	8086_code	153966	0	23	
 maperror()	8086_code	152440	0	51	
-memavl()	8086_code	147395 	0	60	
+memavl()	8086_code	147395	0	60	
 memcpy()	8086_code	155910	0	94	
 memmax()	8086_code	147322	0	73	
 memmax()/memavl() helper #1.	8086_code	147284	0	38	
@@ -306,7 +307,7 @@ strncpy()	8086_code	146736	0	42
 strpbrk()	8086_code	154856	0	94	
 strrchr()	8086_code	148050	0	46	
 strupr()	8086_code	148136	0	40	
-sub_23C9C	8086_code	146588 	0	18	Unused.
+sub_23C9C	8086_code	146588	0	18	Unused.
 sub_23CAE	8086_code	146606	0	70	Indirectly called by main().
 sub_24871	8086_code	149617	0	160	
 sub_24E50	8086_code	151120	0	64	
