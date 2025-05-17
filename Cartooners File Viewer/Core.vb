@@ -139,7 +139,7 @@ Public Module CoreModule
       Return Nothing
    End Function
 
-   'This procedure returns the specified text with any non-displayable or all charactes converted to escape sequences.
+   'This procedure returns the specified text with any non-displayable or all characters converted to escape sequences.
    Public Function Escape(ToEscape As Object, Optional EscapeCharacter As Char = "/"c, Optional EscapeAll As Boolean = False) As String
       Try
          Dim Character As New Char
