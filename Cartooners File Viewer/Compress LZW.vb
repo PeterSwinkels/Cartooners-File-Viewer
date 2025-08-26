@@ -25,7 +25,7 @@ Public Module CompressLZWModule
       End Try
    End Sub
 
-   'This procedure retruns the specified data compressed using LZW compression.
+   'This procedure returns the specified data compressed using LZW compression.
    Public Function CompressLZW(Uncompressed As List(Of Byte)) As List(Of Byte)
       Try
          Dim BitCount As Integer = &H9%
@@ -87,3 +87,4 @@ Public Module CompressLZWModule
       Return Nothing
    End Function
 End Module
+
