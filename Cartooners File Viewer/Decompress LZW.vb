@@ -21,23 +21,6 @@ Public Module DecompressLZWModule
       End Try
    End Sub
 
-   'This procedure returns a LZW dictionary.
-   Private Function InitializeDictionary() As List(Of LZWEntryStr)
-      Try
-         Dim DictionaryO As New List(Of LZWEntryStr)
-
-         For Index As Integer = &H0% To LZW_MAXIMUM_ENTRIES - &H1%
-            DictionaryO.Add(New LZWEntryStr With {.Prefix = -1, .Suffix = If(Index < LZW_START, Index, -1)})
-         Next Index
-
-         Return DictionaryO
-      Catch ExceptionO As Exception
-         DisplayException(ExceptionO)
-      End Try
-
-      Return Nothing
-   End Function
-
    'This procedure returns the specified data decompressed using LZW decompression.
    Public Function DecompressLZW(Compressed As List(Of Byte)) As List(Of Byte)
       Try
@@ -111,6 +94,23 @@ Public Module DecompressLZWModule
          Buffer.Reverse()
 
          Return Buffer
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
+
+      Return Nothing
+   End Function
+
+   'This procedure returns a LZW dictionary.
+   Private Function InitializeDictionary() As List(Of LZWEntryStr)
+      Try
+         Dim DictionaryO As New List(Of LZWEntryStr)
+
+         For Index As Integer = &H0% To LZW_MAXIMUM_ENTRIES - &H1%
+            DictionaryO.Add(New LZWEntryStr With {.Prefix = -1, .Suffix = If(Index < LZW_START, Index, -1)})
+         Next Index
+
+         Return DictionaryO
       Catch ExceptionO As Exception
          DisplayException(ExceptionO)
       End Try
