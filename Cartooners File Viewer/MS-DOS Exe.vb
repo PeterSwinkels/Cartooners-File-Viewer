@@ -55,7 +55,7 @@ Public Module MSDOSEXEModule
    End Structure
 
    Public Const MSDOS_EXECUTABLE_SIGNATURE As Integer = &H5A4D%   'Defines the MS-DOS executable signature "MZ".
-   Public Const MSDOS_HEADER_SIZE As Integer = &H1C%              'Defines the MS-DOS exectuable header's size.
+   Public Const MSDOS_HEADER_SIZE As Integer = &H1C%              'Defines the MS-DOS executable header's size.
 
    'This procedure manages a MS-DOS executable's header size with the size of the relocation table added.
    Public Function EXEHeaderSize(Optional Data As List(Of Byte) = Nothing) As Integer

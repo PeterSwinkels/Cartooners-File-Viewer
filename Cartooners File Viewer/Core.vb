@@ -72,7 +72,7 @@ Public Module CoreModule
    Public ReadOnly TEXT_TO_BYTES As Func(Of String, List(Of Byte)) = Function(Text As String) (From Character In Text.ToCharArray() Select ToByte(Character)).ToList()                                                                               'This procedure returns the specified text converted to bytes.
    Public ReadOnly UNSIGN_BYTE As Func(Of Integer, Integer) = Function(Value As Integer) Abs(If(Value >= &H80%, Value - &H100%, Value))                                                                                                              'This procedure returns the specified signed byte converted to an unsigned byte.
 
-   'This function returns the specified text with any MS-DOS line breaks converted to Micorosft Windows line breaks.
+   'This function returns the specified text with any MS-DOS line breaks converted to Microsoft Windows line breaks.
    Public Function ConvertMSDOSLineBreak(Text As String) As String
       Try
          Dim Conversion As New StringBuilder
@@ -98,7 +98,7 @@ Public Module CoreModule
       Return Nothing
    End Function
 
-   'This procudure displays the message describing the specified exception.
+   'This procedure displays the message describing the specified exception.
    Public Sub DisplayException(ExceptionO As Exception)
       Try
          If MessageBox.Show(ExceptionO.Message, My.Application.Info.Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) = DialogResult.Cancel Then Application.Exit()
@@ -207,7 +207,7 @@ Public Module CoreModule
       Return Nothing
    End Function
 
-   'This procedure returns the specified bytes converted to a number assuming big endianess.
+   'This procedure returns the specified bytes converted to a number assuming big endianness.
    Public Function GetBENumberFromBytes(Bytes As List(Of Byte)) As Integer
       Try
          Dim Hexadecimals As New StringBuilder
@@ -374,7 +374,7 @@ Public Module CoreModule
       Return Nothing
    End Function
 
-   'This procedeure returns the unsigned byte converted to a signed byte.
+   'This procedure returns the unsigned byte converted to a signed byte.
    Public Function SignByte(Value As Integer, IsNegative As Boolean) As Integer
       Try
          Return If(IsNegative, &H100% - Value, Value)

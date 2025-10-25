@@ -87,4 +87,3 @@ Public Module CompressLZWModule
       Return Nothing
    End Function
 End Module
-

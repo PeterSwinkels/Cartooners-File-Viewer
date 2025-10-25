@@ -37,13 +37,13 @@ Public Class CartoonersClass
       Public EndO As Integer         'Defines a region's end.
    End Class
 
-   'This enumeration lists the Cartooner's exectuable near address's properties.
+   'This enumeration lists the Cartooners's executable near address's properties.
    Private Enum NearAddressPropertiesE As Integer
       Description   'A near address's description.
       Address       'A near address in hexadecimal notation.
    End Enum
 
-   'This enumeration lists the Cartooner's executable region's properties.
+   'This enumeration lists the Cartooners's executable region's properties.
    Private Enum RegionPropertiesE As Integer
       Description   'A region's description.
       Type          'A region's type.
@@ -105,7 +105,7 @@ Public Class CartoonersClass
       End Try
    End Sub
 
-   'This procedure returns whether the Cartooner's executable regions overlap.
+   'This procedure returns whether the Cartooners's executable regions overlap.
    Private Function CheckForRegionOverlap() As String
       Try
          Dim Overlaps As New StringBuilder
@@ -128,7 +128,7 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
-   'This procedure returns whether the Cartooner's executable regions overlap.
+   'This procedure returns whether the Cartooners's executable regions overlap.
    Private Function CheckForDuplicateRegions() As String
       Try
          Dim Duplicates As String = String.Join(NewLine, Regions().GroupBy(Function(Region) Region.Description).
@@ -198,7 +198,7 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
-   'This procedure disassembles the Cartooner's executable data at the specified position and returns the results.
+   'This procedure disassembles the Cartooners's executable data at the specified position and returns the results.
    Private Function Disassemble(Code As List(Of Byte), StartPosition As Integer, Length As Integer) As String
       Try
          Dim Comment As String = Nothing
@@ -520,7 +520,7 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
-   'This procedure manages Cartooner's executable near address list.
+   'This procedure manages Cartooners's executable near address list.
    Private Function NearAddresses() As List(Of NearAddressClass)
       Try
          Dim NearAddressLines As List(Of String) = Nothing
@@ -549,7 +549,7 @@ Public Class CartoonersClass
       Return Nothing
    End Function
 
-   'This procedure manages Cartooner's executable region information.
+   'This procedure manages Cartooners's executable region information.
    Private Function Regions() As List(Of RegionClass)
       Try
          Dim Properties() As String = {}

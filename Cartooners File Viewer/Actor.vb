@@ -253,7 +253,7 @@ Public Class ActorClass
          Return Nothing
       End Function
 
-   'This procecure displays the actor's animation record lists.
+   'This procedure displays the actor's animation record lists.
    Private Sub DisplayAnimationRecordListsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordListsMenu.Click
       Try
          With New StringBuilder
@@ -278,7 +278,7 @@ Public Class ActorClass
       End Try
    End Sub
 
-   'This procecure displays the actor's animation records.
+   'This procedure displays the actor's animation records.
    Private Sub DisplayAnimationRecordsMenu_Click(sender As Object, e As EventArgs) Handles DisplayAnimationRecordsMenu.Click
          Try
             Dim NewText As New StringBuilder
@@ -502,8 +502,8 @@ Public Class ActorClass
          Return Nothing
       End Function
 
-      'This procudure converts the specified image to a 4 bit color image and returns the resulting color indexes.
-      Private Function GetIndexes(ImageO As Bitmap, GBRPalette As List(Of Byte), Transparent As Color) As List(Of Byte)
+   'This procedure converts the specified image to a 4 bit color image and returns the resulting color indexes.
+   Private Function GetIndexes(ImageO As Bitmap, GBRPalette As List(Of Byte), Transparent As Color) As List(Of Byte)
          Try
             Dim BestMatch As New Integer
             Dim BytesPerRow As New Integer
@@ -993,31 +993,31 @@ Public Class ActorClass
          End Try
       End Sub
 
-      'This procudure manages the color that is used to represent the transparent areas in an actor's image.
-      Private Function TransparentColor(Optional Refresh As Boolean = False, Optional Replace As Boolean = False) As Color
-         Try
-            Static CurrentTransparentColor As Color = Color.White
-            Static SettingsFile As String = ($"{My.Application.Info.Title}.ini")
+   'This procedure manages the color that is used to represent the transparent areas in an actor's image.
+   Private Function TransparentColor(Optional Refresh As Boolean = False, Optional Replace As Boolean = False) As Color
+      Try
+         Static CurrentTransparentColor As Color = Color.White
+         Static SettingsFile As String = ($"{My.Application.Info.Title}.ini")
 
-            If Refresh Then
-               If File.Exists(SettingsFile) Then
-                  CurrentTransparentColor = Color.FromArgb(ToInt32(File.ReadAllText(SettingsFile).Trim(), fromBase:=16))
-               End If
-            ElseIf Replace Then
-               With New ColorDialog
-                  .Color = CurrentTransparentColor
-                  If Not .ShowDialog = DialogResult.Cancel Then
-                     CurrentTransparentColor = .Color
-                     File.WriteAllText(SettingsFile, $"{CurrentTransparentColor.ToArgb:X}")
-                  End If
-               End With
+         If Refresh Then
+            If File.Exists(SettingsFile) Then
+               CurrentTransparentColor = Color.FromArgb(ToInt32(File.ReadAllText(SettingsFile).Trim(), fromBase:=16))
             End If
+         ElseIf Replace Then
+            With New ColorDialog
+               .Color = CurrentTransparentColor
+               If Not .ShowDialog = DialogResult.Cancel Then
+                  CurrentTransparentColor = .Color
+                  File.WriteAllText(SettingsFile, $"{CurrentTransparentColor.ToArgb:X}")
+               End If
+            End With
+         End If
 
-            Return CurrentTransparentColor
-         Catch ExceptionO As Exception
-            DisplayException(ExceptionO)
-         End Try
+         Return CurrentTransparentColor
+      Catch ExceptionO As Exception
+         DisplayException(ExceptionO)
+      End Try
 
-         Return Nothing
-      End Function
-   End Class
+      Return Nothing
+   End Function
+End Class

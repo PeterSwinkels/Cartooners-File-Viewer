@@ -79,10 +79,10 @@ Public Class MovieClass
    Private Const MAXIMUM_ACTORS_PER_FRAME As Integer = &H5%              'Defines the number handle records per actor.
    Private Const MAXIMUM_FRAME_RATE As Integer = 60                      'Defines the highest number of frames per second supported.
    Private Const MINIMUM_INTERVAL As Double = 1000 / MAXIMUM_FRAME_RATE  'Defines the lowest number of milliseconds between frames supported.
-   Private ReadOnly PALETTE_DESCRIPTIONS As New List(Of String)({"actors and scenes", "speech balloons"})                                                                                                     'Defines the movie palettes descriptions.
-   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%, &H10%})                                                                                                                                            'Defines the movie file signature.
-   Private ReadOnly SPEECH_BALLOON_ALIGNMENTS As New List(Of String)({"left", "center"})                                                                                                                      'Defines the movie speech balloon alignments.
-   Private ReadOnly SPEECH_BALLOON_TYPES As New List(Of String)({"Invisible", "Title", "Speech (Right)", "Speech (Left)", "Thought (Right)", "Thought (Left)", "Exclamation (Right)", "Exclamtion (Left)"})   'Defines the movie's speech balloon types.
+   Private ReadOnly PALETTE_DESCRIPTIONS As New List(Of String)({"actors and scenes", "speech balloons"})                                                                                                      'Defines the movie palettes descriptions.
+   Private ReadOnly SIGNATURE As New List(Of Byte)({&H10%, &H10%})                                                                                                                                             'Defines the movie file signature.
+   Private ReadOnly SPEECH_BALLOON_ALIGNMENTS As New List(Of String)({"left", "center"})                                                                                                                       'Defines the movie speech balloon alignments.
+   Private ReadOnly SPEECH_BALLOON_TYPES As New List(Of String)({"Invisible", "Title", "Speech (Right)", "Speech (Left)", "Thought (Right)", "Thought (Left)", "Exclamation (Right)", "Exclamation (Left)"})   'Defines the movie's speech balloon types.
 
    'The menu items used by this class.
    Private WithEvents DisplayActorHandleRecordsMenu As New ToolStripMenuItem With {.ShortcutKeys = Keys.F6, .Text = "Display Actor &Handle Records"}
