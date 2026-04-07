@@ -1,4 +1,4 @@
-﻿'This module's imports and settings.
+﻿'This class's imports and settings.
 Option Compare Binary
 Option Explicit On
 Option Infer Off
@@ -13,7 +13,7 @@ Imports System.Linq
 Imports System.Text
 Imports System.Windows.Forms
 
-'This module contains this program's interface.
+'This class contains this program's interface.
 Public Class InterfaceWindow
    Private ReadOnly SUPPORTED_IMAGES As New List(Of String)({".bmp", ".emf", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".wmf"})   'Defines the extensions of the supported image file types.
 
