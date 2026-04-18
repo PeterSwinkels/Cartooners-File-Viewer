@@ -199,7 +199,7 @@ Public Class CartoonersClass
    End Function
 
    'This procedure disassembles the Cartooners's executable data at the specified position and returns the results.
-   Private Function Disassemble(Code As List(Of Byte), StartPosition As Integer, Length As Integer) As String
+   Private Function Disassemble(Code() As Byte, StartPosition As Integer, Length As Integer) As String
       Try
          Dim Comment As String = Nothing
          Dim Disassembler As New DisassemblerClass
@@ -276,7 +276,7 @@ Public Class CartoonersClass
                Size = EXEHeaderSize(Data:=DataFile().Data)
                Position -= Size
                Count = DataFile().Data.Count - Size
-               NewText.Append(Disassemble(DataFile().Data.GetRange(Size, Count), Position, Length))
+               NewText.Append(Disassemble(DataFile().Data.GetRange(Size, Count).ToArray(), Position, Length))
             Case "binary", "bitmap", "image", "mousemask"
                NewText.Append($"{Escape(GetBytes(DataFile().Data, Position, Length), " "c, EscapeAll:=True).Trim()}")
             Case "far_address"
